@@ -110,7 +110,11 @@ export default function DotMap({ visitCounts }: Props) {
 
   const onTap = useCallback(
     (worldX: number, worldY: number) => {
-      const hitR = halfDotPx * 1.6;
+      // 격자 한 칸 크기를 기준으로 hit 영역을 잡으면 도트 사이 여백(특히
+      // 4개 도트 사이의 대각선 코너)까지 모두 커버된다. 코너에서 가장 가까운
+      // 도트 중심까지 거리는 약 0.707셀이므로 0.75셀이면 여유 있게 덮는다.
+      const cellPx = gridSize * baseScale;
+      const hitR = cellPx * 0.75;
       const hitR2 = hitR * hitR;
       let bestCountries: CountryRef[] | null = null;
       let bestDist = Infinity;
