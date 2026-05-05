@@ -126,25 +126,43 @@ function findCountry(lng, lat) {
   return null;
 }
 
-// 한 격자 셀(gridSize×gridSize) 안을 5×5로 샘플링해 영토가 걸치는 모든 국가를 모은다.
+// 한 도트가 실제로 그려지는 영역(셀의 FILL_RATIO 폭)을 7×7로 샘플링해 각
+// 국가가 차지하는 표본 수를 센다. 셀 전체가 아니라 도트 픽셀 영역만 보므로,
+// 시각적으로 도트가 닿지 않는 모서리 슬리버는 자연스럽게 배제된다.
+// 추가로 임계치(SHARE_THRESHOLD) 미만으로만 걸치는 나라는 점 단위로 미세하게
+// 걸친 슬리버로 간주해 버린다.
+// 단, 호출부에서 셀 중심 국가는 점유율과 무관하게 항상 유지하도록 별도 처리한다.
+const SAMPLES_PER_AXIS = 7;
+const SHARE_THRESHOLD = 0.12; // 49 × 0.12 ≈ 6 표본 이상
+// DotMap.tsx의 FILL_RATIO와 동기화. 도트가 실제로 그려지는 폭의 비율.
+const SAMPLE_AREA_RATIO = 0.6;
+
 function findCountriesInCell(lat, lng, gridSize) {
-  const samples = 5;
-  const step = gridSize / samples;
-  const start = -gridSize / 2 + step / 2;
-  const seen = new Map();
-  const order = [];
+  const samples = SAMPLES_PER_AXIS;
+  const span = gridSize * SAMPLE_AREA_RATIO;
+  const step = span / samples;
+  const start = -span / 2 + step / 2;
+  const counts = new Map(); // code -> { count, name }
   for (let i = 0; i < samples; i++) {
     for (let j = 0; j < samples; j++) {
       const sLat = lat + start + i * step;
       const sLng = lng + start + j * step;
       const c = findCountry(sLng, sLat);
-      if (c && c.code && !seen.has(c.code)) {
-        seen.set(c.code, c.name);
-        order.push(c.code);
+      if (c && c.code) {
+        const prev = counts.get(c.code);
+        if (prev) prev.count++;
+        else counts.set(c.code, { count: 1, name: c.name });
       }
     }
   }
-  return order.map((code) => ({ code, name: seen.get(code) }));
+  const total = samples * samples;
+  const minCount = Math.max(2, Math.ceil(total * SHARE_THRESHOLD));
+  const kept = [];
+  for (const [code, { count, name }] of counts) {
+    if (count >= minCount) kept.push({ code, name, count });
+  }
+  kept.sort((a, b) => b.count - a.count);
+  return kept.map(({ code, name }) => ({ code, name }));
 }
 
 const half = gridSize / 2;
@@ -177,13 +195,18 @@ for (let lat = startLat; lat <= maxLat - half + 1e-9; lat += gridSize) {
         lng: +lng.toFixed(2),
         kind: "grid",
       };
-      const c = findCountry(lng, lat);
-      if (c) {
-        if (c.code) dot.country = c.code;
-        if (c.name) dot.name = c.name;
-      }
+      // 셀 중심 국가가 시각적 "주인"이므로 무조건 포함시킨다.
+      const center = findCountry(lng, lat);
       const cs = findCountriesInCell(lat, lng, gridSize);
-      if (cs.length) dot.countries = cs;
+      if (center && center.code && !cs.some((x) => x.code === center.code)) {
+        cs.unshift({ code: center.code, name: center.name });
+      }
+      const primary = center && center.code ? center : cs[0];
+      if (primary && primary.code) {
+        dot.country = primary.code;
+        if (primary.name) dot.name = primary.name;
+      }
+      if (cs.length > 1) dot.countries = cs;
       dots.push(dot);
       occupied.add(cellKey(dot.lat, dot.lng));
     }
@@ -254,7 +277,7 @@ if (countries) {
       kind: "anchor",
       country: code,
       name: props.NAME,
-      countries: cs.length ? cs : undefined,
+      countries: cs.length > 1 ? cs : undefined,
     });
     occupied.add(key);
     anchorCount++;
@@ -280,10 +303,17 @@ fs.writeFileSync(
   )
 );
 
+const multiCountry = dots.filter((d) => d.countries && d.countries.length > 1);
 console.log(`gridSize=${gridSize}°, lat=[${minLat}, ${maxLat}]`);
-console.log(`  grid dots:   ${gridCount}`);
-console.log(`  anchor dots: ${anchorCount}`);
-console.log(`  total:       ${dots.length}`);
+console.log(`  grid dots:    ${gridCount}`);
+console.log(`  anchor dots:  ${anchorCount}`);
+console.log(`  total:        ${dots.length}`);
+console.log(
+  `  multi-country: ${multiCountry.length} (${(
+    (multiCountry.length / dots.length) *
+    100
+  ).toFixed(1)}%)`
+);
 if (anchorsMergedFor.length) {
   console.log(
     `  merged into existing cell (no extra dot): ${anchorsMergedFor.join(", ")}`
