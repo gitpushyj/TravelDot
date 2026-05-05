@@ -103,17 +103,55 @@ function isLand(lng, lat) {
   return false;
 }
 
+// 본국과 정치적으로 동일한 해외 영토는 본국 코드로 통합한다.
+// 자치권이 강하거나 별개의 정치적 실체로 취급되는 곳(GL, FO, AX, AW, CK,
+// NU, JE 등)은 그대로 둔다.
+const TERRITORY_OVERRIDES = {
+  // France
+  TF: { code: "FR", name: "France" },
+  PF: { code: "FR", name: "France" },
+  NC: { code: "FR", name: "France" },
+  WF: { code: "FR", name: "France" },
+  PM: { code: "FR", name: "France" },
+  // United Kingdom
+  AI: { code: "GB", name: "United Kingdom" },
+  BM: { code: "GB", name: "United Kingdom" },
+  IO: { code: "GB", name: "United Kingdom" },
+  VG: { code: "GB", name: "United Kingdom" },
+  FK: { code: "GB", name: "United Kingdom" },
+  GS: { code: "GB", name: "United Kingdom" },
+  MS: { code: "GB", name: "United Kingdom" },
+  PN: { code: "GB", name: "United Kingdom" },
+  SH: { code: "GB", name: "United Kingdom" },
+  TC: { code: "GB", name: "United Kingdom" },
+  // United States
+  AS: { code: "US", name: "United States of America" },
+  GU: { code: "US", name: "United States of America" },
+  MP: { code: "US", name: "United States of America" },
+  PR: { code: "US", name: "United States of America" },
+  VI: { code: "US", name: "United States of America" },
+  // Australia
+  NF: { code: "AU", name: "Australia" },
+  HM: { code: "AU", name: "Australia" },
+};
+
+function applyOverride(code, name) {
+  const o = TERRITORY_OVERRIDES[code];
+  return o ? { code: o.code, name: o.name } : { code, name };
+}
+
 // Cache country bboxes / codes for fast lookup during pass 1.
 const countryBoxes = (countries?.features || []).map((f) => {
   const props = f.properties || {};
   let code;
   if (props.ISO_A2_EH && props.ISO_A2_EH !== "-99") code = props.ISO_A2_EH;
   else if (props.ISO_A2 && props.ISO_A2 !== "-99") code = props.ISO_A2;
+  const mapped = code ? applyOverride(code, props.NAME) : { code, name: props.NAME };
   return {
     feature: f,
     bbox: bboxOfFeature(f),
-    code,
-    name: props.NAME,
+    code: mapped.code,
+    name: mapped.name,
   };
 });
 
@@ -260,14 +298,17 @@ if (countries) {
       continue;
     }
 
-    const code =
+    const rawCode =
       props.ISO_A2_EH && props.ISO_A2_EH !== "-99"
         ? props.ISO_A2_EH
         : props.ISO_A2 || undefined;
+    const mapped = rawCode
+      ? applyOverride(rawCode, props.NAME)
+      : { code: undefined, name: props.NAME };
 
     const cs = findCountriesInCell(snapped.lat, snapped.lng, gridSize);
-    if (code && !cs.some((c) => c.code === code)) {
-      cs.unshift({ code, name: props.NAME });
+    if (mapped.code && !cs.some((c) => c.code === mapped.code)) {
+      cs.unshift({ code: mapped.code, name: mapped.name });
     }
 
     dots.push({
@@ -275,8 +316,8 @@ if (countries) {
       lat: +snapped.lat.toFixed(2),
       lng: +snapped.lng.toFixed(2),
       kind: "anchor",
-      country: code,
-      name: props.NAME,
+      country: mapped.code,
+      name: mapped.name,
       countries: cs.length > 1 ? cs : undefined,
     });
     occupied.add(key);
