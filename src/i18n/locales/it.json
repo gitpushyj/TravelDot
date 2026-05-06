@@ -1,0 +1,113 @@
+{
+  "common": {
+    "ok": "OK",
+    "cancel": "Annulla",
+    "close": "Chiudi",
+    "confirm": "Conferma",
+    "save": "Salva",
+    "delete": "Elimina",
+    "back": "Indietro"
+  },
+  "home": {
+    "all": "Tutto",
+    "yearPicker": "Anno ▾",
+    "yearPickerSelected": "{{year}} ▾",
+    "syncing": "Scansione foto · {{processed}} elaborate",
+    "homeBadge": "Paese di residenza",
+    "visitedDays": "{{days}} giorni di permanenza",
+    "isHome": "Paese di residenza",
+    "statTitle": "Paesi visitati",
+    "nextMilestone": "Prossimo traguardo",
+    "milestoneCountries": "{{count}} paesi",
+    "milestoneRemaining": "ne mancano {{count}}",
+    "recentTitle": "Viaggi recenti",
+    "viewAll": "Vedi tutto →",
+    "viewAllCountries": "Tutti i paesi",
+    "tripRecent": "Recente",
+    "tripDuration": "{{y}} · {{m}} · {{d}} · viaggio di {{days}} giorni",
+    "emptyTrips": "Nessun viaggio registrato finora. Scansiona le foto o aggiungine uno manualmente.",
+    "yearPickerEmptyTitle": "Scegli l'anno",
+    "yearPickerEmptyBody": "Non sono ancora stati registrati viaggi.",
+    "countriesUnit": "paesi",
+    "daysUnit": "giorni"
+  },
+  "scan": {
+    "completedTitle": "Scansione foto completata",
+    "errorTitle": "Impossibile analizzare le foto",
+    "errorBody": "Si è verificato un problema durante il caricamento delle foto.\nProva a ripetere la scansione dalle Impostazioni tra poco.",
+    "permissionDeniedTitle": "Accesso alle foto necessario",
+    "permissionDeniedBody": "Per trovare i tuoi viaggi serve l'accesso alle foto.\nConcedi l'autorizzazione nelle Impostazioni.",
+    "addedBody": "Esaminate {{scanned}} foto\ne aggiunte {{added}} nuove ai tuoi viaggi.",
+    "limitedSuffixAdded": "\n\nAl momento abbiamo accesso solo a una parte delle foto.\nConcedi l'accesso completo per trovare più viaggi.",
+    "noNewBody": "Tutte le foto sono già state esaminate.\nNessun nuovo viaggio aggiunto.",
+    "limitedSuffixNoNew": "\n\nConcedi l'accesso completo alle foto\nper recuperare i viaggi che potrebbero essere sfuggiti.",
+    "noPhotosLimited": "Nessuna foto disponibile per l'esame.\nConcedi l'accesso completo alle foto.",
+    "noPhotos": "Nessuna foto da esaminare.",
+    "suspectFound": "\n\nTrovato/i {{count}} viaggio/i con foto provenienti solo da un altro dispositivo.\nSe sono foto ricevute da amici, rimuovile dai registri.",
+    "reviewAction": "Verifica ora",
+    "scanFailed": "Scansione non riuscita"
+  },
+  "homeCleanup": {
+    "title": "Pulizia automatica del paese di residenza",
+    "body": "Il tuo paese di residenza ({{country}}) ora è escluso dall'aggiunta automatica.\nSono stati eliminati {{days}} giorni e {{photos}} foto aggiunte in automatico.\n\nLe foto scattate nel paese di residenza si possono comunque aggiungere manualmente da Menu > « Aggiungi viaggio » selezionando le date desiderate."
+  },
+  "badges": {
+    "newSingleTitle": "Hai ottenuto un nuovo badge!",
+    "newMultipleTitle": "Hai ottenuto {{count}} nuovi badge!",
+    "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nScegli il badge da Impostazioni > Titoli per mostrarlo nella schermata principale.",
+    "newMultipleBody": "{{list}}\n\nScegline uno da Impostazioni > Titoli per mostrarlo nella schermata principale."
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "section": {
+      "account": "Account",
+      "home": "Paese di residenza",
+      "trips": "Storico viaggi",
+      "title": "Titolo",
+      "theme": "Tema",
+      "language": "Lingua"
+    },
+    "account": {
+      "google": "Account Google",
+      "googleSub": "Accesso effettuato con Google",
+      "signOut": "Esci",
+      "signOutSub": "Esci da questo dispositivo",
+      "signOutConfirmTitle": "Esci",
+      "signOutConfirmBody": "Vuoi uscire?",
+      "signOutFailed": "Uscita non riuscita"
+    },
+    "home": {
+      "current": "Paese di residenza attuale",
+      "notSet": "Non impostato",
+      "change": "Cambia paese di residenza",
+      "changeSub": "Cancella tutti i registri e riesegue la scansione delle foto · Solo una volta",
+      "changeConfirmTitle": "Cambia paese di residenza",
+      "changeConfirmBody": "Tutti i dati di viaggio registrati verranno eliminati e le foto del dispositivo saranno scansionate di nuovo, come la prima volta che hai scelto il tuo paese di residenza.\n\nQuesta funzione può essere usata una sola volta nell'app. Continuare?"
+    },
+    "trips": {
+      "addManually": "Aggiungi viaggio",
+      "addManuallySub": "Inserisci paese e date manualmente",
+      "scanIncremental": "Aggiungi automaticamente le nuove foto",
+      "scanIncrementalSub": "Elabora velocemente solo le foto successive all'ultima scansione",
+      "scanFull": "Riesegui la scansione delle foto",
+      "scanFullSub": "Riesamina l'intera libreria e aggiorna i registri",
+      "review": "Verifica viaggi ({{count}})",
+      "reviewSub": "Viaggi con sole foto di un altro dispositivo — conferma se sono tuoi"
+    },
+    "title": {
+      "label": "Titolo",
+      "preview": "{{emoji}} {{title}}",
+      "previewAuto": "{{emoji}} {{title}} · Auto",
+      "none": "Nessun titolo"
+    },
+    "theme": {
+      "system": "Sistema",
+      "light": "Chiaro",
+      "dark": "Scuro"
+    },
+    "language": {
+      "label": "Lingua",
+      "current": "Attuale: {{name}}"
+    }
+  }
+}

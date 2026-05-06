@@ -1,0 +1,113 @@
+{
+  "common": {
+    "ok": "OK",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "back": "Zurück"
+  },
+  "home": {
+    "all": "Alles",
+    "yearPicker": "Jahr ▾",
+    "yearPickerSelected": "{{year}} ▾",
+    "syncing": "Fotos werden gescannt · {{processed}} verarbeitet",
+    "homeBadge": "Heimatland",
+    "visitedDays": "{{days}} Tage besucht",
+    "isHome": "Heimatland",
+    "statTitle": "Besuchte Länder",
+    "nextMilestone": "Nächster Meilenstein",
+    "milestoneCountries": "{{count}} Länder",
+    "milestoneRemaining": "noch {{count}}",
+    "recentTitle": "Letzte Reisen",
+    "viewAll": "Alle anzeigen →",
+    "viewAllCountries": "Alle Länder",
+    "tripRecent": "Neueste",
+    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}}-tägige Reise",
+    "emptyTrips": "Noch keine Reisen erfasst. Scanne deine Fotos oder füge eine manuell hinzu.",
+    "yearPickerEmptyTitle": "Jahr auswählen",
+    "yearPickerEmptyBody": "Es wurden noch keine Reisen erfasst.",
+    "countriesUnit": "Länder",
+    "daysUnit": "Tage"
+  },
+  "scan": {
+    "completedTitle": "Foto-Scan abgeschlossen",
+    "errorTitle": "Fotos konnten nicht gescannt werden",
+    "errorBody": "Beim Laden deiner Fotos ist ein Fehler aufgetreten.\nBitte versuche den Scan später erneut über die Einstellungen.",
+    "permissionDeniedTitle": "Foto-Zugriff erforderlich",
+    "permissionDeniedBody": "Wir brauchen Zugriff auf deine Fotos, um deine Reisen zu finden.\nBitte erlaube den Foto-Zugriff in den Einstellungen.",
+    "addedBody": "{{scanned}} Fotos durchgesehen\nund {{added}} neue zu deinen Reisen hinzugefügt.",
+    "limitedSuffixAdded": "\n\nDerzeit ist nur Zugriff auf einen Teil der Fotos möglich.\nMit vollem Zugriff lassen sich mehr Reisen finden.",
+    "noNewBody": "Alle Fotos wurden bereits geprüft.\nKeine neuen Reisen hinzugefügt.",
+    "limitedSuffixNoNew": "\n\nMit vollem Foto-Zugriff finden wir\nmöglicherweise verpasste Reisen.",
+    "noPhotosLimited": "Keine Fotos zum Prüfen verfügbar.\nBitte erlaube vollen Foto-Zugriff.",
+    "noPhotos": "Keine Fotos zum Prüfen vorhanden.",
+    "suspectFound": "\n\n{{count}} Reise(n) mit Fotos nur von einem anderen Gerät gefunden.\nFalls sie von Freunden stammen, entferne sie bitte aus deinen Aufzeichnungen.",
+    "reviewAction": "Jetzt prüfen",
+    "scanFailed": "Scan fehlgeschlagen"
+  },
+  "homeCleanup": {
+    "title": "Heimatland: automatische Bereinigung",
+    "body": "Dein Heimatland ({{country}}) wird ab jetzt nicht mehr automatisch erfasst.\n{{days}} Tage und {{photos}} Fotos, die automatisch hinzugefügt worden waren, wurden bereinigt.\n\nFotos aus dem Heimatland kannst du weiterhin manuell über Menü > „Reise hinzufügen\" mit konkreten Daten eintragen."
+  },
+  "badges": {
+    "newSingleTitle": "Du hast ein neues Abzeichen erhalten!",
+    "newMultipleTitle": "Du hast {{count}} neue Abzeichen erhalten!",
+    "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nWähle es unter Einstellungen > Titel aus, um es auf dem Startbildschirm anzuzeigen.",
+    "newMultipleBody": "{{list}}\n\nWähle eines unter Einstellungen > Titel aus, um es auf dem Startbildschirm anzuzeigen."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "section": {
+      "account": "Konto",
+      "home": "Heimatland",
+      "trips": "Reiseverlauf",
+      "title": "Titel",
+      "theme": "Design",
+      "language": "Sprache"
+    },
+    "account": {
+      "google": "Google-Konto",
+      "googleSub": "Mit Google angemeldet",
+      "signOut": "Abmelden",
+      "signOutSub": "Auf diesem Gerät abmelden",
+      "signOutConfirmTitle": "Abmelden",
+      "signOutConfirmBody": "Möchtest du dich abmelden?",
+      "signOutFailed": "Abmelden fehlgeschlagen"
+    },
+    "home": {
+      "current": "Aktuelles Heimatland",
+      "notSet": "Nicht festgelegt",
+      "change": "Heimatland ändern",
+      "changeSub": "Löscht alle Aufzeichnungen und scannt Fotos erneut · Nur einmal möglich",
+      "changeConfirmTitle": "Heimatland ändern",
+      "changeConfirmBody": "Alle erfassten Reisedaten werden gelöscht und die Fotos auf dem Gerät erneut gescannt — wie bei der ersten Auswahl deines Heimatlands.\n\nDiese Funktion kann pro App nur einmal verwendet werden. Fortfahren?"
+    },
+    "trips": {
+      "addManually": "Reise hinzufügen",
+      "addManuallySub": "Land und Daten manuell eingeben",
+      "scanIncremental": "Neue Fotos automatisch hinzufügen",
+      "scanIncrementalSub": "Verarbeitet schnell nur Fotos seit dem letzten Scan",
+      "scanFull": "Fotos erneut scannen",
+      "scanFullSub": "Gesamte Bibliothek erneut prüfen und aktualisieren",
+      "review": "Reisen prüfen ({{count}})",
+      "reviewSub": "Reisen nur mit Fotos von einem anderen Gerät — bestätige, ob sie deine sind"
+    },
+    "title": {
+      "label": "Titel",
+      "preview": "{{emoji}} {{title}}",
+      "previewAuto": "{{emoji}} {{title}} · Auto",
+      "none": "Kein Titel"
+    },
+    "theme": {
+      "system": "System",
+      "light": "Hell",
+      "dark": "Dunkel"
+    },
+    "language": {
+      "label": "Sprache",
+      "current": "Aktuell: {{name}}"
+    }
+  }
+}

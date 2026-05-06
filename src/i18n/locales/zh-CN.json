@@ -1,0 +1,113 @@
+{
+  "common": {
+    "ok": "确定",
+    "cancel": "取消",
+    "close": "关闭",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "back": "返回"
+  },
+  "home": {
+    "all": "全部",
+    "yearPicker": "年份 ▾",
+    "yearPickerSelected": "{{year}}年 ▾",
+    "syncing": "正在扫描照片 · 已处理 {{processed}} 张",
+    "homeBadge": "本国",
+    "visitedDays": "停留 {{days}} 天",
+    "isHome": "本国",
+    "statTitle": "去过的国家",
+    "nextMilestone": "下一个里程碑",
+    "milestoneCountries": "{{count}} 国",
+    "milestoneRemaining": "还差 {{count}}",
+    "recentTitle": "最近的旅行",
+    "viewAll": "查看全部 →",
+    "viewAllCountries": "所有国家",
+    "tripRecent": "最近",
+    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}} 天行程",
+    "emptyTrips": "还没有旅行记录。可以扫描照片或手动添加。",
+    "yearPickerEmptyTitle": "选择年份",
+    "yearPickerEmptyBody": "尚未记录任何旅行。",
+    "countriesUnit": "国",
+    "daysUnit": "天"
+  },
+  "scan": {
+    "completedTitle": "照片扫描完成",
+    "errorTitle": "无法扫描照片",
+    "errorBody": "加载照片时出现问题。\n请稍后到「设置」中重新扫描。",
+    "permissionDeniedTitle": "需要照片访问权限",
+    "permissionDeniedBody": "为了找出您的旅行记录,需要访问您的照片。\n请在设置中允许照片访问权限。",
+    "addedBody": "已查看 {{scanned}} 张照片,\n并向旅行记录中新增了 {{added}} 张。",
+    "limitedSuffixAdded": "\n\n目前仅可访问部分照片。\n开放完整访问权限可发现更多旅行。",
+    "noNewBody": "所有照片都已检查完毕。\n没有新增的旅行记录。",
+    "limitedSuffixNoNew": "\n\n开放完整照片访问权限,\n即可发现可能遗漏的旅行。",
+    "noPhotosLimited": "暂无可查看的照片。\n请开放完整照片访问权限。",
+    "noPhotos": "没有可查看的照片。",
+    "suspectFound": "\n\n发现 {{count}} 段仅由其他设备拍摄的照片组成的旅行。\n如果是朋友发来的照片,请从记录中移除。",
+    "reviewAction": "前往确认",
+    "scanFailed": "扫描失败"
+  },
+  "homeCleanup": {
+    "title": "本国自动记录清理",
+    "body": "本国({{country}})将不再纳入自动添加范围。\n已清理之前自动添加的 {{days}} 天 / {{photos}} 张照片。\n\n在本国拍摄的照片仍可通过菜单 >「添加旅行」选择具体日期手动添加。"
+  },
+  "badges": {
+    "newSingleTitle": "获得了一枚新徽章!",
+    "newMultipleTitle": "获得了 {{count}} 枚新徽章!",
+    "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n可在「设置 > 称号」中选择并显示在主页。",
+    "newMultipleBody": "{{list}}\n\n可在「设置 > 称号」中选择并显示在主页。"
+  },
+  "settings": {
+    "title": "设置",
+    "section": {
+      "account": "账户",
+      "home": "本国",
+      "trips": "旅行记录",
+      "title": "称号",
+      "theme": "主题",
+      "language": "语言"
+    },
+    "account": {
+      "google": "Google 账户",
+      "googleSub": "已使用 Google 登录",
+      "signOut": "退出登录",
+      "signOutSub": "从此设备退出登录",
+      "signOutConfirmTitle": "退出登录",
+      "signOutConfirmBody": "确定要退出登录吗?",
+      "signOutFailed": "退出登录失败"
+    },
+    "home": {
+      "current": "当前本国",
+      "notSet": "未设置",
+      "change": "更改本国",
+      "changeSub": "将清空所有记录并重新扫描照片 · 仅限一次",
+      "changeConfirmTitle": "更改本国",
+      "changeConfirmBody": "所有已记录的旅行数据将被删除,并像首次设置本国时一样重新扫描设备中的照片。\n\n此功能在本应用中仅可使用一次。是否继续?"
+    },
+    "trips": {
+      "addManually": "添加旅行",
+      "addManuallySub": "手动输入国家和日期",
+      "scanIncremental": "自动添加新照片",
+      "scanIncrementalSub": "仅快速处理上次扫描之后的照片",
+      "scanFull": "重新扫描照片",
+      "scanFullSub": "重新检查所有照片并刷新记录",
+      "review": "确认旅行 ({{count}})",
+      "reviewSub": "仅由其他设备照片组成的旅行 — 请确认是否为本人旅行"
+    },
+    "title": {
+      "label": "称号",
+      "preview": "{{emoji}} {{title}}",
+      "previewAuto": "{{emoji}} {{title}} · 自动",
+      "none": "暂无称号"
+    },
+    "theme": {
+      "system": "跟随系统",
+      "light": "浅色",
+      "dark": "深色"
+    },
+    "language": {
+      "label": "语言",
+      "current": "当前:{{name}}"
+    }
+  }
+}

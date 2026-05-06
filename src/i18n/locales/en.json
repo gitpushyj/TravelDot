@@ -1,0 +1,113 @@
+{
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "back": "Back"
+  },
+  "home": {
+    "all": "All",
+    "yearPicker": "Year ▾",
+    "yearPickerSelected": "{{year}} ▾",
+    "syncing": "Scanning photos · {{processed}} processed",
+    "homeBadge": "Home",
+    "visitedDays": "{{days}} days visited",
+    "isHome": "Home",
+    "statTitle": "Countries Visited",
+    "nextMilestone": "Next milestone",
+    "milestoneCountries": "{{count}} countries",
+    "milestoneRemaining": "{{count}} to go",
+    "recentTitle": "Recent Trips",
+    "viewAll": "View all →",
+    "viewAllCountries": "All Countries",
+    "tripRecent": "Latest",
+    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}}-day trip",
+    "emptyTrips": "No trips yet. Scan your photos or add one manually.",
+    "yearPickerEmptyTitle": "Select Year",
+    "yearPickerEmptyBody": "No trips have been recorded yet.",
+    "countriesUnit": "countries",
+    "daysUnit": "days"
+  },
+  "scan": {
+    "completedTitle": "Photo scan complete",
+    "errorTitle": "Couldn't scan photos",
+    "errorBody": "Something went wrong while loading your photos.\nPlease try scanning again from Settings.",
+    "permissionDeniedTitle": "Photo access needed",
+    "permissionDeniedBody": "We need access to your photos to find your trips.\nPlease allow photo access in Settings.",
+    "addedBody": "Reviewed {{scanned}} photos\nand added {{added}} new ones to your trips.",
+    "limitedSuffixAdded": "\n\nWe currently have access to only some photos.\nGrant full access to find more trips.",
+    "noNewBody": "All photos already reviewed.\nNo new trips were added.",
+    "limitedSuffixNoNew": "\n\nGrant full photo access to find\ntrips you might have missed.",
+    "noPhotosLimited": "No photos available to review.\nPlease grant full photo access.",
+    "noPhotos": "No photos to review.",
+    "suspectFound": "\n\nFound {{count}} trip(s) that only have photos from another device.\nIf they were sent to you by friends, please remove them.",
+    "reviewAction": "Review now",
+    "scanFailed": "Scan failed"
+  },
+  "homeCleanup": {
+    "title": "Home country cleanup",
+    "body": "Your home country ({{country}}) is now excluded from automatic tracking.\nWe cleaned up {{days}} days and {{photos}} photos that had been auto-added.\n\nFor home-country photos, you can still add specific dates manually from Menu > \"Add Trip\"."
+  },
+  "badges": {
+    "newSingleTitle": "You earned a new badge!",
+    "newMultipleTitle": "You earned {{count}} new badges!",
+    "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nChoose it from Settings > Titles to display on your home screen.",
+    "newMultipleBody": "{{list}}\n\nChoose one from Settings > Titles to display on your home screen."
+  },
+  "settings": {
+    "title": "Settings",
+    "section": {
+      "account": "Account",
+      "home": "Home Country",
+      "trips": "Trip Records",
+      "title": "Title",
+      "theme": "Theme",
+      "language": "Language"
+    },
+    "account": {
+      "google": "Google Account",
+      "googleSub": "Signed in with Google",
+      "signOut": "Sign out",
+      "signOutSub": "Sign out from this device",
+      "signOutConfirmTitle": "Sign out",
+      "signOutConfirmBody": "Sign out of your account?",
+      "signOutFailed": "Sign-out failed"
+    },
+    "home": {
+      "current": "Current home country",
+      "notSet": "Not set",
+      "change": "Change home country",
+      "changeSub": "Erases all records and rescans your photos · One-time only",
+      "changeConfirmTitle": "Change home country",
+      "changeConfirmBody": "All your travel records will be deleted and your photos will be rescanned, just like the first time you set your home country.\n\nThis can only be done once. Continue?"
+    },
+    "trips": {
+      "addManually": "Add trip",
+      "addManuallySub": "Enter the country and dates manually",
+      "scanIncremental": "Auto-add new photos",
+      "scanIncrementalSub": "Quickly process photos taken since the last scan",
+      "scanFull": "Rescan all photos",
+      "scanFullSub": "Re-examine your entire library and refresh records",
+      "review": "Review trips ({{count}})",
+      "reviewSub": "Trips with only other-device photos — confirm they're yours"
+    },
+    "title": {
+      "label": "Title",
+      "preview": "{{emoji}} {{title}}",
+      "previewAuto": "{{emoji}} {{title}} · Auto",
+      "none": "No title"
+    },
+    "theme": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "language": {
+      "label": "Language",
+      "current": "Current: {{name}}"
+    }
+  }
+}

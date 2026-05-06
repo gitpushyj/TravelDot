@@ -1,0 +1,113 @@
+{
+  "common": {
+    "ok": "OK",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "back": "Retour"
+  },
+  "home": {
+    "all": "Tout",
+    "yearPicker": "Année ▾",
+    "yearPickerSelected": "{{year}} ▾",
+    "syncing": "Analyse des photos · {{processed}} traitées",
+    "homeBadge": "Pays d'origine",
+    "visitedDays": "{{days}} jours sur place",
+    "isHome": "Pays d'origine",
+    "statTitle": "Pays visités",
+    "nextMilestone": "Prochain palier",
+    "milestoneCountries": "{{count}} pays",
+    "milestoneRemaining": "il reste {{count}}",
+    "recentTitle": "Voyages récents",
+    "viewAll": "Tout voir →",
+    "viewAllCountries": "Tous les pays",
+    "tripRecent": "Récent",
+    "tripDuration": "{{y}} · {{m}} · {{d}} · voyage de {{days}} jours",
+    "emptyTrips": "Aucun voyage enregistré pour le moment. Lance une analyse de photos ou ajoute-en un manuellement.",
+    "yearPickerEmptyTitle": "Choisir l'année",
+    "yearPickerEmptyBody": "Aucun voyage n'a encore été enregistré.",
+    "countriesUnit": "pays",
+    "daysUnit": "jours"
+  },
+  "scan": {
+    "completedTitle": "Analyse des photos terminée",
+    "errorTitle": "Impossible d'analyser les photos",
+    "errorBody": "Un problème est survenu lors du chargement de tes photos.\nRéessaie l'analyse depuis les Réglages dans un instant.",
+    "permissionDeniedTitle": "Accès aux photos requis",
+    "permissionDeniedBody": "Nous avons besoin d'accéder à tes photos pour retrouver tes voyages.\nAutorise l'accès aux photos dans les Réglages.",
+    "addedBody": "{{scanned}} photos passées en revue\net {{added}} nouvelles ajoutées à tes voyages.",
+    "limitedSuffixAdded": "\n\nNous n'avons accès qu'à une partie de tes photos.\nAccorde l'accès complet pour découvrir plus de voyages.",
+    "noNewBody": "Toutes les photos ont déjà été examinées.\nAucun nouveau voyage ajouté.",
+    "limitedSuffixNoNew": "\n\nAccorde un accès complet aux photos\npour retrouver les voyages oubliés.",
+    "noPhotosLimited": "Aucune photo à examiner.\nMerci d'accorder l'accès complet aux photos.",
+    "noPhotos": "Aucune photo à examiner.",
+    "suspectFound": "\n\n{{count}} voyage(s) ne contient/contiennent que des photos d'un autre appareil.\nS'il s'agit de photos reçues d'amis, retire-les des enregistrements.",
+    "reviewAction": "Vérifier",
+    "scanFailed": "Échec de l'analyse"
+  },
+  "homeCleanup": {
+    "title": "Nettoyage automatique du pays d'origine",
+    "body": "Ton pays d'origine ({{country}}) est désormais exclu de l'ajout automatique.\nNous avons nettoyé {{days}} jours et {{photos}} photos qui avaient été ajoutés automatiquement.\n\nLes photos prises dans ton pays d'origine peuvent toujours être ajoutées manuellement avec des dates précises depuis Menu > « Ajouter un voyage »."
+  },
+  "badges": {
+    "newSingleTitle": "Nouveau badge débloqué !",
+    "newMultipleTitle": "{{count}} nouveaux badges débloqués !",
+    "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nChoisis-le dans Réglages > Titres pour l'afficher sur l'écran d'accueil.",
+    "newMultipleBody": "{{list}}\n\nChoisis-en un dans Réglages > Titres pour l'afficher sur l'écran d'accueil."
+  },
+  "settings": {
+    "title": "Réglages",
+    "section": {
+      "account": "Compte",
+      "home": "Pays d'origine",
+      "trips": "Historique des voyages",
+      "title": "Titre",
+      "theme": "Thème",
+      "language": "Langue"
+    },
+    "account": {
+      "google": "Compte Google",
+      "googleSub": "Connecté avec Google",
+      "signOut": "Se déconnecter",
+      "signOutSub": "Se déconnecter de cet appareil",
+      "signOutConfirmTitle": "Se déconnecter",
+      "signOutConfirmBody": "Veux-tu te déconnecter ?",
+      "signOutFailed": "Échec de la déconnexion"
+    },
+    "home": {
+      "current": "Pays d'origine actuel",
+      "notSet": "Non défini",
+      "change": "Changer de pays d'origine",
+      "changeSub": "Efface tous les enregistrements et relance l'analyse des photos · Une seule fois",
+      "changeConfirmTitle": "Changer de pays d'origine",
+      "changeConfirmBody": "Toutes les données de voyage enregistrées seront supprimées et les photos de l'appareil seront analysées à nouveau, comme lors du choix initial de ton pays d'origine.\n\nCette action ne peut être effectuée qu'une seule fois dans l'app. Continuer ?"
+    },
+    "trips": {
+      "addManually": "Ajouter un voyage",
+      "addManuallySub": "Saisis le pays et les dates manuellement",
+      "scanIncremental": "Ajouter automatiquement les nouvelles photos",
+      "scanIncrementalSub": "Traite rapidement uniquement les photos prises depuis la dernière analyse",
+      "scanFull": "Réanalyser les photos",
+      "scanFullSub": "Réexamine toute la bibliothèque et met à jour les enregistrements",
+      "review": "Vérifier les voyages ({{count}})",
+      "reviewSub": "Voyages avec uniquement des photos d'un autre appareil — confirme qu'ils sont à toi"
+    },
+    "title": {
+      "label": "Titre",
+      "preview": "{{emoji}} {{title}}",
+      "previewAuto": "{{emoji}} {{title}} · Auto",
+      "none": "Pas de titre"
+    },
+    "theme": {
+      "system": "Système",
+      "light": "Clair",
+      "dark": "Sombre"
+    },
+    "language": {
+      "label": "Langue",
+      "current": "Actuelle : {{name}}"
+    }
+  }
+}

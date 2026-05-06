@@ -1,0 +1,113 @@
+{
+  "common": {
+    "ok": "OK",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "confirm": "確認",
+    "save": "保存",
+    "delete": "削除",
+    "back": "戻る"
+  },
+  "home": {
+    "all": "全期間",
+    "yearPicker": "年 ▾",
+    "yearPickerSelected": "{{year}}年 ▾",
+    "syncing": "写真をスキャン中・{{processed}}枚処理済み",
+    "homeBadge": "母国",
+    "visitedDays": "{{days}}日間滞在",
+    "isHome": "母国",
+    "statTitle": "訪問国",
+    "nextMilestone": "次のマイルストーン",
+    "milestoneCountries": "{{count}}カ国",
+    "milestoneRemaining": "あと{{count}}",
+    "recentTitle": "最近の旅",
+    "viewAll": "すべて見る →",
+    "viewAllCountries": "すべての国を見る",
+    "tripRecent": "最新",
+    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}}日間の旅",
+    "emptyTrips": "まだ旅の記録がありません。写真をスキャンするか、手動で追加してみましょう。",
+    "yearPickerEmptyTitle": "年の選択",
+    "yearPickerEmptyBody": "まだ記録された旅がありません。",
+    "countriesUnit": "カ国",
+    "daysUnit": "日"
+  },
+  "scan": {
+    "completedTitle": "写真の確認が終わりました",
+    "errorTitle": "写真を確認できませんでした",
+    "errorBody": "写真の読み込み中に問題が発生しました。\n少し時間をおいて、設定から再度スキャンしてください。",
+    "permissionDeniedTitle": "写真へのアクセス許可が必要です",
+    "permissionDeniedBody": "旅の記録を見つけるには、写真へのアクセス許可が必要です。\n設定から写真の権限を許可してください。",
+    "addedBody": "{{scanned}}枚の写真を確認し、\n旅の記録に{{added}}枚を新しく追加しました。",
+    "limitedSuffixAdded": "\n\n現在、一部の写真にしかアクセスできません。\nすべての写真へのアクセスを許可すると、もっと多くの旅が見つかります。",
+    "noNewBody": "すべての写真は確認済みです。\n新しい旅の記録は追加されませんでした。",
+    "limitedSuffixNoNew": "\n\nすべての写真へのアクセスを許可すると、\n見逃していた旅も見つけられます。",
+    "noPhotosLimited": "確認できる写真がありません。\nすべての写真へのアクセスを許可してください。",
+    "noPhotos": "確認できる写真がありません。",
+    "suspectFound": "\n\n他の端末で撮影された写真しかない旅を{{count}}件見つけました。\n友人から受け取った写真であれば、記録から除外してください。",
+    "reviewAction": "確認しに行く",
+    "scanFailed": "スキャン失敗"
+  },
+  "homeCleanup": {
+    "title": "母国の自動記録を整理",
+    "body": "母国（{{country}}）は今後、自動追加の対象から除外されます。\n自動で追加されていた{{days}}日 / 写真{{photos}}枚を整理しました。\n\n母国で撮った写真は、メニュー >「旅を追加」から日付を指定して手動で追加できます。"
+  },
+  "badges": {
+    "newSingleTitle": "新しいバッジを獲得！",
+    "newMultipleTitle": "新しいバッジを{{count}}個獲得！",
+    "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n設定 > 称号から選んでホーム画面に表示できます。",
+    "newMultipleBody": "{{list}}\n\n設定 > 称号から選んでホーム画面に表示できます。"
+  },
+  "settings": {
+    "title": "設定",
+    "section": {
+      "account": "アカウント",
+      "home": "母国",
+      "trips": "旅の記録",
+      "title": "称号",
+      "theme": "テーマ",
+      "language": "言語"
+    },
+    "account": {
+      "google": "Googleアカウント",
+      "googleSub": "Googleでサインイン中",
+      "signOut": "ログアウト",
+      "signOutSub": "この端末からログアウトします",
+      "signOutConfirmTitle": "ログアウト",
+      "signOutConfirmBody": "ログアウトしますか？",
+      "signOutFailed": "ログアウトに失敗しました"
+    },
+    "home": {
+      "current": "現在の母国",
+      "notSet": "未設定",
+      "change": "母国を変更",
+      "changeSub": "記録をすべて削除して写真を再スキャンします・1回限り",
+      "changeConfirmTitle": "母国を変更",
+      "changeConfirmBody": "記録された旅のデータがすべて削除され、最初に母国を選んだときと同じように端末の写真を再スキャンします。\n\nこの機能はアプリで一度しか使えません。続けますか？"
+    },
+    "trips": {
+      "addManually": "旅を追加",
+      "addManuallySub": "国と日付を直接入力して追加",
+      "scanIncremental": "新しい写真を自動追加",
+      "scanIncrementalSub": "前回のスキャン以降の写真だけを素早く処理",
+      "scanFull": "写真を再スキャン",
+      "scanFullSub": "すべての写真を再確認して記録を更新",
+      "review": "旅を確認 ({{count}})",
+      "reviewSub": "他の端末の写真しかない旅 — 自分の旅か確認"
+    },
+    "title": {
+      "label": "称号",
+      "preview": "{{emoji}} {{title}}",
+      "previewAuto": "{{emoji}} {{title}} · 自動",
+      "none": "称号なし"
+    },
+    "theme": {
+      "system": "システム",
+      "light": "ライト",
+      "dark": "ダーク"
+    },
+    "language": {
+      "label": "言語",
+      "current": "現在: {{name}}"
+    }
+  }
+}

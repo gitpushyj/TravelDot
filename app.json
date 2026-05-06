@@ -14,7 +14,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.gitpush.visitgrid"
+      "bundleIdentifier": "com.gitpush.visitgrid",
+      "appleTeamId": "27LS459HJ3"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +36,8 @@
         {
           "iosUrlScheme": "com.googleusercontent.apps.106650189331-45ce63ggrs90rtaosjcjjv8orjn95v22"
         }
-      ]
+      ],
+      "expo-localization"
     ]
   }
 }

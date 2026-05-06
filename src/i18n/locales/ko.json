@@ -1,0 +1,113 @@
+{
+  "common": {
+    "ok": "확인",
+    "cancel": "취소",
+    "close": "닫기",
+    "confirm": "확인",
+    "save": "저장",
+    "delete": "삭제",
+    "back": "뒤로"
+  },
+  "home": {
+    "all": "전체",
+    "yearPicker": "연도 ▾",
+    "yearPickerSelected": "{{year}} ▾",
+    "syncing": "사진 스캔 중 · {{processed}}장 처리됨",
+    "homeBadge": "본국",
+    "visitedDays": "{{days}}일 방문",
+    "isHome": "본국",
+    "statTitle": "방문 국가",
+    "nextMilestone": "다음 마일스톤",
+    "milestoneCountries": "{{count}}개국",
+    "milestoneRemaining": "{{count}} 남음",
+    "recentTitle": "최근 방문",
+    "viewAll": "전체보기 →",
+    "viewAllCountries": "모든 나라 보기",
+    "tripRecent": "최근",
+    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}}일 여행",
+    "emptyTrips": "아직 기록된 여행이 없어요. 사진을 스캔하거나 직접 추가해보세요.",
+    "yearPickerEmptyTitle": "연도 선택",
+    "yearPickerEmptyBody": "아직 기록된 여행이 없습니다.",
+    "countriesUnit": "개국",
+    "daysUnit": "일"
+  },
+  "scan": {
+    "completedTitle": "사진 확인이 끝났어요",
+    "errorTitle": "사진을 확인하지 못했어요",
+    "errorBody": "사진을 불러오는 도중 문제가 생겼어요.\n잠시 후 설정에서 다시 스캔해 주세요.",
+    "permissionDeniedTitle": "사진 접근 권한이 필요해요",
+    "permissionDeniedBody": "여행 기록을 찾으려면 사진 접근 권한이 필요해요.\n설정에서 사진 권한을 허용해 주세요.",
+    "addedBody": "사진 {{scanned}}장을 살펴보고\n여행 기록에 {{added}}장을 새로 추가했어요.",
+    "limitedSuffixAdded": "\n\n현재 일부 사진에만 접근할 수 있어요.\n전체 사진을 허용하면 더 많은 여행을 찾아드릴 수 있어요.",
+    "noNewBody": "이미 모든 사진을 확인했어요.\n새로 추가된 여행 기록은 없어요.",
+    "limitedSuffixNoNew": "\n\n전체 사진 접근을 허용하면\n놓친 여행을 더 찾아드릴 수 있어요.",
+    "noPhotosLimited": "확인할 수 있는 사진이 없어요.\n전체 사진 접근을 허용해 주세요.",
+    "noPhotos": "확인할 사진이 없어요.",
+    "suspectFound": "\n\n다른 기기로 찍힌 사진만 있는 여행 {{count}}개를 찾았어요.\n친구한테 받은 사진이라면 기록에서 빼주세요.",
+    "reviewAction": "확인하러 가기",
+    "scanFailed": "스캔 실패"
+  },
+  "homeCleanup": {
+    "title": "본국 자동 기록 정리",
+    "body": "본국({{country}})은 이제 자동 추가에서 제외됩니다.\n이미 자동으로 들어가 있던 {{days}}일 / 사진 {{photos}}장을 정리했어요.\n\n본국에서 찍은 사진은 메뉴 > \"여행 추가\"에서 원하는 날짜만 직접 선택해 추가할 수 있습니다."
+  },
+  "badges": {
+    "newSingleTitle": "새로운 뱃지를 얻었어요!",
+    "newMultipleTitle": "새로운 뱃지 {{count}}개를 얻었어요!",
+    "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.",
+    "newMultipleBody": "{{list}}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요."
+  },
+  "settings": {
+    "title": "설정",
+    "section": {
+      "account": "계정",
+      "home": "본국",
+      "trips": "여행 기록",
+      "title": "호칭",
+      "theme": "테마",
+      "language": "언어"
+    },
+    "account": {
+      "google": "Google 계정",
+      "googleSub": "Google로 로그인됨",
+      "signOut": "로그아웃",
+      "signOutSub": "이 기기에서 로그아웃합니다",
+      "signOutConfirmTitle": "로그아웃",
+      "signOutConfirmBody": "로그아웃하시겠어요?",
+      "signOutFailed": "로그아웃 실패"
+    },
+    "home": {
+      "current": "현재 본국",
+      "notSet": "설정되지 않음",
+      "change": "본국 바꾸기",
+      "changeSub": "기록을 모두 지우고 사진을 다시 스캔합니다 · 1회 한정",
+      "changeConfirmTitle": "본국 바꾸기",
+      "changeConfirmBody": "기록된 모든 여행 데이터가 삭제되고, 처음 본국을 선택했을 때처럼 기기의 이미지를 다시 스캔합니다.\n\n이 기능은 앱에서 한 번만 사용할 수 있어요. 계속하시겠어요?"
+    },
+    "trips": {
+      "addManually": "여행 추가",
+      "addManuallySub": "국가와 날짜를 직접 입력해 추가",
+      "scanIncremental": "새 사진 자동 추가",
+      "scanIncrementalSub": "마지막 스캔 이후의 사진만 빠르게 처리",
+      "scanFull": "사진 재스캔",
+      "scanFullSub": "전체 사진을 다시 훑어 기록을 갱신",
+      "review": "여행 확인하기 ({{count}})",
+      "reviewSub": "다른 기기 사진만 있는 여행 — 본인 여행 맞는지 확인"
+    },
+    "title": {
+      "label": "호칭",
+      "preview": "{{emoji}} {{title}}",
+      "previewAuto": "{{emoji}} {{title}} · 자동",
+      "none": "호칭 없음"
+    },
+    "theme": {
+      "system": "시스템",
+      "light": "라이트",
+      "dark": "다크"
+    },
+    "language": {
+      "label": "언어",
+      "current": "현재: {{name}}"
+    }
+  }
+}

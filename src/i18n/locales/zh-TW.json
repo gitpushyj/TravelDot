@@ -1,0 +1,113 @@
+{
+  "common": {
+    "ok": "確定",
+    "cancel": "取消",
+    "close": "關閉",
+    "confirm": "確認",
+    "save": "儲存",
+    "delete": "刪除",
+    "back": "返回"
+  },
+  "home": {
+    "all": "全部",
+    "yearPicker": "年份 ▾",
+    "yearPickerSelected": "{{year}}年 ▾",
+    "syncing": "正在掃描相片 · 已處理 {{processed}} 張",
+    "homeBadge": "母國",
+    "visitedDays": "停留 {{days}} 天",
+    "isHome": "母國",
+    "statTitle": "造訪國家",
+    "nextMilestone": "下個里程碑",
+    "milestoneCountries": "{{count}} 國",
+    "milestoneRemaining": "還差 {{count}}",
+    "recentTitle": "最近的旅行",
+    "viewAll": "查看全部 →",
+    "viewAllCountries": "所有國家",
+    "tripRecent": "最新",
+    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}} 天旅程",
+    "emptyTrips": "尚未有旅行紀錄。可以掃描相片或手動新增。",
+    "yearPickerEmptyTitle": "選擇年份",
+    "yearPickerEmptyBody": "尚未記錄任何旅行。",
+    "countriesUnit": "國",
+    "daysUnit": "天"
+  },
+  "scan": {
+    "completedTitle": "相片掃描完成",
+    "errorTitle": "無法掃描相片",
+    "errorBody": "載入相片時發生問題。\n請稍後到「設定」重新掃描。",
+    "permissionDeniedTitle": "需要相片存取權限",
+    "permissionDeniedBody": "為了找出您的旅行紀錄,需要存取您的相片。\n請在設定中允許相片存取權限。",
+    "addedBody": "已檢視 {{scanned}} 張相片,\n並將 {{added}} 張新增至旅行紀錄中。",
+    "limitedSuffixAdded": "\n\n目前僅能存取部分相片。\n允許完整存取可找到更多旅行。",
+    "noNewBody": "所有相片都已檢查完畢。\n沒有新增的旅行紀錄。",
+    "limitedSuffixNoNew": "\n\n允許完整相片存取,\n就能找出可能遺漏的旅行。",
+    "noPhotosLimited": "沒有可檢視的相片。\n請允許完整相片存取。",
+    "noPhotos": "沒有可檢視的相片。",
+    "suspectFound": "\n\n找到 {{count}} 段僅由其他裝置相片組成的旅行。\n如果是朋友傳來的相片,請從紀錄中移除。",
+    "reviewAction": "前往確認",
+    "scanFailed": "掃描失敗"
+  },
+  "homeCleanup": {
+    "title": "母國自動紀錄整理",
+    "body": "母國({{country}})將不再納入自動新增。\n已整理先前自動新增的 {{days}} 天 / 相片 {{photos}} 張。\n\n在母國拍攝的相片仍可從選單 >「新增旅行」自選日期手動新增。"
+  },
+  "badges": {
+    "newSingleTitle": "獲得了一枚新徽章!",
+    "newMultipleTitle": "獲得了 {{count}} 枚新徽章!",
+    "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n可在「設定 > 稱號」中選擇並顯示於主畫面。",
+    "newMultipleBody": "{{list}}\n\n可在「設定 > 稱號」中選擇並顯示於主畫面。"
+  },
+  "settings": {
+    "title": "設定",
+    "section": {
+      "account": "帳號",
+      "home": "母國",
+      "trips": "旅行紀錄",
+      "title": "稱號",
+      "theme": "主題",
+      "language": "語言"
+    },
+    "account": {
+      "google": "Google 帳號",
+      "googleSub": "已使用 Google 登入",
+      "signOut": "登出",
+      "signOutSub": "從此裝置登出",
+      "signOutConfirmTitle": "登出",
+      "signOutConfirmBody": "確定要登出嗎?",
+      "signOutFailed": "登出失敗"
+    },
+    "home": {
+      "current": "目前的母國",
+      "notSet": "尚未設定",
+      "change": "變更母國",
+      "changeSub": "會清除所有紀錄並重新掃描相片 · 僅限一次",
+      "changeConfirmTitle": "變更母國",
+      "changeConfirmBody": "所有已記錄的旅行資料將被刪除,並像首次設定母國時那樣重新掃描裝置中的相片。\n\n此功能在本 App 中僅可使用一次。是否繼續?"
+    },
+    "trips": {
+      "addManually": "新增旅行",
+      "addManuallySub": "手動輸入國家與日期",
+      "scanIncremental": "自動新增新相片",
+      "scanIncrementalSub": "僅快速處理上次掃描之後的相片",
+      "scanFull": "重新掃描相片",
+      "scanFullSub": "重新檢視所有相片並更新紀錄",
+      "review": "確認旅行 ({{count}})",
+      "reviewSub": "僅由其他裝置相片組成的旅行 — 請確認是否為本人旅行"
+    },
+    "title": {
+      "label": "稱號",
+      "preview": "{{emoji}} {{title}}",
+      "previewAuto": "{{emoji}} {{title}} · 自動",
+      "none": "尚無稱號"
+    },
+    "theme": {
+      "system": "跟隨系統",
+      "light": "淺色",
+      "dark": "深色"
+    },
+    "language": {
+      "label": "語言",
+      "current": "目前:{{name}}"
+    }
+  }
+}

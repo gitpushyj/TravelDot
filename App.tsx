@@ -16,6 +16,9 @@ import {
   Text,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
+
+import { initI18n } from "./src/i18n";
 import {
   GestureHandlerRootView,
   ScrollView,
@@ -35,6 +38,7 @@ import { useVisitStore } from "./src/features/travel/visitStore";
 import { pickActiveBadge, useBadgeStore } from "./src/features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "./src/features/badges/countryNames";
 import AddTripScreen from "./src/screens/AddTripScreen";
+import AllCountriesScreen from "./src/screens/AllCountriesScreen";
 import CountryDetailScreen from "./src/screens/CountryDetailScreen";
 import EditTripScreen from "./src/screens/EditTripScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
@@ -78,6 +82,7 @@ type RootStackParamList = {
   EditTrip: { trip: RecentTrip };
   History: undefined;
   ReviewSuspect: undefined;
+  AllCountries: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -100,6 +105,8 @@ const useAppCtx = () => {
 };
 
 export default function App() {
+  const [i18nReady, setI18nReady] = useState(false);
+  const { t } = useTranslation();
   const ready = useVisitStore((s) => s.ready);
   const homeCountry = useVisitStore((s) => s.homeCountry);
   const hydrate = useVisitStore((s) => s.hydrate);
@@ -132,6 +139,7 @@ export default function App() {
     void hydrate();
     void themeHydrate();
     void authHydrate();
+    void initI18n().then(() => setI18nReady(true));
   }, [hydrate, themeHydrate, authHydrate]);
 
   useEffect(() => {
@@ -147,52 +155,48 @@ export default function App() {
     if (pendingInitialScan) return;
     const { permission, scanned, added, error } = lastSync;
 
-    let title = "사진 확인이 끝났어요";
+    let title = t("scan.completedTitle");
     let body: string;
 
     if (error) {
-      title = "사진을 확인하지 못했어요";
-      body =
-        "사진을 불러오는 도중 문제가 생겼어요.\n잠시 후 설정에서 다시 스캔해 주세요.";
+      title = t("scan.errorTitle");
+      body = t("scan.errorBody");
     } else if (permission === "denied") {
-      title = "사진 접근 권한이 필요해요";
-      body =
-        "여행 기록을 찾으려면 사진 접근 권한이 필요해요.\n설정에서 사진 권한을 허용해 주세요.";
+      title = t("scan.permissionDeniedTitle");
+      body = t("scan.permissionDeniedBody");
     } else if (added > 0) {
-      body = `사진 ${scanned.toLocaleString()}장을 살펴보고\n여행 기록에 ${added.toLocaleString()}장을 새로 추가했어요.`;
+      body = t("scan.addedBody", {
+        scanned: scanned.toLocaleString(),
+        added: added.toLocaleString(),
+      });
       if (permission === "limited") {
-        body +=
-          "\n\n현재 일부 사진에만 접근할 수 있어요.\n전체 사진을 허용하면 더 많은 여행을 찾아드릴 수 있어요.";
+        body += t("scan.limitedSuffixAdded");
       }
     } else if (scanned > 0) {
-      body =
-        "이미 모든 사진을 확인했어요.\n새로 추가된 여행 기록은 없어요.";
+      body = t("scan.noNewBody");
       if (permission === "limited") {
-        body +=
-          "\n\n전체 사진 접근을 허용하면\n놓친 여행을 더 찾아드릴 수 있어요.";
+        body += t("scan.limitedSuffixNoNew");
       }
     } else {
       body =
         permission === "limited"
-          ? "확인할 수 있는 사진이 없어요.\n전체 사진 접근을 허용해 주세요."
-          : "확인할 사진이 없어요.";
+          ? t("scan.noPhotosLimited")
+          : t("scan.noPhotos");
     }
 
     const suspectCount = suspectTrips.length;
     if (!error && permission !== "denied" && suspectCount > 0) {
-      body +=
-        `\n\n다른 기기로 찍힌 사진만 있는 여행 ${suspectCount}개를 찾았어요.\n` +
-        `친구한테 받은 사진이라면 기록에서 빼주세요.`;
+      body += t("scan.suspectFound", { count: suspectCount });
     }
 
     const buttons: {
       text: string;
       style?: "default" | "cancel" | "destructive";
       onPress: () => void;
-    }[] = [{ text: "확인", onPress: () => setLastSync(null) }];
+    }[] = [{ text: t("common.ok"), onPress: () => setLastSync(null) }];
     if (!error && permission !== "denied" && suspectCount > 0) {
       buttons.unshift({
-        text: "확인하러 가기",
+        text: t("scan.reviewAction"),
         onPress: () => {
           setLastSync(null);
           if (navigationRef.isReady()) {
@@ -203,7 +207,7 @@ export default function App() {
     }
 
     Alert.alert(title, body, buttons);
-  }, [lastSync, syncStatus.running, setLastSync, suspectTrips, pendingInitialScan]);
+  }, [lastSync, syncStatus.running, setLastSync, suspectTrips, pendingInitialScan, t]);
 
   useEffect(() => {
     if (!homeCleanupReport) return;
@@ -211,13 +215,15 @@ export default function App() {
       KO_NAME_BY_CODE[homeCleanupReport.countryCode] ??
       homeCleanupReport.countryCode;
     Alert.alert(
-      "본국 자동 기록 정리",
-      `본국(${koName})은 이제 자동 추가에서 제외됩니다.\n` +
-        `이미 자동으로 들어가 있던 ${homeCleanupReport.daysDeleted}일 / 사진 ${homeCleanupReport.photosDeleted}장을 정리했어요.\n\n` +
-        `본국에서 찍은 사진은 메뉴 > "여행 추가"에서 원하는 날짜만 직접 선택해 추가할 수 있습니다.`,
-      [{ text: "확인", onPress: () => setHomeCleanupReport(null) }]
+      t("homeCleanup.title"),
+      t("homeCleanup.body", {
+        country: koName,
+        days: homeCleanupReport.daysDeleted,
+        photos: homeCleanupReport.photosDeleted,
+      }),
+      [{ text: t("common.ok"), onPress: () => setHomeCleanupReport(null) }]
     );
-  }, [homeCleanupReport, setHomeCleanupReport]);
+  }, [homeCleanupReport, setHomeCleanupReport, t]);
 
   // 새로 잠금 해제된 뱃지가 여러 개여도 한 번의 알림으로 묶어서 표시한다.
   // 스캔 한 번에 호칭이 여러 개 풀릴 수 있어 팝업이 연달아 뜨는 것을 막기 위함.
@@ -227,18 +233,22 @@ export default function App() {
     const batch = pendingNotifications.slice(0, count);
     const title =
       count === 1
-        ? "새로운 뱃지를 얻었어요!"
-        : `새로운 뱃지 ${count}개를 얻었어요!`;
+        ? t("badges.newSingleTitle")
+        : t("badges.newMultipleTitle", { count });
     const body =
       count === 1
-        ? `${batch[0].emoji}  ${batch[0].titleKo}\n\n${batch[0].description}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`
-        : `${batch
-            .map((b) => `${b.emoji}  ${b.titleKo}`)
-            .join("\n")}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`;
+        ? t("badges.newSingleBody", {
+            emoji: batch[0].emoji,
+            title: batch[0].titleKo,
+            description: batch[0].description,
+          })
+        : t("badges.newMultipleBody", {
+            list: batch.map((b) => `${b.emoji}  ${b.titleKo}`).join("\n"),
+          });
     Alert.alert(title, body, [
-      { text: "확인", onPress: () => consumeBadgeNotifications(count) },
+      { text: t("common.ok"), onPress: () => consumeBadgeNotifications(count) },
     ]);
-  }, [pendingNotifications, consumeBadgeNotifications]);
+  }, [pendingNotifications, consumeBadgeNotifications, t]);
 
   const activeCounts = useMemo(() => {
     if (yearMode.kind === "year") {
@@ -247,7 +257,7 @@ export default function App() {
     return visitCounts;
   }, [yearMode, visitCounts, visitCountsByYear]);
 
-  if (!ready || !themeHydrated || !authHydrated) {
+  if (!ready || !themeHydrated || !authHydrated || !i18nReady) {
     return <View style={styles.root} />;
   }
 
@@ -314,6 +324,10 @@ export default function App() {
                 name="ReviewSuspect"
                 component={ReviewSuspectScreenNav}
               />
+              <Stack.Screen
+                name="AllCountries"
+                component={AllCountriesScreenNav}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </AppCtx.Provider>
@@ -325,6 +339,7 @@ export default function App() {
 function MainScreen({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, "Main">) {
+  const { t } = useTranslation();
   const { yearMode, setYearMode, activeCounts } = useAppCtx();
   const homeCountry = useVisitStore((s) => s.homeCountry);
   const recentTrips = useVisitStore((s) => s.recentTrips);
@@ -370,7 +385,7 @@ function MainScreen({
 
   const openYearPicker = () => {
     if (availableYears.length === 0) {
-      Alert.alert("연도 선택", "아직 기록된 여행이 없습니다.");
+      Alert.alert(t("home.yearPickerEmptyTitle"), t("home.yearPickerEmptyBody"));
       return;
     }
     setYearPickerOpen(true);
@@ -395,10 +410,10 @@ function MainScreen({
             <Text style={styles.periodLabel}>{periodLabel}</Text>
             <View style={styles.headerStatRow}>
               <Text style={styles.headerStatNum}>{totals.countries}</Text>
-              <Text style={styles.headerStatUnit}> 개국</Text>
+              <Text style={styles.headerStatUnit}> {t("home.countriesUnit")}</Text>
               <Text style={styles.headerStatDot}> · </Text>
               <Text style={styles.headerStatNum}>{totals.days}</Text>
-              <Text style={styles.headerStatUnit}> 일</Text>
+              <Text style={styles.headerStatUnit}> {t("home.daysUnit")}</Text>
             </View>
           </View>
           <Pressable
@@ -429,7 +444,7 @@ function MainScreen({
                   yearMode.kind === "all" && styles.tabTextActive,
                 ]}
               >
-                전체
+                {t("home.all")}
               </Text>
             </Pressable>
             <Pressable
@@ -445,7 +460,9 @@ function MainScreen({
                   yearMode.kind === "year" && styles.tabTextActive,
                 ]}
               >
-                {yearMode.kind === "year" ? `${yearMode.year} ▾` : "연도 ▾"}
+                {yearMode.kind === "year"
+                  ? t("home.yearPickerSelected", { year: yearMode.year })
+                  : t("home.yearPicker")}
               </Text>
             </Pressable>
           </View>
@@ -454,7 +471,7 @@ function MainScreen({
         {syncStatus.running && (
           <View style={styles.syncBar}>
             <Text style={styles.syncText}>
-              사진 스캔 중 · {syncStatus.processed}장 처리됨
+              {t("home.syncing", { processed: syncStatus.processed })}
             </Text>
           </View>
         )}
@@ -485,7 +502,7 @@ function MainScreen({
           />
           <View style={styles.statCard}>
             <View style={styles.statHeaderRow}>
-              <Text style={styles.statTitle}>방문 국가</Text>
+              <Text style={styles.statTitle}>{t("home.statTitle")}</Text>
               <Text
                 style={[
                   styles.statTier,
@@ -523,25 +540,25 @@ function MainScreen({
             </View>
             <View style={styles.statFooter}>
               <Text style={styles.statFooterLabel}>
-                다음 마일스톤{" "}
+                {t("home.nextMilestone")}{" "}
                 <Text style={styles.statFooterStrong}>
-                  {milestone.next}개국
+                  {t("home.milestoneCountries", { count: milestone.next })}
                 </Text>
               </Text>
               <Text style={styles.statFooterAccent}>
-                {milestone.remaining} 남음
+                {t("home.milestoneRemaining", { count: milestone.remaining })}
               </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.recentHeader}>
-          <Text style={styles.sectionTitle}>최근 방문</Text>
+          <Text style={styles.sectionTitle}>{t("home.recentTitle")}</Text>
           <Pressable
             onPress={() => navigation.navigate("History")}
             hitSlop={8}
           >
-            <Text style={styles.allLink}>전체보기 →</Text>
+            <Text style={styles.allLink}>{t("home.viewAll")}</Text>
           </Pressable>
         </View>
         <RecentList
@@ -549,6 +566,18 @@ function MainScreen({
           trips={recentTrips}
           onSelect={(t) => navigation.navigate("TripDetail", { trip: t })}
         />
+
+        <Pressable
+          onPress={() => navigation.navigate("AllCountries")}
+          style={({ pressed }) => [
+            styles.allCountriesBtn,
+            pressed && styles.allCountriesBtnPressed,
+          ]}
+        >
+          <Text style={styles.allCountriesIcon}>🌍</Text>
+          <Text style={styles.allCountriesText}>{t("home.viewAllCountries")}</Text>
+          <Text style={styles.allCountriesChev}>›</Text>
+        </Pressable>
       </ScrollView>
       <YearPickerModal
         visible={yearPickerOpen}
@@ -713,6 +742,25 @@ function HistoryScreenNav({
   );
 }
 
+function AllCountriesScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "AllCountries">) {
+  const theme = useTheme();
+  const setSelectedCountry = useVisitStore((s) => s.setSelectedCountry);
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <AllCountriesScreen
+        onClose={() => navigation.goBack()}
+        onSelectCountry={(c) => {
+          setSelectedCountry({ code: c.code, name: c.nameKo });
+          navigation.navigate("CountryDetail");
+        }}
+      />
+    </>
+  );
+}
+
 function MiniCard({
   theme,
   homeCode,
@@ -724,6 +772,7 @@ function MiniCard({
   visitCounts: Record<string, number>;
   onPress: () => void;
 }) {
+  const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
   const code = selectedCountry?.code ?? homeCode;
@@ -745,7 +794,7 @@ function MiniCard({
     >
       {isHome && (
         <View style={styles.miniBadge}>
-          <Text style={styles.miniBadgeText}>본국</Text>
+          <Text style={styles.miniBadgeText}>{t("home.homeBadge")}</Text>
         </View>
       )}
       <View style={styles.miniDotsArea}>
@@ -755,7 +804,7 @@ function MiniCard({
         {name}
       </Text>
       <Text style={[styles.miniSub, { color: textColor, opacity: 0.85 }]}>
-        {isHome ? "본국" : `${visitDays}일 방문`}
+        {isHome ? t("home.isHome") : t("home.visitedDays", { days: visitDays })}
       </Text>
     </Pressable>
   );
@@ -770,13 +819,12 @@ function RecentList({
   trips: RecentTrip[];
   onSelect: (trip: RecentTrip) => void;
 }) {
+  const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   if (trips.length === 0) {
     return (
       <View style={styles.emptyWrap}>
-        <Text style={styles.emptyText}>
-          아직 기록된 여행이 없어요. 사진을 스캔하거나 직접 추가해보세요.
-        </Text>
+        <Text style={styles.emptyText}>{t("home.emptyTrips")}</Text>
       </View>
     );
   }
@@ -784,7 +832,7 @@ function RecentList({
   return (
     <FlatList
       data={display}
-      keyExtractor={(t) => `${t.countryCode}-${t.startDate}`}
+      keyExtractor={(trip) => `${trip.countryCode}-${trip.startDate}`}
       scrollEnabled={false}
       ItemSeparatorComponent={() => <View style={styles.rowSep} />}
       renderItem={({ item, index }) => {
@@ -807,12 +855,12 @@ function RecentList({
                 <Text style={styles.recentCode}> {item.countryCode}</Text>
                 {index === 0 && (
                   <View style={styles.recentBadge}>
-                    <Text style={styles.recentBadgeText}>최근</Text>
+                    <Text style={styles.recentBadgeText}>{t("home.tripRecent")}</Text>
                   </View>
                 )}
               </View>
               <Text style={styles.recentDate}>
-                {y} · {m} · {d} · {item.days}일 여행
+                {t("home.tripDuration", { y, m, d, days: item.days })}
               </Text>
             </View>
             <Text style={styles.chev}>›</Text>
@@ -1190,6 +1238,36 @@ function makeStyles(theme: Theme) {
       color: theme.textSecondary,
       fontSize: 13,
       textAlign: "center",
+    },
+    allCountriesBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+      marginHorizontal: 20,
+      marginTop: 20,
+      paddingVertical: 16,
+      paddingHorizontal: 18,
+      backgroundColor: theme.cardBg,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+    },
+    allCountriesBtnPressed: {
+      backgroundColor: theme.rowPressedBg,
+    },
+    allCountriesIcon: {
+      fontSize: 20,
+    },
+    allCountriesText: {
+      flex: 1,
+      color: theme.textPrimary,
+      fontSize: 15,
+      fontWeight: "700",
+    },
+    allCountriesChev: {
+      color: theme.textMuted,
+      fontSize: 22,
+      fontWeight: "400",
     },
   });
 }
