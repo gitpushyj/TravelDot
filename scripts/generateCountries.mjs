@@ -49,14 +49,17 @@ const seen = new Map();
 const features = [];
 for (const f of src.features) {
   const p = f.properties || {};
-  let code = rawCode(p);
-  if (!code) continue;
-  code = TERRITORY_OVERRIDES[code] || code;
+  const original = rawCode(p);
+  if (!original) continue;
+  const code = TERRITORY_OVERRIDES[original] || original;
   features.push({
     type: "Feature",
     properties: { code },
     geometry: f.geometry,
   });
+  // territory feature는 폴리곤 매핑에만 쓰고, 이름 목록은 sovereign 피처에서만 뽑는다.
+  // 그래야 "MP가 먼저 나와서 US 슬롯을 '북마리아나' 이름으로 잠가버리는" 사고를 막을 수 있다.
+  if (TERRITORY_OVERRIDES[original]) continue;
   if (seen.has(code)) continue;
   seen.set(code, {
     code,

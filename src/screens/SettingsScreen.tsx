@@ -23,6 +23,7 @@ type Props = {
   onClose: () => void;
   onAddTrip: () => void;
   onOpenTitles: () => void;
+  onChangeHome: () => void;
 };
 
 const THEME_OPTIONS: { mode: ThemeMode; label: string }[] = [
@@ -31,7 +32,12 @@ const THEME_OPTIONS: { mode: ThemeMode; label: string }[] = [
   { mode: "dark", label: "다크" },
 ];
 
-export default function SettingsScreen({ onClose, onAddTrip, onOpenTitles }: Props) {
+export default function SettingsScreen({
+  onClose,
+  onAddTrip,
+  onOpenTitles,
+  onChangeHome,
+}: Props) {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const mode = useThemeStore((s) => s.mode);
@@ -39,12 +45,28 @@ export default function SettingsScreen({ onClose, onAddTrip, onOpenTitles }: Pro
 
   const activeId = useBadgeStore((s) => s.activeId);
   const visitCounts = useVisitStore((s) => s.visitCounts);
+  const homeCountry = useVisitStore((s) => s.homeCountry);
+  const homeChanged = useVisitStore((s) => s.homeChanged);
 
   const handleIncrementalSync = () => {
     runIncrementalSync().catch((e) => Alert.alert("스캔 실패", String(e)));
   };
   const handleFullSync = () => {
     runFullSync().catch((e) => Alert.alert("스캔 실패", String(e)));
+  };
+  const handleChangeHome = () => {
+    Alert.alert(
+      "본국 바꾸기",
+      "기록된 모든 여행 데이터가 삭제되고, 처음 본국을 선택했을 때처럼 기기의 이미지를 다시 스캔합니다.\n\n이 기능은 앱에서 한 번만 사용할 수 있어요. 계속하시겠어요?",
+      [
+        { text: "취소", style: "cancel" },
+        {
+          text: "확인",
+          style: "destructive",
+          onPress: onChangeHome,
+        },
+      ]
+    );
   };
 
   // 현재 호칭 미리보기 — 활성 뱃지 또는 자동 모드의 등급 뱃지
@@ -68,7 +90,29 @@ export default function SettingsScreen({ onClose, onAddTrip, onOpenTitles }: Pro
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionLabel}>여행 기록</Text>
+        <Text style={styles.sectionLabel}>본국</Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label="현재 본국"
+            sub={homeCountry ? homeCountry.name : "설정되지 않음"}
+            onPress={() => {}}
+            disabled
+          />
+          {!homeChanged && (
+            <ActionRow
+              theme={theme}
+              label="본국 바꾸기"
+              sub="기록을 모두 지우고 사진을 다시 스캔합니다 · 1회 한정"
+              onPress={handleChangeHome}
+              divider
+            />
+          )}
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          여행 기록
+        </Text>
         <View style={styles.card}>
           <ActionRow
             theme={theme}
@@ -143,21 +187,24 @@ function ActionRow({
   sub,
   onPress,
   divider,
+  disabled,
 }: {
   theme: Theme;
   label: string;
   sub: string;
   onPress: () => void;
   divider?: boolean;
+  disabled?: boolean;
 }) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.row,
         divider && styles.rowDivider,
-        pressed && { backgroundColor: theme.rowPressedBg },
+        !disabled && pressed && { backgroundColor: theme.rowPressedBg },
       ]}
     >
       <View style={{ flex: 1 }}>
@@ -166,7 +213,7 @@ function ActionRow({
           {sub}
         </Text>
       </View>
-      <Text style={styles.chev}>›</Text>
+      {!disabled && <Text style={styles.chev}>›</Text>}
     </Pressable>
   );
 }

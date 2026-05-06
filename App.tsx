@@ -71,7 +71,7 @@ export default function App() {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
   const [screen, setScreen] = useState<
-    "main" | "addTrip" | "settings" | "titles" | "mapZoom"
+    "main" | "addTrip" | "settings" | "titles" | "mapZoom" | "changeHome"
   >("main");
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
@@ -218,6 +218,19 @@ export default function App() {
           onClose={() => setScreen("main")}
           onAddTrip={() => setScreen("addTrip")}
           onOpenTitles={() => setScreen("titles")}
+          onChangeHome={() => setScreen("changeHome")}
+        />
+      </GestureHandlerRootView>
+    );
+  }
+
+  if (screen === "changeHome") {
+    return (
+      <GestureHandlerRootView style={styles.rootDark}>
+        <StatusBar style="light" />
+        <OnboardingScreen
+          mode="change"
+          onClose={() => setScreen("main")}
         />
       </GestureHandlerRootView>
     );

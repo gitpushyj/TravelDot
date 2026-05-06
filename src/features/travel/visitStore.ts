@@ -10,10 +10,13 @@ import {
   loadVisitCountsByYear,
   RecentTrip,
   removeAutoVisitsForCountry,
+  wipeAllVisits,
 } from "./visitRepository";
 import {
   HomeCountry,
   loadHomeCountry,
+  loadHomeCountryChanged,
+  markHomeCountryChanged,
   saveHomeCountry,
 } from "./homeCountryStorage";
 import { useBadgeStore } from "../badges/badgeStore";
@@ -51,6 +54,8 @@ export type HomeCleanupReport = {
 type State = {
   ready: boolean;
   homeCountry: HomeCountry | null;
+  /** 앱에서 한 번이라도 본국을 바꾼 적이 있는지. 일회용 메뉴 노출 여부에 사용. */
+  homeChanged: boolean;
   visitCounts: Record<string, number>;
   visitCountsByYear: Record<number, Record<string, number>>;
   recentTrips: RecentTrip[];
@@ -61,6 +66,7 @@ type State = {
   homeCleanupReport: HomeCleanupReport | null;
   hydrate: () => Promise<void>;
   setHomeCountry: (c: HomeCountry) => Promise<void>;
+  changeHomeCountry: (c: HomeCountry) => Promise<void>;
   refreshVisits: () => Promise<void>;
   /** 현재 visitCounts + DB 통계로부터 뱃지를 재평가한다 */
   evaluateBadges: () => Promise<void>;
@@ -74,6 +80,7 @@ type State = {
 export const useVisitStore = create<State>((set, get) => ({
   ready: false,
   homeCountry: null,
+  homeChanged: false,
   visitCounts: {},
   visitCountsByYear: {},
   recentTrips: [],
@@ -102,14 +109,16 @@ export const useVisitStore = create<State>((set, get) => ({
         }
       }
     }
-    const [counts, trips, years] = await Promise.all([
+    const [counts, trips, years, homeChanged] = await Promise.all([
       loadVisitCounts(),
       loadRecentTripsByCountry(),
       loadAvailableYears(),
+      loadHomeCountryChanged(),
     ]);
     set({
       ready: true,
       homeCountry: home,
+      homeChanged,
       visitCounts: counts,
       recentTrips: trips,
       availableYears: years,
@@ -146,6 +155,26 @@ export const useVisitStore = create<State>((set, get) => ({
       });
     }
     // 본국이 바뀌면 해외 사진 기준이 달라지므로 항상 재평가한다.
+    await get().evaluateBadges();
+  },
+  // 일회용 "본국 바꾸기": 모든 방문 기록을 비우고 새 본국으로 다시 시작한다.
+  // 호출 측에서 이어서 runFullSync로 재스캔을 트리거한다.
+  changeHomeCountry: async (c) => {
+    await wipeAllVisits();
+    await saveHomeCountry(c);
+    await markHomeCountryChanged();
+    // 새 본국에 대해서는 자동 누적분이 처음부터 없으므로 cleanup 플래그를 done으로 유지.
+    await AsyncStorage.setItem(HOME_AUTO_CLEANUP_FLAG, "done");
+    set({
+      homeCountry: c,
+      homeChanged: true,
+      selectedCountry: { code: c.code, name: c.name },
+      visitCounts: {},
+      visitCountsByYear: {},
+      recentTrips: [],
+      availableYears: [],
+      homeCleanupReport: null,
+    });
     await get().evaluateBadges();
   },
   setSelectedCountry: (c) => set({ selectedCountry: c }),

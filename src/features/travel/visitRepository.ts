@@ -319,6 +319,16 @@ export async function deleteNote(id: string): Promise<void> {
   );
 }
 
+// "본국 바꾸기"용 — 모든 방문 기록을 비운다.
+export async function wipeAllVisits(): Promise<void> {
+  const db = await getDb();
+  await db.withTransactionAsync(async () => {
+    await db.runAsync(`DELETE FROM visit_photos`);
+    await db.runAsync(`DELETE FROM visit_notes`);
+    await db.runAsync(`DELETE FROM visit_days`);
+  });
+}
+
 // 본국이 자동 동기화에서 제외되도록 정책이 바뀌면서, 이미 들어간 자동 사진을
 // 정리한다. 사용자가 직접 고른 manual 사진과 노트가 달린 날짜는 보존한다.
 export async function removeAutoVisitsForCountry(

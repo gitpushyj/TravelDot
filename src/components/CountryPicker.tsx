@@ -47,6 +47,7 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
         data={data}
         keyExtractor={(item) => item.code}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
         renderItem={({ item }) => {
           const selected = item.code === selectedCode;
           return (

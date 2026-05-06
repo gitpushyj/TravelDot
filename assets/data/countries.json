@@ -300,6 +300,11 @@
     "nameKo": "몽골"
   },
   {
+    "code": "US",
+    "name": "United States of America",
+    "nameKo": "미국"
+  },
+  {
     "code": "MM",
     "name": "Myanmar",
     "nameKo": "미얀마"
@@ -400,11 +405,6 @@
     "nameKo": "부탄"
   },
   {
-    "code": "US",
-    "name": "Northern Mariana Islands",
-    "nameKo": "북마리아나 제도"
-  },
-  {
     "code": "MK",
     "name": "North Macedonia",
     "nameKo": "북마케도니아"
@@ -433,11 +433,6 @@
     "code": "SA",
     "name": "Saudi Arabia",
     "nameKo": "사우디아라비아"
-  },
-  {
-    "code": "GB",
-    "name": "South Georgia and the South Sandwich Islands",
-    "nameKo": "사우스조지아 사우스샌드위치 제도"
   },
   {
     "code": "SM",
@@ -663,6 +658,11 @@
     "code": "SV",
     "name": "El Salvador",
     "nameKo": "엘살바도르"
+  },
+  {
+    "code": "GB",
+    "name": "United Kingdom",
+    "nameKo": "영국"
   },
   {
     "code": "YE",
