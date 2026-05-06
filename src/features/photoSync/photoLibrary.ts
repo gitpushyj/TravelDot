@@ -57,6 +57,33 @@ async function loadPhotoMetaViaInfo(
   };
 }
 
+// iOS의 ph:// URI는 일부 RN Image 로더 빌드가 인식하지 못해 "no suitable image
+// URL loader found for ph://" 에러를 낸다. 표시 직전에 MediaLibrary로 file://
+// localUri를 해석한다. 이미 file://(Android 등)인 URI는 그대로 통과시킨다.
+export async function resolveDisplayUris(
+  entries: { id: string; uri: string }[]
+): Promise<Record<string, string>> {
+  const out: Record<string, string> = {};
+  await Promise.all(
+    entries.map(async ({ id, uri }) => {
+      if (!uri.startsWith("ph://")) {
+        out[id] = uri;
+        return;
+      }
+      try {
+        const info = await MediaLibrary.getAssetInfoAsync(id, {
+          shouldDownloadFromNetwork: false,
+        });
+        const local = info.localUri ?? info.uri;
+        if (local) out[id] = local;
+      } catch {
+        // 자산이 삭제됐거나 권한이 바뀐 경우는 표시에서 빠진다.
+      }
+    })
+  );
+  return out;
+}
+
 export async function* iteratePhotos(
   pageSize = 200,
   options?: { createdAfter?: number; createdBefore?: number }

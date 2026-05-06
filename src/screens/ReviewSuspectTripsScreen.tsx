@@ -12,6 +12,7 @@ import {
 import { SuspectTrip } from "../features/photoSync/deviceVerification";
 import { useVisitStore } from "../features/travel/visitStore";
 import { loadPhotoUrisByIds } from "../features/travel/visitRepository";
+import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
 import { flagEmoji } from "../utils/flag";
 import { colorForCountry } from "../utils/countryColors";
 import { useTheme } from "../theme/themeStore";
@@ -51,8 +52,13 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
     }
     void (async () => {
       try {
-        const map = await loadPhotoUrisByIds(ids);
-        if (!cancelled) setPhotoUris(map);
+        const stored = await loadPhotoUrisByIds(ids);
+        const entries = Object.entries(stored).map(([id, uri]) => ({
+          id,
+          uri,
+        }));
+        const display = await resolveDisplayUris(entries);
+        if (!cancelled) setPhotoUris(display);
       } catch {
         if (!cancelled) setPhotoUris({});
       }
