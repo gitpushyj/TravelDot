@@ -38,6 +38,11 @@ type Props = {
   mapAreaStyle?: StyleProp<ViewStyle>;
   // 한 도트가 여러 나라에 걸쳐 있을 때 선택 UI 없이 첫 국가를 자동 선택.
   autoPickFirst?: boolean;
+  // 첫 진입 시 본국에서 세계지도로 줌아웃하는 인트로 애니메이션을 재생할지 여부.
+  playIntro?: boolean;
+  // 부모 View가 시계방향(rotate: "90deg")으로 회전되어 있는 경우 true.
+  // RNGH가 보고하는 translation/focal/탭 좌표를 회전된 로컬 프레임으로 되돌린다.
+  parentRotated90?: boolean;
 };
 
 export default function DotMap({
@@ -46,6 +51,8 @@ export default function DotMap({
   onInteractingChange,
   mapAreaStyle,
   autoPickFirst = false,
+  playIntro = true,
+  parentRotated90 = false,
 }: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -204,8 +211,14 @@ export default function DotMap({
         })
         .onUpdate((e) => {
           const s = scale.value;
-          tx.value = clampPanX(savedTx.value + e.translationX, s, viewW);
-          ty.value = clampPanY(savedTy.value + e.translationY, s, viewH);
+          // RNGH의 translationX/Y는 부모의 회전 transform을 따라가지 않고
+          // 화면 픽셀 축을 그대로 보고한다. 부모가 시계방향 90° 회전된 경우
+          // 사용자의 가로 드래그가 콘텐츠 로컬 프레임에서는 X축으로 와야 하므로
+          // (sx, sy) → (sy, -sx) 매핑으로 회전을 풀어준다.
+          const dx = parentRotated90 ? e.translationY : e.translationX;
+          const dy = parentRotated90 ? -e.translationX : e.translationY;
+          tx.value = clampPanX(savedTx.value + dx, s, viewW);
+          ty.value = clampPanY(savedTy.value + dy, s, viewH);
         })
         .onEnd(() => {
           savedTx.value = tx.value;
@@ -214,7 +227,17 @@ export default function DotMap({
         .onFinalize(() => {
           runOnJS(notifyInteracting)(false);
         }),
-    [viewW, viewH, notifyInteracting, scale, tx, ty, savedTx, savedTy]
+    [
+      viewW,
+      viewH,
+      notifyInteracting,
+      scale,
+      tx,
+      ty,
+      savedTx,
+      savedTy,
+      parentRotated90,
+    ]
   );
 
   const onTap = useCallback(
@@ -250,6 +273,7 @@ export default function DotMap({
   // 첫 진입 시 본국을 2초 보여준 뒤 4초에 걸쳐 세계지도로 줌아웃하는 인트로 애니메이션.
   const introPlayed = useRef(false);
   useEffect(() => {
+    if (!playIntro) return;
     if (introPlayed.current) return;
     if (size.width === 0 || size.height === 0) return;
     if (!homeCode) return;
@@ -304,6 +328,7 @@ export default function DotMap({
       })
     );
   }, [
+    playIntro,
     size.width,
     size.height,
     homeCode,
