@@ -557,7 +557,10 @@ function CountryDetailScreenNav({
   return (
     <>
       <StatusBar style={theme.statusBar} />
-      <CountryDetailScreen onClose={() => navigation.goBack()} />
+      <CountryDetailScreen
+        onClose={() => navigation.goBack()}
+        onSelectTrip={(trip) => navigation.navigate("TripDetail", { trip })}
+      />
     </>
   );
 }

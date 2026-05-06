@@ -197,6 +197,76 @@ function diffInDays(a: string, b: string): number {
   return Math.round((db - da) / 86400000);
 }
 
+// 특정 나라의 모든 "여행"(연속된 방문일 묶음). 시작일 내림차순으로 반환.
+export async function loadTripsForCountry(
+  countryCode: string
+): Promise<RecentTrip[]> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{ date: string }>(
+    `SELECT date FROM visit_days
+      WHERE country_code = ? AND deleted_at IS NULL
+      ORDER BY date ASC`,
+    countryCode
+  );
+  if (rows.length === 0) return [];
+  const trips: RecentTrip[] = [];
+  let startDate = rows[0].date;
+  let prev = startDate;
+  for (let i = 1; i < rows.length; i += 1) {
+    const cur = rows[i].date;
+    if (diffInDays(prev, cur) === 1) {
+      prev = cur;
+      continue;
+    }
+    trips.push({
+      countryCode,
+      startDate,
+      endDate: prev,
+      days: diffInDays(startDate, prev) + 1,
+    });
+    startDate = cur;
+    prev = cur;
+  }
+  trips.push({
+    countryCode,
+    startDate,
+    endDate: prev,
+    days: diffInDays(startDate, prev) + 1,
+  });
+  trips.sort((a, b) => (a.startDate < b.startDate ? 1 : -1));
+  return trips;
+}
+
+export async function countPhotosForCountry(
+  countryCode: string
+): Promise<number> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ n: number }>(
+    `SELECT COUNT(*) AS n FROM visit_photos
+       WHERE country_code = ? AND deleted_at IS NULL`,
+    countryCode
+  );
+  return row?.n ?? 0;
+}
+
+export async function countPhotosForTrip(
+  countryCode: string,
+  startDate: string,
+  endDate: string
+): Promise<number> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ n: number }>(
+    `SELECT COUNT(*) AS n FROM visit_photos
+       WHERE country_code = ?
+         AND date BETWEEN ? AND ?
+         AND deleted_at IS NULL`,
+    countryCode,
+    startDate,
+    endDate
+  );
+  return row?.n ?? 0;
+}
+
 export type TripPhoto = {
   id: string;
   countryCode: string;
