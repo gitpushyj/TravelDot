@@ -1,15 +1,21 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Alert,
+  Animated,
+  Easing,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import Swipeable from "react-native-gesture-handler/Swipeable";
+import { RectButton } from "react-native-gesture-handler";
 
 import {
   countPhotosForCountry,
   countPhotosForTrip,
+  deleteTrip,
   loadTripsForCountry,
   RecentTrip,
 } from "../features/travel/visitRepository";
@@ -48,9 +54,21 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
+  const refreshVisits = useVisitStore((s) => s.refreshVisits);
 
   const [trips, setTrips] = useState<TripWithPhotos[] | null>(null);
   const [photoTotal, setPhotoTotal] = useState<number | null>(null);
+  const [editMode, setEditMode] = useState(false);
+
+  const reload = async (code: string) => {
+    const rawTrips = await loadTripsForCountry(code);
+    const total = await countPhotosForCountry(code);
+    const counts = await Promise.all(
+      rawTrips.map((t) => countPhotosForTrip(t.countryCode, t.startDate, t.endDate))
+    );
+    setTrips(rawTrips.map((t, i) => ({ ...t, photos: counts[i] })));
+    setPhotoTotal(total);
+  };
 
   useEffect(() => {
     if (!selectedCountry) return;
@@ -78,11 +96,33 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
 
   const grouped = useMemo(() => groupByYear(trips ?? []), [trips]);
 
+  const handleDelete = (trip: TripWithPhotos) => {
+    if (!selectedCountry) return;
+    const code = selectedCountry.code;
+    Alert.alert(
+      "여행 기록 삭제",
+      `${formatMD(trip.startDate)} — ${formatMD(trip.endDate)} (${trip.days}일) 기록을 삭제할까요?\n해당 기간의 사진/메모도 함께 사라집니다.`,
+      [
+        { text: "취소", style: "cancel" },
+        {
+          text: "삭제",
+          style: "destructive",
+          onPress: async () => {
+            await deleteTrip(code, trip.startDate, trip.endDate);
+            await reload(code);
+            await refreshVisits();
+          },
+        },
+      ]
+    );
+  };
+
   if (!selectedCountry) {
     return <View style={styles.root} />;
   }
 
   const flag = flagEmoji(selectedCountry.code);
+  const hasTrips = (trips?.length ?? 0) > 0;
 
   return (
     <View style={styles.root}>
@@ -104,9 +144,27 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
           </Text>
           <Text style={styles.headerCode}>{selectedCountry.code}</Text>
         </View>
-        <View style={styles.iconBtn} pointerEvents="none">
-          <View />
-        </View>
+        <Pressable
+          onPress={() => setEditMode((v) => !v)}
+          disabled={!hasTrips && !editMode}
+          hitSlop={8}
+          style={({ pressed }) => [
+            styles.iconBtn,
+            editMode && styles.iconBtnActive,
+            pressed && styles.iconBtnPressed,
+            !hasTrips && !editMode && styles.iconBtnDisabled,
+          ]}
+        >
+          <Text
+            style={[
+              styles.iconBtnText,
+              styles.editIcon,
+              editMode && styles.iconBtnTextActive,
+            ]}
+          >
+            {editMode ? "✓" : "✎"}
+          </Text>
+        </Pressable>
       </View>
 
       <ScrollView
@@ -123,7 +181,11 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
 
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>여행 기록</Text>
-          <Text style={styles.sortLabel}>최신순</Text>
+          {editMode ? (
+            <Text style={styles.editHint}>← 옆으로 밀어 삭제</Text>
+          ) : (
+            <Text style={styles.sortLabel}>최신순</Text>
+          )}
         </View>
 
         {trips == null ? (
@@ -151,7 +213,9 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
                     theme={theme}
                     trip={trip}
                     showRecent={isMostRecent}
+                    editMode={editMode}
                     onPress={() => onSelectTrip?.(trip)}
+                    onDelete={() => handleDelete(trip)}
                   />
                 );
               })}
@@ -178,21 +242,68 @@ function TripRow({
   theme,
   trip,
   showRecent,
+  editMode,
   onPress,
+  onDelete,
 }: {
   theme: Theme;
   trip: TripWithPhotos;
   showRecent: boolean;
+  editMode: boolean;
   onPress: () => void;
+  onDelete: () => void;
 }) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [light, dark] = colorPairForTrip(trip);
-  return (
+
+  // iOS 편집 모드의 잔잔한 흔들림. 항목별로 위상 차이를 줘서 한꺼번에 같은
+  // 방향으로 흔들리지 않도록 한다.
+  const wiggle = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (!editMode) {
+      wiggle.stopAnimation();
+      wiggle.setValue(0);
+      return;
+    }
+    let h = 0;
+    for (let i = 0; i < trip.startDate.length; i += 1) {
+      h = (h * 31 + trip.startDate.charCodeAt(i)) >>> 0;
+    }
+    const phase = (h % 100) / 100;
+    wiggle.setValue(phase);
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(wiggle, {
+          toValue: 1,
+          duration: 140,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(wiggle, {
+          toValue: 0,
+          duration: 140,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    loop.start();
+    return () => {
+      loop.stop();
+    };
+  }, [editMode, wiggle, trip.startDate]);
+
+  const rotate = wiggle.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: ["-1.2deg", "0deg", "1.2deg"],
+  });
+
+  const content = (
     <Pressable
-      onPress={onPress}
+      onPress={editMode ? undefined : onPress}
       style={({ pressed }) => [
         styles.tripCard,
-        pressed && { backgroundColor: theme.rowPressedBg },
+        !editMode && pressed && { backgroundColor: theme.rowPressedBg },
       ]}
     >
       <View style={[styles.tripThumb, { backgroundColor: light }]}>
@@ -216,8 +327,33 @@ function TripRow({
           {trip.days === 1 ? "1일 (당일)" : `${trip.days}일 여행`}
         </Text>
       </View>
-      <Text style={styles.chev}>›</Text>
+      {!editMode && <Text style={styles.chev}>›</Text>}
     </Pressable>
+  );
+
+  const renderRightActions = () => (
+    <RectButton style={styles.deleteAction} onPress={onDelete}>
+      <Text style={styles.deleteActionText}>삭제</Text>
+    </RectButton>
+  );
+
+  return (
+    <Animated.View
+      style={[styles.tripWrapper, { transform: [{ rotate }] }]}
+    >
+      {editMode ? (
+        <Swipeable
+          renderRightActions={renderRightActions}
+          friction={2}
+          rightThreshold={40}
+          overshootRight={false}
+        >
+          {content}
+        </Swipeable>
+      ) : (
+        content
+      )}
+    </Animated.View>
   );
 }
 
@@ -265,11 +401,25 @@ function makeStyles(theme: Theme) {
       justifyContent: "center",
     },
     iconBtnPressed: { backgroundColor: theme.tabRowBg },
+    iconBtnActive: {
+      backgroundColor: theme.accent,
+      borderColor: theme.accent,
+    },
+    iconBtnDisabled: {
+      opacity: 0.4,
+    },
     iconBtnText: {
       color: theme.textPrimary,
       fontSize: 22,
       fontWeight: "600",
       lineHeight: 24,
+    },
+    iconBtnTextActive: {
+      color: "#fff",
+    },
+    editIcon: {
+      fontSize: 18,
+      lineHeight: 22,
     },
     headerCenter: {
       flex: 1,
@@ -340,6 +490,11 @@ function makeStyles(theme: Theme) {
       fontSize: 12,
       fontWeight: "600",
     },
+    editHint: {
+      color: theme.accent,
+      fontSize: 12,
+      fontWeight: "700",
+    },
     emptyWrap: {
       paddingVertical: 36,
       alignItems: "center",
@@ -367,6 +522,11 @@ function makeStyles(theme: Theme) {
       flex: 1,
       height: 1,
       backgroundColor: theme.cardBorder,
+    },
+    tripWrapper: {
+      borderRadius: 16,
+      overflow: "hidden",
+      marginBottom: 8,
     },
     tripCard: {
       flexDirection: "row",
@@ -434,6 +594,18 @@ function makeStyles(theme: Theme) {
       color: theme.textMuted,
       fontSize: 22,
       fontWeight: "400",
+    },
+    deleteAction: {
+      width: 84,
+      backgroundColor: "#e64a3b",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 0,
+    },
+    deleteActionText: {
+      color: "#fff",
+      fontSize: 15,
+      fontWeight: "800",
     },
   });
 }

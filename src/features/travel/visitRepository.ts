@@ -471,6 +471,55 @@ export async function deleteNote(id: string): Promise<void> {
   );
 }
 
+// 한 "여행"(연속된 방문일 묶음)을 통째로 삭제한다.
+// visit_days / visit_photos / visit_notes 모두 soft-delete 처리.
+export async function deleteTrip(
+  countryCode: string,
+  startDate: string,
+  endDate: string
+): Promise<void> {
+  const db = await getDb();
+  const now = Date.now();
+  await db.withTransactionAsync(async () => {
+    await db.runAsync(
+      `UPDATE visit_days
+          SET deleted_at = ?, updated_at = ?
+        WHERE country_code = ?
+          AND date BETWEEN ? AND ?
+          AND deleted_at IS NULL`,
+      now,
+      now,
+      countryCode,
+      startDate,
+      endDate
+    );
+    await db.runAsync(
+      `UPDATE visit_photos
+          SET deleted_at = ?, updated_at = ?
+        WHERE country_code = ?
+          AND date BETWEEN ? AND ?
+          AND deleted_at IS NULL`,
+      now,
+      now,
+      countryCode,
+      startDate,
+      endDate
+    );
+    await db.runAsync(
+      `UPDATE visit_notes
+          SET deleted_at = ?, updated_at = ?
+        WHERE country_code = ?
+          AND date BETWEEN ? AND ?
+          AND deleted_at IS NULL`,
+      now,
+      now,
+      countryCode,
+      startDate,
+      endDate
+    );
+  });
+}
+
 // "본국 바꾸기"용 — 모든 방문 기록을 비운다.
 export async function wipeAllVisits(): Promise<void> {
   const db = await getDb();
