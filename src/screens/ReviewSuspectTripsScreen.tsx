@@ -130,7 +130,10 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
             </Text>
           </View>
         ) : (
-          <View style={styles.list}>
+          <Animated.View
+            style={styles.list}
+            layout={LinearTransition.duration(260)}
+          >
             {suspectTrips.map((trip) => {
               const previewUris = trip.photoIds
                 .slice(0, PREVIEW_PHOTO_LIMIT)
@@ -147,7 +150,7 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
                 />
               );
             })}
-          </View>
+          </Animated.View>
         )}
       </ScrollView>
 
@@ -196,8 +199,7 @@ function SuspectRow({
   return (
     <Animated.View
       style={styles.row}
-      exiting={FadeOut.duration(220)}
-      layout={LinearTransition.duration(220)}
+      exiting={FadeOut.duration(260)}
     >
       <View style={styles.rowMain}>
         <Text style={styles.flagText}>{flagEmoji(trip.countryCode)}</Text>
