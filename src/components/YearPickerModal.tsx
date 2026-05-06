@@ -36,11 +36,9 @@ export default function YearPickerModal({
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [summaries, setSummaries] = useState<YearSummary[] | null>(null);
-  const [pending, setPending] = useState<YearMode>(initial);
 
   useEffect(() => {
     if (!visible) return;
-    setPending(initial);
     let alive = true;
     void loadYearSummaries().then((s) => {
       if (alive) setSummaries(s);
@@ -48,7 +46,7 @@ export default function YearPickerModal({
     return () => {
       alive = false;
     };
-  }, [visible, initial]);
+  }, [visible]);
 
   // min ~ max 사이의 모든 연도를 채워, 기록 없는 연도도 "기록 없음"으로 노출한다.
   const rows = useMemo(() => {
@@ -81,10 +79,6 @@ export default function YearPickerModal({
     return acc;
   }, [summaries]);
 
-  const handleApply = () => {
-    onApply(pending);
-  };
-
   return (
     <Modal
       visible={visible}
@@ -104,9 +98,7 @@ export default function YearPickerModal({
               <Text style={styles.cancelText}>취소</Text>
             </Pressable>
             <Text style={styles.titleText}>연도 선택</Text>
-            <Pressable hitSlop={8} onPress={handleApply}>
-              <Text style={styles.applyText}>적용</Text>
-            </Pressable>
+            <View style={styles.headerSpacer} />
           </View>
 
           <ScrollView
@@ -123,9 +115,9 @@ export default function YearPickerModal({
                   : "모든 기록"
               }
               monthly={totalsMonthly}
-              selected={pending.kind === "all"}
+              selected={initial.kind === "all"}
               muted={false}
-              onPress={() => setPending({ kind: "all" })}
+              onPress={() => onApply({ kind: "all" })}
             />
             {rows.map((s) => {
               const isEmpty = s.days === 0;
@@ -140,10 +132,10 @@ export default function YearPickerModal({
                   subtitle={subtitle}
                   monthly={s.monthly}
                   selected={
-                    pending.kind === "year" && pending.year === s.year
+                    initial.kind === "year" && initial.year === s.year
                   }
                   muted={isEmpty}
-                  onPress={() => setPending({ kind: "year", year: s.year })}
+                  onPress={() => onApply({ kind: "year", year: s.year })}
                 />
               );
             })}
@@ -280,12 +272,8 @@ function makeStyles(theme: Theme) {
       fontSize: 16,
       fontWeight: "700",
     },
-    applyText: {
-      color: theme.accent,
-      fontSize: 15,
-      fontWeight: "700",
+    headerSpacer: {
       minWidth: 40,
-      textAlign: "right",
     },
     list: {
       flexGrow: 0,
