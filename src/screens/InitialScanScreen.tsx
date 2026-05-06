@@ -9,6 +9,10 @@ import {
   Text,
   View,
 } from "react-native";
+import Animated, {
+  FadeOut,
+  LinearTransition,
+} from "react-native-reanimated";
 
 import { runFullSync } from "../features/photoSync/syncService";
 import { SuspectTrip } from "../features/photoSync/deviceVerification";
@@ -158,8 +162,8 @@ export default function InitialScanScreen({ onDone }: Props) {
         </Text>
         {!error && !denied && suspectTrips.length > 0 && (
           <Text style={styles.subtitle}>
-            다른 기기로 찍힌 사진만 있는 여행이에요. 친구한테 받은 사진이라면
-            기록에서 빼주세요.
+            다른 기기로 찍힌 사진만 있는 여행이에요. 내 여행이 아닌게 있다면
+            기록에서 제거해주세요.
           </Text>
         )}
         {!error && !denied && suspectTrips.length === 0 && (
@@ -248,7 +252,11 @@ function SuspectRow({
   const countryColor = colorForCountry(trip.countryCode);
 
   return (
-    <View style={styles.row}>
+    <Animated.View
+      style={styles.row}
+      exiting={FadeOut.duration(220)}
+      layout={LinearTransition.duration(220)}
+    >
       <View style={styles.rowMain}>
         <View style={[styles.flagBox, { backgroundColor: countryColor.bg }]}>
           <Text style={styles.flagText}>{flagEmoji(trip.countryCode)}</Text>
@@ -305,7 +313,7 @@ function SuspectRow({
           <Text style={styles.acceptBtnText}>내 여행에 추가</Text>
         </Pressable>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

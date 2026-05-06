@@ -8,6 +8,10 @@ import {
   Text,
   View,
 } from "react-native";
+import Animated, {
+  FadeOut,
+  LinearTransition,
+} from "react-native-reanimated";
 
 import { SuspectTrip } from "../features/photoSync/deviceVerification";
 import { useVisitStore } from "../features/travel/visitStore";
@@ -192,7 +196,11 @@ function SuspectRow({
   const countryColor = colorForCountry(trip.countryCode);
 
   return (
-    <View style={styles.row}>
+    <Animated.View
+      style={styles.row}
+      exiting={FadeOut.duration(220)}
+      layout={LinearTransition.duration(220)}
+    >
       <View style={styles.rowMain}>
         <View style={[styles.flagBox, { backgroundColor: countryColor.bg }]}>
           <Text style={styles.flagText}>{flagEmoji(trip.countryCode)}</Text>
@@ -249,7 +257,7 @@ function SuspectRow({
           <Text style={styles.acceptBtnText}>내 여행에 추가</Text>
         </Pressable>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
