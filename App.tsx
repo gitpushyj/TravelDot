@@ -37,9 +37,14 @@ export default function App() {
     ];
     if (lastSync.sample) {
       const s = lastSync.sample;
+      // 일부러 raw 값을 그대로 표시한다. number가 아닐 수도 있다는 의심을 검증.
+      const fmt = (v: unknown) =>
+        typeof v === "number" ? v.toFixed(4) : `${typeof v}:${String(v)}`;
       lines.push(
-        `표본: lat=${s.lat.toFixed(4)} lng=${s.lng.toFixed(4)}`,
-        `bbox통과 ${s.bboxHits}/${s.totalFeatures} → code=${s.code ?? "null"}`
+        `표본: lat=${fmt(s.lat)} lng=${fmt(s.lng)}`,
+        `bbox통과 ${s.bboxHits ?? "?"}/${s.totalFeatures ?? "?"} → code=${
+          s.code ?? "null"
+        }`
       );
     }
     if (lastSync.error) lines.push(`에러: ${lastSync.error}`);
