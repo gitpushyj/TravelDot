@@ -80,10 +80,19 @@ async function fetchDeviceForAsset(
   }
 }
 
+// 본국 사진 표본에서 추정한 사용자의 기기들.
+// - primary: 본국에서 가장 자주 등장한 단일 기기. 사용자의 메인 폰으로 간주.
+// - all: primary + 임계(OWN_DEVICE_MIN_COUNT) 이상 등장한 보조 기기 묶음.
+//        가족/연인 기기는 여기 들어와 의심 분류 시 보조 안전 신호로 사용된다.
+export type OwnDevices = {
+  primary: string | null;
+  all: Set<string>;
+};
+
 // 본국 사진 표본을 훑어 빈도가 높은 (make, model)을 "내 기기"로 본다.
 export async function detectOwnDevices(
   homeCode: string
-): Promise<Set<string>> {
+): Promise<OwnDevices> {
   const counts = new Map<string, number>();
   let sampled = 0;
 
@@ -99,16 +108,18 @@ export async function detectOwnDevices(
     sampled += 1;
   }
 
-  const result = new Set<string>();
+  const all = new Set<string>();
   for (const [k, n] of counts) {
-    if (n >= OWN_DEVICE_MIN_COUNT) result.add(k);
+    if (n >= OWN_DEVICE_MIN_COUNT) all.add(k);
   }
-  // 표본이 적어 임계 미달이면 최소 1개라도 반영해서 false positive를 줄인다.
-  if (result.size === 0 && counts.size > 0) {
+  let primary: string | null = null;
+  if (counts.size > 0) {
     const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
-    result.add(top[0]);
+    primary = top[0];
+    // 표본이 적어 임계 미달이면 primary 하나만이라도 own으로 인정한다.
+    if (all.size === 0) all.add(primary);
   }
-  return result;
+  return { primary, all };
 }
 
 // device_checked_at == null 인 사진들의 make/model을 채워 넣는다. iOS의
@@ -153,19 +164,22 @@ export async function fillMissingDeviceInfo(
   });
 }
 
-// 분류 후 의심 여행을 그룹핑한다. 본인 사진은 안전, 외부 사진(foreign)과
-// EXIF 메타가 없는 사진(unknown — 메신저 전달본 등)은 ±GRACE_PERIOD_DAYS 내에
-// 본인 사진이 같은 국가에 없을 때 의심으로 잡힌다.
+// 분류 후 의심 여행을 그룹핑한다. primary 기기 사진만 무조건 안전으로 보고,
+// 그 외(secondary own 포함, foreign, unknown)는 ±GRACE_PERIOD_DAYS 내에 같은
+// 국가에 primary 기기 사진이 없으면 의심으로 잡는다. 친구가 본국으로 AirDrop한
+// 사진이 5장을 넘어 own으로 잘못 등록되더라도, 사용자가 그 친구가 간 외국에
+// 메인 기기로 사진을 찍지 않았다면 자연스럽게 의심으로 걸러진다.
 export function buildSuspectTrips(
   photos: VisitPhotoForReview[],
-  ownDevices: Set<string>
+  ownDevices: OwnDevices
 ): SuspectTrip[] {
-  type Cls = "own" | "foreign" | "unknown";
+  type Cls = "primary" | "secondary" | "foreign" | "unknown";
   const classify = (p: VisitPhotoForReview): Cls => {
     if (p.deviceMake == null && p.deviceModel == null) return "unknown";
-    return ownDevices.has(deviceKey(p.deviceMake, p.deviceModel))
-      ? "own"
-      : "foreign";
+    const k = deviceKey(p.deviceMake, p.deviceModel);
+    if (ownDevices.primary && k === ownDevices.primary) return "primary";
+    if (ownDevices.all.has(k)) return "secondary";
+    return "foreign";
   };
 
   const byCountry = new Map<string, VisitPhotoForReview[]>();
@@ -179,14 +193,14 @@ export function buildSuspectTrips(
 
   for (const [country, list] of byCountry) {
     list.sort((a, b) => a.takenAt - b.takenAt);
-    const ownDates = new Set<string>();
+    const primaryDates = new Set<string>();
     for (const p of list) {
-      if (classify(p) === "own") ownDates.add(p.date);
+      if (classify(p) === "primary") primaryDates.add(p.date);
     }
-    const hasOwnNeighbor = (date: string): boolean => {
+    const hasPrimaryNeighbor = (date: string): boolean => {
       const d = parseDate(date);
       for (let off = -GRACE_PERIOD_DAYS; off <= GRACE_PERIOD_DAYS; off++) {
-        if (ownDates.has(formatDate(addDays(d, off)))) return true;
+        if (primaryDates.has(formatDate(addDays(d, off)))) return true;
       }
       return false;
     };
@@ -194,8 +208,8 @@ export function buildSuspectTrips(
     const suspectsInCountry: VisitPhotoForReview[] = [];
     for (const p of list) {
       const cls = classify(p);
-      if (cls === "own") continue;
-      if (hasOwnNeighbor(p.date)) continue;
+      if (cls === "primary") continue;
+      if (hasPrimaryNeighbor(p.date)) continue;
       suspectsInCountry.push(p);
     }
     if (suspectsInCountry.length === 0) continue;
@@ -252,7 +266,7 @@ export async function reviewSuspectTrips(opts: {
   // 본국 사진에서 내 기기를 단 하나도 찾지 못한 경우(신규 사용자, 본국 사진이 모두
   // 메타 없이 저장된 경우 등). 모든 외국 사진을 "다른 기기"로 간주하면 false positive가
   // 폭주하므로 안전하게 빈 결과를 반환한다.
-  if (ownDevices.size === 0) return [];
+  if (!ownDevices.primary) return [];
   let photos = await loadAllPhotosForReview();
   photos = await fillMissingDeviceInfo(photos, opts.onProgress);
   return buildSuspectTrips(photos, ownDevices);
