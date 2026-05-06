@@ -166,7 +166,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
       return;
     }
     const res = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ["images"],
       allowsMultipleSelection: true,
       exif: true,
       quality: 0.5,
