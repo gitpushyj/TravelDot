@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,6 +11,7 @@ import {
 
 import { SuspectTrip } from "../features/photoSync/deviceVerification";
 import { useVisitStore } from "../features/travel/visitStore";
+import { loadPhotoUrisByIds } from "../features/travel/visitRepository";
 import { flagEmoji } from "../utils/flag";
 import { useTheme } from "../theme/themeStore";
 import type { Theme } from "../theme/theme";
@@ -20,6 +22,8 @@ const COUNTRY_LIST = countriesJson as CountryEntry[];
 const KO_NAME_BY_CODE: Record<string, string> = {};
 for (const c of COUNTRY_LIST) KO_NAME_BY_CODE[c.code] = c.nameKo;
 
+const PREVIEW_PHOTO_LIMIT = 5;
+
 type Props = { onClose: () => void };
 
 export default function ReviewSuspectTripsScreen({ onClose }: Props) {
@@ -27,7 +31,35 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const suspectTrips = useVisitStore((s) => s.suspectTrips);
   const rejectSuspectTrip = useVisitStore((s) => s.rejectSuspectTrip);
+  const acceptSuspectTrip = useVisitStore((s) => s.acceptSuspectTrip);
   const acceptSuspectTrips = useVisitStore((s) => s.acceptSuspectTrips);
+
+  // 모든 의심 여행의 미리보기 사진을 한 번에 로드. trip별로 photoIds 앞쪽 N개만
+  // 보여주면 충분하므로, 평탄화된 id 묶음으로 단일 쿼리를 던진다.
+  const [photoUris, setPhotoUris] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+    const ids: string[] = [];
+    for (const trip of suspectTrips) {
+      ids.push(...trip.photoIds.slice(0, PREVIEW_PHOTO_LIMIT));
+    }
+    if (ids.length === 0) {
+      setPhotoUris({});
+      return;
+    }
+    void (async () => {
+      try {
+        const map = await loadPhotoUrisByIds(ids);
+        if (!cancelled) setPhotoUris(map);
+      } catch {
+        if (!cancelled) setPhotoUris({});
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [suspectTrips]);
 
   const handleReject = (trip: SuspectTrip) => {
     const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
@@ -45,6 +77,10 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
         },
       ]
     );
+  };
+
+  const handleAccept = (trip: SuspectTrip) => {
+    void acceptSuspectTrip(trip);
   };
 
   const handleConfirmAll = async () => {
@@ -85,14 +121,22 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
           </View>
         ) : (
           <View style={styles.list}>
-            {suspectTrips.map((trip) => (
-              <SuspectRow
-                key={`${trip.countryCode}-${trip.startDate}-${trip.endDate}`}
-                theme={theme}
-                trip={trip}
-                onReject={() => handleReject(trip)}
-              />
-            ))}
+            {suspectTrips.map((trip) => {
+              const previewUris = trip.photoIds
+                .slice(0, PREVIEW_PHOTO_LIMIT)
+                .map((id) => photoUris[id])
+                .filter((u): u is string => !!u);
+              return (
+                <SuspectRow
+                  key={`${trip.countryCode}-${trip.startDate}-${trip.endDate}`}
+                  theme={theme}
+                  trip={trip}
+                  previewUris={previewUris}
+                  onReject={() => handleReject(trip)}
+                  onAccept={() => handleAccept(trip)}
+                />
+              );
+            })}
           </View>
         )}
       </ScrollView>
@@ -119,11 +163,15 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
 function SuspectRow({
   theme,
   trip,
+  previewUris,
   onReject,
+  onAccept,
 }: {
   theme: Theme;
   trip: SuspectTrip;
+  previewUris: string[];
   onReject: () => void;
+  onAccept: () => void;
 }) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
@@ -133,6 +181,7 @@ function SuspectRow({
       : trip.deviceLabels.length === 1
         ? trip.deviceLabels[0]
         : `${trip.deviceLabels[0]} 외 ${trip.deviceLabels.length - 1}대`;
+  const remainingPhotos = Math.max(0, trip.photoCount - previewUris.length);
 
   return (
     <View style={styles.row}>
@@ -153,15 +202,44 @@ function SuspectRow({
           </Text>
         </View>
       </View>
-      <Pressable
-        onPress={onReject}
-        style={({ pressed }) => [
-          styles.rejectBtn,
-          pressed && styles.rejectBtnPressed,
-        ]}
-      >
-        <Text style={styles.rejectBtnText}>내 여행 아님</Text>
-      </Pressable>
+      {previewUris.length > 0 && (
+        <View style={styles.thumbRow}>
+          {previewUris.map((uri, idx) => (
+            <View key={`${uri}-${idx}`} style={styles.thumbWrap}>
+              <Image source={{ uri }} style={styles.thumb} />
+              {idx === previewUris.length - 1 && remainingPhotos > 0 && (
+                <View style={styles.thumbOverlay}>
+                  <Text style={styles.thumbOverlayText}>
+                    +{remainingPhotos}
+                  </Text>
+                </View>
+              )}
+            </View>
+          ))}
+        </View>
+      )}
+      <View style={styles.actionRow}>
+        <Pressable
+          onPress={onReject}
+          style={({ pressed }) => [
+            styles.actionBtn,
+            styles.rejectBtn,
+            pressed && styles.actionBtnPressed,
+          ]}
+        >
+          <Text style={styles.rejectBtnText}>내 여행 아님</Text>
+        </Pressable>
+        <Pressable
+          onPress={onAccept}
+          style={({ pressed }) => [
+            styles.actionBtn,
+            styles.acceptBtn,
+            pressed && styles.actionBtnPressed,
+          ]}
+        >
+          <Text style={styles.acceptBtnText}>내 여행 맞음</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -199,7 +277,7 @@ function makeStyles(theme: Theme) {
     content: {
       paddingHorizontal: 20,
       paddingTop: 8,
-      paddingBottom: 100,
+      paddingBottom: 140,
     },
     intro: {
       marginBottom: 16,
@@ -264,18 +342,57 @@ function makeStyles(theme: Theme) {
       justifyContent: "center",
     },
     flagText: { fontSize: 26 },
-    rejectBtn: {
+    thumbRow: {
+      flexDirection: "row",
+      gap: 6,
       marginTop: 12,
+    },
+    thumbWrap: {
+      width: 60,
+      height: 60,
+      borderRadius: 8,
+      overflow: "hidden",
+      backgroundColor: theme.flagBoxBg,
+    },
+    thumb: { width: "100%", height: "100%" },
+    thumbOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: "rgba(0,0,0,0.5)",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    thumbOverlayText: {
+      color: "#FFFFFF",
+      fontSize: 13,
+      fontWeight: "700",
+    },
+    actionRow: {
+      flexDirection: "row",
+      gap: 8,
+      marginTop: 12,
+    },
+    actionBtn: {
+      flex: 1,
       borderRadius: 10,
       paddingVertical: 10,
       alignItems: "center",
-      backgroundColor: theme.tabRowBg,
     },
-    rejectBtnPressed: {
+    actionBtnPressed: {
       opacity: 0.7,
+    },
+    rejectBtn: {
+      backgroundColor: theme.tabRowBg,
     },
     rejectBtnText: {
       color: theme.textPrimary,
+      fontSize: 14,
+      fontWeight: "700",
+    },
+    acceptBtn: {
+      backgroundColor: theme.accent,
+    },
+    acceptBtnText: {
+      color: "#FFFFFF",
       fontSize: 14,
       fontWeight: "700",
     },
@@ -292,7 +409,9 @@ function makeStyles(theme: Theme) {
       left: 0,
       right: 0,
       bottom: 0,
-      padding: 16,
+      paddingHorizontal: 16,
+      paddingTop: 16,
+      paddingBottom: 36,
       backgroundColor: theme.homeBg,
       borderTopWidth: StyleSheet.hairlineWidth,
       borderTopColor: theme.cardBorder,

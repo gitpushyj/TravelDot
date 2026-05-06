@@ -624,6 +624,29 @@ export async function loadAllPhotosForReview(): Promise<VisitPhotoForReview[]> {
   }));
 }
 
+// 의심 여행 미리보기용 — id 묶음에 해당하는 visit_photos의 localUri를 반환.
+// soft-delete된 행은 제외하고, local_uri가 비어있는 행은 결과에서 빠진다.
+export async function loadPhotoUrisByIds(
+  ids: string[]
+): Promise<Record<string, string>> {
+  if (ids.length === 0) return {};
+  const db = await getDb();
+  const out: Record<string, string> = {};
+  for (let i = 0; i < ids.length; i += 500) {
+    const chunk = ids.slice(i, i + 500);
+    const placeholders = chunk.map(() => "?").join(",");
+    const rows = await db.getAllAsync<{ id: string; local_uri: string | null }>(
+      `SELECT id, local_uri FROM visit_photos
+        WHERE id IN (${placeholders}) AND deleted_at IS NULL`,
+      ...chunk
+    );
+    for (const r of rows) {
+      if (r.local_uri) out[r.id] = r.local_uri;
+    }
+  }
+  return out;
+}
+
 // 사용자가 "내 여행 맞음"으로 확인한 사진들을 표시. 다음 리뷰에서 제외된다.
 export async function markPhotosUserReviewed(ids: string[]): Promise<void> {
   if (ids.length === 0) return;

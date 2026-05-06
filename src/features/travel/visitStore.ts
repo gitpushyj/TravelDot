@@ -83,6 +83,8 @@ type State = {
   setSuspectTrips: (trips: SuspectTrip[]) => void;
   /** 의심 여행 거부 — 해당 사진들을 soft-delete하고 visit 통계 재로드. */
   rejectSuspectTrip: (trip: SuspectTrip) => Promise<void>;
+  /** 단건 인정 — 한 묶음만 user_reviewed로 표시하고 목록에서 제거. */
+  acceptSuspectTrip: (trip: SuspectTrip) => Promise<void>;
   /** 의심 여행 인정 — 해당 사진들을 user_reviewed로 표시해 다음 리뷰에서 제외. */
   acceptSuspectTrips: (trips: SuspectTrip[]) => Promise<void>;
 };
@@ -249,6 +251,19 @@ export const useVisitStore = create<State>((set, get) => ({
       ),
     }));
     await get().refreshVisits();
+  },
+  acceptSuspectTrip: async (trip) => {
+    await markPhotosUserReviewed(trip.photoIds);
+    set((s) => ({
+      suspectTrips: s.suspectTrips.filter(
+        (t) =>
+          !(
+            t.countryCode === trip.countryCode &&
+            t.startDate === trip.startDate &&
+            t.endDate === trip.endDate
+          )
+      ),
+    }));
   },
   acceptSuspectTrips: async (trips) => {
     if (trips.length === 0) return;
