@@ -25,6 +25,7 @@ import { useVisitStore } from "./src/features/travel/visitStore";
 import { pickActiveBadge, useBadgeStore } from "./src/features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "./src/features/badges/countryNames";
 import AddTripScreen from "./src/screens/AddTripScreen";
+import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import TitlesScreen from "./src/screens/TitlesScreen";
@@ -69,7 +70,9 @@ export default function App() {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
-  const [screen, setScreen] = useState<"main" | "addTrip" | "settings" | "titles">("main");
+  const [screen, setScreen] = useState<
+    "main" | "addTrip" | "settings" | "titles" | "mapZoom"
+  >("main");
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
@@ -219,6 +222,17 @@ export default function App() {
     );
   }
 
+  if (screen === "mapZoom") {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <MapZoomScreen
+          visitCounts={activeCounts}
+          onClose={() => setScreen("main")}
+        />
+      </GestureHandlerRootView>
+    );
+  }
+
   const percent =
     Math.round((totals.countries / TOTAL_COUNTRIES) * 1000) / 10;
 
@@ -290,9 +304,7 @@ export default function App() {
             </Pressable>
           </View>
           <Pressable
-            onPress={() =>
-              Alert.alert("준비 중", "전체화면 보기는 곧 추가됩니다.")
-            }
+            onPress={() => setScreen("mapZoom")}
             hitSlop={8}
             style={({ pressed }) => [
               styles.iconBtn,
