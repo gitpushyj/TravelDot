@@ -36,6 +36,7 @@ import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import TitlesScreen from "./src/screens/TitlesScreen";
+import TripDetailScreen from "./src/screens/TripDetailScreen";
 import countriesJson from "./assets/data/countries.json";
 import { flagEmoji } from "./src/utils/flag";
 import { colorForVisitWith, type Theme } from "./src/theme/theme";
@@ -63,6 +64,7 @@ type RootStackParamList = {
   Titles: undefined;
   MapZoom: undefined;
   CountryDetail: undefined;
+  TripDetail: { trip: RecentTrip };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -230,6 +232,10 @@ export default function App() {
               <Stack.Screen
                 name="CountryDetail"
                 component={CountryDetailScreenNav}
+              />
+              <Stack.Screen
+                name="TripDetail"
+                component={TripDetailScreenNav}
               />
             </Stack.Navigator>
           </NavigationContainer>
@@ -462,7 +468,11 @@ function MainScreen({
             <Text style={styles.allLink}>전체보기 →</Text>
           </Pressable>
         </View>
-        <RecentList theme={theme} trips={recentTrips} />
+        <RecentList
+          theme={theme}
+          trips={recentTrips}
+          onSelect={(t) => navigation.navigate("TripDetail", { trip: t })}
+        />
       </ScrollView>
       <YearPickerModal
         visible={yearPickerOpen}
@@ -552,6 +562,19 @@ function CountryDetailScreenNav({
   );
 }
 
+function TripDetailScreenNav({
+  navigation,
+  route,
+}: NativeStackScreenProps<RootStackParamList, "TripDetail">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <TripDetailScreen trip={route.params.trip} onClose={() => navigation.goBack()} />
+    </>
+  );
+}
+
 function MiniCard({
   theme,
   homeCode,
@@ -596,7 +619,15 @@ function MiniCard({
   );
 }
 
-function RecentList({ theme, trips }: { theme: Theme; trips: RecentTrip[] }) {
+function RecentList({
+  theme,
+  trips,
+  onSelect,
+}: {
+  theme: Theme;
+  trips: RecentTrip[];
+  onSelect: (trip: RecentTrip) => void;
+}) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   if (trips.length === 0) {
     return (
@@ -619,12 +650,7 @@ function RecentList({ theme, trips }: { theme: Theme; trips: RecentTrip[] }) {
         const [y, m, d] = item.startDate.split("-");
         return (
           <Pressable
-            onPress={() =>
-              Alert.alert(
-                koName,
-                `${y}.${m}.${d} 시작 · ${item.days}일 머무름`
-              )
-            }
+            onPress={() => onSelect(item)}
             style={({ pressed }) => [
               styles.recentRow,
               pressed && { backgroundColor: theme.rowPressedBg },
