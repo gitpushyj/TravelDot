@@ -23,6 +23,7 @@ import {
 import type { RecentTrip } from "./src/features/travel/visitRepository";
 import { useVisitStore } from "./src/features/travel/visitStore";
 import AddTripScreen from "./src/screens/AddTripScreen";
+import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import countriesJson from "./assets/data/countries.json";
 import { flagEmoji } from "./src/utils/flag";
@@ -64,7 +65,7 @@ export default function App() {
   const setLastSync = useVisitStore((s) => s.setLastSync);
   const homeCleanupReport = useVisitStore((s) => s.homeCleanupReport);
   const setHomeCleanupReport = useVisitStore((s) => s.setHomeCleanupReport);
-  const [screen, setScreen] = useState<"main" | "addTrip">("main");
+  const [screen, setScreen] = useState<"main" | "addTrip" | "mapZoom">("main");
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
@@ -203,6 +204,17 @@ export default function App() {
     );
   }
 
+  if (screen === "mapZoom") {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <MapZoomScreen
+          visitCounts={activeCounts}
+          onClose={() => setScreen("main")}
+        />
+      </GestureHandlerRootView>
+    );
+  }
+
   const percent =
     Math.round((totals.countries / TOTAL_COUNTRIES) * 1000) / 10;
 
@@ -274,9 +286,7 @@ export default function App() {
             </Pressable>
           </View>
           <Pressable
-            onPress={() =>
-              Alert.alert("준비 중", "전체화면 보기는 곧 추가됩니다.")
-            }
+            onPress={() => setScreen("mapZoom")}
             hitSlop={8}
             style={({ pressed }) => [
               styles.iconBtn,

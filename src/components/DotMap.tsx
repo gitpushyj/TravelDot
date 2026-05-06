@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Canvas, Group, RoundedRect } from "@shopify/react-native-skia";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
@@ -27,12 +34,18 @@ type Props = {
   enableZoom?: boolean;
   // 핀치/팬이 시작·종료될 때 호출. 부모 ScrollView 스크롤을 일시 잠그는 데 사용.
   onInteractingChange?: (interacting: boolean) => void;
+  // 기본 width:100% + aspectRatio 360/145 대신 직접 사이즈를 지정하고 싶을 때.
+  mapAreaStyle?: StyleProp<ViewStyle>;
+  // 한 도트가 여러 나라에 걸쳐 있을 때 선택 UI 없이 첫 국가를 자동 선택.
+  autoPickFirst?: boolean;
 };
 
 export default function DotMap({
   visitCounts: visitCountsProp,
   enableZoom = true,
   onInteractingChange,
+  mapAreaStyle,
+  autoPickFirst = false,
 }: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -182,7 +195,7 @@ export default function DotMap({
         }
       }
       if (!bestCountries || bestCountries.length === 0) return;
-      if (bestCountries.length === 1) {
+      if (bestCountries.length === 1 || autoPickFirst) {
         const c = bestCountries[0];
         setPending(null);
         setSelectedCountry({ code: c.code, name: c.name });
@@ -190,7 +203,7 @@ export default function DotMap({
         setPending(bestCountries);
       }
     },
-    [positioned, halfDotPx, baseScale, gridSize, setSelectedCountry]
+    [positioned, halfDotPx, baseScale, gridSize, setSelectedCountry, autoPickFirst]
   );
 
   // 첫 진입 시 본국을 2초 보여준 뒤 4초에 걸쳐 세계지도로 줌아웃하는 인트로 애니메이션.
@@ -286,7 +299,7 @@ export default function DotMap({
   return (
     <View style={styles.root}>
       <View
-        style={styles.mapArea}
+        style={[styles.mapArea, mapAreaStyle]}
         onLayout={(e) => {
           const { width, height } = e.nativeEvent.layout;
           if (width !== size.width || height !== size.height) {
