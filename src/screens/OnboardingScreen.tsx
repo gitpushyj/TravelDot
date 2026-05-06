@@ -19,9 +19,15 @@ type Mode = "initial" | "change";
 type Props = {
   mode?: Mode;
   onClose?: () => void;
+  /** 초기 모드에서 본국이 저장되면 호출. 호출 측은 스캔 화면으로 전환한다. */
+  onAfterSetup?: () => void;
 };
 
-export default function OnboardingScreen({ mode = "initial", onClose }: Props) {
+export default function OnboardingScreen({
+  mode = "initial",
+  onClose,
+  onAfterSetup,
+}: Props) {
   const setHomeCountry = useVisitStore((s) => s.setHomeCountry);
   const changeHomeCountry = useVisitStore((s) => s.changeHomeCountry);
   const [submitting, setSubmitting] = useState(false);
@@ -36,17 +42,24 @@ export default function OnboardingScreen({ mode = "initial", onClose }: Props) {
     Keyboard.dismiss();
     setSelectedCode(entry.code);
     setSubmitting(true);
+    // 초기 모드에서는 setHomeCountry가 끝나기 전에 화면이 깜빡이지 않도록
+    // 미리 스캔 화면으로 전환 신호를 보낸다. InitialScanScreen은 homeCountry가
+    // 채워지는 것을 보고 스캔을 시작한다.
+    if (mode === "initial") {
+      onAfterSetup?.();
+    }
     try {
       if (mode === "change") {
         await changeHomeCountry({ code: entry.code, name: entry.nameKo });
+        // 본국 변경은 기존 메인 화면으로 돌아가 스캔이 백그라운드로 진행된다.
+        runFullSync().catch((err) => {
+          console.warn("[VisitGrid] sync failed", err);
+        });
+        onClose?.();
       } else {
         await setHomeCountry({ code: entry.code, name: entry.nameKo });
+        // 스캔 트리거는 InitialScanScreen이 담당한다.
       }
-      // 첫 스캔 / 재스캔은 fire-and-forget. 실패해도 화면 전환을 막지 않는다.
-      runFullSync().catch((err) => {
-        console.warn("[VisitGrid] sync failed", err);
-      });
-      onClose?.();
     } catch (e) {
       Alert.alert("저장 실패", String(e));
       setSubmitting(false);

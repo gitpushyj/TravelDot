@@ -26,8 +26,10 @@ import { pickActiveBadge, useBadgeStore } from "./src/features/badges/badgeStore
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "./src/features/badges/countryNames";
 import AddTripScreen from "./src/screens/AddTripScreen";
 import CountryDetailScreen from "./src/screens/CountryDetailScreen";
+import InitialScanScreen from "./src/screens/InitialScanScreen";
 import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
+import ReviewSuspectTripsScreen from "./src/screens/ReviewSuspectTripsScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import TitlesScreen from "./src/screens/TitlesScreen";
 import TripDetailScreen from "./src/screens/TripDetailScreen";
@@ -64,6 +66,7 @@ export default function App() {
   const setLastSync = useVisitStore((s) => s.setLastSync);
   const homeCleanupReport = useVisitStore((s) => s.homeCleanupReport);
   const setHomeCleanupReport = useVisitStore((s) => s.setHomeCleanupReport);
+  const suspectTrips = useVisitStore((s) => s.suspectTrips);
   const themeHydrate = useThemeStore((s) => s.hydrate);
   const themeHydrated = useThemeStore((s) => s.hydrated);
   const activeBadgeId = useBadgeStore((s) => s.activeId);
@@ -81,6 +84,8 @@ export default function App() {
     | "changeHome"
     | "countryDetail"
     | "tripDetail"
+    | "reviewSuspect"
+    | "initialScan"
   >("main");
   const [selectedTrip, setSelectedTrip] = useState<RecentTrip | null>(null);
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
@@ -101,6 +106,8 @@ export default function App() {
   useEffect(() => {
     if (!lastSync) return;
     if (syncStatus.running) return;
+    // 초기 스캔 화면은 결과를 자체 UI로 직접 보여주므로 알림을 띄우지 않는다.
+    if (screen === "initialScan") return;
     const { permission, scanned, added, error } = lastSync;
 
     let title = "사진 확인이 끝났어요";
@@ -134,10 +141,30 @@ export default function App() {
           : "확인할 사진이 없어요.";
     }
 
-    Alert.alert(title, body, [
-      { text: "확인", onPress: () => setLastSync(null) },
-    ]);
-  }, [lastSync, syncStatus.running, setLastSync]);
+    const suspectCount = suspectTrips.length;
+    if (!error && permission !== "denied" && suspectCount > 0) {
+      body +=
+        `\n\n다른 기기로 찍힌 사진만 있는 여행 ${suspectCount}개를 찾았어요.\n` +
+        `친구한테 받은 사진이라면 기록에서 빼주세요.`;
+    }
+
+    const buttons: {
+      text: string;
+      style?: "default" | "cancel" | "destructive";
+      onPress: () => void;
+    }[] = [{ text: "확인", onPress: () => setLastSync(null) }];
+    if (!error && permission !== "denied" && suspectCount > 0) {
+      buttons.unshift({
+        text: "확인하러 가기",
+        onPress: () => {
+          setLastSync(null);
+          setScreen("reviewSuspect");
+        },
+      });
+    }
+
+    Alert.alert(title, body, buttons);
+  }, [lastSync, syncStatus.running, setLastSync, suspectTrips, screen]);
 
   useEffect(() => {
     if (!homeCleanupReport) return;
@@ -227,11 +254,22 @@ export default function App() {
     return <View style={styles.root} />;
   }
 
+  // 초기 스캔은 homeCountry가 store에 반영되기 직전에 진입할 수 있으므로
+  // homeCountry 체크보다 먼저 분기시켜 화면 깜빡임을 막는다.
+  if (screen === "initialScan") {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <StatusBar style={theme.statusBar} />
+        <InitialScanScreen onDone={() => setScreen("main")} />
+      </GestureHandlerRootView>
+    );
+  }
+
   if (!homeCountry) {
     return (
       <GestureHandlerRootView style={styles.rootDark}>
         <StatusBar style="light" />
-        <OnboardingScreen />
+        <OnboardingScreen onAfterSetup={() => setScreen("initialScan")} />
       </GestureHandlerRootView>
     );
   }
@@ -254,6 +292,7 @@ export default function App() {
           onAddTrip={() => setScreen("addTrip")}
           onOpenTitles={() => setScreen("titles")}
           onChangeHome={() => setScreen("changeHome")}
+          onReviewSuspect={() => setScreen("reviewSuspect")}
         />
       </GestureHandlerRootView>
     );
@@ -308,6 +347,15 @@ export default function App() {
           trip={selectedTrip}
           onClose={() => setScreen("main")}
         />
+      </GestureHandlerRootView>
+    );
+  }
+
+  if (screen === "reviewSuspect") {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <StatusBar style={theme.statusBar} />
+        <ReviewSuspectTripsScreen onClose={() => setScreen("main")} />
       </GestureHandlerRootView>
     );
   }

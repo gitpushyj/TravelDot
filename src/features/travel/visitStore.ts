@@ -8,10 +8,13 @@ import {
   loadTotalVisitDays,
   loadVisitCounts,
   loadVisitCountsByYear,
+  markPhotosUserReviewed,
   RecentTrip,
   removeAutoVisitsForCountry,
+  softDeletePhotosByIds,
   wipeAllVisits,
 } from "./visitRepository";
+import { SuspectTrip } from "../photoSync/deviceVerification";
 import {
   HomeCountry,
   loadHomeCountry,
@@ -64,6 +67,8 @@ type State = {
   lastSync: SyncReport | null;
   selectedCountry: SelectedCountry | null;
   homeCleanupReport: HomeCleanupReport | null;
+  /** 다른 기기 사진만 있어 본인 여행이 맞는지 사용자 확인이 필요한 묶음들. */
+  suspectTrips: SuspectTrip[];
   hydrate: () => Promise<void>;
   setHomeCountry: (c: HomeCountry) => Promise<void>;
   changeHomeCountry: (c: HomeCountry) => Promise<void>;
@@ -75,6 +80,11 @@ type State = {
   setSyncStatus: (s: SyncStatus) => void;
   setLastSync: (r: SyncReport | null) => void;
   setHomeCleanupReport: (r: HomeCleanupReport | null) => void;
+  setSuspectTrips: (trips: SuspectTrip[]) => void;
+  /** 의심 여행 거부 — 해당 사진들을 soft-delete하고 visit 통계 재로드. */
+  rejectSuspectTrip: (trip: SuspectTrip) => Promise<void>;
+  /** 의심 여행 인정 — 해당 사진들을 user_reviewed로 표시해 다음 리뷰에서 제외. */
+  acceptSuspectTrips: (trips: SuspectTrip[]) => Promise<void>;
 };
 
 export const useVisitStore = create<State>((set, get) => ({
@@ -89,6 +99,7 @@ export const useVisitStore = create<State>((set, get) => ({
   lastSync: null,
   selectedCountry: null,
   homeCleanupReport: null,
+  suspectTrips: [],
   hydrate: async () => {
     // 뱃지 스토어는 visitStore보다 먼저 hydrate되어야 한다 — 첫 evaluate에서
     // seeded 플래그를 정확히 읽어 retroactive 알림을 묵음 처리하기 위함.
@@ -174,6 +185,7 @@ export const useVisitStore = create<State>((set, get) => ({
       recentTrips: [],
       availableYears: [],
       homeCleanupReport: null,
+      suspectTrips: [],
     });
     await get().evaluateBadges();
   },
@@ -223,4 +235,32 @@ export const useVisitStore = create<State>((set, get) => ({
   setSyncStatus: (s) => set({ syncStatus: s }),
   setLastSync: (r) => set({ lastSync: r }),
   setHomeCleanupReport: (r) => set({ homeCleanupReport: r }),
+  setSuspectTrips: (trips) => set({ suspectTrips: trips }),
+  rejectSuspectTrip: async (trip) => {
+    await softDeletePhotosByIds(trip.photoIds);
+    set((s) => ({
+      suspectTrips: s.suspectTrips.filter(
+        (t) =>
+          !(
+            t.countryCode === trip.countryCode &&
+            t.startDate === trip.startDate &&
+            t.endDate === trip.endDate
+          )
+      ),
+    }));
+    await get().refreshVisits();
+  },
+  acceptSuspectTrips: async (trips) => {
+    if (trips.length === 0) return;
+    const ids = trips.flatMap((t) => t.photoIds);
+    await markPhotosUserReviewed(ids);
+    const keys = new Set(
+      trips.map((t) => `${t.countryCode}|${t.startDate}|${t.endDate}`)
+    );
+    set((s) => ({
+      suspectTrips: s.suspectTrips.filter(
+        (t) => !keys.has(`${t.countryCode}|${t.startDate}|${t.endDate}`)
+      ),
+    }));
+  },
 }));

@@ -42,7 +42,10 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
       source       TEXT NOT NULL,
       taken_at     INTEGER NOT NULL,
       updated_at   INTEGER NOT NULL,
-      deleted_at   INTEGER
+      deleted_at   INTEGER,
+      device_make  TEXT,
+      device_model TEXT,
+      device_checked_at INTEGER
     );
     CREATE INDEX IF NOT EXISTS idx_visit_photos_country_date
       ON visit_photos (country_code, date);
@@ -50,6 +53,22 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
   await ensureColumn(db, "visit_days", "deleted_at", "deleted_at INTEGER");
   await ensureColumn(db, "visit_notes", "deleted_at", "deleted_at INTEGER");
   await ensureColumn(db, "visit_photos", "deleted_at", "deleted_at INTEGER");
+  await ensureColumn(db, "visit_photos", "device_make", "device_make TEXT");
+  await ensureColumn(db, "visit_photos", "device_model", "device_model TEXT");
+  await ensureColumn(
+    db,
+    "visit_photos",
+    "device_checked_at",
+    "device_checked_at INTEGER"
+  );
+  // 사용자가 "다른 기기 사진이지만 내 여행 맞음"으로 확인한 시각.
+  // 채워져 있으면 의심 여행 리뷰에서 제외된다.
+  await ensureColumn(
+    db,
+    "visit_photos",
+    "user_reviewed_at",
+    "user_reviewed_at INTEGER"
+  );
   _db = db;
   return db;
 }

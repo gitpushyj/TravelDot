@@ -24,6 +24,7 @@ type Props = {
   onAddTrip: () => void;
   onOpenTitles: () => void;
   onChangeHome: () => void;
+  onReviewSuspect: () => void;
 };
 
 const THEME_OPTIONS: { mode: ThemeMode; label: string }[] = [
@@ -37,6 +38,7 @@ export default function SettingsScreen({
   onAddTrip,
   onOpenTitles,
   onChangeHome,
+  onReviewSuspect,
 }: Props) {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -47,6 +49,7 @@ export default function SettingsScreen({
   const visitCounts = useVisitStore((s) => s.visitCounts);
   const homeCountry = useVisitStore((s) => s.homeCountry);
   const homeChanged = useVisitStore((s) => s.homeChanged);
+  const suspectTrips = useVisitStore((s) => s.suspectTrips);
 
   const handleIncrementalSync = () => {
     runIncrementalSync().catch((e) => Alert.alert("스캔 실패", String(e)));
@@ -134,6 +137,15 @@ export default function SettingsScreen({
             onPress={handleFullSync}
             divider
           />
+          {suspectTrips.length > 0 && (
+            <ActionRow
+              theme={theme}
+              label={`여행 확인하기 (${suspectTrips.length})`}
+              sub="다른 기기 사진만 있는 여행 — 본인 여행 맞는지 확인"
+              onPress={onReviewSuspect}
+              divider
+            />
+          )}
         </View>
 
         <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>

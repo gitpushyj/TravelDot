@@ -7,6 +7,7 @@ import {
 } from "../travel/visitRepository";
 import { useVisitStore, SyncReport } from "../travel/visitStore";
 import { resolveCountryDetailed } from "./countryResolver";
+import { reviewSuspectTrips } from "./deviceVerification";
 import { ensurePermission, iteratePhotos } from "./photoLibrary";
 
 // sinceDate가 주어지면 그 날짜(YYYY-MM-DD) 미만의 사진은 건너뛴다.
@@ -81,6 +82,18 @@ async function runSync(sinceDate: string | null): Promise<void> {
     for (const items of buffer.values()) all.push(...items);
     const added = await addPhotos(all);
     await useVisitStore.getState().refreshVisits();
+
+    // 사진 추가가 끝났다면 곧바로 디바이스 검증을 돌려 의심 여행을 추려둔다.
+    // 본국이 없으면(온보딩 직전 등) 검증을 건너뛴다.
+    if (homeCode) {
+      try {
+        const suspects = await reviewSuspectTrips({ homeCode });
+        useVisitStore.getState().setSuspectTrips(suspects);
+      } catch {
+        // 검증 실패는 sync 자체를 실패로 만들지 않는다.
+      }
+    }
+
     useVisitStore
       .getState()
       .setSyncStatus({ running: false, processed: scanned });
