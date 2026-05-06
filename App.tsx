@@ -1,10 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useState } from "react";
 import {
-  ActionSheetIOS,
   Alert,
   FlatList,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -16,10 +14,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import CountryShape from "./src/components/CountryShape";
 import DotMap from "./src/components/DotMap";
 import YearPickerModal from "./src/components/YearPickerModal";
-import {
-  runFullSync,
-  runIncrementalSync,
-} from "./src/features/photoSync/syncService";
 import type { RecentTrip } from "./src/features/travel/visitRepository";
 import {
   getTierByCount,
@@ -154,50 +148,7 @@ export default function App() {
     setYearPickerOpen(true);
   };
 
-  const openMenu = () => {
-    const options = [
-      "여행 추가",
-      "새 사진 자동 추가",
-      "사진 재스캔",
-      "설정",
-      "취소",
-    ];
-    if (Platform.OS === "ios") {
-      ActionSheetIOS.showActionSheetWithOptions(
-        { options, cancelButtonIndex: 4 },
-        (idx) => {
-          if (idx === 0) setScreen("addTrip");
-          else if (idx === 1) {
-            runIncrementalSync().catch((e) =>
-              Alert.alert("스캔 실패", String(e))
-            );
-          } else if (idx === 2) {
-            runFullSync().catch((e) => Alert.alert("스캔 실패", String(e)));
-          } else if (idx === 3) {
-            setScreen("settings");
-          }
-        }
-      );
-    } else {
-      Alert.alert("메뉴", undefined, [
-        { text: "여행 추가", onPress: () => setScreen("addTrip") },
-        {
-          text: "새 사진 자동 추가",
-          onPress: () =>
-            runIncrementalSync().catch((e) =>
-              Alert.alert("스캔 실패", String(e))
-            ),
-        },
-        {
-          text: "사진 재스캔",
-          onPress: () =>
-            runFullSync().catch((e) => Alert.alert("스캔 실패", String(e))),
-        },
-        { text: "설정", onPress: () => setScreen("settings") },
-        { text: "취소", style: "cancel" },
-      ]);
-    }
-  };
+  const openSettings = () => setScreen("settings");
 
   if (!ready || !themeHydrated) {
     return <View style={styles.root} />;
@@ -225,7 +176,10 @@ export default function App() {
     return (
       <GestureHandlerRootView style={styles.root}>
         <StatusBar style={theme.statusBar} />
-        <SettingsScreen onClose={() => setScreen("main")} />
+        <SettingsScreen
+          onClose={() => setScreen("main")}
+          onAddTrip={() => setScreen("addTrip")}
+        />
       </GestureHandlerRootView>
     );
   }
@@ -254,7 +208,7 @@ export default function App() {
             </View>
           </View>
           <Pressable
-            onPress={openMenu}
+            onPress={openSettings}
             hitSlop={8}
             style={({ pressed }) => [
               styles.iconBtn,

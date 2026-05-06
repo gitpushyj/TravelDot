@@ -240,10 +240,10 @@ export default function DotMap({
     savedTy.value = targetTy;
 
     const easing = Easing.inOut(Easing.cubic);
-    scale.value = withDelay(2000, withTiming(1, { duration: 4000, easing }));
-    tx.value = withDelay(2000, withTiming(0, { duration: 4000, easing }));
+    scale.value = withDelay(1000, withTiming(1, { duration: 4000, easing }));
+    tx.value = withDelay(1000, withTiming(0, { duration: 4000, easing }));
     ty.value = withDelay(
-      2000,
+      1000,
       withTiming(0, { duration: 4000, easing }, (finished) => {
         if (finished) {
           savedScale.value = 1;

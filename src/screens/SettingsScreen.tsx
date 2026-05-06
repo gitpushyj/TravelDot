@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import {
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -7,22 +8,36 @@ import {
   View,
 } from "react-native";
 
+import {
+  runFullSync,
+  runIncrementalSync,
+} from "../features/photoSync/syncService";
 import { useTheme, useThemeStore } from "../theme/themeStore";
 import type { Theme, ThemeMode } from "../theme/theme";
 
-type Props = { onClose: () => void };
+type Props = {
+  onClose: () => void;
+  onAddTrip: () => void;
+};
 
-const OPTIONS: { mode: ThemeMode; label: string; sub: string }[] = [
-  { mode: "system", label: "시스템 기본", sub: "iOS/Android 다크모드 설정을 따름" },
-  { mode: "light", label: "라이트", sub: "항상 밝은 테마" },
-  { mode: "dark", label: "다크", sub: "항상 어두운 테마" },
+const THEME_OPTIONS: { mode: ThemeMode; label: string }[] = [
+  { mode: "system", label: "시스템" },
+  { mode: "light", label: "라이트" },
+  { mode: "dark", label: "다크" },
 ];
 
-export default function SettingsScreen({ onClose }: Props) {
+export default function SettingsScreen({ onClose, onAddTrip }: Props) {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const mode = useThemeStore((s) => s.mode);
   const setMode = useThemeStore((s) => s.setMode);
+
+  const handleIncrementalSync = () => {
+    runIncrementalSync().catch((e) => Alert.alert("스캔 실패", String(e)));
+  };
+  const handleFullSync = () => {
+    runFullSync().catch((e) => Alert.alert("스캔 실패", String(e)));
+  };
 
   return (
     <View style={styles.root}>
@@ -35,32 +50,54 @@ export default function SettingsScreen({ onClose }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionLabel}>테마</Text>
+        <Text style={styles.sectionLabel}>여행 기록</Text>
         <View style={styles.card}>
-          {OPTIONS.map((opt, i) => {
+          <ActionRow
+            theme={theme}
+            label="여행 추가"
+            sub="국가와 날짜를 직접 입력해 추가"
+            onPress={onAddTrip}
+          />
+          <ActionRow
+            theme={theme}
+            label="새 사진 자동 추가"
+            sub="마지막 스캔 이후의 사진만 빠르게 처리"
+            onPress={handleIncrementalSync}
+            divider
+          />
+          <ActionRow
+            theme={theme}
+            label="사진 재스캔"
+            sub="전체 사진을 다시 훑어 기록을 갱신"
+            onPress={handleFullSync}
+            divider
+          />
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          테마
+        </Text>
+        <View style={styles.segment}>
+          {THEME_OPTIONS.map((opt) => {
             const selected = mode === opt.mode;
             return (
               <Pressable
                 key={opt.mode}
                 onPress={() => void setMode(opt.mode)}
                 style={({ pressed }) => [
-                  styles.row,
-                  i > 0 && styles.rowDivider,
-                  pressed && { backgroundColor: theme.rowPressedBg },
+                  styles.segmentItem,
+                  selected && styles.segmentItemActive,
+                  pressed && !selected && { opacity: 0.7 },
                 ]}
               >
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.rowLabel}>{opt.label}</Text>
-                  <Text style={styles.rowSub}>{opt.sub}</Text>
-                </View>
-                <View
+                <Text
                   style={[
-                    styles.radio,
-                    selected && styles.radioSelected,
+                    styles.segmentText,
+                    selected && styles.segmentTextActive,
                   ]}
                 >
-                  {selected && <Text style={styles.radioCheck}>✓</Text>}
-                </View>
+                  {opt.label}
+                </Text>
               </Pressable>
             );
           })}
@@ -70,12 +107,44 @@ export default function SettingsScreen({ onClose }: Props) {
   );
 }
 
+function ActionRow({
+  theme,
+  label,
+  sub,
+  onPress,
+  divider,
+}: {
+  theme: Theme;
+  label: string;
+  sub: string;
+  onPress: () => void;
+  divider?: boolean;
+}) {
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.row,
+        divider && styles.rowDivider,
+        pressed && { backgroundColor: theme.rowPressedBg },
+      ]}
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={styles.rowLabel}>{label}</Text>
+        <Text style={styles.rowSub}>{sub}</Text>
+      </View>
+      <Text style={styles.chev}>›</Text>
+    </Pressable>
+  );
+}
+
 function makeStyles(theme: Theme) {
   return StyleSheet.create({
     root: {
       flex: 1,
       backgroundColor: theme.homeBg,
-      paddingTop: 36,
+      paddingTop: 56,
     },
     header: {
       flexDirection: "row",
@@ -109,6 +178,9 @@ function makeStyles(theme: Theme) {
       marginLeft: 4,
       textTransform: "uppercase",
     },
+    sectionLabelSpaced: {
+      marginTop: 24,
+    },
     card: {
       backgroundColor: theme.cardBg,
       borderRadius: 14,
@@ -137,24 +209,41 @@ function makeStyles(theme: Theme) {
       fontSize: 12,
       marginTop: 2,
     },
-    radio: {
-      width: 24,
-      height: 24,
-      borderRadius: 12,
-      borderWidth: 1.5,
-      borderColor: theme.radioBorder,
+    segment: {
+      flexDirection: "row",
+      backgroundColor: theme.tabRowBg,
+      borderRadius: 999,
+      padding: 4,
+      gap: 4,
+    },
+    segmentItem: {
+      flex: 1,
+      paddingVertical: 8,
+      borderRadius: 999,
       alignItems: "center",
       justifyContent: "center",
     },
-    radioSelected: {
-      backgroundColor: theme.accent,
-      borderColor: theme.accent,
+    segmentItemActive: {
+      backgroundColor: theme.cardBg,
+      shadowColor: "#000",
+      shadowOpacity: 0.05,
+      shadowOffset: { width: 0, height: 1 },
+      shadowRadius: 2,
+      elevation: 1,
     },
-    radioCheck: {
-      color: theme.radioCheckColor,
+    segmentText: {
+      color: theme.textSecondary,
       fontSize: 13,
-      fontWeight: "900",
-      marginTop: -1,
+      fontWeight: "600",
+    },
+    segmentTextActive: {
+      color: theme.textPrimary,
+      fontWeight: "700",
+    },
+    chev: {
+      color: theme.textMuted,
+      fontSize: 22,
+      fontWeight: "400",
     },
   });
 }
