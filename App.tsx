@@ -4,6 +4,7 @@ import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import MapView from "./src/components/MapView";
+import { runFullSync } from "./src/features/photoSync/syncService";
 import { useVisitStore } from "./src/features/travel/visitStore";
 import AddTripScreen from "./src/screens/AddTripScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
@@ -87,16 +88,34 @@ export default function App() {
             {totals.countries}개국 · 총 {totals.days}일
           </Text>
         </View>
-        <Pressable
-          onPress={() => setScreen("addTrip")}
-          style={({ pressed }) => [
-            styles.addBtn,
-            pressed && styles.addBtnPressed,
-          ]}
-          hitSlop={6}
-        >
-          <Text style={styles.addBtnText}>여행 추가</Text>
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Pressable
+            onPress={() => {
+              runFullSync().catch((e) =>
+                Alert.alert("스캔 실패", String(e))
+              );
+            }}
+            disabled={syncStatus.running}
+            style={({ pressed }) => [
+              styles.rescanBtn,
+              syncStatus.running && styles.rescanBtnDisabled,
+              pressed && styles.addBtnPressed,
+            ]}
+            hitSlop={6}
+          >
+            <Text style={styles.rescanBtnText}>재스캔</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setScreen("addTrip")}
+            style={({ pressed }) => [
+              styles.addBtn,
+              pressed && styles.addBtnPressed,
+            ]}
+            hitSlop={6}
+          >
+            <Text style={styles.addBtnText}>여행 추가</Text>
+          </Pressable>
+        </View>
       </View>
       {syncStatus.running && (
         <View style={styles.syncBar}>
@@ -137,6 +156,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 2,
   },
+  headerActions: { flexDirection: "row", gap: 8 },
   addBtn: {
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -149,6 +169,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "700",
   },
+  rescanBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: "#1c2942",
+    borderWidth: 1,
+    borderColor: "#2a3a5c",
+  },
+  rescanBtnDisabled: { opacity: 0.5 },
+  rescanBtnText: { color: "#bdf99b", fontSize: 12, fontWeight: "700" },
   syncBar: {
     paddingHorizontal: 20,
     paddingVertical: 6,
