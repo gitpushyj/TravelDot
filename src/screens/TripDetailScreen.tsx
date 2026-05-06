@@ -21,6 +21,7 @@ import {
   VisitNote,
 } from "../features/travel/visitRepository";
 import { flagEmoji } from "../utils/flag";
+import { colorForCountry } from "../utils/countryColors";
 import { useTheme } from "../theme/themeStore";
 import type { Theme } from "../theme/theme";
 import countriesJson from "../../assets/data/countries.json";
@@ -101,6 +102,7 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
 
   const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
   const flag = flagEmoji(trip.countryCode);
+  const countryColor = colorForCountry(trip.countryCode);
 
   const previewPhotos = useMemo<DisplayPhoto[]>(() => {
     const result: DisplayPhoto[] = [];
@@ -209,11 +211,11 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.heroCard}>
+        <View style={[styles.heroCard, { backgroundColor: countryColor.bg }]}>
           <View style={styles.heroDots}>
             <CountryDotMap
               countryCode={trip.countryCode}
-              color="rgba(255,255,255,0.85)"
+              color={countryColor.dot}
             />
           </View>
           <View style={styles.heroBadgeRow}>

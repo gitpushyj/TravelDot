@@ -21,6 +21,7 @@ import {
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
 import { flagEmoji } from "../utils/flag";
+import { colorForCountry } from "../utils/countryColors";
 import { useTheme } from "../theme/themeStore";
 import type { Theme } from "../theme/theme";
 
@@ -30,25 +31,6 @@ type Props = {
 };
 
 type TripWithPhotos = RecentTrip & { photos: number };
-
-// 여행 카드 썸네일 색을 시작일 기반으로 결정해 시각적으로 구분되도록 한다.
-const TRIP_COLORS = [
-  ["#f4b27a", "#c97a3a"], // 오렌지
-  ["#9ec5e3", "#5a8db4"], // 블루
-  ["#e6a3ad", "#b06f7c"], // 핑크
-  ["#d8c479", "#9c8a3b"], // 골드
-  ["#a7c6a6", "#5f8862"], // 그린
-  ["#b9a9d4", "#7a679f"], // 퍼플
-];
-
-function colorPairForTrip(trip: RecentTrip): [string, string] {
-  let h = 0;
-  for (let i = 0; i < trip.startDate.length; i += 1) {
-    h = (h * 31 + trip.startDate.charCodeAt(i)) >>> 0;
-  }
-  const pair = TRIP_COLORS[h % TRIP_COLORS.length];
-  return [pair[0], pair[1]];
-}
 
 export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
   const theme = useTheme();
@@ -254,7 +236,7 @@ function TripRow({
   onDelete: () => void;
 }) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
-  const [light, dark] = colorPairForTrip(trip);
+  const countryColor = colorForCountry(trip.countryCode);
 
   // iOS 편집 모드의 잔잔한 흔들림. 항목별로 위상 차이를 줘서 한꺼번에 같은
   // 방향으로 흔들리지 않도록 한다.
@@ -306,8 +288,10 @@ function TripRow({
         !editMode && pressed && { backgroundColor: theme.rowPressedBg },
       ]}
     >
-      <View style={[styles.tripThumb, { backgroundColor: light }]}>
-        <View style={[styles.tripThumbInner, { backgroundColor: dark }]} />
+      <View style={[styles.tripThumb, { backgroundColor: countryColor.bg }]}>
+        <View
+          style={[styles.tripThumbInner, { backgroundColor: countryColor.dot }]}
+        />
         <View style={styles.tripThumbBadge}>
           <Text style={styles.tripThumbBadgeText}>{trip.photos}장</Text>
         </View>

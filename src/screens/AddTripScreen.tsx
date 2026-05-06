@@ -18,6 +18,7 @@ import {
   VisitPhotoInput,
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
+import { colorForCountry } from "../utils/countryColors";
 import { toLocalDateKey } from "../utils/date";
 import { BG_COLOR } from "../utils/heatmap";
 
@@ -306,10 +307,18 @@ export default function AddTripScreen({ onClose }: Props) {
           return (
             <View style={styles.group}>
               <View style={styles.groupHead}>
-                <Text style={styles.groupTitle}>
-                  {g.countryName}
-                  {isHome ? " (본국)" : ""}
-                </Text>
+                <View style={styles.groupTitleRow}>
+                  <View
+                    style={[
+                      styles.countryDot,
+                      { backgroundColor: colorForCountry(g.countryCode).bg },
+                    ]}
+                  />
+                  <Text style={styles.groupTitle}>
+                    {g.countryName}
+                    {isHome ? " (본국)" : ""}
+                  </Text>
+                </View>
                 <Text style={styles.groupSub}>
                   {g.date} · 기존 {g.existing}/3 · 선택 {g.selectedIds.size}/
                   {slot}
@@ -390,6 +399,16 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   groupHead: { gap: 2 },
+  groupTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  countryDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
   groupTitle: { color: "#e8eefc", fontSize: 15, fontWeight: "700" },
   groupSub: { color: "#7d8aa6", fontSize: 12 },
   thumbRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
