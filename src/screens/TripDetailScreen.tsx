@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
+  Dimensions,
+  FlatList,
   Image,
   Pressable,
   ScrollView,
@@ -51,6 +53,7 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
     { id: string; uri: string; takenAt: number; date: string }[] | null
   >(null);
   const [note, setNote] = useState<VisitNote | null>(null);
+  const [view, setView] = useState<"detail" | "all">("detail");
 
   useEffect(() => {
     let cancelled = false;
@@ -131,6 +134,45 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
 
   const totalDevicePhotos = devicePhotos?.length;
 
+  // 그리드 뷰: DB 저장 사진을 앞쪽에 두고, 디바이스 사진은 그 뒤에 takenAt DESC로
+  // 이어 붙인다. 같은 URI는 중복 제거.
+  const allPhotos = useMemo(() => {
+    const result: { key: string; uri: string; takenAt: number }[] = [];
+    const seen = new Set<string>();
+    if (savedPhotos) {
+      for (const p of savedPhotos) {
+        if (seen.has(p.localUri)) continue;
+        result.push({
+          key: `db:${p.id}`,
+          uri: p.localUri,
+          takenAt: p.takenAt,
+        });
+        seen.add(p.localUri);
+      }
+    }
+    if (devicePhotos) {
+      for (const p of devicePhotos) {
+        if (seen.has(p.uri)) continue;
+        result.push({ key: `dev:${p.id}`, uri: p.uri, takenAt: p.takenAt });
+        seen.add(p.uri);
+      }
+    }
+    return result;
+  }, [savedPhotos, devicePhotos]);
+
+  if (view === "all") {
+    return (
+      <PhotosGridView
+        photos={allPhotos}
+        loading={devicePhotos == null}
+        countryName={koName}
+        flag={flag}
+        styles={styles}
+        onBack={() => setView("detail")}
+      />
+    );
+  }
+
   return (
     <View style={styles.root}>
       <View style={styles.header}>
@@ -198,12 +240,7 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>사진</Text>
           {totalDevicePhotos != null && totalDevicePhotos > 0 && (
-            <Pressable
-              onPress={() =>
-                Alert.alert("준비 중", "전체 사진 보기는 곧 추가됩니다.")
-              }
-              hitSlop={8}
-            >
+            <Pressable onPress={() => setView("all")} hitSlop={8}>
               <Text style={styles.allLink}>
                 전체보기 ({totalDevicePhotos}) →
               </Text>
@@ -255,6 +292,79 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
           </View>
         )}
       </ScrollView>
+    </View>
+  );
+}
+
+type GridPhoto = { key: string; uri: string; takenAt: number };
+
+const GRID_COLS = 3;
+const GRID_GAP = 4;
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const GRID_PADDING = 16;
+const GRID_CELL =
+  (SCREEN_WIDTH - GRID_PADDING * 2 - GRID_GAP * (GRID_COLS - 1)) / GRID_COLS;
+
+function PhotosGridView({
+  photos,
+  loading,
+  countryName,
+  flag,
+  styles,
+  onBack,
+}: {
+  photos: GridPhoto[];
+  loading: boolean;
+  countryName: string;
+  flag: string;
+  styles: ReturnType<typeof makeStyles>;
+  onBack: () => void;
+}) {
+  return (
+    <View style={styles.root}>
+      <View style={styles.header}>
+        <Pressable
+          onPress={onBack}
+          hitSlop={8}
+          style={({ pressed }) => [
+            styles.iconBtn,
+            pressed && styles.iconBtnPressed,
+          ]}
+        >
+          <Text style={styles.iconBtnText}>‹</Text>
+        </Pressable>
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerFlag}>{flag}</Text>
+          <Text style={styles.headerTitle}>{countryName}</Text>
+          <Text style={styles.headerCode}>사진 {photos.length}</Text>
+        </View>
+        <View style={{ width: 40 }} />
+      </View>
+      {photos.length === 0 ? (
+        <View style={styles.gridEmpty}>
+          <Text style={styles.emptyText}>
+            {loading ? "사진을 불러오는 중…" : "이 여행의 사진이 없어요."}
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={photos}
+          keyExtractor={(p) => p.key}
+          numColumns={GRID_COLS}
+          columnWrapperStyle={styles.gridRow}
+          contentContainerStyle={styles.gridContent}
+          // 큰 사진첩에서도 메모리/스크롤 성능을 안정화한다.
+          removeClippedSubviews
+          windowSize={5}
+          initialNumToRender={24}
+          maxToRenderPerBatch={24}
+          renderItem={({ item }) => (
+            <View style={styles.gridCell}>
+              <Image source={{ uri: item.uri }} style={styles.gridImage} />
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 }
@@ -462,6 +572,31 @@ function makeStyles(theme: Theme) {
     emptyText: {
       color: theme.textSecondary,
       fontSize: 13,
+    },
+    gridContent: {
+      paddingHorizontal: GRID_PADDING,
+      paddingTop: 4,
+      paddingBottom: 40,
+    },
+    gridRow: {
+      gap: GRID_GAP,
+      marginBottom: GRID_GAP,
+    },
+    gridCell: {
+      width: GRID_CELL,
+      height: GRID_CELL,
+      borderRadius: 6,
+      overflow: "hidden",
+      backgroundColor: theme.cardBg,
+    },
+    gridImage: {
+      width: "100%",
+      height: "100%",
+    },
+    gridEmpty: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
     },
     noteCard: {
       backgroundColor: theme.cardBg,
