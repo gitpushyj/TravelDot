@@ -25,6 +25,7 @@ import { useVisitStore } from "./src/features/travel/visitStore";
 import { pickActiveBadge, useBadgeStore } from "./src/features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "./src/features/badges/countryNames";
 import AddTripScreen from "./src/screens/AddTripScreen";
+import CountryDetailScreen from "./src/screens/CountryDetailScreen";
 import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
@@ -71,7 +72,13 @@ export default function App() {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
   const [screen, setScreen] = useState<
-    "main" | "addTrip" | "settings" | "titles" | "mapZoom" | "changeHome"
+    | "main"
+    | "addTrip"
+    | "settings"
+    | "titles"
+    | "mapZoom"
+    | "changeHome"
+    | "countryDetail"
   >("main");
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
@@ -256,6 +263,15 @@ export default function App() {
     );
   }
 
+  if (screen === "countryDetail") {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <StatusBar style={theme.statusBar} />
+        <CountryDetailScreen onClose={() => setScreen("main")} />
+      </GestureHandlerRootView>
+    );
+  }
+
   const percent =
     Math.round((totals.countries / TOTAL_COUNTRIES) * 1000) / 10;
 
@@ -358,6 +374,7 @@ export default function App() {
             theme={theme}
             homeCode={homeCountry.code}
             visitCounts={activeCounts}
+            onPress={() => setScreen("countryDetail")}
           />
           <View style={styles.statCard}>
             <View style={styles.statHeaderRow}>
@@ -441,10 +458,12 @@ function MiniCard({
   theme,
   homeCode,
   visitCounts,
+  onPress,
 }: {
   theme: Theme;
   homeCode: string;
   visitCounts: Record<string, number>;
+  onPress: () => void;
 }) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
@@ -458,11 +477,14 @@ function MiniCard({
   });
 
   return (
-    <View style={styles.miniCard}>
-      <View style={styles.miniBadge}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.miniCard, pressed && styles.miniCardPressed]}
+    >
+      <View style={styles.miniBadge} pointerEvents="none">
         <Text style={styles.miniBadgeText}>{isHome ? "본국" : "선택"}</Text>
       </View>
-      <View style={styles.miniDotsArea}>
+      <View style={styles.miniDotsArea} pointerEvents="none">
         <CountryShape countryCode={code} color={shapeColor} />
       </View>
       <Text style={styles.miniTitle} numberOfLines={1}>
@@ -471,7 +493,7 @@ function MiniCard({
       <Text style={styles.miniSub}>
         {isHome ? "본국" : `${visitDays}일 방문`}
       </Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -669,6 +691,9 @@ function makeStyles(theme: Theme) {
       borderColor: theme.cardBorder,
       padding: 12,
       minHeight: 140,
+    },
+    miniCardPressed: {
+      backgroundColor: theme.tabRowBg,
     },
     miniBadge: {
       alignSelf: "flex-start",
