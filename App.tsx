@@ -47,7 +47,8 @@ import TitlesScreen from "./src/screens/TitlesScreen";
 import TripDetailScreen from "./src/screens/TripDetailScreen";
 import countriesJson from "./assets/data/countries.json";
 import { flagEmoji } from "./src/utils/flag";
-import { colorForVisitWith, type Theme } from "./src/theme/theme";
+import { colorForCountry } from "./src/utils/countryColors";
+import { type Theme } from "./src/theme/theme";
 import {
   useSystemSchemeListener,
   useTheme,
@@ -695,22 +696,23 @@ function MiniCard({
   const name = selectedCountry?.name ?? "";
   const isHome = code === homeCode;
   const visitDays = visitCounts[code] ?? 0;
-  const shapeColor = colorForVisitWith(theme, {
-    count: visitDays,
-    isHomeCountry: isHome,
-  });
+  const countryColor = colorForCountry(code);
 
   return (
     <Pressable
       onPress={onPress}
       pointerEvents="box-only"
-      style={({ pressed }) => [styles.miniCard, pressed && styles.miniCardPressed]}
+      style={({ pressed }) => [
+        styles.miniCard,
+        { backgroundColor: countryColor.bg, borderColor: countryColor.bg },
+        pressed && { opacity: 0.85 },
+      ]}
     >
       <View style={styles.miniBadge}>
         <Text style={styles.miniBadgeText}>{isHome ? "본국" : "선택"}</Text>
       </View>
       <View style={styles.miniDotsArea}>
-        <CountryShape countryCode={code} color={shapeColor} />
+        <CountryShape countryCode={code} color={countryColor.dot} />
       </View>
       <Text style={styles.miniTitle} numberOfLines={1}>
         {name}
