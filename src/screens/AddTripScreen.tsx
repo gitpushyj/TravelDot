@@ -233,7 +233,7 @@ export default function AddTripScreen({ onClose }: Props) {
             id: c.id,
             countryCode: c.countryCode,
             date: c.date,
-            photoUri: c.uri,
+            localUri: c.uri,
             source: "manual",
             takenAt: c.takenAt,
           });

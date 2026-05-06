@@ -57,7 +57,7 @@ export async function runFullSync(): Promise<void> {
         id: p.id,
         countryCode: code,
         date,
-        photoUri: p.uri,
+        localUri: p.uri,
         source: "auto",
         takenAt: p.takenAt,
       });
