@@ -1,10 +1,17 @@
 import { toLocalDateKey } from "../../utils/date";
-import { addPhotos, VisitPhotoInput } from "../travel/visitRepository";
+import {
+  addPhotos,
+  loadLatestVisitDate,
+  VisitPhotoInput,
+} from "../travel/visitRepository";
 import { useVisitStore, SyncReport } from "../travel/visitStore";
 import { resolveCountryDetailed } from "./countryResolver";
 import { ensurePermission, iteratePhotos } from "./photoLibrary";
 
-export async function runFullSync(): Promise<void> {
+// sinceDate가 주어지면 그 날짜(YYYY-MM-DD) 미만의 사진은 건너뛴다.
+// iteratePhotos는 creationTime DESC로 사진을 내려주므로, 임계 날짜보다
+// 이전 사진을 만나는 순간 더 이상 볼 필요가 없어 즉시 break한다.
+async function runSync(sinceDate: string | null): Promise<void> {
   const store = useVisitStore.getState();
   const permission = await ensurePermission();
   if (permission === "denied") {
@@ -29,6 +36,8 @@ export async function runFullSync(): Promise<void> {
 
   try {
     for await (const p of iteratePhotos()) {
+      const date = toLocalDateKey(p.takenAt);
+      if (sinceDate && date < sinceDate) break;
       scanned += 1;
       if (scanned % 50 === 0) {
         useVisitStore
@@ -49,7 +58,6 @@ export async function runFullSync(): Promise<void> {
       }
       if (!code) continue;
       resolved += 1;
-      const date = toLocalDateKey(p.takenAt);
       const key = `${code}|${date}`;
       const list = buffer.get(key) ?? [];
       if (list.length >= 3) continue;
@@ -89,4 +97,15 @@ export async function runFullSync(): Promise<void> {
     });
     throw err;
   }
+}
+
+export async function runFullSync(): Promise<void> {
+  return runSync(null);
+}
+
+// 앱에 기록된 가장 최근 방문 날짜 이후의 사진만 추가 스캔한다.
+// 기록이 전혀 없으면 전체 스캔으로 폴백한다.
+export async function runIncrementalSync(): Promise<void> {
+  const since = await loadLatestVisitDate();
+  return runSync(since);
 }

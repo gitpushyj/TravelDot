@@ -44,6 +44,14 @@ export async function loadVisitCountsByYear(
   return out;
 }
 
+export async function loadLatestVisitDate(): Promise<string | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ d: string | null }>(
+    `SELECT MAX(date) AS d FROM visit_days`
+  );
+  return row?.d ?? null;
+}
+
 export async function loadAvailableYears(): Promise<number[]> {
   const db = await getDb();
   const rows = await db.getAllAsync<{ y: string }>(

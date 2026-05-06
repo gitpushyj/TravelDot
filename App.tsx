@@ -15,7 +15,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import CountryShape from "./src/components/CountryShape";
 import DotMap from "./src/components/DotMap";
-import { runFullSync } from "./src/features/photoSync/syncService";
+import {
+  runFullSync,
+  runIncrementalSync,
+} from "./src/features/photoSync/syncService";
 import type { RecentTrip } from "./src/features/travel/visitRepository";
 import { useVisitStore } from "./src/features/travel/visitStore";
 import AddTripScreen from "./src/screens/AddTripScreen";
@@ -149,13 +152,17 @@ export default function App() {
   };
 
   const openMenu = () => {
-    const options = ["여행 추가", "사진 재스캔", "취소"];
+    const options = ["여행 추가", "새 사진 자동 추가", "사진 재스캔", "취소"];
     if (Platform.OS === "ios") {
       ActionSheetIOS.showActionSheetWithOptions(
-        { options, cancelButtonIndex: 2 },
+        { options, cancelButtonIndex: 3 },
         (idx) => {
           if (idx === 0) setScreen("addTrip");
           else if (idx === 1) {
+            runIncrementalSync().catch((e) =>
+              Alert.alert("스캔 실패", String(e))
+            );
+          } else if (idx === 2) {
             runFullSync().catch((e) => Alert.alert("스캔 실패", String(e)));
           }
         }
@@ -163,6 +170,13 @@ export default function App() {
     } else {
       Alert.alert("메뉴", undefined, [
         { text: "여행 추가", onPress: () => setScreen("addTrip") },
+        {
+          text: "새 사진 자동 추가",
+          onPress: () =>
+            runIncrementalSync().catch((e) =>
+              Alert.alert("스캔 실패", String(e))
+            ),
+        },
         {
           text: "사진 재스캔",
           onPress: () =>
