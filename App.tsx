@@ -36,6 +36,7 @@ import { pickActiveBadge, useBadgeStore } from "./src/features/badges/badgeStore
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "./src/features/badges/countryNames";
 import AddTripScreen from "./src/screens/AddTripScreen";
 import CountryDetailScreen from "./src/screens/CountryDetailScreen";
+import EditTripScreen from "./src/screens/EditTripScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
 import InitialScanScreen from "./src/screens/InitialScanScreen";
 import LoginScreen from "./src/screens/LoginScreen";
@@ -74,6 +75,7 @@ type RootStackParamList = {
   MapZoom: undefined;
   CountryDetail: undefined;
   TripDetail: { trip: RecentTrip };
+  EditTrip: { trip: RecentTrip };
   History: undefined;
   ReviewSuspect: undefined;
 };
@@ -306,6 +308,7 @@ export default function App() {
                 name="TripDetail"
                 component={TripDetailScreenNav}
               />
+              <Stack.Screen name="EditTrip" component={EditTripScreenNav} />
               <Stack.Screen name="History" component={HistoryScreenNav} />
               <Stack.Screen
                 name="ReviewSuspect"
@@ -659,7 +662,38 @@ function TripDetailScreenNav({
   return (
     <>
       <StatusBar style={theme.statusBar} />
-      <TripDetailScreen trip={route.params.trip} onClose={() => navigation.goBack()} />
+      <TripDetailScreen
+        trip={route.params.trip}
+        onClose={() => navigation.goBack()}
+        onEdit={() => navigation.navigate("EditTrip", { trip: route.params.trip })}
+      />
+    </>
+  );
+}
+
+function EditTripScreenNav({
+  navigation,
+  route,
+}: NativeStackScreenProps<RootStackParamList, "EditTrip">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <EditTripScreen
+        trip={route.params.trip}
+        // 저장/취소 모두 detail 화면으로 돌아간다. 저장 후엔 visit store가
+        // refreshVisits로 갱신되어 detail 화면이 자동으로 재진입 시 새 데이터를 본다.
+        // 다만 detail 화면이 이미 mount된 상태에서 trip params는 그대로이므로,
+        // 날짜가 바뀌었으면 detail이 보여주는 trip이 더 이상 존재하지 않을 수 있다.
+        // 이 경우 두 단계 뒤로 돌아가 trip 목록으로 보낸다.
+        onClose={(changed) => {
+          if (changed) {
+            navigation.pop(2);
+          } else {
+            navigation.goBack();
+          }
+        }}
+      />
     </>
   );
 }
