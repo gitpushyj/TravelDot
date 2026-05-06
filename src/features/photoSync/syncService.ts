@@ -4,17 +4,28 @@ import { useVisitStore } from "../travel/visitStore";
 import { resolveCountry } from "./countryResolver";
 import { ensurePermission, iteratePhotos } from "./photoLibrary";
 
-export async function runFullSync(): Promise<{ added: number; scanned: number }> {
-  const ok = await ensurePermission();
-  if (!ok) return { added: 0, scanned: 0 };
-
+export async function runFullSync(): Promise<void> {
   const store = useVisitStore.getState();
+  const permission = await ensurePermission();
+  if (permission === "denied") {
+    store.setLastSync({
+      permission,
+      scanned: 0,
+      withGps: 0,
+      resolved: 0,
+      added: 0,
+    });
+    return;
+  }
+
   store.setSyncStatus({ running: true, processed: 0 });
 
-  // (country|date) → up to 3 photos. We cap during the scan so a single
-  // country/day with thousands of photos doesn't bloat memory.
+  // (country|date) → up to 3 photos per (country, date).
   const buffer = new Map<string, VisitPhotoInput[]>();
   let scanned = 0;
+  let withGps = 0;
+  let resolved = 0;
+
   try {
     for await (const p of iteratePhotos()) {
       scanned += 1;
@@ -23,8 +34,11 @@ export async function runFullSync(): Promise<{ added: number; scanned: number }>
           .getState()
           .setSyncStatus({ running: true, processed: scanned });
       }
+      if (p.lat == null || p.lng == null) continue;
+      withGps += 1;
       const code = resolveCountry(p.lat, p.lng);
       if (!code) continue;
+      resolved += 1;
       const date = toLocalDateKey(p.takenAt);
       const key = `${code}|${date}`;
       const list = buffer.get(key) ?? [];
@@ -44,10 +58,24 @@ export async function runFullSync(): Promise<{ added: number; scanned: number }>
     for (const items of buffer.values()) all.push(...items);
     const added = await addPhotos(all);
     await useVisitStore.getState().refreshVisits();
-    useVisitStore.getState().setSyncStatus({ running: false, processed: scanned });
-    return { added, scanned };
+    useVisitStore
+      .getState()
+      .setSyncStatus({ running: false, processed: scanned });
+    useVisitStore
+      .getState()
+      .setLastSync({ permission, scanned, withGps, resolved, added });
   } catch (err) {
-    useVisitStore.getState().setSyncStatus({ running: false, processed: scanned });
+    useVisitStore
+      .getState()
+      .setSyncStatus({ running: false, processed: scanned });
+    useVisitStore.getState().setLastSync({
+      permission,
+      scanned,
+      withGps,
+      resolved,
+      added: 0,
+      error: String(err),
+    });
     throw err;
   }
 }

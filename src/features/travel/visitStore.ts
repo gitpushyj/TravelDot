@@ -9,15 +9,26 @@ import {
 
 type SyncStatus = { running: boolean; processed: number };
 
+export type SyncReport = {
+  permission: "granted" | "limited" | "denied";
+  scanned: number;
+  withGps: number;
+  resolved: number; // 좌표→국가 매칭 성공
+  added: number; // DB에 새로 들어간 visit_photos 건수
+  error?: string;
+};
+
 type State = {
   ready: boolean;
   homeCountry: HomeCountry | null;
   visitCounts: Record<string, number>;
   syncStatus: SyncStatus;
+  lastSync: SyncReport | null;
   hydrate: () => Promise<void>;
   setHomeCountry: (c: HomeCountry) => Promise<void>;
   refreshVisits: () => Promise<void>;
   setSyncStatus: (s: SyncStatus) => void;
+  setLastSync: (r: SyncReport | null) => void;
 };
 
 export const useVisitStore = create<State>((set) => ({
@@ -25,6 +36,7 @@ export const useVisitStore = create<State>((set) => ({
   homeCountry: null,
   visitCounts: {},
   syncStatus: { running: false, processed: 0 },
+  lastSync: null,
   hydrate: async () => {
     const [home, counts] = await Promise.all([
       loadHomeCountry(),
@@ -41,4 +53,5 @@ export const useVisitStore = create<State>((set) => ({
     set({ visitCounts: counts });
   },
   setSyncStatus: (s) => set({ syncStatus: s }),
+  setLastSync: (r) => set({ lastSync: r }),
 }));

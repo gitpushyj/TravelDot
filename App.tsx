@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import MapView from "./src/components/MapView";
@@ -14,11 +14,38 @@ export default function App() {
   const homeCountry = useVisitStore((s) => s.homeCountry);
   const hydrate = useVisitStore((s) => s.hydrate);
   const syncStatus = useVisitStore((s) => s.syncStatus);
+  const visitCounts = useVisitStore((s) => s.visitCounts);
+  const lastSync = useVisitStore((s) => s.lastSync);
+  const setLastSync = useVisitStore((s) => s.setLastSync);
   const [screen, setScreen] = useState<"main" | "addTrip">("main");
 
   useEffect(() => {
     void hydrate();
   }, [hydrate]);
+
+  // 첫 스캔이 끝났을 때 결과를 한 번 Alert으로 띄워 진단을 돕는다.
+  useEffect(() => {
+    if (!lastSync) return;
+    if (syncStatus.running) return;
+    const lines = [
+      `권한: ${lastSync.permission}`,
+      `사진 ${lastSync.scanned}장 확인`,
+      `GPS 있음: ${lastSync.withGps}장`,
+      `국가 매칭: ${lastSync.resolved}장`,
+      `DB 추가: ${lastSync.added}장`,
+    ];
+    if (lastSync.error) lines.push(`에러: ${lastSync.error}`);
+    Alert.alert("스캔 결과", lines.join("\n"), [
+      { text: "확인", onPress: () => setLastSync(null) },
+    ]);
+  }, [lastSync, syncStatus.running, setLastSync]);
+
+  const totals = useMemo(() => {
+    const codes = Object.keys(visitCounts);
+    let days = 0;
+    for (const c of codes) days += visitCounts[c] ?? 0;
+    return { countries: codes.length, days };
+  }, [visitCounts]);
 
   if (!ready) {
     return <View style={styles.root} />;
@@ -49,7 +76,8 @@ export default function App() {
         <View style={styles.headerLeft}>
           <Text style={styles.title}>VisitGrid</Text>
           <Text style={styles.subtitle}>
-            본국: {homeCountry.name} ({homeCountry.code})
+            본국: {homeCountry.name} ({homeCountry.code}) · 방문{" "}
+            {totals.countries}개국 · 총 {totals.days}일
           </Text>
         </View>
         <Pressable

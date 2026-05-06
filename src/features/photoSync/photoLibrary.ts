@@ -3,18 +3,23 @@ import * as MediaLibrary from "expo-media-library";
 export type PhotoMeta = {
   id: string;
   uri: string;
-  lat: number;
-  lng: number;
+  // null이면 GPS 메타데이터가 사진에 없거나 권한 범위 밖이라는 뜻.
+  lat: number | null;
+  lng: number | null;
   takenAt: number;
 };
 
-export async function ensurePermission(): Promise<boolean> {
-  const { status } = await MediaLibrary.requestPermissionsAsync();
-  return status === "granted";
+// iOS의 "선택된 사진만" 권한도 스캔에 충분하므로 limited를 허용한다.
+export async function ensurePermission(): Promise<
+  "granted" | "limited" | "denied"
+> {
+  const res = await MediaLibrary.requestPermissionsAsync();
+  if (res.status === "granted") {
+    return res.accessPrivileges === "limited" ? "limited" : "granted";
+  }
+  return "denied";
 }
 
-// Async-iterate every photo asset that has GPS metadata. Skips assets without
-// location to avoid emitting partial records.
 export async function* iteratePhotos(
   pageSize = 200
 ): AsyncGenerator<PhotoMeta, void, void> {
@@ -30,13 +35,12 @@ export async function* iteratePhotos(
       const info = await MediaLibrary.getAssetInfoAsync(asset, {
         shouldDownloadFromNetwork: false,
       });
-      const loc = info.location;
-      if (!loc) continue;
+      const loc = info.location ?? null;
       yield {
         id: asset.id,
         uri: info.localUri ?? asset.uri,
-        lat: loc.latitude,
-        lng: loc.longitude,
+        lat: loc?.latitude ?? null,
+        lng: loc?.longitude ?? null,
         takenAt: asset.creationTime,
       };
     }
