@@ -578,7 +578,9 @@ const styles = StyleSheet.create({
   mapWrap: {
     marginTop: 8,
     marginBottom: 16,
-    paddingHorizontal: 4,
+    paddingHorizontal: 0,
+    paddingVertical: 12,
+    backgroundColor: CARD_BG,
     position: "relative",
   },
   statsRow: {
