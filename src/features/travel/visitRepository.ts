@@ -199,6 +199,65 @@ function diffInDays(a: string, b: string): number {
   return Math.round((db - da) / 86400000);
 }
 
+export type TripWithPhotos = RecentTrip & { photos: number };
+
+// 모든 나라의 모든 "여행"(연속된 방문일 묶음)을 한 번에 반환. 사진 수까지 채움.
+// 시작일 내림차순.
+export async function loadAllTrips(): Promise<TripWithPhotos[]> {
+  const db = await getDb();
+  const dayRows = await db.getAllAsync<{ country_code: string; date: string }>(
+    `SELECT country_code, date
+       FROM visit_days
+      WHERE deleted_at IS NULL
+      ORDER BY country_code, date`
+  );
+  if (dayRows.length === 0) return [];
+
+  const photoRows = await db.getAllAsync<{
+    country_code: string;
+    date: string;
+    n: number;
+  }>(
+    `SELECT country_code, date, COUNT(*) AS n
+       FROM visit_photos
+      WHERE deleted_at IS NULL
+      GROUP BY country_code, date`
+  );
+  const photoByKey = new Map<string, number>();
+  for (const r of photoRows) {
+    photoByKey.set(`${r.country_code}|${r.date}`, r.n);
+  }
+
+  const trips: TripWithPhotos[] = [];
+  let i = 0;
+  while (i < dayRows.length) {
+    const code = dayRows[i].country_code;
+    let startDate = dayRows[i].date;
+    let prev = startDate;
+    let photos = photoByKey.get(`${code}|${startDate}`) ?? 0;
+    let j = i + 1;
+    while (
+      j < dayRows.length &&
+      dayRows[j].country_code === code &&
+      diffInDays(prev, dayRows[j].date) === 1
+    ) {
+      prev = dayRows[j].date;
+      photos += photoByKey.get(`${code}|${prev}`) ?? 0;
+      j += 1;
+    }
+    trips.push({
+      countryCode: code,
+      startDate,
+      endDate: prev,
+      days: diffInDays(startDate, prev) + 1,
+      photos,
+    });
+    i = j;
+  }
+  trips.sort((a, b) => (a.startDate < b.startDate ? 1 : -1));
+  return trips;
+}
+
 // 특정 나라의 모든 "여행"(연속된 방문일 묶음). 시작일 내림차순으로 반환.
 export async function loadTripsForCountry(
   countryCode: string

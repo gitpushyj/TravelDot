@@ -35,6 +35,7 @@ import { pickActiveBadge, useBadgeStore } from "./src/features/badges/badgeStore
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "./src/features/badges/countryNames";
 import AddTripScreen from "./src/screens/AddTripScreen";
 import CountryDetailScreen from "./src/screens/CountryDetailScreen";
+import HistoryScreen from "./src/screens/HistoryScreen";
 import InitialScanScreen from "./src/screens/InitialScanScreen";
 import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
@@ -70,6 +71,7 @@ type RootStackParamList = {
   MapZoom: undefined;
   CountryDetail: undefined;
   TripDetail: { trip: RecentTrip };
+  History: undefined;
   ReviewSuspect: undefined;
 };
 
@@ -287,6 +289,7 @@ export default function App() {
                 name="TripDetail"
                 component={TripDetailScreenNav}
               />
+              <Stack.Screen name="History" component={HistoryScreenNav} />
               <Stack.Screen
                 name="ReviewSuspect"
                 component={ReviewSuspectScreenNav}
@@ -514,9 +517,7 @@ function MainScreen({
         <View style={styles.recentHeader}>
           <Text style={styles.sectionTitle}>최근 방문</Text>
           <Pressable
-            onPress={() =>
-              Alert.alert("준비 중", "전체보기는 곧 추가됩니다.")
-            }
+            onPress={() => navigation.navigate("History")}
             hitSlop={8}
           >
             <Text style={styles.allLink}>전체보기 →</Text>
@@ -645,6 +646,21 @@ function TripDetailScreenNav({
   );
 }
 
+function HistoryScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "History">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <HistoryScreen
+        onClose={() => navigation.goBack()}
+        onSelectTrip={(trip) => navigation.navigate("TripDetail", { trip })}
+      />
+    </>
+  );
+}
+
 function MiniCard({
   theme,
   homeCode,
@@ -708,7 +724,7 @@ function RecentList({
       </View>
     );
   }
-  const display = trips.slice(0, 8);
+  const display = trips.slice(0, 5);
   return (
     <FlatList
       data={display}

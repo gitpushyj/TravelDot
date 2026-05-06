@@ -70,15 +70,19 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
       ]);
       if (cancelled) return;
       // ph:// URI는 일부 RN Image 로더가 인식하지 못해 화면에서 file:// localUri로 변환.
+      // 자산이 디바이스에서 삭제됐다면 resolve가 실패해 ph://가 그대로 남는데
+      // 이 경우 화면에 빈 셀로만 그려져 카운트와 실제 보이는 수가 어긋난다.
+      // 표시 가능한 자산만 남긴다.
       const resolved = await resolveDisplayUris(
         photos.map((p) => ({ id: p.id, uri: p.localUri }))
       );
       if (cancelled) return;
       setSavedPhotos(
-        photos.map((p) => ({
-          ...p,
-          localUri: resolved[p.id] ?? p.localUri,
-        }))
+        photos.flatMap((p) => {
+          const local = resolved[p.id];
+          if (!local || local.startsWith("ph://")) return [];
+          return [{ ...p, localUri: local }];
+        })
       );
       setNote(latestNote);
     })();
@@ -104,7 +108,11 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
         );
         if (cancelled) return;
         setDevicePhotos(
-          photos.map((p) => ({ ...p, uri: resolved[p.id] ?? p.uri }))
+          photos.flatMap((p) => {
+            const uri = resolved[p.id];
+            if (!uri || uri.startsWith("ph://")) return [];
+            return [{ ...p, uri }];
+          })
         );
       } catch (e) {
         if (cancelled) return;
@@ -151,8 +159,6 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
     return result;
   }, [savedPhotos, devicePhotos]);
 
-  const totalDevicePhotos = devicePhotos?.length;
-
   // 그리드 뷰: DB 저장 사진을 앞쪽에 두고, 디바이스 사진은 그 뒤에 takenAt DESC로
   // 이어 붙인다. 같은 URI는 중복 제거.
   const allPhotos = useMemo(() => {
@@ -178,6 +184,11 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
     }
     return result;
   }, [savedPhotos, devicePhotos]);
+
+  // hero 배지·"전체보기 (N)" 모두 grid에 실제로 표시되는 사진 수와 동일해야
+  // 일관된다. 디바이스 스캔이 아직 진행 중일 땐 null로 두고 "—"로 표시.
+  const totalPhotos =
+    savedPhotos == null || devicePhotos == null ? null : allPhotos.length;
 
   if (view === "all") {
     return (
@@ -242,7 +253,7 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
             </View>
             <View style={styles.heroBadge}>
               <Text style={styles.heroBadgeNum}>
-                {totalDevicePhotos ?? "—"}
+                {totalPhotos ?? "—"}
               </Text>
               <Text style={styles.heroBadgeUnit}> 장의 사진</Text>
             </View>
@@ -258,10 +269,10 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
 
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>사진</Text>
-          {totalDevicePhotos != null && totalDevicePhotos > 0 && (
+          {totalPhotos != null && totalPhotos > 0 && (
             <Pressable onPress={() => setView("all")} hitSlop={8}>
               <Text style={styles.allLink}>
-                전체보기 ({totalDevicePhotos}) →
+                전체보기 ({totalPhotos}) →
               </Text>
             </Pressable>
           )}
