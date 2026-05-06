@@ -402,10 +402,11 @@ function MainScreen({
             hitSlop={8}
             style={({ pressed }) => [
               styles.iconBtn,
+              styles.iconBtnLarge,
               pressed && styles.iconBtnPressed,
             ]}
           >
-            <Text style={styles.iconBtnText}>⚙︎</Text>
+            <Text style={[styles.iconBtnText, styles.iconBtnTextLarge]}>⚙︎</Text>
           </Pressable>
         </View>
 
@@ -843,10 +844,18 @@ function makeStyles(theme: Theme) {
       justifyContent: "center",
     },
     iconBtnPressed: { backgroundColor: theme.tabRowBg },
+    iconBtnLarge: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+    },
     iconBtnText: {
       color: theme.textPrimary,
       fontSize: 16,
       fontWeight: "700",
+    },
+    iconBtnTextLarge: {
+      fontSize: 22,
     },
     tabRow: {
       flexDirection: "row",
