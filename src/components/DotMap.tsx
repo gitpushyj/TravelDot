@@ -9,15 +9,16 @@ import {
 } from "react-native-reanimated";
 
 import dotData from "../../assets/data/dots.json";
+import { useVisitStore } from "../features/travel/visitStore";
 import type { CountryRef, DotData } from "../types";
-import { BG_COLOR, colorForVisitCount } from "../utils/heatmap";
+import { BG_COLOR, colorForVisit } from "../utils/heatmap";
 
 const FILL_RATIO = 0.6;
 const MIN_SCALE = 1;
 const MAX_SCALE = 10;
 const HIGHLIGHT_COLOR = "#ffd75e";
 
-type Props = { visitCounts?: Record<string, number> };
+type Props = Record<string, never>;
 
 type Selection =
   | { kind: "none" }
@@ -29,10 +30,12 @@ function clamp(v: number, min: number, max: number) {
   return Math.max(min, Math.min(max, v));
 }
 
-export default function DotMap({ visitCounts }: Props) {
+export default function DotMap(_: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [selection, setSelection] = useState<Selection>({ kind: "none" });
+  const visitCounts = useVisitStore((s) => s.visitCounts);
+  const homeCountry = useVisitStore((s) => s.homeCountry);
 
   const viewBoxW = 360;
   const viewBoxH = maxLat - minLat;
@@ -45,21 +48,27 @@ export default function DotMap({ visitCounts }: Props) {
   const halfDotPx = dotPx / 2;
   const radius = dotPx * 0.25;
 
+  const homeCode = homeCountry?.code;
   const positioned = useMemo(
     () =>
       dots.map((d) => {
         const fallback: CountryRef[] = d.country
           ? [{ code: d.country, name: d.name ?? d.country }]
           : [];
+        const countries =
+          d.countries && d.countries.length ? d.countries : fallback;
+        const primary = countries[0]?.code;
+        const isHome = primary != null && primary === homeCode;
+        const count = primary ? visitCounts[primary] ?? 0 : 0;
         return {
           id: d.id,
           x: (d.lng + 180) * baseScale - halfDotPx,
           y: (maxLat - d.lat) * baseScale - halfDotPx,
-          countries: d.countries && d.countries.length ? d.countries : fallback,
-          fill: colorForVisitCount(visitCounts?.[d.id] ?? 0),
+          countries,
+          fill: colorForVisit({ count, isHomeCountry: isHome }),
         };
       }),
-    [dots, baseScale, halfDotPx, maxLat, visitCounts]
+    [dots, baseScale, halfDotPx, maxLat, visitCounts, homeCode]
   );
 
   const highlightedIds = useMemo(() => {
@@ -220,7 +229,8 @@ export default function DotMap({ visitCounts }: Props) {
         ) : selection.kind === "country" ? (
           <>
             <Text style={styles.captionLabel}>
-              {selection.name} · {highlightedIds?.size ?? 0}개 도트
+              {selection.name} · {visitCounts[selection.code] ?? 0}일 방문 ·{" "}
+              {highlightedIds?.size ?? 0}개 도트
             </Text>
             <Pressable
               onPress={() => setSelection({ kind: "none" })}
