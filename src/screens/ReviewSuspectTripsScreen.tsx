@@ -235,7 +235,8 @@ function SuspectRow({
             pressed && styles.actionBtnPressed,
           ]}
         >
-          <Text style={styles.rejectBtnText}>내 여행 아님</Text>
+          <Text style={styles.rejectBtnIcon}>✕</Text>
+          <Text style={styles.rejectBtnText}>제거</Text>
         </Pressable>
         <Pressable
           onPress={onAccept}
@@ -245,7 +246,7 @@ function SuspectRow({
             pressed && styles.actionBtnPressed,
           ]}
         >
-          <Text style={styles.acceptBtnText}>내 여행 맞음</Text>
+          <Text style={styles.acceptBtnText}>내 여행에 추가</Text>
         </Pressable>
       </View>
     </View>
@@ -381,15 +382,24 @@ function makeStyles(theme: Theme) {
     },
     actionBtn: {
       flex: 1,
+      flexDirection: "row",
+      gap: 6,
       borderRadius: 10,
       paddingVertical: 10,
       alignItems: "center",
+      justifyContent: "center",
     },
     actionBtnPressed: {
       opacity: 0.7,
     },
     rejectBtn: {
       backgroundColor: theme.tabRowBg,
+    },
+    rejectBtnIcon: {
+      color: theme.textPrimary,
+      fontSize: 14,
+      fontWeight: "700",
+      lineHeight: 16,
     },
     rejectBtnText: {
       color: theme.textPrimary,
