@@ -14,10 +14,15 @@ import {
 } from "../features/photoSync/syncService";
 import { useTheme, useThemeStore } from "../theme/themeStore";
 import type { Theme, ThemeMode } from "../theme/theme";
+import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
+import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
+import { useVisitStore } from "../features/travel/visitStore";
+import { getTierByCount } from "../features/travel/tierTitles";
 
 type Props = {
   onClose: () => void;
   onAddTrip: () => void;
+  onOpenTitles: () => void;
 };
 
 const THEME_OPTIONS: { mode: ThemeMode; label: string }[] = [
@@ -26,11 +31,14 @@ const THEME_OPTIONS: { mode: ThemeMode; label: string }[] = [
   { mode: "dark", label: "다크" },
 ];
 
-export default function SettingsScreen({ onClose, onAddTrip }: Props) {
+export default function SettingsScreen({ onClose, onAddTrip, onOpenTitles }: Props) {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const mode = useThemeStore((s) => s.mode);
   const setMode = useThemeStore((s) => s.setMode);
+
+  const activeId = useBadgeStore((s) => s.activeId);
+  const visitCounts = useVisitStore((s) => s.visitCounts);
 
   const handleIncrementalSync = () => {
     runIncrementalSync().catch((e) => Alert.alert("스캔 실패", String(e)));
@@ -38,6 +46,16 @@ export default function SettingsScreen({ onClose, onAddTrip }: Props) {
   const handleFullSync = () => {
     runFullSync().catch((e) => Alert.alert("스캔 실패", String(e)));
   };
+
+  // 현재 호칭 미리보기 — 활성 뱃지 또는 자동 모드의 등급 뱃지
+  const activeBadge = useMemo(() => {
+    const tier = getTierByCount(Object.keys(visitCounts).length);
+    return pickActiveBadge(activeId, `tier_${tier.id}`, COUNTRY_NAME_KO_BY_CODE);
+  }, [activeId, visitCounts]);
+
+  const titleSub = activeBadge
+    ? `${activeBadge.emoji} ${activeBadge.titleKo}${activeId == null ? " · 자동" : ""}`
+    : "호칭 없음";
 
   return (
     <View style={styles.root}>
@@ -71,6 +89,18 @@ export default function SettingsScreen({ onClose, onAddTrip }: Props) {
             sub="전체 사진을 다시 훑어 기록을 갱신"
             onPress={handleFullSync}
             divider
+          />
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          호칭
+        </Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label="호칭"
+            sub={titleSub}
+            onPress={onOpenTitles}
           />
         </View>
 
@@ -132,7 +162,9 @@ function ActionRow({
     >
       <View style={{ flex: 1 }}>
         <Text style={styles.rowLabel}>{label}</Text>
-        <Text style={styles.rowSub}>{sub}</Text>
+        <Text style={styles.rowSub} numberOfLines={1}>
+          {sub}
+        </Text>
       </View>
       <Text style={styles.chev}>›</Text>
     </Pressable>

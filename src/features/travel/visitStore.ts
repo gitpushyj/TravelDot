@@ -3,7 +3,9 @@ import { create } from "zustand";
 
 import {
   loadAvailableYears,
+  loadForeignPhotoCount,
   loadRecentTripsByCountry,
+  loadTotalVisitDays,
   loadVisitCounts,
   loadVisitCountsByYear,
   RecentTrip,
@@ -14,6 +16,8 @@ import {
   loadHomeCountry,
   saveHomeCountry,
 } from "./homeCountryStorage";
+import { useBadgeStore } from "../badges/badgeStore";
+import { COUNTRY_NAME_KO_BY_CODE } from "../badges/countryNames";
 
 const HOME_AUTO_CLEANUP_FLAG = "visitgrid:migration:autoHomeCleanup_v1";
 
@@ -58,6 +62,8 @@ type State = {
   hydrate: () => Promise<void>;
   setHomeCountry: (c: HomeCountry) => Promise<void>;
   refreshVisits: () => Promise<void>;
+  /** 현재 visitCounts + DB 통계로부터 뱃지를 재평가한다 */
+  evaluateBadges: () => Promise<void>;
   ensureYearCounts: (year: number) => Promise<void>;
   setSelectedCountry: (c: SelectedCountry | null) => void;
   setSyncStatus: (s: SyncStatus) => void;
@@ -77,6 +83,11 @@ export const useVisitStore = create<State>((set, get) => ({
   selectedCountry: null,
   homeCleanupReport: null,
   hydrate: async () => {
+    // 뱃지 스토어는 visitStore보다 먼저 hydrate되어야 한다 — 첫 evaluate에서
+    // seeded 플래그를 정확히 읽어 retroactive 알림을 묵음 처리하기 위함.
+    if (!useBadgeStore.getState().hydrated) {
+      await useBadgeStore.getState().hydrate();
+    }
     const home = await loadHomeCountry();
     // 본국은 더 이상 자동 동기화에서 추가되지 않는다. 기존 사용자에게 남아있는
     // 자동 누적분을 1회만 정리하고, 정리 결과는 UI에서 알림으로 보여준다.
@@ -105,6 +116,8 @@ export const useVisitStore = create<State>((set, get) => ({
       selectedCountry: home ? { code: home.code, name: home.name } : null,
       homeCleanupReport: cleanupReport,
     });
+    // 첫 평가는 ready=true 이후에 수행. 뱃지 스토어는 App.tsx에서 hydrate 완료를 보장한다.
+    await get().evaluateBadges();
   },
   setHomeCountry: async (c) => {
     await saveHomeCountry(c);
@@ -132,6 +145,8 @@ export const useVisitStore = create<State>((set, get) => ({
         visitCountsByYear: {},
       });
     }
+    // 본국이 바뀌면 해외 사진 기준이 달라지므로 항상 재평가한다.
+    await get().evaluateBadges();
   },
   setSelectedCountry: (c) => set({ selectedCountry: c }),
   refreshVisits: async () => {
@@ -146,6 +161,28 @@ export const useVisitStore = create<State>((set, get) => ({
       availableYears: years,
       visitCountsByYear: {}, // 캐시 무효화
     });
+    await get().evaluateBadges();
+  },
+  evaluateBadges: async () => {
+    const { visitCounts, homeCountry } = get();
+    // 본국이 설정되기 전에는 "해외 사진" 기준이 의미가 없어 잘못된 상태로 시드될 수
+    // 있다. 온보딩에서 본국 설정 직후 setHomeCountry가 평가를 다시 트리거하므로
+    // 여기서는 그냥 건너뛴다.
+    if (!homeCountry) return;
+    const totalDays = Object.values(visitCounts).reduce((s, n) => s + n, 0);
+    const foreignPhotoCount = await loadForeignPhotoCount(homeCountry.code);
+    // visit_days 전체 행 수 = totalDays(visitCounts 합)와 같지만, 향후 일자 중복 제거 정책이
+    // 갈라질 수 있으니 DB 값을 권위 자료로 한 번 더 확인한다.
+    const dbDays = await loadTotalVisitDays();
+    await useBadgeStore.getState().evaluate(
+      {
+        visitedCountriesCount: Object.keys(visitCounts).length,
+        totalDays: Math.max(totalDays, dbDays),
+        daysByCountry: visitCounts,
+        foreignPhotoCount,
+      },
+      COUNTRY_NAME_KO_BY_CODE
+    );
   },
   ensureYearCounts: async (year) => {
     if (get().visitCountsByYear[year]) return;

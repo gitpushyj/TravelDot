@@ -44,6 +44,31 @@ export async function loadVisitCountsByYear(
   return out;
 }
 
+export async function loadTotalVisitDays(): Promise<number> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ n: number }>(
+    `SELECT COUNT(*) AS n FROM visit_days`
+  );
+  return row?.n ?? 0;
+}
+
+export async function loadForeignPhotoCount(
+  homeCode: string | null
+): Promise<number> {
+  const db = await getDb();
+  if (!homeCode) {
+    const row = await db.getFirstAsync<{ n: number }>(
+      `SELECT COUNT(*) AS n FROM visit_photos`
+    );
+    return row?.n ?? 0;
+  }
+  const row = await db.getFirstAsync<{ n: number }>(
+    `SELECT COUNT(*) AS n FROM visit_photos WHERE country_code != ?`,
+    homeCode
+  );
+  return row?.n ?? 0;
+}
+
 export async function loadLatestVisitDate(): Promise<string | null> {
   const db = await getDb();
   const row = await db.getFirstAsync<{ d: string | null }>(

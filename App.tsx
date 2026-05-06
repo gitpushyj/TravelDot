@@ -4,12 +4,14 @@ import {
   Alert,
   FlatList,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from "react-native-gesture-handler";
 
 import CountryShape from "./src/components/CountryShape";
 import DotMap from "./src/components/DotMap";
@@ -20,9 +22,12 @@ import {
   TIER_CUTOFFS,
 } from "./src/features/travel/tierTitles";
 import { useVisitStore } from "./src/features/travel/visitStore";
+import { pickActiveBadge, useBadgeStore } from "./src/features/badges/badgeStore";
+import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "./src/features/badges/countryNames";
 import AddTripScreen from "./src/screens/AddTripScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
+import TitlesScreen from "./src/screens/TitlesScreen";
 import countriesJson from "./assets/data/countries.json";
 import { flagEmoji } from "./src/utils/flag";
 import { colorForVisitWith, type Theme } from "./src/theme/theme";
@@ -58,10 +63,13 @@ export default function App() {
   const setHomeCleanupReport = useVisitStore((s) => s.setHomeCleanupReport);
   const themeHydrate = useThemeStore((s) => s.hydrate);
   const themeHydrated = useThemeStore((s) => s.hydrated);
+  const activeBadgeId = useBadgeStore((s) => s.activeId);
+  const pendingNotifications = useBadgeStore((s) => s.pendingNotifications);
+  const consumeBadgeNotification = useBadgeStore((s) => s.consumeNotification);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
-  const [screen, setScreen] = useState<"main" | "addTrip" | "settings">("main");
+  const [screen, setScreen] = useState<"main" | "addTrip" | "settings" | "titles">("main");
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
@@ -132,6 +140,23 @@ export default function App() {
     [totals.countries]
   );
 
+  // 활성 뱃지: 사용자 선택이 있으면 그것, 없으면 현재 등급 뱃지
+  const activeBadge = useMemo(
+    () => pickActiveBadge(activeBadgeId, `tier_${tier.id}`, BADGE_KO_NAMES),
+    [activeBadgeId, tier.id]
+  );
+
+  // 새로 잠금 해제된 뱃지가 있으면 한 번에 하나씩 알림으로 표시
+  useEffect(() => {
+    if (pendingNotifications.length === 0) return;
+    const next = pendingNotifications[0];
+    Alert.alert(
+      "새로운 뱃지를 얻었어요!",
+      `${next.emoji}  ${next.titleKo}\n\n${next.description}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`,
+      [{ text: "확인", onPress: () => consumeBadgeNotification() }]
+    );
+  }, [pendingNotifications, consumeBadgeNotification]);
+
   const periodLabel = useMemo(() => {
     if (yearMode.kind === "year") return String(yearMode.year);
     if (availableYears.length === 0) return String(new Date().getFullYear());
@@ -179,7 +204,17 @@ export default function App() {
         <SettingsScreen
           onClose={() => setScreen("main")}
           onAddTrip={() => setScreen("addTrip")}
+          onOpenTitles={() => setScreen("titles")}
         />
+      </GestureHandlerRootView>
+    );
+  }
+
+  if (screen === "titles") {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <StatusBar style={theme.statusBar} />
+        <TitlesScreen onClose={() => setScreen("settings")} />
       </GestureHandlerRootView>
     );
   }
@@ -295,11 +330,18 @@ export default function App() {
               <Text
                 style={[
                   styles.statTier,
-                  tier.prestige ? styles.statTierPrestige : null,
+                  // 활성 뱃지가 등급 뱃지가 아니면(=사용자가 직접 고른 테마 뱃지면) 강조
+                  activeBadge && !activeBadge.isTier
+                    ? styles.statTierPrestige
+                    : tier.prestige
+                      ? styles.statTierPrestige
+                      : null,
                 ]}
                 numberOfLines={1}
               >
-                {tier.titleKo}
+                {activeBadge
+                  ? `${activeBadge.emoji} ${activeBadge.titleKo}`
+                  : tier.titleKo}
               </Text>
             </View>
             <View style={styles.statBigRow}>
@@ -645,7 +687,8 @@ function makeStyles(theme: Theme) {
       color: theme.accent,
       fontSize: 12,
       fontWeight: "700",
-      maxWidth: 140,
+      maxWidth: 180,
+      flexShrink: 1,
     },
     statTierPrestige: {
       color: theme.accentSoftText,
