@@ -419,17 +419,7 @@ function MainScreen({
               <Text style={styles.headerStatUnit}> {t("home.daysUnit")}</Text>
             </View>
           </View>
-          <Pressable
-            onPress={() => navigation.navigate("Settings")}
-            hitSlop={8}
-            style={({ pressed }) => [
-              styles.iconBtn,
-              styles.iconBtnLarge,
-              pressed && styles.iconBtnPressed,
-            ]}
-          >
-            <Text style={[styles.iconBtnText, styles.iconBtnTextLarge]}>⚙︎</Text>
-          </Pressable>
+          <View style={styles.headerRightSpacer} />
         </View>
 
         <View style={styles.tabRow}>
@@ -582,6 +572,18 @@ function MainScreen({
           <Text style={styles.allCountriesChev}>›</Text>
         </Pressable>
       </ScrollView>
+      <Pressable
+        onPress={() => navigation.navigate("Settings")}
+        hitSlop={8}
+        style={({ pressed }) => [
+          styles.iconBtn,
+          styles.iconBtnLarge,
+          styles.headerFloatingBtn,
+          pressed && styles.iconBtnPressed,
+        ]}
+      >
+        <Text style={[styles.iconBtnText, styles.iconBtnTextLarge]}>☰</Text>
+      </Pressable>
       <YearPickerModal
         visible={yearPickerOpen}
         initial={yearMode}
@@ -952,6 +954,16 @@ function makeStyles(theme: Theme) {
       height: 44,
       borderRadius: 22,
     },
+    headerRightSpacer: {
+      width: 44,
+      height: 44,
+    },
+    headerFloatingBtn: {
+      position: "absolute",
+      top: 56,
+      right: 20,
+      zIndex: 10,
+    },
     iconBtnText: {
       color: theme.textPrimary,
       fontSize: 16,
@@ -1261,6 +1273,7 @@ function makeStyles(theme: Theme) {
       gap: 10,
       marginHorizontal: 20,
       marginTop: 20,
+      marginBottom: 32,
       paddingVertical: 16,
       paddingHorizontal: 18,
       backgroundColor: theme.cardBg,
