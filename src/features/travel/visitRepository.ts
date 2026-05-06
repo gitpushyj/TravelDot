@@ -1,5 +1,8 @@
 import { getDb } from "./db";
 
+// 무료 사용자의 일별 사진 저장 한도. 추후 유료 tier 도입 시 함수로 분기.
+export const PHOTO_LIMIT_PER_DAY = 5;
+
 export type VisitPhotoInput = {
   id: string;
   countryCode: string;
@@ -21,7 +24,10 @@ export type VisitNote = {
 export async function loadVisitCounts(): Promise<Record<string, number>> {
   const db = await getDb();
   const rows = await db.getAllAsync<{ country_code: string; days: number }>(
-    `SELECT country_code, COUNT(*) AS days FROM visit_days GROUP BY country_code`
+    `SELECT country_code, COUNT(*) AS days
+       FROM visit_days
+      WHERE deleted_at IS NULL
+      GROUP BY country_code`
   );
   const out: Record<string, number> = {};
   for (const r of rows) out[r.country_code] = r.days;
@@ -35,7 +41,7 @@ export async function loadVisitCountsByYear(
   const rows = await db.getAllAsync<{ country_code: string; days: number }>(
     `SELECT country_code, COUNT(*) AS days
        FROM visit_days
-      WHERE substr(date, 1, 4) = ?
+      WHERE substr(date, 1, 4) = ? AND deleted_at IS NULL
       GROUP BY country_code`,
     String(year)
   );
@@ -47,7 +53,7 @@ export async function loadVisitCountsByYear(
 export async function loadTotalVisitDays(): Promise<number> {
   const db = await getDb();
   const row = await db.getFirstAsync<{ n: number }>(
-    `SELECT COUNT(*) AS n FROM visit_days`
+    `SELECT COUNT(*) AS n FROM visit_days WHERE deleted_at IS NULL`
   );
   return row?.n ?? 0;
 }
@@ -58,12 +64,13 @@ export async function loadForeignPhotoCount(
   const db = await getDb();
   if (!homeCode) {
     const row = await db.getFirstAsync<{ n: number }>(
-      `SELECT COUNT(*) AS n FROM visit_photos`
+      `SELECT COUNT(*) AS n FROM visit_photos WHERE deleted_at IS NULL`
     );
     return row?.n ?? 0;
   }
   const row = await db.getFirstAsync<{ n: number }>(
-    `SELECT COUNT(*) AS n FROM visit_photos WHERE country_code != ?`,
+    `SELECT COUNT(*) AS n FROM visit_photos
+       WHERE country_code != ? AND deleted_at IS NULL`,
     homeCode
   );
   return row?.n ?? 0;
@@ -72,7 +79,7 @@ export async function loadForeignPhotoCount(
 export async function loadLatestVisitDate(): Promise<string | null> {
   const db = await getDb();
   const row = await db.getFirstAsync<{ d: string | null }>(
-    `SELECT MAX(date) AS d FROM visit_days`
+    `SELECT MAX(date) AS d FROM visit_days WHERE deleted_at IS NULL`
   );
   return row?.d ?? null;
 }
@@ -80,7 +87,10 @@ export async function loadLatestVisitDate(): Promise<string | null> {
 export async function loadAvailableYears(): Promise<number[]> {
   const db = await getDb();
   const rows = await db.getAllAsync<{ y: string }>(
-    `SELECT DISTINCT substr(date, 1, 4) AS y FROM visit_days ORDER BY y DESC`
+    `SELECT DISTINCT substr(date, 1, 4) AS y
+       FROM visit_days
+      WHERE deleted_at IS NULL
+      ORDER BY y DESC`
   );
   return rows.map((r) => Number(r.y)).filter((n) => Number.isFinite(n));
 }
@@ -102,11 +112,13 @@ export async function loadYearSummaries(): Promise<YearSummary[]> {
   }>(
     `SELECT substr(date, 1, 4) AS y, substr(date, 6, 2) AS m, COUNT(*) AS days
        FROM visit_days
+      WHERE deleted_at IS NULL
       GROUP BY y, m`
   );
   const countryRows = await db.getAllAsync<{ y: string; countries: number }>(
     `SELECT substr(date, 1, 4) AS y, COUNT(DISTINCT country_code) AS countries
        FROM visit_days
+      WHERE deleted_at IS NULL
       GROUP BY y`
   );
   const map = new Map<number, YearSummary>();
@@ -141,7 +153,10 @@ export type RecentTrip = {
 export async function loadRecentTripsByCountry(): Promise<RecentTrip[]> {
   const db = await getDb();
   const rows = await db.getAllAsync<{ country_code: string; date: string }>(
-    `SELECT country_code, date FROM visit_days ORDER BY country_code, date`
+    `SELECT country_code, date
+       FROM visit_days
+      WHERE deleted_at IS NULL
+      ORDER BY country_code, date`
   );
   const byCountry = new Map<string, string[]>();
   for (const r of rows) {
@@ -188,14 +203,15 @@ export async function countPhotosForDay(
 ): Promise<number> {
   const db = await getDb();
   const row = await db.getFirstAsync<{ n: number }>(
-    `SELECT COUNT(*) AS n FROM visit_photos WHERE country_code = ? AND date = ?`,
+    `SELECT COUNT(*) AS n FROM visit_photos
+       WHERE country_code = ? AND date = ? AND deleted_at IS NULL`,
     countryCode,
     date
   );
   return row?.n ?? 0;
 }
 
-// (country, date) 그룹별로 일별 3장 제한을 강제하면서 일괄 INSERT한다.
+// (country, date) 그룹별로 PHOTO_LIMIT_PER_DAY 제한을 강제하면서 일괄 INSERT한다.
 export async function addPhotos(inputs: VisitPhotoInput[]): Promise<number> {
   if (inputs.length === 0) return 0;
   const db = await getDb();
@@ -212,7 +228,7 @@ export async function addPhotos(inputs: VisitPhotoInput[]): Promise<number> {
     for (const [, items] of groups) {
       const { countryCode, date } = items[0];
       const existing = await countPhotosForDay(countryCode, date);
-      const slots = Math.max(0, 3 - existing);
+      const slots = Math.max(0, PHOTO_LIMIT_PER_DAY - existing);
       const toInsert = items.slice(0, slots);
       if (toInsert.length === 0) continue;
       await ensureVisitDay(countryCode, date, now);
@@ -251,7 +267,7 @@ export async function listNotes(
   }>(
     `SELECT id, country_code, date, body, created_at, updated_at
        FROM visit_notes
-      WHERE country_code = ? AND date = ?
+      WHERE country_code = ? AND date = ? AND deleted_at IS NULL
       ORDER BY created_at ASC`,
     countryCode,
     date
@@ -279,7 +295,10 @@ export async function upsertNote(note: {
     await db.runAsync(
       `INSERT INTO visit_notes (id, country_code, date, body, created_at, updated_at)
        VALUES (?, ?, ?, ?, ?, ?)
-       ON CONFLICT(id) DO UPDATE SET body = excluded.body, updated_at = excluded.updated_at`,
+       ON CONFLICT(id) DO UPDATE SET
+         body = excluded.body,
+         updated_at = excluded.updated_at,
+         deleted_at = NULL`,
       note.id,
       note.countryCode,
       note.date,
@@ -292,7 +311,12 @@ export async function upsertNote(note: {
 
 export async function deleteNote(id: string): Promise<void> {
   const db = await getDb();
-  await db.runAsync(`DELETE FROM visit_notes WHERE id = ?`, id);
+  await db.runAsync(
+    `UPDATE visit_notes SET deleted_at = ?, updated_at = ? WHERE id = ?`,
+    Date.now(),
+    Date.now(),
+    id
+  );
 }
 
 // 본국이 자동 동기화에서 제외되도록 정책이 바뀌면서, 이미 들어간 자동 사진을
@@ -303,17 +327,33 @@ export async function removeAutoVisitsForCountry(
   const db = await getDb();
   let photosDeleted = 0;
   let daysDeleted = 0;
+  const now = Date.now();
   await db.withTransactionAsync(async () => {
     const r1 = await db.runAsync(
-      `DELETE FROM visit_photos WHERE country_code = ? AND source = 'auto'`,
+      `UPDATE visit_photos
+          SET deleted_at = ?, updated_at = ?
+        WHERE country_code = ? AND source = 'auto' AND deleted_at IS NULL`,
+      now,
+      now,
       countryCode
     );
     photosDeleted = r1.changes;
+    // 사용자가 직접 추가한 사진(manual)이나 노트가 살아있는 날짜는 visit_day도 보존.
     const r2 = await db.runAsync(
-      `DELETE FROM visit_days
+      `UPDATE visit_days
+          SET deleted_at = ?, updated_at = ?
         WHERE country_code = ?
-          AND date NOT IN (SELECT date FROM visit_photos WHERE country_code = ?)
-          AND date NOT IN (SELECT date FROM visit_notes WHERE country_code = ?)`,
+          AND deleted_at IS NULL
+          AND date NOT IN (
+            SELECT date FROM visit_photos
+             WHERE country_code = ? AND deleted_at IS NULL
+          )
+          AND date NOT IN (
+            SELECT date FROM visit_notes
+             WHERE country_code = ? AND deleted_at IS NULL
+          )`,
+      now,
+      now,
       countryCode,
       countryCode,
       countryCode
@@ -332,7 +372,9 @@ async function ensureVisitDay(
   await db.runAsync(
     `INSERT INTO visit_days (country_code, date, updated_at)
      VALUES (?, ?, ?)
-     ON CONFLICT(country_code, date) DO UPDATE SET updated_at = excluded.updated_at`,
+     ON CONFLICT(country_code, date) DO UPDATE SET
+       updated_at = excluded.updated_at,
+       deleted_at = NULL`,
     countryCode,
     date,
     now
