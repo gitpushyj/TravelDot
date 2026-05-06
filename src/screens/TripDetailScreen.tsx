@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -35,6 +34,7 @@ for (const c of COUNTRY_LIST) KO_NAME_BY_CODE[c.code] = c.nameKo;
 type Props = {
   trip: RecentTrip;
   onClose: () => void;
+  onEdit: () => void;
 };
 
 type DisplayPhoto = {
@@ -46,7 +46,7 @@ type DisplayPhoto = {
 
 const PREVIEW_PHOTO_COUNT = 5;
 
-export default function TripDetailScreen({ trip, onClose }: Props) {
+export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
@@ -219,9 +219,7 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
           <Text style={styles.headerCode}>{trip.countryCode}</Text>
         </View>
         <Pressable
-          onPress={() =>
-            Alert.alert("준비 중", "여행 수정은 곧 추가됩니다.")
-          }
+          onPress={onEdit}
           hitSlop={8}
           style={({ pressed }) => [
             styles.editBtn,

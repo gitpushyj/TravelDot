@@ -587,6 +587,61 @@ export async function deleteTrip(
   });
 }
 
+// 한 "여행"의 시작·종료일을 새 범위로 갱신한다.
+// - 새 범위 안의 모든 날짜에 대해 visit_days를 보장(언삭제 + insert).
+// - 기존 범위 안이지만 새 범위 밖에 있는 visit_days/photos/notes는 soft-delete.
+// 새 범위 자체에 photo가 없는 빈 날짜라도 visit_days로는 남아있어 "여행 일수"에 포함된다.
+export async function updateTripDates(
+  countryCode: string,
+  oldStartDate: string,
+  oldEndDate: string,
+  newStartDate: string,
+  newEndDate: string
+): Promise<void> {
+  if (newStartDate > newEndDate) {
+    throw new Error("시작일이 종료일보다 늦을 수 없습니다.");
+  }
+  const db = await getDb();
+  const now = Date.now();
+  await db.withTransactionAsync(async () => {
+    // 기존 범위 안 + 새 범위 밖 → soft-delete.
+    const trimSql = (table: string) =>
+      `UPDATE ${table}
+          SET deleted_at = ?, updated_at = ?
+        WHERE country_code = ?
+          AND date BETWEEN ? AND ?
+          AND (date < ? OR date > ?)
+          AND deleted_at IS NULL`;
+    for (const t of ["visit_days", "visit_photos", "visit_notes"]) {
+      await db.runAsync(
+        trimSql(t),
+        now,
+        now,
+        countryCode,
+        oldStartDate,
+        oldEndDate,
+        newStartDate,
+        newEndDate
+      );
+    }
+    // 새 범위의 모든 날짜에 visit_days 보장.
+    let cur = newStartDate;
+    while (cur <= newEndDate) {
+      await ensureVisitDay(countryCode, cur, now);
+      cur = addOneDay(cur);
+    }
+  });
+}
+
+function addOneDay(date: string): string {
+  const [y, m, d] = date.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + 1));
+  const yy = dt.getUTCFullYear();
+  const mm = String(dt.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(dt.getUTCDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
+}
+
 // "본국 바꾸기"용 — 모든 방문 기록을 비운다.
 export async function wipeAllVisits(): Promise<void> {
   const db = await getDb();
