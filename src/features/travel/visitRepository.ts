@@ -28,6 +28,83 @@ export async function loadVisitCounts(): Promise<Record<string, number>> {
   return out;
 }
 
+export async function loadVisitCountsByYear(
+  year: number
+): Promise<Record<string, number>> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{ country_code: string; days: number }>(
+    `SELECT country_code, COUNT(*) AS days
+       FROM visit_days
+      WHERE substr(date, 1, 4) = ?
+      GROUP BY country_code`,
+    String(year)
+  );
+  const out: Record<string, number> = {};
+  for (const r of rows) out[r.country_code] = r.days;
+  return out;
+}
+
+export async function loadAvailableYears(): Promise<number[]> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{ y: string }>(
+    `SELECT DISTINCT substr(date, 1, 4) AS y FROM visit_days ORDER BY y DESC`
+  );
+  return rows.map((r) => Number(r.y)).filter((n) => Number.isFinite(n));
+}
+
+export type RecentTrip = {
+  countryCode: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string;
+  days: number;
+};
+
+// 나라별 가장 최근 "여행" = 마지막 날짜에서 거꾸로 거슬러 올라가며 연속된 날짜의 묶음.
+// 결과는 시작일 기준 내림차순 정렬.
+export async function loadRecentTripsByCountry(): Promise<RecentTrip[]> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{ country_code: string; date: string }>(
+    `SELECT country_code, date FROM visit_days ORDER BY country_code, date`
+  );
+  const byCountry = new Map<string, string[]>();
+  for (const r of rows) {
+    const arr = byCountry.get(r.country_code) ?? [];
+    arr.push(r.date);
+    byCountry.set(r.country_code, arr);
+  }
+  const trips: RecentTrip[] = [];
+  for (const [code, dates] of byCountry) {
+    if (dates.length === 0) continue;
+    // dates는 ASC. 마지막에서부터 연속 구간을 찾는다.
+    const endDate = dates[dates.length - 1];
+    let startDate = endDate;
+    let i = dates.length - 2;
+    while (i >= 0 && diffInDays(dates[i], startDate) === 1) {
+      startDate = dates[i];
+      i -= 1;
+    }
+    const days = diffInDays(startDate, endDate) + 1;
+    trips.push({ countryCode: code, startDate, endDate, days });
+  }
+  trips.sort((a, b) => (a.startDate < b.startDate ? 1 : -1));
+  return trips;
+}
+
+function diffInDays(a: string, b: string): number {
+  // YYYY-MM-DD 가정. UTC로 변환해 일수만 계산.
+  const da = Date.UTC(
+    Number(a.slice(0, 4)),
+    Number(a.slice(5, 7)) - 1,
+    Number(a.slice(8, 10))
+  );
+  const db = Date.UTC(
+    Number(b.slice(0, 4)),
+    Number(b.slice(5, 7)) - 1,
+    Number(b.slice(8, 10))
+  );
+  return Math.round((db - da) / 86400000);
+}
+
 export async function countPhotosForDay(
   countryCode: string,
   date: string

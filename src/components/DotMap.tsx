@@ -11,36 +11,34 @@ import {
 import dotData from "../../assets/data/dots.json";
 import { useVisitStore } from "../features/travel/visitStore";
 import type { CountryRef, DotData } from "../types";
-import { BG_COLOR, colorForVisit } from "../utils/heatmap";
+import { colorForVisit } from "../utils/heatmap";
 
 const FILL_RATIO = 0.6;
 const MIN_SCALE = 1;
 const MAX_SCALE = 10;
 const HIGHLIGHT_COLOR = "#ffd75e";
 
-type Props = Record<string, never>;
+type Props = {
+  visitCounts?: Record<string, number>;
+  // pinch/pan 활성화 여부. 홈에서는 ScrollView와 충돌을 피하려고 false.
+  enableZoom?: boolean;
+};
 
-type Selection =
-  | { kind: "none" }
-  | { kind: "pending"; options: CountryRef[] }
-  | { kind: "country"; code: string; name: string };
-
-function clamp(v: number, min: number, max: number) {
-  "worklet";
-  return Math.max(min, Math.min(max, v));
-}
-
-export default function DotMap(_: Props) {
+export default function DotMap({
+  visitCounts: visitCountsProp,
+  enableZoom = true,
+}: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [selection, setSelection] = useState<Selection>({ kind: "none" });
-  const visitCounts = useVisitStore((s) => s.visitCounts);
+  // 한 도트가 여러 나라에 걸쳐 있을 때만 사용하는 임시 선택지.
+  const [pending, setPending] = useState<CountryRef[] | null>(null);
+  const storeVisitCounts = useVisitStore((s) => s.visitCounts);
+  const visitCounts = visitCountsProp ?? storeVisitCounts;
   const homeCountry = useVisitStore((s) => s.homeCountry);
+  const selectedCountry = useVisitStore((s) => s.selectedCountry);
+  const setSelectedCountry = useVisitStore((s) => s.setSelectedCountry);
 
   const viewBoxW = 360;
-  const viewBoxH = maxLat - minLat;
-
-  // 가로는 화면 폭에 꽉 맞추고, 세로는 비율에 따라 결정한다.
   const drawWidth = size.width;
   const baseScale = drawWidth / viewBoxW || 1;
 
@@ -72,13 +70,15 @@ export default function DotMap(_: Props) {
   );
 
   const highlightedIds = useMemo(() => {
-    if (selection.kind !== "country") return null;
+    if (!selectedCountry) return null;
     const ids = new Set<string>();
     for (const d of positioned) {
-      if (d.countries.some((c) => c.code === selection.code)) ids.add(d.id);
+      if (d.countries.some((c) => c.code === selectedCountry.code)) {
+        ids.add(d.id);
+      }
     }
     return ids;
-  }, [positioned, selection]);
+  }, [positioned, selectedCountry]);
 
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
@@ -119,9 +119,6 @@ export default function DotMap(_: Props) {
 
   const onTap = useCallback(
     (worldX: number, worldY: number) => {
-      // 격자 한 칸 크기를 기준으로 hit 영역을 잡으면 도트 사이 여백(특히
-      // 4개 도트 사이의 대각선 코너)까지 모두 커버된다. 코너에서 가장 가까운
-      // 도트 중심까지 거리는 약 0.707셀이므로 0.75셀이면 여유 있게 덮는다.
       const cellPx = gridSize * baseScale;
       const hitR = cellPx * 0.75;
       const hitR2 = hitR * hitR;
@@ -138,16 +135,16 @@ export default function DotMap(_: Props) {
           bestDist = dist;
         }
       }
-      if (!bestCountries || bestCountries.length === 0) {
-        setSelection({ kind: "none" });
-      } else if (bestCountries.length === 1) {
+      if (!bestCountries || bestCountries.length === 0) return;
+      if (bestCountries.length === 1) {
         const c = bestCountries[0];
-        setSelection({ kind: "country", code: c.code, name: c.name });
+        setPending(null);
+        setSelectedCountry({ code: c.code, name: c.name });
       } else {
-        setSelection({ kind: "pending", options: bestCountries });
+        setPending(bestCountries);
       }
     },
-    [positioned, halfDotPx]
+    [positioned, halfDotPx, baseScale, gridSize, setSelectedCountry]
   );
 
   const tap = Gesture.Tap()
@@ -158,7 +155,9 @@ export default function DotMap(_: Props) {
       runOnJS(onTap)(wx, wy);
     });
 
-  const composed = Gesture.Race(tap, Gesture.Simultaneous(pinch, pan));
+  const composed = enableZoom
+    ? Gesture.Race(tap, Gesture.Simultaneous(pinch, pan))
+    : tap;
 
   const transform = useDerivedValue(() => [
     { translateX: tx.value },
@@ -199,79 +198,67 @@ export default function DotMap(_: Props) {
           </GestureDetector>
         )}
       </View>
-      <View style={styles.caption}>
-        {selection.kind === "pending" ? (
-          <>
-            <Text style={styles.captionLabel}>
-              어느 나라의 도트를 강조할까요?
-            </Text>
-            <View style={styles.optionRow}>
-              {selection.options.map((c) => (
-                <Pressable
-                  key={c.code}
-                  style={({ pressed }) => [
-                    styles.optionBtn,
-                    pressed && styles.optionBtnPressed,
-                  ]}
-                  onPress={() =>
-                    setSelection({
-                      kind: "country",
-                      code: c.code,
-                      name: c.name,
-                    })
-                  }
-                >
-                  <Text style={styles.optionText}>{c.name}</Text>
-                </Pressable>
-              ))}
-            </View>
-          </>
-        ) : selection.kind === "country" ? (
-          <>
-            <Text style={styles.captionLabel}>
-              {selection.name} · {visitCounts[selection.code] ?? 0}일 방문 ·{" "}
-              {highlightedIds?.size ?? 0}개 도트
-            </Text>
-            <Pressable
-              onPress={() => setSelection({ kind: "none" })}
-              hitSlop={6}
-            >
-              <Text style={styles.clearText}>선택 해제</Text>
-            </Pressable>
-          </>
-        ) : (
-          <Text style={styles.captionHint}>
-            도트를 탭하면 해당 나라의 도트가 모두 노란색으로 강조됩니다.
+      {pending && pending.length > 0 && (
+        <View style={styles.caption}>
+          <Text style={styles.captionLabel}>
+            어느 나라의 도트를 강조할까요?
           </Text>
-        )}
-      </View>
+          <View style={styles.optionRow}>
+            {pending.map((c) => (
+              <Pressable
+                key={c.code}
+                style={({ pressed }) => [
+                  styles.optionBtn,
+                  pressed && styles.optionBtnPressed,
+                ]}
+                onPress={() => {
+                  setSelectedCountry({ code: c.code, name: c.name });
+                  setPending(null);
+                }}
+              >
+                <Text style={styles.optionText}>{c.name}</Text>
+              </Pressable>
+            ))}
+            <Pressable
+              style={({ pressed }) => [
+                styles.optionBtn,
+                pressed && styles.optionBtnPressed,
+              ]}
+              onPress={() => setPending(null)}
+            >
+              <Text style={styles.optionText}>취소</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
     </View>
   );
+}
+
+function clamp(v: number, min: number, max: number) {
+  "worklet";
+  return Math.max(min, Math.min(max, v));
 }
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: BG_COLOR,
+    backgroundColor: "transparent",
   },
   mapArea: {
     width: "100%",
     aspectRatio: 360 / 145,
-    backgroundColor: BG_COLOR,
+    backgroundColor: "transparent",
     overflow: "hidden",
   },
   caption: {
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 12,
   },
   captionLabel: {
-    color: "#7d8aa6",
+    color: "#8a8779",
     fontSize: 12,
     marginBottom: 8,
-  },
-  captionHint: {
-    color: "#5b6680",
-    fontSize: 13,
   },
   optionRow: {
     flexDirection: "row",
@@ -282,21 +269,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
-    backgroundColor: "#1c2942",
+    backgroundColor: "#ffffff",
     borderWidth: 1,
-    borderColor: "#2a3a5c",
+    borderColor: "#ecebe4",
   },
   optionBtnPressed: {
-    backgroundColor: "#2a3a5c",
+    backgroundColor: "#f3efe6",
   },
   optionText: {
-    color: "#e8eefc",
+    color: "#1a1a1a",
     fontSize: 14,
     fontWeight: "600",
-  },
-  clearText: {
-    color: "#7d8aa6",
-    fontSize: 13,
-    textDecorationLine: "underline",
   },
 });
