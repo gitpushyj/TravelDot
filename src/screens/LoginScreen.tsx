@@ -26,9 +26,6 @@ export default function LoginScreen() {
     <View style={styles.root}>
       <View style={styles.center}>
         <Text style={styles.brand}>VisitGrid</Text>
-        <Text style={styles.subtitle}>
-          여행 기록을 안전하게 보관하려면{"\n"}먼저 로그인해 주세요.
-        </Text>
       </View>
 
       <View style={styles.bottom}>
@@ -50,9 +47,6 @@ export default function LoginScreen() {
             </>
           )}
         </Pressable>
-        <Text style={styles.fineprint}>
-          로그인 정보는 Supabase에 안전하게 저장됩니다.
-        </Text>
       </View>
     </View>
   );
@@ -78,12 +72,6 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: "800",
     letterSpacing: 0.5,
-  },
-  subtitle: {
-    color: "#9fb1d6",
-    fontSize: 15,
-    lineHeight: 22,
-    textAlign: "center",
   },
   bottom: {
     gap: 14,
@@ -115,10 +103,5 @@ const styles = StyleSheet.create({
     color: "#1a1a1a",
     fontSize: 16,
     fontWeight: "700",
-  },
-  fineprint: {
-    color: "#7d8aa6",
-    fontSize: 12,
-    textAlign: "center",
   },
 });
