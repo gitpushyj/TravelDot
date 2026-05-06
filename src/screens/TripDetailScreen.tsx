@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import CountryDotMap from "../components/CountryDotMap";
+import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
 import { scanDevicePhotosForTrip } from "../features/photoSync/tripPhotos";
 import {
   loadLatestNoteForTrip,
@@ -68,7 +69,17 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
         ),
       ]);
       if (cancelled) return;
-      setSavedPhotos(photos);
+      // ph:// URI는 일부 RN Image 로더가 인식하지 못해 화면에서 file:// localUri로 변환.
+      const resolved = await resolveDisplayUris(
+        photos.map((p) => ({ id: p.id, uri: p.localUri }))
+      );
+      if (cancelled) return;
+      setSavedPhotos(
+        photos.map((p) => ({
+          ...p,
+          localUri: resolved[p.id] ?? p.localUri,
+        }))
+      );
       setNote(latestNote);
     })();
     return () => {
@@ -88,7 +99,13 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
           endDate: trip.endDate,
         });
         if (cancelled) return;
-        setDevicePhotos(photos);
+        const resolved = await resolveDisplayUris(
+          photos.map((p) => ({ id: p.id, uri: p.uri }))
+        );
+        if (cancelled) return;
+        setDevicePhotos(
+          photos.map((p) => ({ ...p, uri: resolved[p.id] ?? p.uri }))
+        );
       } catch (e) {
         if (cancelled) return;
         // 권한 거부 등으로 실패해도 화면 자체는 동작한다.
