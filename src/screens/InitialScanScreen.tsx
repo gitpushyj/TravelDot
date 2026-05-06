@@ -13,6 +13,7 @@ import { runFullSync } from "../features/photoSync/syncService";
 import { SuspectTrip } from "../features/photoSync/deviceVerification";
 import { useVisitStore } from "../features/travel/visitStore";
 import { flagEmoji } from "../utils/flag";
+import { colorForCountry } from "../utils/countryColors";
 import { useTheme } from "../theme/themeStore";
 import type { Theme } from "../theme/theme";
 import countriesJson from "../../assets/data/countries.json";
@@ -191,10 +192,12 @@ function SuspectRow({
         ? trip.deviceLabels[0]
         : `${trip.deviceLabels[0]} 외 ${trip.deviceLabels.length - 1}대`;
 
+  const countryColor = colorForCountry(trip.countryCode);
+
   return (
     <View style={styles.row}>
       <View style={styles.rowMain}>
-        <View style={styles.flagBox}>
+        <View style={[styles.flagBox, { backgroundColor: countryColor.bg }]}>
           <Text style={styles.flagText}>{flagEmoji(trip.countryCode)}</Text>
         </View>
         <View style={styles.rowText}>
