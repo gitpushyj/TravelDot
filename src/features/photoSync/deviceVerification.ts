@@ -153,8 +153,9 @@ export async function fillMissingDeviceInfo(
   });
 }
 
-// 분류 후 의심 여행을 그룹핑한다. 본인 사진/미확인 사진은 안전, 외부 사진만
-// ±GRACE_PERIOD_DAYS 내에 본인 사진이 같은 국가에 없을 때 의심으로 잡힌다.
+// 분류 후 의심 여행을 그룹핑한다. 본인 사진은 안전, 외부 사진(foreign)과
+// EXIF 메타가 없는 사진(unknown — 메신저 전달본 등)은 ±GRACE_PERIOD_DAYS 내에
+// 본인 사진이 같은 국가에 없을 때 의심으로 잡힌다.
 export function buildSuspectTrips(
   photos: VisitPhotoForReview[],
   ownDevices: Set<string>
@@ -192,7 +193,8 @@ export function buildSuspectTrips(
 
     const suspectsInCountry: VisitPhotoForReview[] = [];
     for (const p of list) {
-      if (classify(p) !== "foreign") continue;
+      const cls = classify(p);
+      if (cls === "own") continue;
       if (hasOwnNeighbor(p.date)) continue;
       suspectsInCountry.push(p);
     }
