@@ -33,8 +33,8 @@ type State = {
     countryNameByCode: Record<string, string>
   ) => Promise<BadgeDefinition[]>;
   setActive: (id: BadgeId | null) => Promise<void>;
-  /** 알림 큐에서 첫 항목 제거 */
-  consumeNotification: () => void;
+  /** 알림 큐에서 앞에서부터 N개 제거 (기본 1) */
+  consumeNotifications: (count?: number) => void;
 };
 
 export const useBadgeStore = create<State>((set, get) => ({
@@ -92,8 +92,8 @@ export const useBadgeStore = create<State>((set, get) => ({
     await saveActive(id);
   },
 
-  consumeNotification: () => {
-    set((s) => ({ pendingNotifications: s.pendingNotifications.slice(1) }));
+  consumeNotifications: (count = 1) => {
+    set((s) => ({ pendingNotifications: s.pendingNotifications.slice(count) }));
   },
 }));
 

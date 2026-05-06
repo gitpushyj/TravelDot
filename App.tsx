@@ -66,7 +66,7 @@ export default function App() {
   const themeHydrated = useThemeStore((s) => s.hydrated);
   const activeBadgeId = useBadgeStore((s) => s.activeId);
   const pendingNotifications = useBadgeStore((s) => s.pendingNotifications);
-  const consumeBadgeNotification = useBadgeStore((s) => s.consumeNotification);
+  const consumeBadgeNotifications = useBadgeStore((s) => s.consumeNotifications);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
@@ -149,16 +149,26 @@ export default function App() {
     [activeBadgeId, tier.id]
   );
 
-  // 새로 잠금 해제된 뱃지가 있으면 한 번에 하나씩 알림으로 표시
+  // 새로 잠금 해제된 뱃지가 여러 개여도 한 번의 알림으로 묶어서 표시한다.
+  // 스캔 한 번에 호칭이 여러 개 풀릴 수 있어 팝업이 연달아 뜨는 것을 막기 위함.
   useEffect(() => {
-    if (pendingNotifications.length === 0) return;
-    const next = pendingNotifications[0];
-    Alert.alert(
-      "새로운 뱃지를 얻었어요!",
-      `${next.emoji}  ${next.titleKo}\n\n${next.description}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`,
-      [{ text: "확인", onPress: () => consumeBadgeNotification() }]
-    );
-  }, [pendingNotifications, consumeBadgeNotification]);
+    const count = pendingNotifications.length;
+    if (count === 0) return;
+    const batch = pendingNotifications.slice(0, count);
+    const title =
+      count === 1
+        ? "새로운 뱃지를 얻었어요!"
+        : `새로운 뱃지 ${count}개를 얻었어요!`;
+    const body =
+      count === 1
+        ? `${batch[0].emoji}  ${batch[0].titleKo}\n\n${batch[0].description}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`
+        : `${batch
+            .map((b) => `${b.emoji}  ${b.titleKo}`)
+            .join("\n")}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`;
+    Alert.alert(title, body, [
+      { text: "확인", onPress: () => consumeBadgeNotifications(count) },
+    ]);
+  }, [pendingNotifications, consumeBadgeNotifications]);
 
   const periodLabel = useMemo(() => {
     if (yearMode.kind === "year") return String(yearMode.year);
