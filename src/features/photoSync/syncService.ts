@@ -1,7 +1,7 @@
 import { toLocalDateKey } from "../../utils/date";
 import { addPhotos, VisitPhotoInput } from "../travel/visitRepository";
-import { useVisitStore } from "../travel/visitStore";
-import { resolveCountry } from "./countryResolver";
+import { useVisitStore, SyncReport } from "../travel/visitStore";
+import { resolveCountryDetailed } from "./countryResolver";
 import { ensurePermission, iteratePhotos } from "./photoLibrary";
 
 export async function runFullSync(): Promise<void> {
@@ -25,6 +25,7 @@ export async function runFullSync(): Promise<void> {
   let scanned = 0;
   let withGps = 0;
   let resolved = 0;
+  let sample: SyncReport["sample"] | undefined;
 
   try {
     for await (const p of iteratePhotos()) {
@@ -36,7 +37,16 @@ export async function runFullSync(): Promise<void> {
       }
       if (p.lat == null || p.lng == null) continue;
       withGps += 1;
-      const code = resolveCountry(p.lat, p.lng);
+      const { code, diag } = resolveCountryDetailed(p.lat, p.lng);
+      if (!sample) {
+        sample = {
+          lat: p.lat,
+          lng: p.lng,
+          code,
+          bboxHits: diag.bboxHits,
+          totalFeatures: diag.totalFeatures,
+        };
+      }
       if (!code) continue;
       resolved += 1;
       const date = toLocalDateKey(p.takenAt);
@@ -63,7 +73,7 @@ export async function runFullSync(): Promise<void> {
       .setSyncStatus({ running: false, processed: scanned });
     useVisitStore
       .getState()
-      .setLastSync({ permission, scanned, withGps, resolved, added });
+      .setLastSync({ permission, scanned, withGps, resolved, added, sample });
   } catch (err) {
     useVisitStore
       .getState()
@@ -74,6 +84,7 @@ export async function runFullSync(): Promise<void> {
       withGps,
       resolved,
       added: 0,
+      sample,
       error: String(err),
     });
     throw err;

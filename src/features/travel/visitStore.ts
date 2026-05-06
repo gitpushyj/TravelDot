@@ -15,6 +15,14 @@ export type SyncReport = {
   withGps: number;
   resolved: number; // 좌표→국가 매칭 성공
   added: number; // DB에 새로 들어간 visit_photos 건수
+  // 진단용 표본: 첫 GPS 사진의 좌표와 매칭 시도 결과
+  sample?: {
+    lat: number;
+    lng: number;
+    code: string | null;
+    bboxHits: number;
+    totalFeatures: number;
+  };
   error?: string;
 };
 

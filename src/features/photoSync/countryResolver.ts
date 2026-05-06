@@ -38,7 +38,19 @@ function bboxOf(f: CountryFeature): Box {
 
 const boxes: Box[] = features.map(bboxOf);
 
-export function resolveCountry(lat: number, lng: number): string | null {
+export type ResolveDiagnostics = {
+  bboxHits: number;
+  totalFeatures: number;
+};
+
+export function resolveCountryDetailed(
+  lat: number,
+  lng: number
+): { code: string | null; diag: ResolveDiagnostics } {
+  const diag: ResolveDiagnostics = {
+    bboxHits: 0,
+    totalFeatures: features.length,
+  };
   if (
     !Number.isFinite(lat) ||
     !Number.isFinite(lng) ||
@@ -47,15 +59,20 @@ export function resolveCountry(lat: number, lng: number): string | null {
     lng < -180 ||
     lng > 180
   ) {
-    return null;
+    return { code: null, diag };
   }
   const pt = point([lng, lat]);
   for (let i = 0; i < features.length; i++) {
     const [minX, minY, maxX, maxY] = boxes[i];
     if (lng < minX || lng > maxX || lat < minY || lat > maxY) continue;
+    diag.bboxHits += 1;
     if (booleanPointInPolygon(pt, features[i])) {
-      return features[i].properties.code;
+      return { code: features[i].properties.code, diag };
     }
   }
-  return null;
+  return { code: null, diag };
+}
+
+export function resolveCountry(lat: number, lng: number): string | null {
+  return resolveCountryDetailed(lat, lng).code;
 }

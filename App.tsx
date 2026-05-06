@@ -34,6 +34,13 @@ export default function App() {
       `국가 매칭: ${lastSync.resolved}장`,
       `DB 추가: ${lastSync.added}장`,
     ];
+    if (lastSync.sample) {
+      const s = lastSync.sample;
+      lines.push(
+        `표본: lat=${s.lat.toFixed(4)} lng=${s.lng.toFixed(4)}`,
+        `bbox통과 ${s.bboxHits}/${s.totalFeatures} → code=${s.code ?? "null"}`
+      );
+    }
     if (lastSync.error) lines.push(`에러: ${lastSync.error}`);
     Alert.alert("스캔 결과", lines.join("\n"), [
       { text: "확인", onPress: () => setLastSync(null) },
