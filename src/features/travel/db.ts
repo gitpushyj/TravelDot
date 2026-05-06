@@ -17,6 +17,7 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
       country_code TEXT NOT NULL,
       date         TEXT NOT NULL,
       updated_at   INTEGER NOT NULL,
+      deleted_at   INTEGER,
       PRIMARY KEY (country_code, date)
     );
 
@@ -26,7 +27,8 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
       date         TEXT NOT NULL,
       body         TEXT NOT NULL,
       created_at   INTEGER NOT NULL,
-      updated_at   INTEGER NOT NULL
+      updated_at   INTEGER NOT NULL,
+      deleted_at   INTEGER
     );
     CREATE INDEX IF NOT EXISTS idx_visit_notes_country_date
       ON visit_notes (country_code, date);
@@ -39,11 +41,30 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
       remote_url   TEXT,
       source       TEXT NOT NULL,
       taken_at     INTEGER NOT NULL,
-      updated_at   INTEGER NOT NULL
+      updated_at   INTEGER NOT NULL,
+      deleted_at   INTEGER
     );
     CREATE INDEX IF NOT EXISTS idx_visit_photos_country_date
       ON visit_photos (country_code, date);
   `);
+  await ensureColumn(db, "visit_days", "deleted_at", "deleted_at INTEGER");
+  await ensureColumn(db, "visit_notes", "deleted_at", "deleted_at INTEGER");
+  await ensureColumn(db, "visit_photos", "deleted_at", "deleted_at INTEGER");
   _db = db;
   return db;
+}
+
+// CREATE TABLE IF NOT EXISTS는 첫 생성 시에만 적용되므로,
+// 기존 사용자의 DB에는 ALTER TABLE로 컬럼을 따로 채워줘야 한다.
+async function ensureColumn(
+  db: SQLite.SQLiteDatabase,
+  table: string,
+  column: string,
+  ddl: string
+): Promise<void> {
+  const cols = await db.getAllAsync<{ name: string }>(
+    `PRAGMA table_info(${table})`
+  );
+  if (cols.some((c) => c.name === column)) return;
+  await db.execAsync(`ALTER TABLE ${table} ADD COLUMN ${ddl}`);
 }
