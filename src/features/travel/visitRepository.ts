@@ -60,6 +60,50 @@ export async function loadAvailableYears(): Promise<number[]> {
   return rows.map((r) => Number(r.y)).filter((n) => Number.isFinite(n));
 }
 
+export type YearSummary = {
+  year: number;
+  days: number;
+  countries: number;
+  monthly: number[]; // length 12, days per month
+};
+
+// 연도 선택 다이얼로그용. 기록이 있는 모든 연/월의 일수와 연도별 고유 국가 수를 함께 가져온다.
+export async function loadYearSummaries(): Promise<YearSummary[]> {
+  const db = await getDb();
+  const monthRows = await db.getAllAsync<{
+    y: string;
+    m: string;
+    days: number;
+  }>(
+    `SELECT substr(date, 1, 4) AS y, substr(date, 6, 2) AS m, COUNT(*) AS days
+       FROM visit_days
+      GROUP BY y, m`
+  );
+  const countryRows = await db.getAllAsync<{ y: string; countries: number }>(
+    `SELECT substr(date, 1, 4) AS y, COUNT(DISTINCT country_code) AS countries
+       FROM visit_days
+      GROUP BY y`
+  );
+  const map = new Map<number, YearSummary>();
+  for (const r of monthRows) {
+    const year = Number(r.y);
+    const idx = Number(r.m) - 1;
+    if (!Number.isFinite(year) || idx < 0 || idx >= 12) continue;
+    const entry =
+      map.get(year) ??
+      { year, days: 0, countries: 0, monthly: new Array(12).fill(0) };
+    entry.monthly[idx] = r.days;
+    entry.days += r.days;
+    map.set(year, entry);
+  }
+  for (const r of countryRows) {
+    const year = Number(r.y);
+    const entry = map.get(year);
+    if (entry) entry.countries = r.countries;
+  }
+  return [...map.values()].sort((a, b) => b.year - a.year);
+}
+
 export type RecentTrip = {
   countryCode: string;
   startDate: string; // YYYY-MM-DD

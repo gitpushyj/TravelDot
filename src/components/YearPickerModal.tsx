@@ -1,0 +1,355 @@
+import { useEffect, useMemo, useState } from "react";
+import {
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+
+import {
+  loadYearSummaries,
+  type YearSummary,
+} from "../features/travel/visitRepository";
+import {
+  ACCENT,
+  CARD_BORDER,
+  TEXT_MUTED,
+  TEXT_PRIMARY,
+  TEXT_SECONDARY,
+} from "../utils/heatmap";
+
+export type YearMode = { kind: "all" } | { kind: "year"; year: number };
+
+type Props = {
+  visible: boolean;
+  initial: YearMode;
+  onCancel: () => void;
+  onApply: (mode: YearMode) => void;
+};
+
+const SHEET_BG = "#ffffff";
+const HANDLE_COLOR = "#d8d4c7";
+const SELECTED_BG = "#fff4ec";
+const SEG_EMPTY = "#e8e7df";
+const SEG_LIGHT = "#9bd093";
+const SEG_DARK = "#2f8a3e";
+const NUM_SEGMENTS = 12;
+
+export default function YearPickerModal({
+  visible,
+  initial,
+  onCancel,
+  onApply,
+}: Props) {
+  const [summaries, setSummaries] = useState<YearSummary[] | null>(null);
+  const [pending, setPending] = useState<YearMode>(initial);
+
+  useEffect(() => {
+    if (!visible) return;
+    setPending(initial);
+    let alive = true;
+    void loadYearSummaries().then((s) => {
+      if (alive) setSummaries(s);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [visible, initial]);
+
+  // min ~ max 사이의 모든 연도를 채워, 기록 없는 연도도 "기록 없음"으로 노출한다.
+  const rows = useMemo(() => {
+    if (!summaries || summaries.length === 0) return [];
+    const byYear = new Map(summaries.map((s) => [s.year, s]));
+    const minY = Math.min(...summaries.map((s) => s.year));
+    const maxY = Math.max(...summaries.map((s) => s.year));
+    const out: YearSummary[] = [];
+    for (let y = maxY; y >= minY; y -= 1) {
+      out.push(
+        byYear.get(y) ?? { year: y, days: 0, countries: 0, monthly: new Array(12).fill(0) }
+      );
+    }
+    return out;
+  }, [summaries]);
+
+  const allRange = useMemo(() => {
+    if (!summaries || summaries.length === 0) return null;
+    const ys = summaries.map((s) => s.year);
+    return { min: Math.min(...ys), max: Math.max(...ys) };
+  }, [summaries]);
+
+  // "전체 보기" 막대용: 모든 연도의 월별 일수를 합산.
+  const totalsMonthly = useMemo(() => {
+    const acc = new Array(NUM_SEGMENTS).fill(0);
+    if (!summaries) return acc;
+    for (const s of summaries) {
+      for (let i = 0; i < NUM_SEGMENTS; i += 1) acc[i] += s.monthly[i] ?? 0;
+    }
+    return acc;
+  }, [summaries]);
+
+  const handleApply = () => {
+    onApply(pending);
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onCancel}
+      statusBarTranslucent
+    >
+      <View style={styles.backdrop}>
+        <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
+        <View style={styles.sheet}>
+          <View style={styles.handleWrap}>
+            <View style={styles.handle} />
+          </View>
+          <View style={styles.headerRow}>
+            <Pressable hitSlop={8} onPress={onCancel}>
+              <Text style={styles.cancelText}>취소</Text>
+            </Pressable>
+            <Text style={styles.titleText}>연도 선택</Text>
+            <Pressable hitSlop={8} onPress={handleApply}>
+              <Text style={styles.applyText}>적용</Text>
+            </Pressable>
+          </View>
+
+          <ScrollView
+            style={styles.list}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <YearRow
+              title="전체 보기"
+              subtitle={
+                allRange
+                  ? `${allRange.min} — ${allRange.max} · 모든 기록`
+                  : "모든 기록"
+              }
+              monthly={totalsMonthly}
+              selected={pending.kind === "all"}
+              muted={false}
+              onPress={() => setPending({ kind: "all" })}
+            />
+            {rows.map((s) => {
+              const isEmpty = s.days === 0;
+              const subtitle = isEmpty
+                ? "기록 없음"
+                : `${s.days}일 · ${s.countries} 도트`;
+              return (
+                <YearRow
+                  key={s.year}
+                  title={String(s.year)}
+                  subtitle={subtitle}
+                  monthly={s.monthly}
+                  selected={
+                    pending.kind === "year" && pending.year === s.year
+                  }
+                  muted={isEmpty}
+                  onPress={() => setPending({ kind: "year", year: s.year })}
+                />
+              );
+            })}
+          </ScrollView>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+function YearRow({
+  title,
+  subtitle,
+  monthly,
+  selected,
+  muted,
+  onPress,
+}: {
+  title: string;
+  subtitle: string;
+  monthly: number[];
+  selected: boolean;
+  muted: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.row, selected && styles.rowSelected]}
+    >
+      <Text
+        style={[
+          styles.yearText,
+          muted && styles.yearMuted,
+        ]}
+      >
+        {title}
+      </Text>
+      <View style={styles.rowMain}>
+        <Text style={[styles.subText, muted && styles.subMuted]}>
+          {subtitle}
+        </Text>
+        <SegmentBar monthly={monthly} muted={muted} />
+      </View>
+      <View
+        style={[
+          styles.radio,
+          selected && styles.radioSelected,
+        ]}
+      >
+        {selected && <Text style={styles.radioCheck}>✓</Text>}
+      </View>
+    </Pressable>
+  );
+}
+
+function SegmentBar({
+  monthly,
+  muted,
+}: {
+  monthly: number[];
+  muted: boolean;
+}) {
+  return (
+    <View style={styles.bar}>
+      {Array.from({ length: NUM_SEGMENTS }).map((_, i) => {
+        const days = monthly[i] ?? 0;
+        let color: string = SEG_EMPTY;
+        if (!muted) {
+          if (days >= 4) color = SEG_DARK;
+          else if (days >= 1) color = SEG_LIGHT;
+        }
+        return <View key={i} style={[styles.seg, { backgroundColor: color }]} />;
+      })}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  backdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.35)",
+  },
+  sheet: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: SHEET_BG,
+    borderTopLeftRadius: 22,
+    borderTopRightRadius: 22,
+    paddingBottom: Platform.OS === "ios" ? 34 : 16,
+    maxHeight: "85%",
+  },
+  handleWrap: {
+    alignItems: "center",
+    paddingTop: 8,
+    paddingBottom: 4,
+  },
+  handle: {
+    width: 40,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: HANDLE_COLOR,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 18,
+    paddingTop: 12,
+    paddingBottom: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: CARD_BORDER,
+  },
+  cancelText: {
+    color: TEXT_MUTED,
+    fontSize: 15,
+    fontWeight: "500",
+    minWidth: 40,
+  },
+  titleText: {
+    color: TEXT_PRIMARY,
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  applyText: {
+    color: ACCENT,
+    fontSize: 15,
+    fontWeight: "700",
+    minWidth: 40,
+    textAlign: "right",
+  },
+  list: {
+    flexGrow: 0,
+  },
+  listContent: {
+    paddingHorizontal: 8,
+    paddingTop: 4,
+    paddingBottom: 8,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    borderRadius: 14,
+    gap: 14,
+  },
+  rowSelected: {
+    backgroundColor: SELECTED_BG,
+  },
+  yearText: {
+    color: TEXT_PRIMARY,
+    fontSize: 20,
+    fontWeight: "800",
+    width: 80,
+  },
+  yearMuted: {
+    color: TEXT_MUTED,
+  },
+  rowMain: {
+    flex: 1,
+    gap: 8,
+  },
+  subText: {
+    color: TEXT_SECONDARY,
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  subMuted: {
+    color: TEXT_MUTED,
+  },
+  bar: {
+    flexDirection: "row",
+    gap: 3,
+  },
+  seg: {
+    flex: 1,
+    height: 8,
+    borderRadius: 2,
+  },
+  radio: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: "#dad6c8",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  radioSelected: {
+    backgroundColor: ACCENT,
+    borderColor: ACCENT,
+  },
+  radioCheck: {
+    color: "#ffffff",
+    fontSize: 13,
+    fontWeight: "900",
+    marginTop: -1,
+  },
+});

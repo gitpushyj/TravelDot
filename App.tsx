@@ -15,6 +15,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import CountryShape from "./src/components/CountryShape";
 import DotMap from "./src/components/DotMap";
+import YearPickerModal from "./src/components/YearPickerModal";
 import {
   runFullSync,
   runIncrementalSync,
@@ -63,6 +64,7 @@ export default function App() {
   const setLastSync = useVisitStore((s) => s.setLastSync);
   const [screen, setScreen] = useState<"main" | "addTrip">("main");
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
+  const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
 
   useEffect(() => {
@@ -124,32 +126,7 @@ export default function App() {
       Alert.alert("연도 선택", "아직 기록된 여행이 없습니다.");
       return;
     }
-    const labels = availableYears.map(String);
-    const options = ["전체", ...labels, "취소"];
-    if (Platform.OS === "ios") {
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          options,
-          cancelButtonIndex: options.length - 1,
-          title: "연도 선택",
-        },
-        (idx) => {
-          if (idx === 0) setYearMode({ kind: "all" });
-          else if (idx > 0 && idx < options.length - 1) {
-            setYearMode({ kind: "year", year: availableYears[idx - 1] });
-          }
-        }
-      );
-    } else {
-      Alert.alert("연도 선택", undefined, [
-        { text: "전체", onPress: () => setYearMode({ kind: "all" }) },
-        ...availableYears.map((y) => ({
-          text: String(y),
-          onPress: () => setYearMode({ kind: "year", year: y }),
-        })),
-        { text: "취소", style: "cancel" as const },
-      ]);
-    }
+    setYearPickerOpen(true);
   };
 
   const openMenu = () => {
@@ -364,6 +341,15 @@ export default function App() {
         </View>
         <RecentList trips={recentTrips} />
       </ScrollView>
+      <YearPickerModal
+        visible={yearPickerOpen}
+        initial={yearMode}
+        onCancel={() => setYearPickerOpen(false)}
+        onApply={(mode) => {
+          setYearMode(mode);
+          setYearPickerOpen(false);
+        }}
+      />
     </GestureHandlerRootView>
   );
 }
