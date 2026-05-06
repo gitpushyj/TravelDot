@@ -58,7 +58,8 @@ async function loadPhotoMetaViaInfo(
 }
 
 export async function* iteratePhotos(
-  pageSize = 200
+  pageSize = 200,
+  options?: { createdAfter?: number; createdBefore?: number }
 ): AsyncGenerator<PhotoMeta, void, void> {
   let after: string | undefined;
   while (true) {
@@ -67,6 +68,8 @@ export async function* iteratePhotos(
       first: pageSize,
       after,
       sortBy: [[MediaLibrary.SortBy.creationTime, false]],
+      createdAfter: options?.createdAfter,
+      createdBefore: options?.createdBefore,
     });
 
     if (Platform.OS === "ios") {

@@ -28,6 +28,7 @@ import AddTripScreen from "./src/screens/AddTripScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import TitlesScreen from "./src/screens/TitlesScreen";
+import TripDetailScreen from "./src/screens/TripDetailScreen";
 import countriesJson from "./assets/data/countries.json";
 import { flagEmoji } from "./src/utils/flag";
 import { colorForVisitWith, type Theme } from "./src/theme/theme";
@@ -69,7 +70,10 @@ export default function App() {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
-  const [screen, setScreen] = useState<"main" | "addTrip" | "settings" | "titles">("main");
+  const [screen, setScreen] = useState<
+    "main" | "addTrip" | "settings" | "titles" | "tripDetail"
+  >("main");
+  const [selectedTrip, setSelectedTrip] = useState<RecentTrip | null>(null);
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
@@ -215,6 +219,18 @@ export default function App() {
       <GestureHandlerRootView style={styles.root}>
         <StatusBar style={theme.statusBar} />
         <TitlesScreen onClose={() => setScreen("settings")} />
+      </GestureHandlerRootView>
+    );
+  }
+
+  if (screen === "tripDetail" && selectedTrip) {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <StatusBar style={theme.statusBar} />
+        <TripDetailScreen
+          trip={selectedTrip}
+          onClose={() => setScreen("main")}
+        />
       </GestureHandlerRootView>
     );
   }
@@ -387,7 +403,14 @@ export default function App() {
             <Text style={styles.allLink}>전체보기 →</Text>
           </Pressable>
         </View>
-        <RecentList theme={theme} trips={recentTrips} />
+        <RecentList
+          theme={theme}
+          trips={recentTrips}
+          onSelect={(t) => {
+            setSelectedTrip(t);
+            setScreen("tripDetail");
+          }}
+        />
       </ScrollView>
       <YearPickerModal
         visible={yearPickerOpen}
@@ -440,7 +463,15 @@ function MiniCard({
   );
 }
 
-function RecentList({ theme, trips }: { theme: Theme; trips: RecentTrip[] }) {
+function RecentList({
+  theme,
+  trips,
+  onSelect,
+}: {
+  theme: Theme;
+  trips: RecentTrip[];
+  onSelect: (trip: RecentTrip) => void;
+}) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   if (trips.length === 0) {
     return (
@@ -463,12 +494,7 @@ function RecentList({ theme, trips }: { theme: Theme; trips: RecentTrip[] }) {
         const [y, m, d] = item.startDate.split("-");
         return (
           <Pressable
-            onPress={() =>
-              Alert.alert(
-                koName,
-                `${y}.${m}.${d} 시작 · ${item.days}일 머무름`
-              )
-            }
+            onPress={() => onSelect(item)}
             style={({ pressed }) => [
               styles.recentRow,
               pressed && { backgroundColor: theme.rowPressedBg },
