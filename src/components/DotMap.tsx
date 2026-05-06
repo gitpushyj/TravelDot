@@ -1,11 +1,15 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Canvas, Group, RoundedRect } from "@shopify/react-native-skia";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
+  cancelAnimation,
+  Easing,
   runOnJS,
   useDerivedValue,
   useSharedValue,
+  withDelay,
+  withTiming,
 } from "react-native-reanimated";
 
 import dotData from "../../assets/data/dots.json";
@@ -20,13 +24,15 @@ const HIGHLIGHT_COLOR = "#ffd75e";
 
 type Props = {
   visitCounts?: Record<string, number>;
-  // pinch/pan 활성화 여부. 홈에서는 ScrollView와 충돌을 피하려고 false.
   enableZoom?: boolean;
+  // 핀치/팬이 시작·종료될 때 호출. 부모 ScrollView 스크롤을 일시 잠그는 데 사용.
+  onInteractingChange?: (interacting: boolean) => void;
 };
 
 export default function DotMap({
   visitCounts: visitCountsProp,
   enableZoom = true,
+  onInteractingChange,
 }: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -89,32 +95,72 @@ export default function DotMap({
   const focalX = useSharedValue(0);
   const focalY = useSharedValue(0);
 
+  const notifyInteracting = useCallback(
+    (interacting: boolean) => {
+      onInteractingChange?.(interacting);
+    },
+    [onInteractingChange]
+  );
+
+  const viewW = size.width;
+  const viewH = size.height;
+
   const pinch = Gesture.Pinch()
     .onStart((e) => {
+      cancelAnimation(scale);
+      cancelAnimation(tx);
+      cancelAnimation(ty);
+      savedScale.value = scale.value;
+      savedTx.value = tx.value;
+      savedTy.value = ty.value;
       focalX.value = e.focalX;
       focalY.value = e.focalY;
+      runOnJS(notifyInteracting)(true);
     })
     .onUpdate((e) => {
+      // 사진 앱과 같은 핀치 줌: 시작 시점 손가락 중심 아래의 world 포인트가
+      // 항상 현재 손가락 중심에 오도록 한다(스케일 + 손가락 이동에 따른 팬을 결합).
       const newScale = clamp(savedScale.value * e.scale, MIN_SCALE, MAX_SCALE);
       const r = newScale / savedScale.value;
-      tx.value = focalX.value * (1 - r) + savedTx.value * r;
-      ty.value = focalY.value * (1 - r) + savedTy.value * r;
+      const dx = e.focalX - focalX.value;
+      const dy = e.focalY - focalY.value;
+      const rawTx = focalX.value * (1 - r) + savedTx.value * r + dx;
+      const rawTy = focalY.value * (1 - r) + savedTy.value * r + dy;
+      tx.value = clampPanX(rawTx, newScale, viewW);
+      ty.value = clampPanY(rawTy, newScale, viewH);
       scale.value = newScale;
     })
     .onEnd(() => {
       savedScale.value = scale.value;
       savedTx.value = tx.value;
       savedTy.value = ty.value;
+    })
+    .onFinalize(() => {
+      runOnJS(notifyInteracting)(false);
     });
 
+  // 한 손가락 드래그만 pan으로 사용. 두 손가락 입력은 pinch 단독으로 처리해 충돌을 막는다.
   const pan = Gesture.Pan()
+    .maxPointers(1)
+    .onStart(() => {
+      cancelAnimation(scale);
+      cancelAnimation(tx);
+      cancelAnimation(ty);
+      savedTx.value = tx.value;
+      savedTy.value = ty.value;
+      runOnJS(notifyInteracting)(true);
+    })
     .onUpdate((e) => {
-      tx.value = savedTx.value + e.translationX;
-      ty.value = savedTy.value + e.translationY;
+      const s = scale.value;
+      tx.value = clampPanX(savedTx.value + e.translationX, s, viewW);
+      ty.value = clampPanY(savedTy.value + e.translationY, s, viewH);
     })
     .onEnd(() => {
       savedTx.value = tx.value;
       savedTy.value = ty.value;
+    })
+    .onFinalize(() => {
+      runOnJS(notifyInteracting)(false);
     });
 
   const onTap = useCallback(
@@ -146,6 +192,78 @@ export default function DotMap({
     },
     [positioned, halfDotPx, baseScale, gridSize, setSelectedCountry]
   );
+
+  // 첫 진입 시 본국을 2초 보여준 뒤 4초에 걸쳐 세계지도로 줌아웃하는 인트로 애니메이션.
+  const introPlayed = useRef(false);
+  useEffect(() => {
+    if (introPlayed.current) return;
+    if (size.width === 0 || size.height === 0) return;
+    if (!homeCode) return;
+
+    let minCx = Infinity;
+    let minCy = Infinity;
+    let maxCx = -Infinity;
+    let maxCy = -Infinity;
+    for (const d of positioned) {
+      if (!d.countries.some((c) => c.code === homeCode)) continue;
+      const cx = d.x + halfDotPx;
+      const cy = d.y + halfDotPx;
+      if (cx < minCx) minCx = cx;
+      if (cy < minCy) minCy = cy;
+      if (cx > maxCx) maxCx = cx;
+      if (cy > maxCy) maxCy = cy;
+    }
+    if (!isFinite(minCx)) return;
+
+    const padding = 1.6;
+    const bboxW = Math.max(maxCx - minCx, 1);
+    const bboxH = Math.max(maxCy - minCy, 1);
+    const target = clampJs(
+      Math.min(size.width / (bboxW * padding), size.height / (bboxH * padding)),
+      MIN_SCALE,
+      MAX_SCALE
+    );
+    const cx0 = (minCx + maxCx) / 2;
+    const cy0 = (minCy + maxCy) / 2;
+    const rawTargetTx = size.width / 2 - target * cx0;
+    const rawTargetTy = size.height / 2 - target * cy0;
+    const targetTx = clampJs(rawTargetTx, size.width * (1 - target), 0);
+    const targetTy = clampJs(rawTargetTy, size.height * (1 - target), 0);
+
+    introPlayed.current = true;
+    scale.value = target;
+    tx.value = targetTx;
+    ty.value = targetTy;
+    savedScale.value = target;
+    savedTx.value = targetTx;
+    savedTy.value = targetTy;
+
+    const easing = Easing.inOut(Easing.cubic);
+    scale.value = withDelay(2000, withTiming(1, { duration: 4000, easing }));
+    tx.value = withDelay(2000, withTiming(0, { duration: 4000, easing }));
+    ty.value = withDelay(
+      2000,
+      withTiming(0, { duration: 4000, easing }, (finished) => {
+        if (finished) {
+          savedScale.value = 1;
+          savedTx.value = 0;
+          savedTy.value = 0;
+        }
+      })
+    );
+  }, [
+    size.width,
+    size.height,
+    homeCode,
+    positioned,
+    halfDotPx,
+    scale,
+    tx,
+    ty,
+    savedScale,
+    savedTx,
+    savedTy,
+  ]);
 
   const tap = Gesture.Tap()
     .maxDistance(8)
@@ -238,6 +356,26 @@ export default function DotMap({
 function clamp(v: number, min: number, max: number) {
   "worklet";
   return Math.max(min, Math.min(max, v));
+}
+
+function clampJs(v: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, v));
+}
+
+// scale=1일 때 콘텐츠가 뷰포트와 정확히 맞도록 설계되어 있으므로,
+// 줌이 들어가면 tx∈[w*(1-s), 0], ty∈[h*(1-s), 0] 안에서만 움직여야 콘텐츠가 화면을 비우지 않는다.
+function clampPanX(value: number, s: number, w: number) {
+  "worklet";
+  if (w <= 0) return 0;
+  const min = w * (1 - s);
+  return Math.min(0, Math.max(min, value));
+}
+
+function clampPanY(value: number, s: number, h: number) {
+  "worklet";
+  if (h <= 0) return 0;
+  const min = h * (1 - s);
+  return Math.min(0, Math.max(min, value));
 }
 
 const styles = StyleSheet.create({
