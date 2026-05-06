@@ -37,17 +37,11 @@ export async function runFullSync(): Promise<void> {
       }
       if (p.lat == null || p.lng == null) continue;
       withGps += 1;
-      // raw 값(p.lat, p.lng)을 그대로 resolveCountry에 흘리고, sample에도 그대로 저장.
-      // 만약 iOS가 string을 줬다면 이 단계에서 그대로 string이 보일 것.
-      const latNum =
-        typeof p.lat === "number" ? p.lat : Number(p.lat as unknown);
-      const lngNum =
-        typeof p.lng === "number" ? p.lng : Number(p.lng as unknown);
-      const { code, diag } = resolveCountryDetailed(latNum, lngNum);
+      const { code, diag } = resolveCountryDetailed(p.lat, p.lng);
       if (!sample) {
         sample = {
-          lat: p.lat as number,
-          lng: p.lng as number,
+          lat: p.lat,
+          lng: p.lng,
           code,
           bboxHits: diag.bboxHits,
           totalFeatures: diag.totalFeatures,

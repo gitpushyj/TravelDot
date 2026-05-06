@@ -9,6 +9,16 @@ export type PhotoMeta = {
   takenAt: number;
 };
 
+function toFiniteNumber(v: unknown): number | null {
+  if (v == null) return null;
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  if (typeof v === "string") {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+}
+
 // iOS의 "선택된 사진만" 권한도 스캔에 충분하므로 limited를 허용한다.
 export async function ensurePermission(): Promise<
   "granted" | "limited" | "denied"
@@ -36,11 +46,15 @@ export async function* iteratePhotos(
         shouldDownloadFromNetwork: false,
       });
       const loc = info.location ?? null;
+      // iOS는 latitude/longitude를 string으로 보낼 때가 있다(관찰됨).
+      // 비교 연산자가 문자열 비교로 새어나가지 않도록 여기서 number로 정규화.
+      const lat = toFiniteNumber(loc?.latitude);
+      const lng = toFiniteNumber(loc?.longitude);
       yield {
         id: asset.id,
         uri: info.localUri ?? asset.uri,
-        lat: loc?.latitude ?? null,
-        lng: loc?.longitude ?? null,
+        lat,
+        lng,
         takenAt: asset.creationTime,
       };
     }
