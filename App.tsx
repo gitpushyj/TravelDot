@@ -449,16 +449,6 @@ function MainScreen({
               </Text>
             </Pressable>
           </View>
-          <Pressable
-            onPress={() => navigation.navigate("MapZoom")}
-            hitSlop={8}
-            style={({ pressed }) => [
-              styles.iconBtn,
-              pressed && styles.iconBtnPressed,
-            ]}
-          >
-            <Text style={styles.iconBtnText}>⛶</Text>
-          </Pressable>
         </View>
 
         {syncStatus.running && (
@@ -474,6 +464,16 @@ function MainScreen({
             visitCounts={activeCounts}
             onInteractingChange={setMapInteracting}
           />
+          <Pressable
+            onPress={() => navigation.navigate("MapZoom")}
+            hitSlop={8}
+            style={({ pressed }) => [
+              styles.mapFloatingBtn,
+              pressed && styles.mapFloatingBtnPressed,
+            ]}
+          >
+            <Text style={styles.mapFloatingBtnIcon}>⛶</Text>
+          </Pressable>
         </View>
 
         <View style={styles.statsRow}>
@@ -951,6 +951,32 @@ function makeStyles(theme: Theme) {
       paddingVertical: 12,
       backgroundColor: theme.cardBg,
       position: "relative",
+    },
+    mapFloatingBtn: {
+      position: "absolute",
+      left: 12,
+      bottom: 12,
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.cardBg,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+      shadowColor: "#000",
+      shadowOpacity: 0.12,
+      shadowOffset: { width: 0, height: 2 },
+      shadowRadius: 6,
+      elevation: 3,
+    },
+    mapFloatingBtnPressed: {
+      backgroundColor: theme.tabRowBg,
+    },
+    mapFloatingBtnIcon: {
+      color: theme.textPrimary,
+      fontSize: 14,
+      fontWeight: "700",
     },
     statsRow: {
       flexDirection: "row",
