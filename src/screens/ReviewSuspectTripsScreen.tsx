@@ -18,7 +18,6 @@ import { useVisitStore } from "../features/travel/visitStore";
 import { loadPhotoUrisByIds } from "../features/travel/visitRepository";
 import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
 import { flagEmoji } from "../utils/flag";
-import { colorForCountry } from "../utils/countryColors";
 import { useTheme } from "../theme/themeStore";
 import type { Theme } from "../theme/theme";
 import countriesJson from "../../assets/data/countries.json";
@@ -193,7 +192,6 @@ function SuspectRow({
         ? trip.deviceLabels[0]
         : `${trip.deviceLabels[0]} 외 ${trip.deviceLabels.length - 1}대`;
   const remainingPhotos = Math.max(0, trip.photoCount - previewUris.length);
-  const countryColor = colorForCountry(trip.countryCode);
 
   return (
     <Animated.View
@@ -202,9 +200,7 @@ function SuspectRow({
       layout={LinearTransition.duration(220)}
     >
       <View style={styles.rowMain}>
-        <View style={[styles.flagBox, { backgroundColor: countryColor.bg }]}>
-          <Text style={styles.flagText}>{flagEmoji(trip.countryCode)}</Text>
-        </View>
+        <Text style={styles.flagText}>{flagEmoji(trip.countryCode)}</Text>
         <View style={styles.rowText}>
           <View style={styles.rowTitleLine}>
             <Text style={styles.rowName}>{koName}</Text>
@@ -350,15 +346,7 @@ function makeStyles(theme: Theme) {
       fontSize: 11,
       marginTop: 4,
     },
-    flagBox: {
-      width: 46,
-      height: 46,
-      borderRadius: 12,
-      backgroundColor: theme.flagBoxBg,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    flagText: { fontSize: 26 },
+    flagText: { fontSize: 36 },
     thumbRow: {
       flexDirection: "row",
       gap: 6,
