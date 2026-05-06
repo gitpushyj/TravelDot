@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\n設定 > 称号から選んでホーム画面に表示できます。"
   },
   "settings": {
-    "title": "設定",
+    "heading": "設定",
     "section": {
       "account": "アカウント",
       "home": "母国",

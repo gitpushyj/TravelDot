@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요."
   },
   "settings": {
-    "title": "설정",
+    "heading": "설정",
     "section": {
       "account": "계정",
       "home": "본국",

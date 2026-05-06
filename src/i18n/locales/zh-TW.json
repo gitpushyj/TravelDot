@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\n可在「設定 > 稱號」中選擇並顯示於主畫面。"
   },
   "settings": {
-    "title": "設定",
+    "heading": "設定",
     "section": {
       "account": "帳號",
       "home": "母國",

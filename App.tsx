@@ -43,6 +43,7 @@ import CountryDetailScreen from "./src/screens/CountryDetailScreen";
 import EditTripScreen from "./src/screens/EditTripScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
 import InitialScanScreen from "./src/screens/InitialScanScreen";
+import LanguageScreen from "./src/screens/LanguageScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
@@ -83,6 +84,7 @@ type RootStackParamList = {
   History: undefined;
   ReviewSuspect: undefined;
   AllCountries: undefined;
+  Language: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -328,6 +330,7 @@ export default function App() {
                 name="AllCountries"
                 component={AllCountriesScreenNav}
               />
+              <Stack.Screen name="Language" component={LanguageScreenNav} />
             </Stack.Navigator>
           </NavigationContainer>
         </AppCtx.Provider>
@@ -616,6 +619,7 @@ function SettingsScreenNav({
         onOpenTitles={() => navigation.navigate("Titles")}
         onChangeHome={() => navigation.navigate("ChangeHome")}
         onReviewSuspect={() => navigation.navigate("ReviewSuspect")}
+        onOpenLanguage={() => navigation.navigate("Language")}
       />
     </>
   );
@@ -738,6 +742,18 @@ function HistoryScreenNav({
         onClose={() => navigation.goBack()}
         onSelectTrip={(trip) => navigation.navigate("TripDetail", { trip })}
       />
+    </>
+  );
+}
+
+function LanguageScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "Language">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <LanguageScreen onClose={() => navigation.goBack()} />
     </>
   );
 }

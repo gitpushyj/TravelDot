@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\nScegline uno da Impostazioni > Titoli per mostrarlo nella schermata principale."
   },
   "settings": {
-    "title": "Impostazioni",
+    "heading": "Impostazioni",
     "section": {
       "account": "Account",
       "home": "Paese di residenza",

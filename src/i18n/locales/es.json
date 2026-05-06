@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\nElige uno en Ajustes > Títulos para mostrarlo en la pantalla de inicio."
   },
   "settings": {
-    "title": "Ajustes",
+    "heading": "Ajustes",
     "section": {
       "account": "Cuenta",
       "home": "País de origen",

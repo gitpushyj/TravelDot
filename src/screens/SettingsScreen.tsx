@@ -22,7 +22,6 @@ import { useVisitStore } from "../features/travel/visitStore";
 import { getTierByCount } from "../features/travel/tierTitles";
 import {
   LOCALE_LABELS,
-  setAppLocale,
   SUPPORTED_LOCALES,
   type SupportedLocale,
 } from "../i18n";
@@ -33,6 +32,7 @@ type Props = {
   onOpenTitles: () => void;
   onChangeHome: () => void;
   onReviewSuspect: () => void;
+  onOpenLanguage: () => void;
 };
 
 const THEME_MODES: ThemeMode[] = ["system", "light", "dark"];
@@ -43,6 +43,7 @@ export default function SettingsScreen({
   onOpenTitles,
   onChangeHome,
   onReviewSuspect,
+  onOpenLanguage,
 }: Props) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -140,28 +141,13 @@ export default function SettingsScreen({
       : "en"
   ) as SupportedLocale;
 
-  const openLanguagePicker = () => {
-    const buttons = SUPPORTED_LOCALES.map((loc) => ({
-      text: LOCALE_LABELS[loc] + (loc === currentLocale ? "  ✓" : ""),
-      onPress: () => {
-        if (loc !== currentLocale) void setAppLocale(loc);
-      },
-    }));
-    buttons.push({
-      text: t("common.cancel"),
-      style: "cancel",
-      onPress: () => {},
-    } as any);
-    Alert.alert(t("settings.language.label"), undefined, buttons);
-  };
-
   return (
     <View style={styles.root}>
       <View style={styles.header}>
         <Pressable onPress={onClose} hitSlop={8}>
           <Text style={styles.cancel}>{t("common.close")}</Text>
         </Pressable>
-        <Text style={styles.title}>{t("settings.title")}</Text>
+        <Text style={styles.title}>{t("settings.heading")}</Text>
         <View style={{ minWidth: 40 }} />
       </View>
 
@@ -261,7 +247,7 @@ export default function SettingsScreen({
             theme={theme}
             label={t("settings.language.label")}
             sub={LOCALE_LABELS[currentLocale]}
-            onPress={openLanguagePicker}
+            onPress={onOpenLanguage}
           />
         </View>
 

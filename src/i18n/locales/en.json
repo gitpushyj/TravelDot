@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\nChoose one from Settings > Titles to display on your home screen."
   },
   "settings": {
-    "title": "Settings",
+    "heading": "Settings",
     "section": {
       "account": "Account",
       "home": "Home Country",

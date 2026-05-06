@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\nWähle eines unter Einstellungen > Titel aus, um es auf dem Startbildschirm anzuzeigen."
   },
   "settings": {
-    "title": "Einstellungen",
+    "heading": "Einstellungen",
     "section": {
       "account": "Konto",
       "home": "Heimatland",

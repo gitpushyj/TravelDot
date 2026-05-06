@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\nChoisis-en un dans Réglages > Titres pour l'afficher sur l'écran d'accueil."
   },
   "settings": {
-    "title": "Réglages",
+    "heading": "Réglages",
     "section": {
       "account": "Compte",
       "home": "Pays d'origine",

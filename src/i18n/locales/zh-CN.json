@@ -58,7 +58,7 @@
     "newMultipleBody": "{{list}}\n\n可在「设置 > 称号」中选择并显示在主页。"
   },
   "settings": {
-    "title": "设置",
+    "heading": "设置",
     "section": {
       "account": "账户",
       "home": "本国",
