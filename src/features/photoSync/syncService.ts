@@ -2,6 +2,7 @@ import { toLocalDateKey } from "../../utils/date";
 import {
   addPhotos,
   loadLatestVisitDate,
+  PHOTO_LIMIT_PER_DAY,
   VisitPhotoInput,
 } from "../travel/visitRepository";
 import { useVisitStore, SyncReport } from "../travel/visitStore";
@@ -28,7 +29,7 @@ async function runSync(sinceDate: string | null): Promise<void> {
 
   store.setSyncStatus({ running: true, processed: 0 });
 
-  // (country|date) → up to 3 photos per (country, date).
+  // (country|date) → DB 한도(PHOTO_LIMIT_PER_DAY)와 동일한 장수만 후보로 모은다.
   const buffer = new Map<string, VisitPhotoInput[]>();
   let scanned = 0;
   let withGps = 0;
@@ -64,7 +65,7 @@ async function runSync(sinceDate: string | null): Promise<void> {
       resolved += 1;
       const key = `${code}|${date}`;
       const list = buffer.get(key) ?? [];
-      if (list.length >= 3) continue;
+      if (list.length >= PHOTO_LIMIT_PER_DAY) continue;
       list.push({
         id: p.id,
         countryCode: code,

@@ -101,15 +101,40 @@ export default function App() {
   useEffect(() => {
     if (!lastSync) return;
     if (syncStatus.running) return;
-    const lines = [
-      `권한: ${lastSync.permission}`,
-      `사진 ${lastSync.scanned}장 확인`,
-      `GPS 있음: ${lastSync.withGps}장`,
-      `국가 매칭: ${lastSync.resolved}장`,
-      `DB 추가: ${lastSync.added}장`,
-    ];
-    if (lastSync.error) lines.push(`에러: ${lastSync.error}`);
-    Alert.alert("스캔 결과", lines.join("\n"), [
+    const { permission, scanned, added, error } = lastSync;
+
+    let title = "사진 확인이 끝났어요";
+    let body: string;
+
+    if (error) {
+      title = "사진을 확인하지 못했어요";
+      body =
+        "사진을 불러오는 도중 문제가 생겼어요.\n잠시 후 설정에서 다시 스캔해 주세요.";
+    } else if (permission === "denied") {
+      title = "사진 접근 권한이 필요해요";
+      body =
+        "여행 기록을 찾으려면 사진 접근 권한이 필요해요.\n설정에서 사진 권한을 허용해 주세요.";
+    } else if (added > 0) {
+      body = `사진 ${scanned.toLocaleString()}장을 살펴보고\n여행 기록에 ${added.toLocaleString()}장을 새로 추가했어요.`;
+      if (permission === "limited") {
+        body +=
+          "\n\n현재 일부 사진에만 접근할 수 있어요.\n전체 사진을 허용하면 더 많은 여행을 찾아드릴 수 있어요.";
+      }
+    } else if (scanned > 0) {
+      body =
+        "이미 모든 사진을 확인했어요.\n새로 추가된 여행 기록은 없어요.";
+      if (permission === "limited") {
+        body +=
+          "\n\n전체 사진 접근을 허용하면\n놓친 여행을 더 찾아드릴 수 있어요.";
+      }
+    } else {
+      body =
+        permission === "limited"
+          ? "확인할 수 있는 사진이 없어요.\n전체 사진 접근을 허용해 주세요."
+          : "확인할 사진이 없어요.";
+    }
+
+    Alert.alert(title, body, [
       { text: "확인", onPress: () => setLastSync(null) },
     ]);
   }, [lastSync, syncStatus.running, setLastSync]);
