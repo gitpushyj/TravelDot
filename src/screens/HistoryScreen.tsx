@@ -240,9 +240,7 @@ function TripRow({
           <Text style={styles.rowName}>{koName}</Text>
           <Text style={styles.rowCode}> {trip.countryCode}</Text>
         </View>
-        <Text style={styles.rowSub}>
-          {trip.days}일 · {trip.photos}장
-        </Text>
+        <Text style={styles.rowSub}>{trip.days}일 여행</Text>
       </View>
       <Text style={styles.rowDate}>
         {y} · {m} · {d}

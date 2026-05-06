@@ -93,6 +93,9 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
 
   // 디바이스 사진첩 스캔은 비교적 무거우니 DB 조회와 병렬로 분리해 띄우고 끝나는
   // 대로 카운트와 폴백 슬라이드를 갱신한다.
+  // resolveDisplayUris(MediaLibrary.getAssetInfoAsync 일괄 호출)은 사진이 많을수록
+  // 첫 진입 시 큰 지연을 만들어 호출하지 않는다. iOS의 ph:// URI는 Image 컴포넌트가
+  // 직접 로드 가능 (photoLibrary.ts iteratePhotos 주석 참고).
   useEffect(() => {
     let cancelled = false;
     void (async () => {
@@ -103,17 +106,7 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
           endDate: trip.endDate,
         });
         if (cancelled) return;
-        const resolved = await resolveDisplayUris(
-          photos.map((p) => ({ id: p.id, uri: p.uri }))
-        );
-        if (cancelled) return;
-        setDevicePhotos(
-          photos.flatMap((p) => {
-            const uri = resolved[p.id];
-            if (!uri || uri.startsWith("ph://")) return [];
-            return [{ ...p, uri }];
-          })
-        );
+        setDevicePhotos(photos);
       } catch (e) {
         if (cancelled) return;
         // 권한 거부 등으로 실패해도 화면 자체는 동작한다.
@@ -129,57 +122,61 @@ export default function TripDetailScreen({ trip, onClose }: Props) {
   const flag = flagEmoji(trip.countryCode);
   const countryColor = colorForCountry(trip.countryCode);
 
+  // 같은 자산이라도 iOS의 getAssetInfoAsync는 호출마다 임시 file:// 경로가
+  // 달라질 수 있어 URI 기반 dedupe가 실패한다. MediaLibrary asset id로 dedupe.
   const previewPhotos = useMemo<DisplayPhoto[]>(() => {
     const result: DisplayPhoto[] = [];
-    const usedUris = new Set<string>();
+    const seenIds = new Set<string>();
     if (savedPhotos) {
       for (const p of savedPhotos) {
         if (result.length >= PREVIEW_PHOTO_COUNT) break;
+        if (seenIds.has(p.id)) continue;
         result.push({
           key: `db:${p.id}`,
           uri: p.localUri,
           date: p.date,
           fromDb: true,
         });
-        usedUris.add(p.localUri);
+        seenIds.add(p.id);
       }
     }
     if (devicePhotos && result.length < PREVIEW_PHOTO_COUNT) {
       for (const p of devicePhotos) {
         if (result.length >= PREVIEW_PHOTO_COUNT) break;
-        if (usedUris.has(p.uri)) continue;
+        if (seenIds.has(p.id)) continue;
         result.push({
           key: `dev:${p.id}`,
           uri: p.uri,
           date: p.date,
           fromDb: false,
         });
+        seenIds.add(p.id);
       }
     }
     return result;
   }, [savedPhotos, devicePhotos]);
 
   // 그리드 뷰: DB 저장 사진을 앞쪽에 두고, 디바이스 사진은 그 뒤에 takenAt DESC로
-  // 이어 붙인다. 같은 URI는 중복 제거.
+  // 이어 붙인다. 같은 자산은 asset id로 중복 제거.
   const allPhotos = useMemo(() => {
     const result: { key: string; uri: string; takenAt: number }[] = [];
-    const seen = new Set<string>();
+    const seenIds = new Set<string>();
     if (savedPhotos) {
       for (const p of savedPhotos) {
-        if (seen.has(p.localUri)) continue;
+        if (seenIds.has(p.id)) continue;
         result.push({
           key: `db:${p.id}`,
           uri: p.localUri,
           takenAt: p.takenAt,
         });
-        seen.add(p.localUri);
+        seenIds.add(p.id);
       }
     }
     if (devicePhotos) {
       for (const p of devicePhotos) {
-        if (seen.has(p.uri)) continue;
+        if (seenIds.has(p.id)) continue;
         result.push({ key: `dev:${p.id}`, uri: p.uri, takenAt: p.takenAt });
-        seen.add(p.uri);
+        seenIds.add(p.id);
       }
     }
     return result;
