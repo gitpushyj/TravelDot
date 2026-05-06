@@ -270,6 +270,34 @@ export async function deleteNote(id: string): Promise<void> {
   await db.runAsync(`DELETE FROM visit_notes WHERE id = ?`, id);
 }
 
+// 본국이 자동 동기화에서 제외되도록 정책이 바뀌면서, 이미 들어간 자동 사진을
+// 정리한다. 사용자가 직접 고른 manual 사진과 노트가 달린 날짜는 보존한다.
+export async function removeAutoVisitsForCountry(
+  countryCode: string
+): Promise<{ photosDeleted: number; daysDeleted: number }> {
+  const db = await getDb();
+  let photosDeleted = 0;
+  let daysDeleted = 0;
+  await db.withTransactionAsync(async () => {
+    const r1 = await db.runAsync(
+      `DELETE FROM visit_photos WHERE country_code = ? AND source = 'auto'`,
+      countryCode
+    );
+    photosDeleted = r1.changes;
+    const r2 = await db.runAsync(
+      `DELETE FROM visit_days
+        WHERE country_code = ?
+          AND date NOT IN (SELECT date FROM visit_photos WHERE country_code = ?)
+          AND date NOT IN (SELECT date FROM visit_notes WHERE country_code = ?)`,
+      countryCode,
+      countryCode,
+      countryCode
+    );
+    daysDeleted = r2.changes;
+  });
+  return { photosDeleted, daysDeleted };
+}
+
 async function ensureVisitDay(
   countryCode: string,
   date: string,

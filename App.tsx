@@ -62,6 +62,8 @@ export default function App() {
   const ensureYearCounts = useVisitStore((s) => s.ensureYearCounts);
   const lastSync = useVisitStore((s) => s.lastSync);
   const setLastSync = useVisitStore((s) => s.setLastSync);
+  const homeCleanupReport = useVisitStore((s) => s.homeCleanupReport);
+  const setHomeCleanupReport = useVisitStore((s) => s.setHomeCleanupReport);
   const [screen, setScreen] = useState<"main" | "addTrip">("main");
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
@@ -92,6 +94,20 @@ export default function App() {
       { text: "확인", onPress: () => setLastSync(null) },
     ]);
   }, [lastSync, syncStatus.running, setLastSync]);
+
+  useEffect(() => {
+    if (!homeCleanupReport) return;
+    const koName =
+      KO_NAME_BY_CODE[homeCleanupReport.countryCode] ??
+      homeCleanupReport.countryCode;
+    Alert.alert(
+      "본국 자동 기록 정리",
+      `본국(${koName})은 이제 자동 추가에서 제외됩니다.\n` +
+        `이미 자동으로 들어가 있던 ${homeCleanupReport.daysDeleted}일 / 사진 ${homeCleanupReport.photosDeleted}장을 정리했어요.\n\n` +
+        `본국에서 찍은 사진은 메뉴 > "여행 추가"에서 원하는 날짜만 직접 선택해 추가할 수 있습니다.`,
+      [{ text: "확인", onPress: () => setHomeCleanupReport(null) }]
+    );
+  }, [homeCleanupReport, setHomeCleanupReport]);
 
   const activeCounts = useMemo(() => {
     if (yearMode.kind === "year") {

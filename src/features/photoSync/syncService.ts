@@ -13,6 +13,7 @@ import { ensurePermission, iteratePhotos } from "./photoLibrary";
 // 이전 사진을 만나는 순간 더 이상 볼 필요가 없어 즉시 break한다.
 async function runSync(sinceDate: string | null): Promise<void> {
   const store = useVisitStore.getState();
+  const homeCode = store.homeCountry?.code ?? null;
   const permission = await ensurePermission();
   if (permission === "denied") {
     store.setLastSync({
@@ -57,6 +58,9 @@ async function runSync(sinceDate: string | null): Promise<void> {
         };
       }
       if (!code) continue;
+      // 본국은 자동 추가에서 제외한다. 본국 사진은 사용자가 "여행 추가" 메뉴를
+      // 통해 원하는 날짜만 직접 선택하도록 한다.
+      if (homeCode && code === homeCode) continue;
       resolved += 1;
       const key = `${code}|${date}`;
       const list = buffer.get(key) ?? [];
