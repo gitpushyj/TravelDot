@@ -13,13 +13,8 @@ import {
   loadYearSummaries,
   type YearSummary,
 } from "../features/travel/visitRepository";
-import {
-  ACCENT,
-  CARD_BORDER,
-  TEXT_MUTED,
-  TEXT_PRIMARY,
-  TEXT_SECONDARY,
-} from "../utils/heatmap";
+import { useTheme } from "../theme/themeStore";
+import type { Theme } from "../theme/theme";
 
 export type YearMode = { kind: "all" } | { kind: "year"; year: number };
 
@@ -30,12 +25,6 @@ type Props = {
   onApply: (mode: YearMode) => void;
 };
 
-const SHEET_BG = "#ffffff";
-const HANDLE_COLOR = "#d8d4c7";
-const SELECTED_BG = "#fff4ec";
-const SEG_EMPTY = "#e8e7df";
-const SEG_LIGHT = "#9bd093";
-const SEG_DARK = "#2f8a3e";
 const NUM_SEGMENTS = 12;
 
 export default function YearPickerModal({
@@ -44,6 +33,8 @@ export default function YearPickerModal({
   onCancel,
   onApply,
 }: Props) {
+  const theme = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   const [summaries, setSummaries] = useState<YearSummary[] | null>(null);
   const [pending, setPending] = useState<YearMode>(initial);
 
@@ -124,6 +115,7 @@ export default function YearPickerModal({
             showsVerticalScrollIndicator={false}
           >
             <YearRow
+              theme={theme}
               title="전체 보기"
               subtitle={
                 allRange
@@ -143,6 +135,7 @@ export default function YearPickerModal({
               return (
                 <YearRow
                   key={s.year}
+                  theme={theme}
                   title={String(s.year)}
                   subtitle={subtitle}
                   monthly={s.monthly}
@@ -162,6 +155,7 @@ export default function YearPickerModal({
 }
 
 function YearRow({
+  theme,
   title,
   subtitle,
   monthly,
@@ -169,6 +163,7 @@ function YearRow({
   muted,
   onPress,
 }: {
+  theme: Theme;
   title: string;
   subtitle: string;
   monthly: number[];
@@ -176,6 +171,7 @@ function YearRow({
   muted: boolean;
   onPress: () => void;
 }) {
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   return (
     <Pressable
       onPress={onPress}
@@ -193,7 +189,7 @@ function YearRow({
         <Text style={[styles.subText, muted && styles.subMuted]}>
           {subtitle}
         </Text>
-        <SegmentBar monthly={monthly} muted={muted} />
+        <SegmentBar theme={theme} monthly={monthly} muted={muted} />
       </View>
       <View
         style={[
@@ -208,20 +204,26 @@ function YearRow({
 }
 
 function SegmentBar({
+  theme,
   monthly,
   muted,
 }: {
+  theme: Theme;
   monthly: number[];
   muted: boolean;
 }) {
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+  const empty = theme.heatmap[0];
+  const light = theme.heatmap[2];
+  const dark = theme.heatmap[4];
   return (
     <View style={styles.bar}>
       {Array.from({ length: NUM_SEGMENTS }).map((_, i) => {
         const days = monthly[i] ?? 0;
-        let color: string = SEG_EMPTY;
+        let color: string = empty;
         if (!muted) {
-          if (days >= 4) color = SEG_DARK;
-          else if (days >= 1) color = SEG_LIGHT;
+          if (days >= 4) color = dark;
+          else if (days >= 1) color = light;
         }
         return <View key={i} style={[styles.seg, { backgroundColor: color }]} />;
       })}
@@ -229,127 +231,129 @@ function SegmentBar({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
-  },
-  sheet: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: SHEET_BG,
-    borderTopLeftRadius: 22,
-    borderTopRightRadius: 22,
-    paddingBottom: Platform.OS === "ios" ? 34 : 16,
-    maxHeight: "85%",
-  },
-  handleWrap: {
-    alignItems: "center",
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  handle: {
-    width: 40,
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: HANDLE_COLOR,
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 18,
-    paddingTop: 12,
-    paddingBottom: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: CARD_BORDER,
-  },
-  cancelText: {
-    color: TEXT_MUTED,
-    fontSize: 15,
-    fontWeight: "500",
-    minWidth: 40,
-  },
-  titleText: {
-    color: TEXT_PRIMARY,
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  applyText: {
-    color: ACCENT,
-    fontSize: 15,
-    fontWeight: "700",
-    minWidth: 40,
-    textAlign: "right",
-  },
-  list: {
-    flexGrow: 0,
-  },
-  listContent: {
-    paddingHorizontal: 8,
-    paddingTop: 4,
-    paddingBottom: 8,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    borderRadius: 14,
-    gap: 14,
-  },
-  rowSelected: {
-    backgroundColor: SELECTED_BG,
-  },
-  yearText: {
-    color: TEXT_PRIMARY,
-    fontSize: 20,
-    fontWeight: "800",
-    width: 80,
-  },
-  yearMuted: {
-    color: TEXT_MUTED,
-  },
-  rowMain: {
-    flex: 1,
-    gap: 8,
-  },
-  subText: {
-    color: TEXT_SECONDARY,
-    fontSize: 13,
-    fontWeight: "600",
-  },
-  subMuted: {
-    color: TEXT_MUTED,
-  },
-  bar: {
-    flexDirection: "row",
-    gap: 3,
-  },
-  seg: {
-    flex: 1,
-    height: 8,
-    borderRadius: 2,
-  },
-  radio: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: "#dad6c8",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  radioSelected: {
-    backgroundColor: ACCENT,
-    borderColor: ACCENT,
-  },
-  radioCheck: {
-    color: "#ffffff",
-    fontSize: 13,
-    fontWeight: "900",
-    marginTop: -1,
-  },
-});
+function makeStyles(theme: Theme) {
+  return StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      backgroundColor: theme.backdrop,
+    },
+    sheet: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: theme.sheetBg,
+      borderTopLeftRadius: 22,
+      borderTopRightRadius: 22,
+      paddingBottom: Platform.OS === "ios" ? 34 : 16,
+      maxHeight: "85%",
+    },
+    handleWrap: {
+      alignItems: "center",
+      paddingTop: 8,
+      paddingBottom: 4,
+    },
+    handle: {
+      width: 40,
+      height: 5,
+      borderRadius: 3,
+      backgroundColor: theme.handleColor,
+    },
+    headerRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 18,
+      paddingTop: 12,
+      paddingBottom: 14,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: theme.cardBorder,
+    },
+    cancelText: {
+      color: theme.textMuted,
+      fontSize: 15,
+      fontWeight: "500",
+      minWidth: 40,
+    },
+    titleText: {
+      color: theme.textPrimary,
+      fontSize: 16,
+      fontWeight: "700",
+    },
+    applyText: {
+      color: theme.accent,
+      fontSize: 15,
+      fontWeight: "700",
+      minWidth: 40,
+      textAlign: "right",
+    },
+    list: {
+      flexGrow: 0,
+    },
+    listContent: {
+      paddingHorizontal: 8,
+      paddingTop: 4,
+      paddingBottom: 8,
+    },
+    row: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 14,
+      paddingVertical: 14,
+      borderRadius: 14,
+      gap: 14,
+    },
+    rowSelected: {
+      backgroundColor: theme.selectedRowBg,
+    },
+    yearText: {
+      color: theme.textPrimary,
+      fontSize: 20,
+      fontWeight: "800",
+      width: 80,
+    },
+    yearMuted: {
+      color: theme.textMuted,
+    },
+    rowMain: {
+      flex: 1,
+      gap: 8,
+    },
+    subText: {
+      color: theme.textSecondary,
+      fontSize: 13,
+      fontWeight: "600",
+    },
+    subMuted: {
+      color: theme.textMuted,
+    },
+    bar: {
+      flexDirection: "row",
+      gap: 3,
+    },
+    seg: {
+      flex: 1,
+      height: 8,
+      borderRadius: 2,
+    },
+    radio: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      borderWidth: 1.5,
+      borderColor: theme.radioBorder,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    radioSelected: {
+      backgroundColor: theme.accent,
+      borderColor: theme.accent,
+    },
+    radioCheck: {
+      color: theme.radioCheckColor,
+      fontSize: 13,
+      fontWeight: "900",
+      marginTop: -1,
+    },
+  });
+}

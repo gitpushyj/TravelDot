@@ -14,13 +14,13 @@ import {
 
 import dotData from "../../assets/data/dots.json";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useTheme } from "../theme/themeStore";
+import { colorForVisitWith } from "../theme/theme";
 import type { CountryRef, DotData } from "../types";
-import { colorForVisit } from "../utils/heatmap";
 
 const FILL_RATIO = 0.6;
 const MIN_SCALE = 1;
 const MAX_SCALE = 10;
-const HIGHLIGHT_COLOR = "#ffd75e";
 
 type Props = {
   visitCounts?: Record<string, number>;
@@ -43,6 +43,7 @@ export default function DotMap({
   const homeCountry = useVisitStore((s) => s.homeCountry);
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
   const setSelectedCountry = useVisitStore((s) => s.setSelectedCountry);
+  const theme = useTheme();
 
   const viewBoxW = 360;
   const drawWidth = size.width;
@@ -69,10 +70,10 @@ export default function DotMap({
           x: (d.lng + 180) * baseScale - halfDotPx,
           y: (maxLat - d.lat) * baseScale - halfDotPx,
           countries,
-          fill: colorForVisit({ count, isHomeCountry: isHome }),
+          fill: colorForVisitWith(theme, { count, isHomeCountry: isHome }),
         };
       }),
-    [dots, baseScale, halfDotPx, maxLat, visitCounts, homeCode]
+    [dots, baseScale, halfDotPx, maxLat, visitCounts, homeCode, theme]
   );
 
   const highlightedIds = useMemo(() => {
@@ -307,7 +308,7 @@ export default function DotMap({
                     height={dotPx}
                     r={radius}
                     color={
-                      highlightedIds?.has(d.id) ? HIGHLIGHT_COLOR : d.fill
+                      highlightedIds?.has(d.id) ? theme.highlightDot : d.fill
                     }
                   />
                 ))}
@@ -318,7 +319,7 @@ export default function DotMap({
       </View>
       {pending && pending.length > 0 && (
         <View style={styles.caption}>
-          <Text style={styles.captionLabel}>
+          <Text style={[styles.captionLabel, { color: theme.textSecondary }]}>
             어느 나라의 도트를 강조할까요?
           </Text>
           <View style={styles.optionRow}>
@@ -327,24 +328,38 @@ export default function DotMap({
                 key={c.code}
                 style={({ pressed }) => [
                   styles.optionBtn,
-                  pressed && styles.optionBtnPressed,
+                  {
+                    backgroundColor: pressed
+                      ? theme.optionBtnPressedBg
+                      : theme.optionBtnBg,
+                    borderColor: theme.optionBtnBorder,
+                  },
                 ]}
                 onPress={() => {
                   setSelectedCountry({ code: c.code, name: c.name });
                   setPending(null);
                 }}
               >
-                <Text style={styles.optionText}>{c.name}</Text>
+                <Text style={[styles.optionText, { color: theme.textPrimary }]}>
+                  {c.name}
+                </Text>
               </Pressable>
             ))}
             <Pressable
               style={({ pressed }) => [
                 styles.optionBtn,
-                pressed && styles.optionBtnPressed,
+                {
+                  backgroundColor: pressed
+                    ? theme.optionBtnPressedBg
+                    : theme.optionBtnBg,
+                  borderColor: theme.optionBtnBorder,
+                },
               ]}
               onPress={() => setPending(null)}
             >
-              <Text style={styles.optionText}>취소</Text>
+              <Text style={[styles.optionText, { color: theme.textPrimary }]}>
+                취소
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -394,7 +409,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   captionLabel: {
-    color: "#8a8779",
     fontSize: 12,
     marginBottom: 8,
   },
@@ -407,15 +421,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
-    backgroundColor: "#ffffff",
     borderWidth: 1,
-    borderColor: "#ecebe4",
-  },
-  optionBtnPressed: {
-    backgroundColor: "#f3efe6",
   },
   optionText: {
-    color: "#1a1a1a",
     fontSize: 14,
     fontWeight: "600",
   },
