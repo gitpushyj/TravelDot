@@ -197,6 +197,88 @@ function diffInDays(a: string, b: string): number {
   return Math.round((db - da) / 86400000);
 }
 
+export type TripPhoto = {
+  id: string;
+  countryCode: string;
+  date: string;
+  localUri: string;
+  takenAt: number;
+  source: "auto" | "manual";
+};
+
+export async function loadPhotosForTrip(
+  countryCode: string,
+  startDate: string,
+  endDate: string
+): Promise<TripPhoto[]> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{
+    id: string;
+    country_code: string;
+    date: string;
+    local_uri: string | null;
+    taken_at: number;
+    source: "auto" | "manual";
+  }>(
+    `SELECT id, country_code, date, local_uri, taken_at, source
+       FROM visit_photos
+      WHERE country_code = ?
+        AND date BETWEEN ? AND ?
+        AND deleted_at IS NULL
+        AND local_uri IS NOT NULL
+      ORDER BY taken_at ASC`,
+    countryCode,
+    startDate,
+    endDate
+  );
+  return rows
+    .filter((r) => !!r.local_uri)
+    .map((r) => ({
+      id: r.id,
+      countryCode: r.country_code,
+      date: r.date,
+      localUri: r.local_uri as string,
+      takenAt: r.taken_at,
+      source: r.source,
+    }));
+}
+
+export async function loadLatestNoteForTrip(
+  countryCode: string,
+  startDate: string,
+  endDate: string
+): Promise<VisitNote | null> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{
+    id: string;
+    country_code: string;
+    date: string;
+    body: string;
+    created_at: number;
+    updated_at: number;
+  }>(
+    `SELECT id, country_code, date, body, created_at, updated_at
+       FROM visit_notes
+      WHERE country_code = ?
+        AND date BETWEEN ? AND ?
+        AND deleted_at IS NULL
+      ORDER BY updated_at DESC
+      LIMIT 1`,
+    countryCode,
+    startDate,
+    endDate
+  );
+  if (!row) return null;
+  return {
+    id: row.id,
+    countryCode: row.country_code,
+    date: row.date,
+    body: row.body,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
 export async function countPhotosForDay(
   countryCode: string,
   date: string
