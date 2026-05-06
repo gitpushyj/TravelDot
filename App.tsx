@@ -30,6 +30,7 @@ import {
   getTierByCount,
   TIER_CUTOFFS,
 } from "./src/features/travel/tierTitles";
+import { useAuthStore } from "./src/features/auth/authStore";
 import { useVisitStore } from "./src/features/travel/visitStore";
 import { pickActiveBadge, useBadgeStore } from "./src/features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "./src/features/badges/countryNames";
@@ -37,6 +38,7 @@ import AddTripScreen from "./src/screens/AddTripScreen";
 import CountryDetailScreen from "./src/screens/CountryDetailScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
 import InitialScanScreen from "./src/screens/InitialScanScreen";
+import LoginScreen from "./src/screens/LoginScreen";
 import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import ReviewSuspectTripsScreen from "./src/screens/ReviewSuspectTripsScreen";
@@ -109,6 +111,9 @@ export default function App() {
   const suspectTrips = useVisitStore((s) => s.suspectTrips);
   const themeHydrate = useThemeStore((s) => s.hydrate);
   const themeHydrated = useThemeStore((s) => s.hydrated);
+  const authHydrate = useAuthStore((s) => s.hydrate);
+  const authHydrated = useAuthStore((s) => s.hydrated);
+  const authUser = useAuthStore((s) => s.user);
   const pendingNotifications = useBadgeStore((s) => s.pendingNotifications);
   const consumeBadgeNotifications = useBadgeStore((s) => s.consumeNotifications);
   const theme = useTheme();
@@ -123,7 +128,8 @@ export default function App() {
   useEffect(() => {
     void hydrate();
     void themeHydrate();
-  }, [hydrate, themeHydrate]);
+    void authHydrate();
+  }, [hydrate, themeHydrate, authHydrate]);
 
   useEffect(() => {
     if (yearMode.kind === "year") {
@@ -238,8 +244,18 @@ export default function App() {
     return visitCounts;
   }, [yearMode, visitCounts, visitCountsByYear]);
 
-  if (!ready || !themeHydrated) {
+  if (!ready || !themeHydrated || !authHydrated) {
     return <View style={styles.root} />;
+  }
+
+  // 로그인은 필수. 미로그인 상태면 다른 모든 화면보다 먼저 차단한다.
+  if (!authUser) {
+    return (
+      <GestureHandlerRootView style={styles.rootDark}>
+        <StatusBar style="light" />
+        <LoginScreen />
+      </GestureHandlerRootView>
+    );
   }
 
   // 초기 스캔은 homeCountry가 store에 반영되기 직전에 들어올 수 있으므로

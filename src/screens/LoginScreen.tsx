@@ -1,0 +1,124 @@
+import React from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+
+import { useAuthStore } from "../features/auth/authStore";
+import { BG_COLOR } from "../utils/heatmap";
+
+export default function LoginScreen() {
+  const signingIn = useAuthStore((s) => s.signingIn);
+  const signInGoogle = useAuthStore((s) => s.signInGoogle);
+
+  const onPressGoogle = async () => {
+    const r = await signInGoogle();
+    if (r.ok) return;
+    if (r.cancelled) return;
+    Alert.alert("로그인 실패", r.message);
+  };
+
+  return (
+    <View style={styles.root}>
+      <View style={styles.center}>
+        <Text style={styles.brand}>VisitGrid</Text>
+        <Text style={styles.subtitle}>
+          여행 기록을 안전하게 보관하려면{"\n"}먼저 로그인해 주세요.
+        </Text>
+      </View>
+
+      <View style={styles.bottom}>
+        <Pressable
+          onPress={onPressGoogle}
+          disabled={signingIn}
+          style={({ pressed }) => [
+            styles.googleBtn,
+            pressed && !signingIn && styles.googleBtnPressed,
+            signingIn && styles.googleBtnDisabled,
+          ]}
+        >
+          {signingIn ? (
+            <ActivityIndicator color="#1a1a1a" />
+          ) : (
+            <>
+              <Text style={styles.googleIcon}>G</Text>
+              <Text style={styles.googleText}>Google로 계속하기</Text>
+            </>
+          )}
+        </Pressable>
+        <Text style={styles.fineprint}>
+          로그인 정보는 Supabase에 안전하게 저장됩니다.
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: BG_COLOR,
+    paddingHorizontal: 24,
+    paddingTop: 80,
+    paddingBottom: 48,
+    justifyContent: "space-between",
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
+  },
+  brand: {
+    color: "#e8eefc",
+    fontSize: 36,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+  subtitle: {
+    color: "#9fb1d6",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+  },
+  bottom: {
+    gap: 14,
+    alignItems: "center",
+  },
+  googleBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+    backgroundColor: "#ffffff",
+    borderRadius: 14,
+    paddingVertical: 14,
+    width: "100%",
+    minHeight: 52,
+  },
+  googleBtnPressed: {
+    backgroundColor: "#e8e8e8",
+  },
+  googleBtnDisabled: {
+    opacity: 0.6,
+  },
+  googleIcon: {
+    color: "#4285F4",
+    fontSize: 20,
+    fontWeight: "900",
+  },
+  googleText: {
+    color: "#1a1a1a",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  fineprint: {
+    color: "#7d8aa6",
+    fontSize: 12,
+    textAlign: "center",
+  },
+});

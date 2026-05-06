@@ -14,6 +14,7 @@ import {
 } from "../features/photoSync/syncService";
 import { useTheme, useThemeStore } from "../theme/themeStore";
 import type { Theme, ThemeMode } from "../theme/theme";
+import { useAuthStore } from "../features/auth/authStore";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
 import { useVisitStore } from "../features/travel/visitStore";
@@ -51,12 +52,34 @@ export default function SettingsScreen({
   const homeChanged = useVisitStore((s) => s.homeChanged);
   const suspectTrips = useVisitStore((s) => s.suspectTrips);
 
+  const authUser = useAuthStore((s) => s.user);
+  const authSignOut = useAuthStore((s) => s.signOut);
+
   const handleIncrementalSync = () => {
     runIncrementalSync().catch((e) => Alert.alert("스캔 실패", String(e)));
   };
   const handleFullSync = () => {
     runFullSync().catch((e) => Alert.alert("스캔 실패", String(e)));
   };
+  const handleSignOut = () => {
+    Alert.alert("로그아웃", "로그아웃하시겠어요?", [
+      { text: "취소", style: "cancel" },
+      {
+        text: "로그아웃",
+        style: "destructive",
+        onPress: () => {
+          authSignOut().catch((e) => Alert.alert("로그아웃 실패", String(e)));
+        },
+      },
+    ]);
+  };
+  // 로그인은 필수이므로 SettingsScreen 진입 시 user는 항상 존재한다.
+  const accountLabel =
+    (authUser?.user_metadata?.full_name as string | undefined) ??
+    authUser?.email ??
+    "Google 계정";
+  const accountSub = authUser?.email ?? "Google로 로그인됨";
+
   const handleChangeHome = () => {
     Alert.alert(
       "본국 바꾸기",
@@ -93,7 +116,25 @@ export default function SettingsScreen({
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionLabel}>본국</Text>
+        <Text style={styles.sectionLabel}>계정</Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label={accountLabel}
+            sub={accountSub}
+            onPress={() => {}}
+            disabled
+          />
+          <ActionRow
+            theme={theme}
+            label="로그아웃"
+            sub="이 기기에서 로그아웃합니다"
+            onPress={handleSignOut}
+            divider
+          />
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>본국</Text>
         <View style={styles.card}>
           <ActionRow
             theme={theme}
