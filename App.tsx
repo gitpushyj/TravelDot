@@ -1,5 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import {
+  createNativeStackNavigator,
+  type NativeStackScreenProps,
+} from "@react-navigation/native-stack";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -12,6 +17,7 @@ import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import CountryShape from "./src/components/CountryShape";
 import DotMap from "./src/components/DotMap";
@@ -30,7 +36,6 @@ import MapZoomScreen from "./src/screens/MapZoomScreen";
 import OnboardingScreen from "./src/screens/OnboardingScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import TitlesScreen from "./src/screens/TitlesScreen";
-import TripDetailScreen from "./src/screens/TripDetailScreen";
 import countriesJson from "./assets/data/countries.json";
 import { flagEmoji } from "./src/utils/flag";
 import { colorForVisitWith, type Theme } from "./src/theme/theme";
@@ -50,6 +55,30 @@ for (const c of COUNTRY_LIST) KO_NAME_BY_CODE[c.code] = c.nameKo;
 
 type YearMode = { kind: "all" } | { kind: "year"; year: number };
 
+type RootStackParamList = {
+  Main: undefined;
+  AddTrip: undefined;
+  Settings: undefined;
+  ChangeHome: undefined;
+  Titles: undefined;
+  MapZoom: undefined;
+  CountryDetail: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+type AppNavCtx = {
+  yearMode: YearMode;
+  setYearMode: (m: YearMode) => void;
+  activeCounts: Record<string, number>;
+};
+const AppCtx = createContext<AppNavCtx | null>(null);
+const useAppCtx = () => {
+  const v = useContext(AppCtx);
+  if (!v) throw new Error("AppCtx not provided");
+  return v;
+};
+
 export default function App() {
   const ready = useVisitStore((s) => s.ready);
   const homeCountry = useVisitStore((s) => s.homeCountry);
@@ -57,8 +86,6 @@ export default function App() {
   const syncStatus = useVisitStore((s) => s.syncStatus);
   const visitCounts = useVisitStore((s) => s.visitCounts);
   const visitCountsByYear = useVisitStore((s) => s.visitCountsByYear);
-  const recentTrips = useVisitStore((s) => s.recentTrips);
-  const availableYears = useVisitStore((s) => s.availableYears);
   const ensureYearCounts = useVisitStore((s) => s.ensureYearCounts);
   const lastSync = useVisitStore((s) => s.lastSync);
   const setLastSync = useVisitStore((s) => s.setLastSync);
@@ -66,26 +93,13 @@ export default function App() {
   const setHomeCleanupReport = useVisitStore((s) => s.setHomeCleanupReport);
   const themeHydrate = useThemeStore((s) => s.hydrate);
   const themeHydrated = useThemeStore((s) => s.hydrated);
-  const activeBadgeId = useBadgeStore((s) => s.activeId);
   const pendingNotifications = useBadgeStore((s) => s.pendingNotifications);
   const consumeBadgeNotifications = useBadgeStore((s) => s.consumeNotifications);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
-  const [screen, setScreen] = useState<
-    | "main"
-    | "addTrip"
-    | "settings"
-    | "titles"
-    | "mapZoom"
-    | "changeHome"
-    | "countryDetail"
-    | "tripDetail"
-  >("main");
-  const [selectedTrip, setSelectedTrip] = useState<RecentTrip | null>(null);
+
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
-  const [yearPickerOpen, setYearPickerOpen] = useState(false);
-  const [mapInteracting, setMapInteracting] = useState(false);
 
   useEffect(() => {
     void hydrate();
@@ -153,12 +167,91 @@ export default function App() {
     );
   }, [homeCleanupReport, setHomeCleanupReport]);
 
+  // 새로 잠금 해제된 뱃지가 여러 개여도 한 번의 알림으로 묶어서 표시한다.
+  // 스캔 한 번에 호칭이 여러 개 풀릴 수 있어 팝업이 연달아 뜨는 것을 막기 위함.
+  useEffect(() => {
+    const count = pendingNotifications.length;
+    if (count === 0) return;
+    const batch = pendingNotifications.slice(0, count);
+    const title =
+      count === 1
+        ? "새로운 뱃지를 얻었어요!"
+        : `새로운 뱃지 ${count}개를 얻었어요!`;
+    const body =
+      count === 1
+        ? `${batch[0].emoji}  ${batch[0].titleKo}\n\n${batch[0].description}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`
+        : `${batch
+            .map((b) => `${b.emoji}  ${b.titleKo}`)
+            .join("\n")}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`;
+    Alert.alert(title, body, [
+      { text: "확인", onPress: () => consumeBadgeNotifications(count) },
+    ]);
+  }, [pendingNotifications, consumeBadgeNotifications]);
+
   const activeCounts = useMemo(() => {
     if (yearMode.kind === "year") {
       return visitCountsByYear[yearMode.year] ?? {};
     }
     return visitCounts;
   }, [yearMode, visitCounts, visitCountsByYear]);
+
+  if (!ready || !themeHydrated) {
+    return <View style={styles.root} />;
+  }
+
+  if (!homeCountry) {
+    return (
+      <GestureHandlerRootView style={styles.rootDark}>
+        <StatusBar style="light" />
+        <OnboardingScreen />
+      </GestureHandlerRootView>
+    );
+  }
+
+  const ctxValue: AppNavCtx = { yearMode, setYearMode, activeCounts };
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AppCtx.Provider value={ctxValue}>
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: theme.homeBg },
+              }}
+            >
+              <Stack.Screen name="Main" component={MainScreen} />
+              <Stack.Screen name="AddTrip" component={AddTripScreenNav} />
+              <Stack.Screen name="Settings" component={SettingsScreenNav} />
+              <Stack.Screen name="ChangeHome" component={ChangeHomeScreenNav} />
+              <Stack.Screen name="Titles" component={TitlesScreenNav} />
+              <Stack.Screen name="MapZoom" component={MapZoomScreenNav} />
+              <Stack.Screen
+                name="CountryDetail"
+                component={CountryDetailScreenNav}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AppCtx.Provider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
+}
+
+function MainScreen({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "Main">) {
+  const { yearMode, setYearMode, activeCounts } = useAppCtx();
+  const homeCountry = useVisitStore((s) => s.homeCountry);
+  const recentTrips = useVisitStore((s) => s.recentTrips);
+  const availableYears = useVisitStore((s) => s.availableYears);
+  const syncStatus = useVisitStore((s) => s.syncStatus);
+  const activeBadgeId = useBadgeStore((s) => s.activeId);
+  const theme = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+  const [yearPickerOpen, setYearPickerOpen] = useState(false);
+  const [mapInteracting, setMapInteracting] = useState(false);
 
   const totals = useMemo(() => {
     const codes = Object.keys(activeCounts);
@@ -184,27 +277,6 @@ export default function App() {
     [activeBadgeId, tier.id]
   );
 
-  // 새로 잠금 해제된 뱃지가 여러 개여도 한 번의 알림으로 묶어서 표시한다.
-  // 스캔 한 번에 호칭이 여러 개 풀릴 수 있어 팝업이 연달아 뜨는 것을 막기 위함.
-  useEffect(() => {
-    const count = pendingNotifications.length;
-    if (count === 0) return;
-    const batch = pendingNotifications.slice(0, count);
-    const title =
-      count === 1
-        ? "새로운 뱃지를 얻었어요!"
-        : `새로운 뱃지 ${count}개를 얻었어요!`;
-    const body =
-      count === 1
-        ? `${batch[0].emoji}  ${batch[0].titleKo}\n\n${batch[0].description}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`
-        : `${batch
-            .map((b) => `${b.emoji}  ${b.titleKo}`)
-            .join("\n")}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`;
-    Alert.alert(title, body, [
-      { text: "확인", onPress: () => consumeBadgeNotifications(count) },
-    ]);
-  }, [pendingNotifications, consumeBadgeNotifications]);
-
   const periodLabel = useMemo(() => {
     if (yearMode.kind === "year") return String(yearMode.year);
     if (availableYears.length === 0) return String(new Date().getFullYear());
@@ -221,103 +293,13 @@ export default function App() {
     setYearPickerOpen(true);
   };
 
-  const openSettings = () => setScreen("settings");
-
-  if (!ready || !themeHydrated) {
-    return <View style={styles.root} />;
-  }
-
-  if (!homeCountry) {
-    return (
-      <GestureHandlerRootView style={styles.rootDark}>
-        <StatusBar style="light" />
-        <OnboardingScreen />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "addTrip") {
-    return (
-      <GestureHandlerRootView style={styles.rootDark}>
-        <StatusBar style="light" />
-        <AddTripScreen onClose={() => setScreen("main")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "settings") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <SettingsScreen
-          onClose={() => setScreen("main")}
-          onAddTrip={() => setScreen("addTrip")}
-          onOpenTitles={() => setScreen("titles")}
-          onChangeHome={() => setScreen("changeHome")}
-        />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "changeHome") {
-    return (
-      <GestureHandlerRootView style={styles.rootDark}>
-        <StatusBar style="light" />
-        <OnboardingScreen
-          mode="change"
-          onClose={() => setScreen("main")}
-        />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "titles") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <TitlesScreen onClose={() => setScreen("settings")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "mapZoom") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <MapZoomScreen
-          visitCounts={activeCounts}
-          onClose={() => setScreen("main")}
-        />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "countryDetail") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <CountryDetailScreen onClose={() => setScreen("main")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "tripDetail" && selectedTrip) {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <TripDetailScreen
-          trip={selectedTrip}
-          onClose={() => setScreen("main")}
-        />
-      </GestureHandlerRootView>
-    );
-  }
-
-
   const percent =
     Math.round((totals.countries / TOTAL_COUNTRIES) * 1000) / 10;
 
+  if (!homeCountry) return null;
+
   return (
-    <GestureHandlerRootView style={styles.root}>
+    <View style={styles.root}>
       <StatusBar style={theme.statusBar} />
       <ScrollView
         style={styles.scroll}
@@ -337,7 +319,7 @@ export default function App() {
             </View>
           </View>
           <Pressable
-            onPress={openSettings}
+            onPress={() => navigation.navigate("Settings")}
             hitSlop={8}
             style={({ pressed }) => [
               styles.iconBtn,
@@ -384,7 +366,7 @@ export default function App() {
             </Pressable>
           </View>
           <Pressable
-            onPress={() => setScreen("mapZoom")}
+            onPress={() => navigation.navigate("MapZoom")}
             hitSlop={8}
             style={({ pressed }) => [
               styles.iconBtn,
@@ -415,7 +397,7 @@ export default function App() {
             theme={theme}
             homeCode={homeCountry.code}
             visitCounts={activeCounts}
-            onPress={() => setScreen("countryDetail")}
+            onPress={() => navigation.navigate("CountryDetail")}
           />
           <View style={styles.statCard}>
             <View style={styles.statHeaderRow}>
@@ -480,14 +462,7 @@ export default function App() {
             <Text style={styles.allLink}>전체보기 →</Text>
           </Pressable>
         </View>
-        <RecentList
-          theme={theme}
-          trips={recentTrips}
-          onSelect={(t) => {
-            setSelectedTrip(t);
-            setScreen("tripDetail");
-          }}
-        />
+        <RecentList theme={theme} trips={recentTrips} />
       </ScrollView>
       <YearPickerModal
         visible={yearPickerOpen}
@@ -498,7 +473,82 @@ export default function App() {
           setYearPickerOpen(false);
         }}
       />
-    </GestureHandlerRootView>
+    </View>
+  );
+}
+
+function AddTripScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "AddTrip">) {
+  return (
+    <>
+      <StatusBar style="light" />
+      <AddTripScreen onClose={() => navigation.goBack()} />
+    </>
+  );
+}
+
+function SettingsScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "Settings">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <SettingsScreen
+        onClose={() => navigation.goBack()}
+        onAddTrip={() => navigation.navigate("AddTrip")}
+        onOpenTitles={() => navigation.navigate("Titles")}
+        onChangeHome={() => navigation.navigate("ChangeHome")}
+      />
+    </>
+  );
+}
+
+function ChangeHomeScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "ChangeHome">) {
+  return (
+    <>
+      <StatusBar style="light" />
+      <OnboardingScreen mode="change" onClose={() => navigation.goBack()} />
+    </>
+  );
+}
+
+function TitlesScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "Titles">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <TitlesScreen onClose={() => navigation.goBack()} />
+    </>
+  );
+}
+
+function MapZoomScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "MapZoom">) {
+  const { activeCounts } = useAppCtx();
+  return (
+    <MapZoomScreen
+      visitCounts={activeCounts}
+      onClose={() => navigation.goBack()}
+    />
+  );
+}
+
+function CountryDetailScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "CountryDetail">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <CountryDetailScreen onClose={() => navigation.goBack()} />
+    </>
   );
 }
 
@@ -527,12 +577,13 @@ function MiniCard({
   return (
     <Pressable
       onPress={onPress}
+      pointerEvents="box-only"
       style={({ pressed }) => [styles.miniCard, pressed && styles.miniCardPressed]}
     >
-      <View style={styles.miniBadge} pointerEvents="none">
+      <View style={styles.miniBadge}>
         <Text style={styles.miniBadgeText}>{isHome ? "본국" : "선택"}</Text>
       </View>
-      <View style={styles.miniDotsArea} pointerEvents="none">
+      <View style={styles.miniDotsArea}>
         <CountryShape countryCode={code} color={shapeColor} />
       </View>
       <Text style={styles.miniTitle} numberOfLines={1}>
@@ -545,15 +596,7 @@ function MiniCard({
   );
 }
 
-function RecentList({
-  theme,
-  trips,
-  onSelect,
-}: {
-  theme: Theme;
-  trips: RecentTrip[];
-  onSelect: (trip: RecentTrip) => void;
-}) {
+function RecentList({ theme, trips }: { theme: Theme; trips: RecentTrip[] }) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   if (trips.length === 0) {
     return (
@@ -576,7 +619,12 @@ function RecentList({
         const [y, m, d] = item.startDate.split("-");
         return (
           <Pressable
-            onPress={() => onSelect(item)}
+            onPress={() =>
+              Alert.alert(
+                koName,
+                `${y}.${m}.${d} 시작 · ${item.days}일 머무름`
+              )
+            }
             style={({ pressed }) => [
               styles.recentRow,
               pressed && { backgroundColor: theme.rowPressedBg },
