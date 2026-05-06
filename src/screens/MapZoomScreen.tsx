@@ -12,7 +12,7 @@ import {
 
 import DotMap from "../components/DotMap";
 import { useVisitStore } from "../features/travel/visitStore";
-import { CARD_BG, HOME_BG, TEXT_PRIMARY } from "../utils/heatmap";
+import { useTheme } from "../theme/themeStore";
 
 const TOAST_DURATION_MS = 3000;
 
@@ -37,6 +37,7 @@ const EDGE_INSET_RATIO = 0.97;
 export default function MapZoomScreen({ visitCounts, onClose }: Props) {
   const { width, height } = useWindowDimensions();
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
+  const theme = useTheme();
 
   const longEdge = Math.max(width, height);
   const shortEdge = Math.min(width, height);
@@ -76,7 +77,9 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
   }
 
   return (
-    <View style={[styles.outer, { width, height }]}>
+    <View
+      style={[styles.outer, { width, height, backgroundColor: theme.homeBg }]}
+    >
       <StatusBar hidden />
       <View
         style={[
@@ -86,6 +89,7 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
             height: shortEdge,
             top: (height - shortEdge) / 2,
             left: (width - longEdge) / 2,
+            backgroundColor: theme.homeBg,
           },
         ]}
       >
@@ -113,10 +117,13 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
           hitSlop={12}
           style={({ pressed }) => [
             styles.closeBtn,
+            { backgroundColor: theme.cardBg },
             pressed && styles.closeBtnPressed,
           ]}
         >
-          <Text style={styles.closeIcon}>✕</Text>
+          <Text style={[styles.closeIcon, { color: theme.textPrimary }]}>
+            ✕
+          </Text>
         </Pressable>
         {toastName && (
           <View pointerEvents="none" style={styles.bottomOverlay}>
@@ -134,12 +141,10 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
 
 const styles = StyleSheet.create({
   outer: {
-    backgroundColor: HOME_BG,
     overflow: "hidden",
   },
   rotated: {
     position: "absolute",
-    backgroundColor: HOME_BG,
     transform: [{ rotate: "90deg" }],
   },
   mapHolder: {
@@ -154,7 +159,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: CARD_BG,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -167,7 +171,6 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   closeIcon: {
-    color: TEXT_PRIMARY,
     fontSize: 18,
     fontWeight: "700",
   },
