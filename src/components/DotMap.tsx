@@ -88,13 +88,16 @@ export default function DotMap({
   }, [positioned, selectedCountry]);
 
   const scale = useSharedValue(1);
-  const savedScale = useSharedValue(1);
   const tx = useSharedValue(0);
   const ty = useSharedValue(0);
   const savedTx = useSharedValue(0);
   const savedTy = useSharedValue(0);
-  const focalX = useSharedValue(0);
-  const focalY = useSharedValue(0);
+  // 핀치는 delta(scaleChange) + 이전 focal 추적 방식으로 처리한다.
+  // RNGH 공식 문서: onStart/onBegin에서 focal을 사용하면 first frame에 불연속이
+  // 생길 수 있으므로 첫 onChange에서 prev focal을 초기화해야 한다.
+  const prevFocalX = useSharedValue(0);
+  const prevFocalY = useSharedValue(0);
+  const pinchPrimed = useSharedValue(false);
 
   const notifyInteracting = useCallback(
     (interacting: boolean) => {
@@ -106,63 +109,100 @@ export default function DotMap({
   const viewW = size.width;
   const viewH = size.height;
 
-  const pinch = Gesture.Pinch()
-    .onStart((e) => {
-      cancelAnimation(scale);
-      cancelAnimation(tx);
-      cancelAnimation(ty);
-      savedScale.value = scale.value;
-      savedTx.value = tx.value;
-      savedTy.value = ty.value;
-      focalX.value = e.focalX;
-      focalY.value = e.focalY;
-      runOnJS(notifyInteracting)(true);
-    })
-    .onUpdate((e) => {
-      // 사진 앱과 같은 핀치 줌: 시작 시점 손가락 중심 아래의 world 포인트가
-      // 항상 현재 손가락 중심에 오도록 한다(스케일 + 손가락 이동에 따른 팬을 결합).
-      const newScale = clamp(savedScale.value * e.scale, MIN_SCALE, MAX_SCALE);
-      const r = newScale / savedScale.value;
-      const dx = e.focalX - focalX.value;
-      const dy = e.focalY - focalY.value;
-      const rawTx = focalX.value * (1 - r) + savedTx.value * r + dx;
-      const rawTy = focalY.value * (1 - r) + savedTy.value * r + dy;
-      tx.value = clampPanX(rawTx, newScale, viewW);
-      ty.value = clampPanY(rawTy, newScale, viewH);
-      scale.value = newScale;
-    })
-    .onEnd(() => {
-      savedScale.value = scale.value;
-      savedTx.value = tx.value;
-      savedTy.value = ty.value;
-    })
-    .onFinalize(() => {
-      runOnJS(notifyInteracting)(false);
-    });
+  // 제스처 객체는 매 렌더마다 새로 만들면 GestureDetector가 핸들러를 재부착해
+  // 진행 중인 핀치/팬에서 savedScale/savedTx 등이 중간값으로 다시 캡처되어
+  // 화면이 튕기는 스터터가 발생한다. useMemo로 안정화한다.
+  const pinch = useMemo(
+    () =>
+      Gesture.Pinch()
+        .onStart(() => {
+          cancelAnimation(scale);
+          cancelAnimation(tx);
+          cancelAnimation(ty);
+          // focal은 첫 onChange에서 캡처 (onStart의 focalX는 불안정).
+          pinchPrimed.value = false;
+          runOnJS(notifyInteracting)(true);
+        })
+        .onChange((e) => {
+          // 손가락이 한 개 이하로 떨어지는 프레임은 무시한다.
+          // 두 손가락이 동시에 떨어지지 않기 때문에 한쪽이 먼저 떨어지는 순간
+          // focal(centroid)이 남은 손가락 쪽으로 급격히 점프하며, 그 점프가
+          // dx/dy로 환산되어 지도가 왼/오른쪽으로 튕기는 원인이 된다.
+          if (e.numberOfPointers < 2) return;
+          if (!pinchPrimed.value) {
+            prevFocalX.value = e.focalX;
+            prevFocalY.value = e.focalY;
+            pinchPrimed.value = true;
+            return;
+          }
+          // 사진 앱 스타일 핀치 줌: scaleChange(증분)으로 현재 focal에서 줌하고,
+          // focal 이동분(dx, dy)을 더해 손가락 중심 아래 world 포인트를 고정한다.
+          const newScale = clamp(
+            scale.value * e.scaleChange,
+            MIN_SCALE,
+            MAX_SCALE
+          );
+          const r = newScale / scale.value;
+          const dx = e.focalX - prevFocalX.value;
+          const dy = e.focalY - prevFocalY.value;
+          const rawTx = e.focalX * (1 - r) + tx.value * r + dx;
+          const rawTy = e.focalY * (1 - r) + ty.value * r + dy;
+          tx.value = clampPanX(rawTx, newScale, viewW);
+          ty.value = clampPanY(rawTy, newScale, viewH);
+          scale.value = newScale;
+          prevFocalX.value = e.focalX;
+          prevFocalY.value = e.focalY;
+        })
+        .onEnd(() => {
+          savedTx.value = tx.value;
+          savedTy.value = ty.value;
+        })
+        .onFinalize(() => {
+          pinchPrimed.value = false;
+          runOnJS(notifyInteracting)(false);
+        }),
+    [
+      viewW,
+      viewH,
+      notifyInteracting,
+      scale,
+      tx,
+      ty,
+      savedTx,
+      savedTy,
+      prevFocalX,
+      prevFocalY,
+      pinchPrimed,
+    ]
+  );
 
   // 한 손가락 드래그만 pan으로 사용. 두 손가락 입력은 pinch 단독으로 처리해 충돌을 막는다.
-  const pan = Gesture.Pan()
-    .maxPointers(1)
-    .onStart(() => {
-      cancelAnimation(scale);
-      cancelAnimation(tx);
-      cancelAnimation(ty);
-      savedTx.value = tx.value;
-      savedTy.value = ty.value;
-      runOnJS(notifyInteracting)(true);
-    })
-    .onUpdate((e) => {
-      const s = scale.value;
-      tx.value = clampPanX(savedTx.value + e.translationX, s, viewW);
-      ty.value = clampPanY(savedTy.value + e.translationY, s, viewH);
-    })
-    .onEnd(() => {
-      savedTx.value = tx.value;
-      savedTy.value = ty.value;
-    })
-    .onFinalize(() => {
-      runOnJS(notifyInteracting)(false);
-    });
+  const pan = useMemo(
+    () =>
+      Gesture.Pan()
+        .maxPointers(1)
+        .onStart(() => {
+          cancelAnimation(scale);
+          cancelAnimation(tx);
+          cancelAnimation(ty);
+          savedTx.value = tx.value;
+          savedTy.value = ty.value;
+          runOnJS(notifyInteracting)(true);
+        })
+        .onUpdate((e) => {
+          const s = scale.value;
+          tx.value = clampPanX(savedTx.value + e.translationX, s, viewW);
+          ty.value = clampPanY(savedTy.value + e.translationY, s, viewH);
+        })
+        .onEnd(() => {
+          savedTx.value = tx.value;
+          savedTy.value = ty.value;
+        })
+        .onFinalize(() => {
+          runOnJS(notifyInteracting)(false);
+        }),
+    [viewW, viewH, notifyInteracting, scale, tx, ty, savedTx, savedTy]
+  );
 
   const onTap = useCallback(
     (worldX: number, worldY: number) => {
@@ -235,18 +275,16 @@ export default function DotMap({
     scale.value = target;
     tx.value = targetTx;
     ty.value = targetTy;
-    savedScale.value = target;
     savedTx.value = targetTx;
     savedTy.value = targetTy;
 
     const easing = Easing.inOut(Easing.cubic);
-    scale.value = withDelay(1000, withTiming(1, { duration: 4000, easing }));
-    tx.value = withDelay(1000, withTiming(0, { duration: 4000, easing }));
+    scale.value = withDelay(500, withTiming(1, { duration: 4000, easing }));
+    tx.value = withDelay(500, withTiming(0, { duration: 4000, easing }));
     ty.value = withDelay(
-      1000,
+      500,
       withTiming(0, { duration: 4000, easing }, (finished) => {
         if (finished) {
-          savedScale.value = 1;
           savedTx.value = 0;
           savedTy.value = 0;
         }
@@ -261,22 +299,27 @@ export default function DotMap({
     scale,
     tx,
     ty,
-    savedScale,
     savedTx,
     savedTy,
   ]);
 
-  const tap = Gesture.Tap()
-    .maxDistance(8)
-    .onEnd((e) => {
-      const wx = (e.x - tx.value) / scale.value;
-      const wy = (e.y - ty.value) / scale.value;
-      runOnJS(onTap)(wx, wy);
-    });
+  const tap = useMemo(
+    () =>
+      Gesture.Tap()
+        .maxDistance(8)
+        .onEnd((e) => {
+          const wx = (e.x - tx.value) / scale.value;
+          const wy = (e.y - ty.value) / scale.value;
+          runOnJS(onTap)(wx, wy);
+        }),
+    [onTap, scale, tx, ty]
+  );
 
-  const composed = enableZoom
-    ? Gesture.Race(tap, Gesture.Simultaneous(pinch, pan))
-    : tap;
+  const composed = useMemo(
+    () =>
+      enableZoom ? Gesture.Race(tap, Gesture.Simultaneous(pinch, pan)) : tap,
+    [enableZoom, tap, pinch, pan]
+  );
 
   const transform = useDerivedValue(() => [
     { translateX: tx.value },
