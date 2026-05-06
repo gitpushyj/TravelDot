@@ -1,5 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useState } from "react";
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+} from "@react-navigation/native";
+import {
+  createNativeStackNavigator,
+  type NativeStackScreenProps,
+} from "@react-navigation/native-stack";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -12,6 +20,7 @@ import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import CountryShape from "./src/components/CountryShape";
 import DotMap from "./src/components/DotMap";
@@ -52,6 +61,37 @@ for (const c of COUNTRY_LIST) KO_NAME_BY_CODE[c.code] = c.nameKo;
 
 type YearMode = { kind: "all" } | { kind: "year"; year: number };
 
+type RootStackParamList = {
+  Main: undefined;
+  AddTrip: undefined;
+  Settings: undefined;
+  ChangeHome: undefined;
+  Titles: undefined;
+  MapZoom: undefined;
+  CountryDetail: undefined;
+  TripDetail: { trip: RecentTrip };
+  ReviewSuspect: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+// 스캔 완료 알림에서 Stack.Navigator 안의 화면으로 이동시키기 위한 navigation ref.
+// 알림 effect는 NavigationContainer 바깥(App 컴포넌트)에 있어 hooks로 navigation을
+// 받을 수 없어서 ref로 우회한다.
+const navigationRef = createNavigationContainerRef<RootStackParamList>();
+
+type AppNavCtx = {
+  yearMode: YearMode;
+  setYearMode: (m: YearMode) => void;
+  activeCounts: Record<string, number>;
+};
+const AppCtx = createContext<AppNavCtx | null>(null);
+const useAppCtx = () => {
+  const v = useContext(AppCtx);
+  if (!v) throw new Error("AppCtx not provided");
+  return v;
+};
+
 export default function App() {
   const ready = useVisitStore((s) => s.ready);
   const homeCountry = useVisitStore((s) => s.homeCountry);
@@ -59,8 +99,6 @@ export default function App() {
   const syncStatus = useVisitStore((s) => s.syncStatus);
   const visitCounts = useVisitStore((s) => s.visitCounts);
   const visitCountsByYear = useVisitStore((s) => s.visitCountsByYear);
-  const recentTrips = useVisitStore((s) => s.recentTrips);
-  const availableYears = useVisitStore((s) => s.availableYears);
   const ensureYearCounts = useVisitStore((s) => s.ensureYearCounts);
   const lastSync = useVisitStore((s) => s.lastSync);
   const setLastSync = useVisitStore((s) => s.setLastSync);
@@ -69,28 +107,16 @@ export default function App() {
   const suspectTrips = useVisitStore((s) => s.suspectTrips);
   const themeHydrate = useThemeStore((s) => s.hydrate);
   const themeHydrated = useThemeStore((s) => s.hydrated);
-  const activeBadgeId = useBadgeStore((s) => s.activeId);
   const pendingNotifications = useBadgeStore((s) => s.pendingNotifications);
   const consumeBadgeNotifications = useBadgeStore((s) => s.consumeNotifications);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
-  const [screen, setScreen] = useState<
-    | "main"
-    | "addTrip"
-    | "settings"
-    | "titles"
-    | "mapZoom"
-    | "changeHome"
-    | "countryDetail"
-    | "tripDetail"
-    | "reviewSuspect"
-    | "initialScan"
-  >("main");
-  const [selectedTrip, setSelectedTrip] = useState<RecentTrip | null>(null);
+  // 첫 본국 선택 직후 InitialScanScreen으로 진입해 권한 요청 + 스캔 + 의심 여행
+  // 리스트를 한 화면에서 보여준다. homeCountry가 store에 반영되기 전에 켜져
+  // 있을 수 있어 NavigationContainer 위에서 우선 분기시킨다.
+  const [pendingInitialScan, setPendingInitialScan] = useState(false);
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
-  const [yearPickerOpen, setYearPickerOpen] = useState(false);
-  const [mapInteracting, setMapInteracting] = useState(false);
 
   useEffect(() => {
     void hydrate();
@@ -107,7 +133,7 @@ export default function App() {
     if (!lastSync) return;
     if (syncStatus.running) return;
     // 초기 스캔 화면은 결과를 자체 UI로 직접 보여주므로 알림을 띄우지 않는다.
-    if (screen === "initialScan") return;
+    if (pendingInitialScan) return;
     const { permission, scanned, added, error } = lastSync;
 
     let title = "사진 확인이 끝났어요";
@@ -158,13 +184,15 @@ export default function App() {
         text: "확인하러 가기",
         onPress: () => {
           setLastSync(null);
-          setScreen("reviewSuspect");
+          if (navigationRef.isReady()) {
+            navigationRef.navigate("ReviewSuspect");
+          }
         },
       });
     }
 
     Alert.alert(title, body, buttons);
-  }, [lastSync, syncStatus.running, setLastSync, suspectTrips, screen]);
+  }, [lastSync, syncStatus.running, setLastSync, suspectTrips, pendingInitialScan]);
 
   useEffect(() => {
     if (!homeCleanupReport) return;
@@ -180,12 +208,110 @@ export default function App() {
     );
   }, [homeCleanupReport, setHomeCleanupReport]);
 
+  // 새로 잠금 해제된 뱃지가 여러 개여도 한 번의 알림으로 묶어서 표시한다.
+  // 스캔 한 번에 호칭이 여러 개 풀릴 수 있어 팝업이 연달아 뜨는 것을 막기 위함.
+  useEffect(() => {
+    const count = pendingNotifications.length;
+    if (count === 0) return;
+    const batch = pendingNotifications.slice(0, count);
+    const title =
+      count === 1
+        ? "새로운 뱃지를 얻었어요!"
+        : `새로운 뱃지 ${count}개를 얻었어요!`;
+    const body =
+      count === 1
+        ? `${batch[0].emoji}  ${batch[0].titleKo}\n\n${batch[0].description}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`
+        : `${batch
+            .map((b) => `${b.emoji}  ${b.titleKo}`)
+            .join("\n")}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`;
+    Alert.alert(title, body, [
+      { text: "확인", onPress: () => consumeBadgeNotifications(count) },
+    ]);
+  }, [pendingNotifications, consumeBadgeNotifications]);
+
   const activeCounts = useMemo(() => {
     if (yearMode.kind === "year") {
       return visitCountsByYear[yearMode.year] ?? {};
     }
     return visitCounts;
   }, [yearMode, visitCounts, visitCountsByYear]);
+
+  if (!ready || !themeHydrated) {
+    return <View style={styles.root} />;
+  }
+
+  // 초기 스캔은 homeCountry가 store에 반영되기 직전에 들어올 수 있으므로
+  // !homeCountry 체크보다 먼저 분기시켜 화면 깜빡임을 막는다.
+  if (pendingInitialScan) {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <StatusBar style={theme.statusBar} />
+        <InitialScanScreen onDone={() => setPendingInitialScan(false)} />
+      </GestureHandlerRootView>
+    );
+  }
+
+  if (!homeCountry) {
+    return (
+      <GestureHandlerRootView style={styles.rootDark}>
+        <StatusBar style="light" />
+        <OnboardingScreen onAfterSetup={() => setPendingInitialScan(true)} />
+      </GestureHandlerRootView>
+    );
+  }
+
+  const ctxValue: AppNavCtx = { yearMode, setYearMode, activeCounts };
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AppCtx.Provider value={ctxValue}>
+          <NavigationContainer ref={navigationRef}>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: theme.homeBg },
+              }}
+            >
+              <Stack.Screen name="Main" component={MainScreen} />
+              <Stack.Screen name="AddTrip" component={AddTripScreenNav} />
+              <Stack.Screen name="Settings" component={SettingsScreenNav} />
+              <Stack.Screen name="ChangeHome" component={ChangeHomeScreenNav} />
+              <Stack.Screen name="Titles" component={TitlesScreenNav} />
+              <Stack.Screen name="MapZoom" component={MapZoomScreenNav} />
+              <Stack.Screen
+                name="CountryDetail"
+                component={CountryDetailScreenNav}
+              />
+              <Stack.Screen
+                name="TripDetail"
+                component={TripDetailScreenNav}
+              />
+              <Stack.Screen
+                name="ReviewSuspect"
+                component={ReviewSuspectScreenNav}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AppCtx.Provider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
+}
+
+function MainScreen({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "Main">) {
+  const { yearMode, setYearMode, activeCounts } = useAppCtx();
+  const homeCountry = useVisitStore((s) => s.homeCountry);
+  const recentTrips = useVisitStore((s) => s.recentTrips);
+  const availableYears = useVisitStore((s) => s.availableYears);
+  const syncStatus = useVisitStore((s) => s.syncStatus);
+  const activeBadgeId = useBadgeStore((s) => s.activeId);
+  const theme = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+  const [yearPickerOpen, setYearPickerOpen] = useState(false);
+  const [mapInteracting, setMapInteracting] = useState(false);
 
   const totals = useMemo(() => {
     const codes = Object.keys(activeCounts);
@@ -211,27 +337,6 @@ export default function App() {
     [activeBadgeId, tier.id]
   );
 
-  // 새로 잠금 해제된 뱃지가 여러 개여도 한 번의 알림으로 묶어서 표시한다.
-  // 스캔 한 번에 호칭이 여러 개 풀릴 수 있어 팝업이 연달아 뜨는 것을 막기 위함.
-  useEffect(() => {
-    const count = pendingNotifications.length;
-    if (count === 0) return;
-    const batch = pendingNotifications.slice(0, count);
-    const title =
-      count === 1
-        ? "새로운 뱃지를 얻었어요!"
-        : `새로운 뱃지 ${count}개를 얻었어요!`;
-    const body =
-      count === 1
-        ? `${batch[0].emoji}  ${batch[0].titleKo}\n\n${batch[0].description}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`
-        : `${batch
-            .map((b) => `${b.emoji}  ${b.titleKo}`)
-            .join("\n")}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.`;
-    Alert.alert(title, body, [
-      { text: "확인", onPress: () => consumeBadgeNotifications(count) },
-    ]);
-  }, [pendingNotifications, consumeBadgeNotifications]);
-
   const periodLabel = useMemo(() => {
     if (yearMode.kind === "year") return String(yearMode.year);
     if (availableYears.length === 0) return String(new Date().getFullYear());
@@ -248,124 +353,13 @@ export default function App() {
     setYearPickerOpen(true);
   };
 
-  const openSettings = () => setScreen("settings");
-
-  if (!ready || !themeHydrated) {
-    return <View style={styles.root} />;
-  }
-
-  // 초기 스캔은 homeCountry가 store에 반영되기 직전에 진입할 수 있으므로
-  // homeCountry 체크보다 먼저 분기시켜 화면 깜빡임을 막는다.
-  if (screen === "initialScan") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <InitialScanScreen onDone={() => setScreen("main")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (!homeCountry) {
-    return (
-      <GestureHandlerRootView style={styles.rootDark}>
-        <StatusBar style="light" />
-        <OnboardingScreen onAfterSetup={() => setScreen("initialScan")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "addTrip") {
-    return (
-      <GestureHandlerRootView style={styles.rootDark}>
-        <StatusBar style="light" />
-        <AddTripScreen onClose={() => setScreen("main")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "settings") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <SettingsScreen
-          onClose={() => setScreen("main")}
-          onAddTrip={() => setScreen("addTrip")}
-          onOpenTitles={() => setScreen("titles")}
-          onChangeHome={() => setScreen("changeHome")}
-          onReviewSuspect={() => setScreen("reviewSuspect")}
-        />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "changeHome") {
-    return (
-      <GestureHandlerRootView style={styles.rootDark}>
-        <StatusBar style="light" />
-        <OnboardingScreen
-          mode="change"
-          onClose={() => setScreen("main")}
-        />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "titles") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <TitlesScreen onClose={() => setScreen("settings")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "mapZoom") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <MapZoomScreen
-          visitCounts={activeCounts}
-          onClose={() => setScreen("main")}
-        />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "countryDetail") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <CountryDetailScreen onClose={() => setScreen("main")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "tripDetail" && selectedTrip) {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <TripDetailScreen
-          trip={selectedTrip}
-          onClose={() => setScreen("main")}
-        />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (screen === "reviewSuspect") {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <ReviewSuspectTripsScreen onClose={() => setScreen("main")} />
-      </GestureHandlerRootView>
-    );
-  }
-
-
   const percent =
     Math.round((totals.countries / TOTAL_COUNTRIES) * 1000) / 10;
 
+  if (!homeCountry) return null;
+
   return (
-    <GestureHandlerRootView style={styles.root}>
+    <View style={styles.root}>
       <StatusBar style={theme.statusBar} />
       <ScrollView
         style={styles.scroll}
@@ -385,7 +379,7 @@ export default function App() {
             </View>
           </View>
           <Pressable
-            onPress={openSettings}
+            onPress={() => navigation.navigate("Settings")}
             hitSlop={8}
             style={({ pressed }) => [
               styles.iconBtn,
@@ -432,7 +426,7 @@ export default function App() {
             </Pressable>
           </View>
           <Pressable
-            onPress={() => setScreen("mapZoom")}
+            onPress={() => navigation.navigate("MapZoom")}
             hitSlop={8}
             style={({ pressed }) => [
               styles.iconBtn,
@@ -463,7 +457,7 @@ export default function App() {
             theme={theme}
             homeCode={homeCountry.code}
             visitCounts={activeCounts}
-            onPress={() => setScreen("countryDetail")}
+            onPress={() => navigation.navigate("CountryDetail")}
           />
           <View style={styles.statCard}>
             <View style={styles.statHeaderRow}>
@@ -531,10 +525,7 @@ export default function App() {
         <RecentList
           theme={theme}
           trips={recentTrips}
-          onSelect={(t) => {
-            setSelectedTrip(t);
-            setScreen("tripDetail");
-          }}
+          onSelect={(t) => navigation.navigate("TripDetail", { trip: t })}
         />
       </ScrollView>
       <YearPickerModal
@@ -546,7 +537,111 @@ export default function App() {
           setYearPickerOpen(false);
         }}
       />
-    </GestureHandlerRootView>
+    </View>
+  );
+}
+
+function AddTripScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "AddTrip">) {
+  return (
+    <>
+      <StatusBar style="light" />
+      <AddTripScreen onClose={() => navigation.goBack()} />
+    </>
+  );
+}
+
+function SettingsScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "Settings">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <SettingsScreen
+        onClose={() => navigation.goBack()}
+        onAddTrip={() => navigation.navigate("AddTrip")}
+        onOpenTitles={() => navigation.navigate("Titles")}
+        onChangeHome={() => navigation.navigate("ChangeHome")}
+        onReviewSuspect={() => navigation.navigate("ReviewSuspect")}
+      />
+    </>
+  );
+}
+
+function ReviewSuspectScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "ReviewSuspect">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <ReviewSuspectTripsScreen onClose={() => navigation.goBack()} />
+    </>
+  );
+}
+
+function ChangeHomeScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "ChangeHome">) {
+  return (
+    <>
+      <StatusBar style="light" />
+      <OnboardingScreen mode="change" onClose={() => navigation.goBack()} />
+    </>
+  );
+}
+
+function TitlesScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "Titles">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <TitlesScreen onClose={() => navigation.goBack()} />
+    </>
+  );
+}
+
+function MapZoomScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "MapZoom">) {
+  const { activeCounts } = useAppCtx();
+  return (
+    <MapZoomScreen
+      visitCounts={activeCounts}
+      onClose={() => navigation.goBack()}
+    />
+  );
+}
+
+function CountryDetailScreenNav({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "CountryDetail">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <CountryDetailScreen
+        onClose={() => navigation.goBack()}
+        onSelectTrip={(trip) => navigation.navigate("TripDetail", { trip })}
+      />
+    </>
+  );
+}
+
+function TripDetailScreenNav({
+  navigation,
+  route,
+}: NativeStackScreenProps<RootStackParamList, "TripDetail">) {
+  const theme = useTheme();
+  return (
+    <>
+      <StatusBar style={theme.statusBar} />
+      <TripDetailScreen trip={route.params.trip} onClose={() => navigation.goBack()} />
+    </>
   );
 }
 
@@ -575,12 +670,13 @@ function MiniCard({
   return (
     <Pressable
       onPress={onPress}
+      pointerEvents="box-only"
       style={({ pressed }) => [styles.miniCard, pressed && styles.miniCardPressed]}
     >
-      <View style={styles.miniBadge} pointerEvents="none">
+      <View style={styles.miniBadge}>
         <Text style={styles.miniBadgeText}>{isHome ? "본국" : "선택"}</Text>
       </View>
-      <View style={styles.miniDotsArea} pointerEvents="none">
+      <View style={styles.miniDotsArea}>
         <CountryShape countryCode={code} color={shapeColor} />
       </View>
       <Text style={styles.miniTitle} numberOfLines={1}>
