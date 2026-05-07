@@ -51,9 +51,6 @@ export function makeStyles(theme: Theme) {
       borderColor: theme.cardBorder,
       overflow: "hidden",
     },
-    cardAfterSegment: {
-      marginTop: 12,
-    },
     row: {
       flexDirection: "row",
       alignItems: "center",
@@ -75,35 +72,26 @@ export function makeStyles(theme: Theme) {
       fontSize: 12,
       marginTop: 2,
     },
-    segment: {
+    themeRow: {
       flexDirection: "row",
-      backgroundColor: theme.tabRowBg,
-      borderRadius: 999,
-      padding: 4,
-      gap: 4,
     },
-    segmentItem: {
+    themeCell: {
       flex: 1,
-      paddingVertical: 8,
-      borderRadius: 999,
+      paddingVertical: 14,
       alignItems: "center",
       justifyContent: "center",
     },
-    segmentItemActive: {
-      backgroundColor: theme.cardBg,
-      shadowColor: "#000",
-      shadowOpacity: 0.05,
-      shadowOffset: { width: 0, height: 1 },
-      shadowRadius: 2,
-      elevation: 1,
+    themeCellDivider: {
+      borderLeftWidth: StyleSheet.hairlineWidth,
+      borderLeftColor: theme.cardBorder,
     },
-    segmentText: {
+    themeCellText: {
       color: theme.textSecondary,
-      fontSize: 13,
+      fontSize: 14,
       fontWeight: "600",
     },
-    segmentTextActive: {
-      color: theme.textPrimary,
+    themeCellTextActive: {
+      color: theme.accent,
       fontWeight: "700",
     },
     chev: {

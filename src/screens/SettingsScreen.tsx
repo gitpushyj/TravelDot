@@ -216,37 +216,38 @@ export default function SettingsScreen({
         <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
           {t("settings.section.appSettings")}
         </Text>
-        <View style={styles.segment}>
-          {themeOptions.map((opt) => {
-            const selected = mode === opt.mode;
-            return (
-              <Pressable
-                key={opt.mode}
-                onPress={() => void setMode(opt.mode)}
-                style={({ pressed }) => [
-                  styles.segmentItem,
-                  selected && styles.segmentItemActive,
-                  pressed && !selected && { opacity: 0.7 },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.segmentText,
-                    selected && styles.segmentTextActive,
+        <View style={styles.card}>
+          <View style={styles.themeRow}>
+            {themeOptions.map((opt, idx) => {
+              const selected = mode === opt.mode;
+              return (
+                <Pressable
+                  key={opt.mode}
+                  onPress={() => void setMode(opt.mode)}
+                  style={({ pressed }) => [
+                    styles.themeCell,
+                    idx > 0 && styles.themeCellDivider,
+                    pressed && !selected && { opacity: 0.6 },
                   ]}
                 >
-                  {opt.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-        <View style={[styles.card, styles.cardAfterSegment]}>
+                  <Text
+                    style={[
+                      styles.themeCellText,
+                      selected && styles.themeCellTextActive,
+                    ]}
+                  >
+                    {opt.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
           <ActionRow
             theme={theme}
             label={t("settings.language.label")}
             sub={LOCALE_LABELS[currentLocale]}
             onPress={onOpenLanguage}
+            divider
           />
         </View>
 
