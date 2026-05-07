@@ -1,4 +1,3 @@
-import { Platform } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 
 import { getLocations } from "../../../modules/photo-location";
@@ -31,30 +30,6 @@ export async function ensurePermission(): Promise<
     return res.accessPrivileges === "limited" ? "limited" : "granted";
   }
   return "denied";
-}
-
-// iOS에서 expo-media-library의 getAssetInfoAsync가 파일을 열어 EXIF까지 읽는 탓에
-// 사진 한 장당 수십~수백 ms가 든다. 우리는 GPS 좌표만 필요하므로 PHAsset.location을
-// 직접 읽는 native 모듈(modules/photo-location)을 통해 우회한다.
-// Android(향후 지원 시)는 동일 인터페이스가 없어 기존 경로로 폴백.
-const ASSET_INFO_CONCURRENCY = 20;
-
-async function loadPhotoMetaViaInfo(
-  asset: MediaLibrary.Asset
-): Promise<PhotoMeta> {
-  const info = await MediaLibrary.getAssetInfoAsync(asset, {
-    shouldDownloadFromNetwork: false,
-  });
-  const loc = info.location ?? null;
-  const lat = toFiniteNumber(loc?.latitude);
-  const lng = toFiniteNumber(loc?.longitude);
-  return {
-    id: asset.id,
-    uri: info.localUri ?? asset.uri,
-    lat,
-    lng,
-    takenAt: asset.creationTime,
-  };
 }
 
 // iOS의 ph:// URI는 일부 RN Image 로더 빌드가 인식하지 못해 "no suitable image
@@ -99,28 +74,23 @@ export async function* iteratePhotos(
       createdBefore: options?.createdBefore,
     });
 
-    if (Platform.OS === "ios") {
-      const ids = page.assets.map((a) => a.id);
-      const locations = await getLocations(ids);
-      for (let i = 0; i < page.assets.length; i++) {
-        const asset = page.assets[i];
-        const loc = locations[i];
-        yield {
-          id: asset.id,
-          // ph:// URI로도 Image 컴포넌트가 정상 로드한다. localUri 해석을
-          // 생략해 getAssetInfoAsync 호출을 0으로 줄인다.
-          uri: asset.uri,
-          lat: toFiniteNumber(loc?.lat),
-          lng: toFiniteNumber(loc?.lng),
-          takenAt: asset.creationTime,
-        };
-      }
-    } else {
-      for (let i = 0; i < page.assets.length; i += ASSET_INFO_CONCURRENCY) {
-        const batch = page.assets.slice(i, i + ASSET_INFO_CONCURRENCY);
-        const metas = await Promise.all(batch.map(loadPhotoMetaViaInfo));
-        for (const meta of metas) yield meta;
-      }
+    // iOS는 PHAsset.location, Android는 EXIF 헤더를 네이티브에서 한 번에 읽는다.
+    // expo-media-library의 getAssetInfoAsync(파일을 열어 EXIF까지 파싱)를 우회해
+    // 사진 한 장당 비용을 마이크로~수 ms 수준으로 낮춘다.
+    const ids = page.assets.map((a) => a.id);
+    const locations = await getLocations(ids);
+    for (let i = 0; i < page.assets.length; i++) {
+      const asset = page.assets[i];
+      const loc = locations[i];
+      yield {
+        id: asset.id,
+        // ph:// URI로도 Image 컴포넌트가 정상 로드한다. localUri 해석을
+        // 생략해 getAssetInfoAsync 호출을 0으로 줄인다.
+        uri: asset.uri,
+        lat: toFiniteNumber(loc?.lat),
+        lng: toFiniteNumber(loc?.lng),
+        takenAt: asset.creationTime,
+      };
     }
 
     if (!page.hasNextPage) return;

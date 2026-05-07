@@ -42,5 +42,9 @@ yarn-error.*
 /ios
 /android
 
+# local expo modules' native build outputs
+modules/*/android/build/
+modules/*/android/.cxx/
+
 # Claude Code 임시 작업 공간 (격리된 worktree)
 .claude/worktrees/
