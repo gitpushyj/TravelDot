@@ -15,6 +15,8 @@ export type ContinentDefinition = {
   id: ContinentId;
   nameKo: string;
   nameEn: string;
+  /** 입문 컷오프 — 마일스톤 추가로 도입 (2026-05-07). AN은 입문 단계 없음(호환 위해 conqueror와 동일). */
+  initiate: number;
   /** 탐방가 컷오프 */
   wanderer: number;
   /** 정복자 컷오프 */
@@ -22,14 +24,14 @@ export type ContinentDefinition = {
 };
 
 export const CONTINENTS: readonly ContinentDefinition[] = [
-  { id: "AS", nameKo: "아시아", nameEn: "Asia", wanderer: 5, conqueror: 12 },
-  { id: "EU", nameKo: "유럽", nameEn: "Europe", wanderer: 5, conqueror: 15 },
-  { id: "AF", nameKo: "아프리카", nameEn: "Africa", wanderer: 4, conqueror: 10 },
-  { id: "NA", nameKo: "북아메리카", nameEn: "North America", wanderer: 3, conqueror: 8 },
-  { id: "SA", nameKo: "남아메리카", nameEn: "South America", wanderer: 3, conqueror: 7 },
-  { id: "OC", nameKo: "오세아니아", nameEn: "Oceania", wanderer: 2, conqueror: 5 },
-  // 남극: 방문 1개국으로 특수 뱃지 처리. wanderer=conqueror=1 형태.
-  { id: "AN", nameKo: "남극", nameEn: "Antarctica", wanderer: 1, conqueror: 1 },
+  { id: "AS", nameKo: "아시아", nameEn: "Asia", initiate: 2, wanderer: 5, conqueror: 12 },
+  { id: "EU", nameKo: "유럽", nameEn: "Europe", initiate: 2, wanderer: 5, conqueror: 15 },
+  { id: "AF", nameKo: "아프리카", nameEn: "Africa", initiate: 2, wanderer: 4, conqueror: 10 },
+  { id: "NA", nameKo: "북아메리카", nameEn: "North America", initiate: 1, wanderer: 3, conqueror: 8 },
+  { id: "SA", nameKo: "남아메리카", nameEn: "South America", initiate: 1, wanderer: 3, conqueror: 7 },
+  { id: "OC", nameKo: "오세아니아", nameEn: "Oceania", initiate: 1, wanderer: 2, conqueror: 5 },
+  // 남극: 입문 단계 없음. wanderer/conqueror 그대로 1.
+  { id: "AN", nameKo: "남극", nameEn: "Antarctica", initiate: 1, wanderer: 1, conqueror: 1 },
 ];
 
 const ASIA = [
