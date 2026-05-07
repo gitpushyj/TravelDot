@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { initI18n } from "./src/i18n";
 import { useAuthStore } from "./src/features/auth/authStore";
+import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
 import { useVisitStore } from "./src/features/travel/visitStore";
 import { useBadgeNotificationAlert } from "./src/hooks/useBadgeNotificationAlert";
 import { useHomeCleanupAlert } from "./src/hooks/useHomeCleanupAlert";
@@ -13,9 +14,8 @@ import { useScanCompletionAlert } from "./src/hooks/useScanCompletionAlert";
 import { AppCtxProvider, type AppNavCtx } from "./src/navigation/AppCtx";
 import RootNavigator from "./src/navigation/RootNavigator";
 import type { YearMode } from "./src/navigation/types";
-import InitialScanScreen from "./src/screens/InitialScanScreen";
 import LoginScreen from "./src/screens/LoginScreen";
-import OnboardingScreen from "./src/screens/OnboardingScreen";
+import OnboardingFlow from "./src/screens/Onboarding";
 import {
   useSystemSchemeListener,
   useTheme,
@@ -35,22 +35,23 @@ export default function App() {
   const authHydrate = useAuthStore((s) => s.hydrate);
   const authHydrated = useAuthStore((s) => s.hydrated);
   const authUser = useAuthStore((s) => s.user);
+  const onboardingHydrate = useOnboardingStore((s) => s.hydrate);
+  const onboardingHydrated = useOnboardingStore((s) => s.hydrated);
+  const onboardingCompleted = useOnboardingStore((s) => s.completed);
+  const onboardingMarkCompleted = useOnboardingStore((s) => s.markCompleted);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
 
-  // 첫 본국 선택 직후 InitialScanScreen으로 진입해 권한 요청 + 스캔 + 의심 여행
-  // 리스트를 한 화면에서 보여준다. homeCountry가 store에 반영되기 전에 켜져
-  // 있을 수 있어 NavigationContainer 위에서 우선 분기시킨다.
-  const [pendingInitialScan, setPendingInitialScan] = useState(false);
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
 
   useEffect(() => {
     void hydrate();
     void themeHydrate();
     void authHydrate();
+    void onboardingHydrate();
     void initI18n().then(() => setI18nReady(true));
-  }, [hydrate, themeHydrate, authHydrate]);
+  }, [hydrate, themeHydrate, authHydrate, onboardingHydrate]);
 
   useEffect(() => {
     if (yearMode.kind === "year") {
@@ -58,7 +59,26 @@ export default function App() {
     }
   }, [yearMode, ensureYearCounts]);
 
-  useScanCompletionAlert(pendingInitialScan);
+  // 기존 사용자(이미 로그인 + 본국 설정 완료)는 자동으로 온보딩 완료 처리.
+  useEffect(() => {
+    if (!ready || !authHydrated || !onboardingHydrated) return;
+    if (onboardingCompleted) return;
+    if (authUser && homeCountry) {
+      void onboardingMarkCompleted();
+    }
+  }, [
+    ready,
+    authHydrated,
+    onboardingHydrated,
+    onboardingCompleted,
+    authUser,
+    homeCountry,
+    onboardingMarkCompleted,
+  ]);
+
+  // 온보딩 동안에는 OnboardingFlow가 자체 안내 UI로 결과를 보여주므로
+  // useScanCompletionAlert의 토스트 중복 노출을 막는다.
+  useScanCompletionAlert(!onboardingCompleted);
   useHomeCleanupAlert();
   useBadgeNotificationAlert();
 
@@ -69,36 +89,32 @@ export default function App() {
     return visitCounts;
   }, [yearMode, visitCounts, visitCountsByYear]);
 
-  if (!ready || !themeHydrated || !authHydrated || !i18nReady) {
+  if (
+    !ready ||
+    !themeHydrated ||
+    !authHydrated ||
+    !onboardingHydrated ||
+    !i18nReady
+  ) {
     return <View style={styles.root} />;
   }
 
-  // 로그인은 필수. 미로그인 상태면 다른 모든 화면보다 먼저 차단한다.
+  // 온보딩 미완료 → OnboardingFlow가 모든 단계를 책임진다.
+  if (!onboardingCompleted) {
+    return (
+      <GestureHandlerRootView style={styles.root}>
+        <StatusBar style={theme.statusBar} />
+        <OnboardingFlow />
+      </GestureHandlerRootView>
+    );
+  }
+
+  // 온보딩 완료 후 어떤 이유로든 로그아웃된 경우 LoginScreen만 노출.
   if (!authUser) {
     return (
       <GestureHandlerRootView style={styles.rootDark}>
         <StatusBar style="light" />
         <LoginScreen />
-      </GestureHandlerRootView>
-    );
-  }
-
-  // 초기 스캔은 homeCountry가 store에 반영되기 직전에 들어올 수 있으므로
-  // !homeCountry 체크보다 먼저 분기시켜 화면 깜빡임을 막는다.
-  if (pendingInitialScan) {
-    return (
-      <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        <InitialScanScreen onDone={() => setPendingInitialScan(false)} />
-      </GestureHandlerRootView>
-    );
-  }
-
-  if (!homeCountry) {
-    return (
-      <GestureHandlerRootView style={styles.rootDark}>
-        <StatusBar style="light" />
-        <OnboardingScreen onAfterSetup={() => setPendingInitialScan(true)} />
       </GestureHandlerRootView>
     );
   }
