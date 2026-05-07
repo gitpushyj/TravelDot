@@ -84,6 +84,14 @@
     "summaryDates": "{{start}} — {{end}} · {{days}} 天",
     "summaryPhotos": "{{count}} 张照片"
   },
+  "addTripSheet": {
+    "title": "添加旅行",
+    "subtitle": "想怎么添加?",
+    "manualLabel": "手动添加",
+    "manualSub": "自己输入国家、日期和笔记。",
+    "scanLabel": "自动扫描最近照片",
+    "scanSub": "读取最近一次扫描之后照片的位置信息,自动添加。"
+  },
   "editTrip": {
     "heading": "编辑 {{country}}",
     "savingState": "保存中…",

@@ -84,6 +84,14 @@
     "summaryDates": "{{start}} — {{end}} · {{days}}일",
     "summaryPhotos": "사진 {{count}}장"
   },
+  "addTripSheet": {
+    "title": "여행 추가하기",
+    "subtitle": "어떻게 추가할까요?",
+    "manualLabel": "직접 추가",
+    "manualSub": "국가·기간·메모를 직접 입력해 추가합니다.",
+    "scanLabel": "최근 사진 자동 스캔",
+    "scanSub": "마지막 스캔 이후 사진의 위치 정보를 읽어 자동으로 추가해요."
+  },
   "editTrip": {
     "heading": "{{country}} 수정",
     "savingState": "저장 중…",

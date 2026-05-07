@@ -84,6 +84,14 @@
     "summaryDates": "{{start}} — {{end}} · {{days}} 天",
     "summaryPhotos": "{{count}} 張相片"
   },
+  "addTripSheet": {
+    "title": "新增旅行",
+    "subtitle": "想要怎麼新增?",
+    "manualLabel": "手動新增",
+    "manualSub": "自己輸入國家、日期與筆記。",
+    "scanLabel": "自動掃描近期相片",
+    "scanSub": "讀取上次掃描後相片的位置資訊,自動新增。"
+  },
   "editTrip": {
     "heading": "編輯 {{country}}",
     "savingState": "儲存中…",

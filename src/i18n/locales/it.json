@@ -84,6 +84,14 @@
     "summaryDates": "{{start}} — {{end}} · {{days}} giorni",
     "summaryPhotos": "{{count}} foto"
   },
+  "addTripSheet": {
+    "title": "Aggiungi viaggio",
+    "subtitle": "Come vuoi aggiungerlo?",
+    "manualLabel": "Aggiungi manualmente",
+    "manualSub": "Inserisci tu stesso/a paese, date e nota.",
+    "scanLabel": "Scansiona le foto recenti",
+    "scanSub": "Legge la posizione dalle foto dall'ultima scansione e le aggiunge automaticamente."
+  },
   "editTrip": {
     "heading": "Modifica {{country}}",
     "savingState": "Salvataggio…",

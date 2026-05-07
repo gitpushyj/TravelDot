@@ -11,8 +11,10 @@ import Animated, {
 import { useTranslation } from "react-i18next";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
+import AddTripActionSheet from "../../components/AddTripActionSheet";
 import DotMap from "../../components/DotMap";
 import YearPickerModal from "../../components/YearPickerModal";
+import { runIncrementalSync } from "../../features/photoSync/syncService";
 import {
   localizedBadgeTitle,
   localizedTierTitle,
@@ -49,6 +51,7 @@ export default function MainScreen({
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
+  const [addSheetOpen, setAddSheetOpen] = useState(false);
 
   // TopAppBar hide-on-scroll: 위로 4px 이상 스크롤하면 숨기고, 아래로 4px 이상
   // 스크롤하면 다시 보인다. 컨텐츠 최상단(<=0)에서는 항상 보이게 강제한다.
@@ -286,7 +289,7 @@ export default function MainScreen({
           <View style={styles.recentHeaderLeft}>
             <Text style={styles.sectionTitle}>{t("home.recentTitle")}</Text>
             <Pressable
-              onPress={() => navigation.navigate("AddTrip")}
+              onPress={() => setAddSheetOpen(true)}
               hitSlop={8}
               style={({ pressed }) => [
                 styles.recentAddBtn,
@@ -316,6 +319,20 @@ export default function MainScreen({
         onApply={(mode) => {
           setYearMode(mode);
           setYearPickerOpen(false);
+        }}
+      />
+      <AddTripActionSheet
+        visible={addSheetOpen}
+        onCancel={() => setAddSheetOpen(false)}
+        onManual={() => {
+          setAddSheetOpen(false);
+          navigation.navigate("AddTrip");
+        }}
+        onAutoScan={() => {
+          setAddSheetOpen(false);
+          runIncrementalSync().catch((e) =>
+            Alert.alert(t("scan.scanFailed"), String(e))
+          );
         }}
       />
     </View>
