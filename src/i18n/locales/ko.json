@@ -164,8 +164,8 @@
       "completed": "달성"
     },
     "activeNext": {
-      "countries": "{{count}}개국을 여행하면 {{title}} 호칭을 얻습니다",
-      "days": "{{count}}일을 여행하면 {{title}} 호칭을 얻습니다",
+      "countries": "{{count}}개국을 여행하면 <b>{{title}}</b> 호칭을 얻습니다",
+      "days": "{{count}}일을 여행하면 <b>{{title}}</b> 호칭을 얻습니다",
       "completed": "최고 단계 달성! 모든 호칭을 얻었어요"
     },
     "footnote": "모든 목표 마일스톤은 조건이 충족되면 자동으로 달성됩니다. 선택한 마일스톤은 홈 화면에 보일 대표 마일스톤이 됩니다."

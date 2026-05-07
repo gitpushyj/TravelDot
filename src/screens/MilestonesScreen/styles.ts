@@ -67,6 +67,10 @@ export function makeStyles(theme: Theme) {
       color: theme.accent,
       fontWeight: "600",
     },
+    rowDescriptionBold: {
+      color: theme.textPrimary,
+      fontWeight: "700",
+    },
     footnote: {
       marginTop: 16,
       color: theme.textMuted,

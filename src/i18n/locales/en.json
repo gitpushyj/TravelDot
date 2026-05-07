@@ -164,8 +164,8 @@
       "completed": "Done"
     },
     "activeNext": {
-      "countries": "Visit {{count}} countries to earn the {{title}} title",
-      "days": "Travel for {{count}} days to earn the {{title}} title",
+      "countries": "Visit {{count}} countries to earn the <b>{{title}}</b> title",
+      "days": "Travel for {{count}} days to earn the <b>{{title}}</b> title",
       "completed": "Top tier reached — all titles unlocked"
     },
     "footnote": "All milestones unlock automatically when their conditions are met. The selected milestone is shown as your featured one on the home screen."

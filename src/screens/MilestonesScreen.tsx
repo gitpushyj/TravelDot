@@ -17,6 +17,7 @@ import { getCurrentLocale } from "../i18n";
 import { useTheme } from "../theme/themeStore";
 
 import MilestoneRow from "./MilestonesScreen/MilestoneRow";
+import type { ActiveDescription } from "./MilestonesScreen/MilestoneRow";
 import { makeStyles } from "./MilestonesScreen/styles";
 
 type Props = {
@@ -85,18 +86,12 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
 function buildActiveDescription(
   progress: MilestoneProgress,
   t: ReturnType<typeof useTranslation>["t"]
-): string {
-  if (progress.reachedFinal) {
-    return t("milestones.activeNext.completed");
-  }
+): ActiveDescription | null {
+  if (progress.reachedFinal) return { kind: "completed" };
   const next = progress.next;
   const badgeId = progress.nextTitleBadgeId;
-  if (next == null || badgeId == null) return "";
+  if (next == null || badgeId == null) return null;
   const badge = badgeFromId(badgeId, COUNTRY_NAME_KO_BY_CODE);
   const title = badge ? localizedBadgeTitle(badge, t, getCurrentLocale()) : "";
-  const key =
-    progress.unit === "days"
-      ? "milestones.activeNext.days"
-      : "milestones.activeNext.countries";
-  return t(key, { count: next, title });
+  return { kind: "next", count: next, title, unit: progress.unit };
 }
