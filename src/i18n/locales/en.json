@@ -390,6 +390,23 @@
       "title": "Choose your home country",
       "subtitle": "Your home dot is shown in blue regardless of days.\nForeign countries get darker the more days you spent there."
     },
+    "birth": {
+      "title": "Tell us your date of birth",
+      "subtitle": "We use it to refine your travel stats and recommendations.",
+      "year": "Year",
+      "month": "Month",
+      "day": "Day",
+      "next": "Next"
+    },
+    "gender": {
+      "title": "Gender",
+      "options": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "prefer_not_to_say": "Prefer not to say"
+      }
+    },
     "sync": {
       "title": "Let's sync your trips",
       "body": "We'll go through your photos and build trip records automatically.",

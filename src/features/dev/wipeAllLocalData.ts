@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuthStore } from "../auth/authStore";
 import { useBadgeStore } from "../badges/badgeStore";
 import { useOnboardingStore } from "../onboarding/onboardingStore";
+import { useProfileStore } from "../onboarding/profileStore";
 import { wipeAllVisits } from "../travel/visit/maintenance";
 import { useVisitStore } from "../travel/visitStore";
 import { useThemeStore } from "../../theme/themeStore";
@@ -38,6 +39,7 @@ export async function wipeAllLocalData(): Promise<void> {
     hydrated: false,
   });
   useOnboardingStore.setState({ hydrated: false, completed: false });
+  useProfileStore.setState({ hydrated: false, profile: null });
   useVisitStore.setState({
     ready: false,
     homeCountry: null,
@@ -55,6 +57,7 @@ export async function wipeAllLocalData(): Promise<void> {
 
   await useThemeStore.getState().hydrate();
   await useOnboardingStore.getState().hydrate();
+  await useProfileStore.getState().hydrate();
   // visitStore.hydrate 내부에서 badgeStore.hydrate 를 먼저 호출한다.
   await useVisitStore.getState().hydrate();
 }
