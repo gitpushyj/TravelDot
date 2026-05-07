@@ -170,7 +170,7 @@ export function makeStyles(theme: Theme) {
     mapFloatingBtn: {
       position: "absolute",
       left: 12,
-      bottom: 12,
+      top: 12,
       width: 32,
       height: 32,
       borderRadius: 16,

@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -47,6 +47,10 @@ import type { RootStackParamList } from "../../navigation/types";
 import { useTheme } from "../../theme/themeStore";
 import MiniCard from "./MiniCard";
 import RecentList from "./RecentList";
+import {
+  loadMapExtraHeight,
+  saveMapExtraHeight,
+} from "./mapHeightStorage";
 import { makeStyles, TOP_BAR_HEIGHT } from "./styles";
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
@@ -106,9 +110,24 @@ export default function MainScreen({
   }));
 
   // 지도 영역 높이 가변. 사용자는 하단 핸들을 잡고 아래로 끌어 키우거나
-  // 위로 다시 밀어 줄일 수 있다.
+  // 위로 다시 밀어 줄일 수 있다. 마지막 사이즈는 영속화해 다음 실행에 복원한다.
   const mapExtraHeight = useSharedValue(0);
   const mapExtraSaved = useSharedValue(0);
+  useEffect(() => {
+    let cancelled = false;
+    loadMapExtraHeight().then((v) => {
+      if (cancelled || v == null) return;
+      const clamped = Math.max(0, Math.min(MAP_MAX_EXTRA, v));
+      mapExtraHeight.value = clamped;
+      mapExtraSaved.value = clamped;
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [mapExtraHeight, mapExtraSaved]);
+  const persistMapExtra = useCallback((value: number) => {
+    saveMapExtraHeight(value).catch(() => {});
+  }, []);
   const mapResizeGesture = useMemo(
     () =>
       Gesture.Pan()
@@ -123,11 +142,12 @@ export default function MainScreen({
         })
         .onEnd(() => {
           mapExtraSaved.value = mapExtraHeight.value;
+          runOnJS(persistMapExtra)(mapExtraHeight.value);
         })
         .onFinalize(() => {
           runOnJS(setMapInteracting)(false);
         }),
-    [mapExtraHeight, mapExtraSaved]
+    [mapExtraHeight, mapExtraSaved, persistMapExtra]
   );
   const mapAreaAnimStyle = useAnimatedStyle(() => ({
     height: MAP_DEFAULT_HEIGHT + mapExtraHeight.value,

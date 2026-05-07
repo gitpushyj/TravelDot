@@ -455,7 +455,15 @@ export default function DotMap({
         )}
       </View>
       {pending && pending.length > 0 && (
-        <View style={styles.caption}>
+        <View
+          style={[
+            styles.caption,
+            {
+              backgroundColor: theme.cardBg,
+              borderTopColor: theme.cardBorder,
+            },
+          ]}
+        >
           <Text style={[styles.captionLabel, { color: theme.textSecondary }]}>
             {t("dotMap.highlightPrompt")}
           </Text>
