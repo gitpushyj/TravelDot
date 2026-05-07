@@ -1,3 +1,4 @@
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -22,6 +23,12 @@ import {
   useTheme,
   useThemeStore,
 } from "./src/theme/themeStore";
+
+// 네이티브 스플래시가 JS 번들 로드 직후 자동으로 사라지면, 아래 hydrate 게이트가
+// 모두 통과하기 전에 한 프레임 정도 빈 배경이 노출돼 깜빡임이 보인다. 첫 렌더
+// 전에 호출해 두면 우리가 직접 hideAsync 를 부를 때까지 스플래시가 유지된다.
+SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.setOptions({ duration: 200, fade: true });
 
 export default function App() {
   const [i18nReady, setI18nReady] = useState(false);
@@ -103,14 +110,24 @@ export default function App() {
     return visitCounts;
   }, [yearMode, visitCounts, visitCountsByYear]);
 
-  if (
-    !ready ||
-    !themeHydrated ||
-    !authHydrated ||
-    !onboardingHydrated ||
-    !milestoneHydrated ||
-    !i18nReady
-  ) {
+  const appReady =
+    ready &&
+    themeHydrated &&
+    authHydrated &&
+    onboardingHydrated &&
+    milestoneHydrated &&
+    i18nReady;
+
+  // 모든 store hydrate + i18n 초기화가 끝나면 네이티브 스플래시를 내린다.
+  // useEffect 는 commit 이후 발화하므로 다음 프레임에는 이미 실 UI 가
+  // 마운트돼 있어 스플래시 → 본 화면 전환 중 빈 배경 노출이 없다.
+  useEffect(() => {
+    if (appReady) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [appReady]);
+
+  if (!appReady) {
     return <View style={styles.root} />;
   }
 
