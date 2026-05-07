@@ -73,6 +73,17 @@ function generateDots(countryCode) {
       }
     }
   }
+  // 1° 격자보다 작은 나라(SG, MC, VA 등)는 셀 중심이 폴리곤 안에 안 들어가
+  // 도트가 0개가 된다. 그런 경우 bbox 중심을 가장 가까운 격자 셀 중심으로
+  // 스냅해 단일 도트를 둔다.
+  if (dots.length === 0) {
+    const midLat = (minLat + maxLat) / 2;
+    const midLng = (minLng + maxLng) / 2;
+    dots.push({
+      lat: Math.floor(midLat / GRID_SIZE) * GRID_SIZE + GRID_SIZE / 2,
+      lng: Math.floor(midLng / GRID_SIZE) * GRID_SIZE + GRID_SIZE / 2,
+    });
+  }
   return removeFarOutliers(dots);
 }
 
