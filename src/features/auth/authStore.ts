@@ -2,12 +2,17 @@ import type { Session, User } from "@supabase/supabase-js";
 import { create } from "zustand";
 
 import { supabase } from "../../lib/supabase";
+import { AppleSignInCancelled, signInWithApple } from "./appleSignIn";
 import {
   GoogleSignInCancelled,
   configureGoogleSignIn,
   signInWithGoogle,
   signOutFromGoogle,
 } from "./googleSignIn";
+
+type SignInResult =
+  | { ok: true }
+  | { ok: false; cancelled: boolean; message: string };
 
 type State = {
   session: Session | null;
@@ -16,7 +21,8 @@ type State = {
   signingIn: boolean;
 
   hydrate: () => Promise<void>;
-  signInGoogle: () => Promise<{ ok: true } | { ok: false; cancelled: boolean; message: string }>;
+  signInGoogle: () => Promise<SignInResult>;
+  signInApple: () => Promise<SignInResult>;
   signOut: () => Promise<void>;
 };
 
@@ -54,6 +60,22 @@ export const useAuthStore = create<State>((set) => ({
       return { ok: true };
     } catch (e) {
       if (e instanceof GoogleSignInCancelled) {
+        return { ok: false, cancelled: true, message: e.message };
+      }
+      const message = e instanceof Error ? e.message : String(e);
+      return { ok: false, cancelled: false, message };
+    } finally {
+      set({ signingIn: false });
+    }
+  },
+
+  signInApple: async () => {
+    set({ signingIn: true });
+    try {
+      await signInWithApple();
+      return { ok: true };
+    } catch (e) {
+      if (e instanceof AppleSignInCancelled) {
         return { ok: false, cancelled: true, message: e.message };
       }
       const message = e instanceof Error ? e.message : String(e);

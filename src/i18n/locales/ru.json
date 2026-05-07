@@ -166,7 +166,8 @@
     "loadingPreparing": "Готовимся…"
   },
   "login": {
-    "googleContinue": "Продолжить с Google"
+    "googleContinue": "Продолжить с Google",
+    "appleContinue": "Продолжить с Apple"
   },
   "yearPicker": {
     "title": "Выбор года",
@@ -202,6 +203,7 @@
     "auth": {
       "missingClientId": "Для входа через Google нужна переменная EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.",
       "googleSignInCancelled": "Вход через Google отменён.",
+      "appleSignInCancelled": "Вход через Apple отменён.",
       "googleSignInNotConfigured": "Google Sign-In не настроен. Проверьте переменные окружения.",
       "noIdToken": "Не удалось получить ID-токен от Google."
     },

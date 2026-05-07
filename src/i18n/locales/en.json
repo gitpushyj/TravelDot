@@ -166,7 +166,8 @@
     "loadingPreparing": "Getting ready…"
   },
   "login": {
-    "googleContinue": "Continue with Google"
+    "googleContinue": "Continue with Google",
+    "appleContinue": "Continue with Apple"
   },
   "yearPicker": {
     "title": "Select year",
@@ -204,6 +205,7 @@
     "auth": {
       "missingClientId": "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID is required for Google Sign-In.",
       "googleSignInCancelled": "Google sign-in was cancelled.",
+      "appleSignInCancelled": "Apple sign-in was cancelled.",
       "googleSignInNotConfigured": "Google Sign-In isn't configured. Check your environment variables.",
       "noIdToken": "Couldn't get an ID token from Google."
     },

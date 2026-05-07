@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import { isAppleSignInAvailable } from "../features/auth/appleSignIn";
 import { useAuthStore } from "../features/auth/authStore";
 import { BG_COLOR } from "../utils/heatmap";
 
@@ -16,9 +17,22 @@ export default function LoginScreen() {
   const { t } = useTranslation();
   const signingIn = useAuthStore((s) => s.signingIn);
   const signInGoogle = useAuthStore((s) => s.signInGoogle);
+  const signInApple = useAuthStore((s) => s.signInApple);
+
+  const [appleAvailable, setAppleAvailable] = useState(false);
+  useEffect(() => {
+    isAppleSignInAvailable().then(setAppleAvailable);
+  }, []);
 
   const onPressGoogle = async () => {
     const r = await signInGoogle();
+    if (r.ok) return;
+    if (r.cancelled) return;
+    Alert.alert(t("alerts.loginFailed"), r.message);
+  };
+
+  const onPressApple = async () => {
+    const r = await signInApple();
     if (r.ok) return;
     if (r.cancelled) return;
     Alert.alert(t("alerts.loginFailed"), r.message);
@@ -37,7 +51,7 @@ export default function LoginScreen() {
           style={({ pressed }) => [
             styles.googleBtn,
             pressed && !signingIn && styles.googleBtnPressed,
-            signingIn && styles.googleBtnDisabled,
+            signingIn && styles.btnDisabled,
           ]}
         >
           {signingIn ? (
@@ -49,6 +63,27 @@ export default function LoginScreen() {
             </>
           )}
         </Pressable>
+
+        {appleAvailable && (
+          <Pressable
+            onPress={onPressApple}
+            disabled={signingIn}
+            style={({ pressed }) => [
+              styles.appleBtn,
+              pressed && !signingIn && styles.appleBtnPressed,
+              signingIn && styles.btnDisabled,
+            ]}
+          >
+            {signingIn ? (
+              <ActivityIndicator color="#ffffff" />
+            ) : (
+              <>
+                <Text style={styles.appleIcon}>{""}</Text>
+                <Text style={styles.appleText}>{t("login.appleContinue")}</Text>
+              </>
+            )}
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -93,7 +128,7 @@ const styles = StyleSheet.create({
   googleBtnPressed: {
     backgroundColor: "#e8e8e8",
   },
-  googleBtnDisabled: {
+  btnDisabled: {
     opacity: 0.6,
   },
   googleIcon: {
@@ -103,6 +138,30 @@ const styles = StyleSheet.create({
   },
   googleText: {
     color: "#1a1a1a",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  appleBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    backgroundColor: "#000000",
+    borderRadius: 14,
+    paddingVertical: 14,
+    width: "100%",
+    minHeight: 52,
+  },
+  appleBtnPressed: {
+    backgroundColor: "#1f1f1f",
+  },
+  appleIcon: {
+    color: "#ffffff",
+    fontSize: 20,
+    marginTop: -2,
+  },
+  appleText: {
+    color: "#ffffff",
     fontSize: 16,
     fontWeight: "700",
   },

@@ -20,6 +20,7 @@
     "@turf/boolean-point-in-polygon": "^7.3.5",
     "@turf/helpers": "^7.3.5",
     "expo": "~54.0.33",
+    "expo-apple-authentication": "~8.0.8",
     "expo-image-picker": "~17.0.11",
     "expo-localization": "~17.0.8",
     "expo-media-library": "~18.2.1",

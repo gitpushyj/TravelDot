@@ -166,7 +166,8 @@
     "loadingPreparing": "Preparazione…"
   },
   "login": {
-    "googleContinue": "Continua con Google"
+    "googleContinue": "Continua con Google",
+    "appleContinue": "Continua con Apple"
   },
   "yearPicker": {
     "title": "Seleziona anno",
@@ -202,6 +203,7 @@
     "auth": {
       "missingClientId": "Per Google Sign-In serve la variabile EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.",
       "googleSignInCancelled": "Accesso con Google annullato.",
+      "appleSignInCancelled": "Accesso con Apple annullato.",
       "googleSignInNotConfigured": "Google Sign-In non è configurato. Controlla le variabili d'ambiente.",
       "noIdToken": "Impossibile ottenere un ID token da Google."
     },

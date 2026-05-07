@@ -166,7 +166,8 @@
     "loadingPreparing": "准备中..."
   },
   "login": {
-    "googleContinue": "通过 Google 继续"
+    "googleContinue": "通过 Google 继续",
+    "appleContinue": "通过 Apple 继续"
   },
   "yearPicker": {
     "title": "选择年份",
@@ -202,6 +203,7 @@
     "auth": {
       "missingClientId": "使用 Google 登录需要环境变量 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID。",
       "googleSignInCancelled": "已取消 Google 登录。",
+      "appleSignInCancelled": "已取消 Apple 登录。",
       "googleSignInNotConfigured": "Google Sign-In 未配置。请检查环境变量。",
       "noIdToken": "未能从 Google 获取到 ID 令牌。"
     },

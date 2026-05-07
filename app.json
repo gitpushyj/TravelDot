@@ -15,7 +15,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.gitpush.visitgrid",
-      "appleTeamId": "27LS459HJ3"
+      "appleTeamId": "27LS459HJ3",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -37,6 +38,7 @@
           "iosUrlScheme": "com.googleusercontent.apps.106650189331-45ce63ggrs90rtaosjcjjv8orjn95v22"
         }
       ],
+      "expo-apple-authentication",
       "expo-localization"
     ]
   }

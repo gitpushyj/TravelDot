@@ -166,7 +166,8 @@
     "loadingPreparing": "Wird vorbereitet …"
   },
   "login": {
-    "googleContinue": "Mit Google fortfahren"
+    "googleContinue": "Mit Google fortfahren",
+    "appleContinue": "Mit Apple fortfahren"
   },
   "yearPicker": {
     "title": "Jahr auswählen",
@@ -202,6 +203,7 @@
     "auth": {
       "missingClientId": "Für Google Sign-In wird die Variable EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID benötigt.",
       "googleSignInCancelled": "Die Google-Anmeldung wurde abgebrochen.",
+      "appleSignInCancelled": "Die Apple-Anmeldung wurde abgebrochen.",
       "googleSignInNotConfigured": "Google Sign-In ist nicht konfiguriert. Bitte prüfe die Umgebungsvariablen.",
       "noIdToken": "Es wurde kein ID-Token von Google empfangen."
     },

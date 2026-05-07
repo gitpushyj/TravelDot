@@ -166,7 +166,8 @@
     "loadingPreparing": "준비 중..."
   },
   "login": {
-    "googleContinue": "Google로 계속하기"
+    "googleContinue": "Google로 계속하기",
+    "appleContinue": "Apple로 계속하기"
   },
   "yearPicker": {
     "title": "연도 선택",
@@ -204,6 +205,7 @@
     "auth": {
       "missingClientId": "Google 로그인을 사용하려면 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID 환경 변수가 필요해요.",
       "googleSignInCancelled": "Google 로그인이 취소되었어요.",
+      "appleSignInCancelled": "Apple 로그인이 취소되었어요.",
       "googleSignInNotConfigured": "Google Sign-In이 설정되지 않았어요. 환경 변수를 확인해 주세요.",
       "noIdToken": "Google에서 ID 토큰을 받지 못했어요."
     },

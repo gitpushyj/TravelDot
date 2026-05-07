@@ -166,7 +166,8 @@
     "loadingPreparing": "準備中..."
   },
   "login": {
-    "googleContinue": "Googleで続ける"
+    "googleContinue": "Googleで続ける",
+    "appleContinue": "Appleで続ける"
   },
   "yearPicker": {
     "title": "年の選択",
@@ -202,6 +203,7 @@
     "auth": {
       "missingClientId": "Googleログインを使うには EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID 環境変数が必要です。",
       "googleSignInCancelled": "Googleログインがキャンセルされました。",
+      "appleSignInCancelled": "Appleログインがキャンセルされました。",
       "googleSignInNotConfigured": "Google Sign-Inが設定されていません。環境変数を確認してください。",
       "noIdToken": "GoogleからIDトークンを取得できませんでした。"
     },
