@@ -454,7 +454,19 @@
       "limitedHint": "Solo se están analizando las fotos seleccionadas. Concede acceso completo en Ajustes para encontrar más viajes.",
       "permissionDeniedTitle": "Se necesita acceso a las fotos",
       "permissionDeniedBody": "Necesitamos acceso a las fotos para crear tus registros de viaje. Concede el permiso e inténtalo de nuevo.",
-      "requestAgain": "Pedir permiso de nuevo"
+      "requestAgain": "Pedir permiso de nuevo",
+      "feature1": {
+        "title": "Viajes creados solos",
+        "desc": "Las ubicaciones y fechas de tus fotos se convierten en viajes"
+      },
+      "feature2": {
+        "title": "Tus fotos seguras",
+        "desc": "El análisis se hace en el dispositivo y no se sube nada"
+      },
+      "feature3": {
+        "title": "Cambia cuando quieras",
+        "desc": "Puedes revocar o cambiar los permisos en cualquier momento"
+      }
     },
     "suspect": {
       "title": "Estos viajes necesitan una revisión",

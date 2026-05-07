@@ -454,7 +454,19 @@
       "limitedHint": "Sto analizzando solo le foto selezionate. Concedi l'accesso completo in Impostazioni per trovare più viaggi.",
       "permissionDeniedTitle": "Accesso alle foto necessario",
       "permissionDeniedBody": "Per creare i registri di viaggio serve l'accesso alle foto. Concedi il permesso e riprova.",
-      "requestAgain": "Richiedi di nuovo l'accesso"
+      "requestAgain": "Richiedi di nuovo l'accesso",
+      "feature1": {
+        "title": "Viaggi creati per te",
+        "desc": "Luoghi e date delle foto diventano viaggi in automatico"
+      },
+      "feature2": {
+        "title": "Foto al sicuro",
+        "desc": "L'analisi avviene solo sul dispositivo, niente viene caricato"
+      },
+      "feature3": {
+        "title": "Modificabile sempre",
+        "desc": "Puoi revocare o cambiare i permessi quando vuoi"
+      }
     },
     "suspect": {
       "title": "Questi viaggi vanno controllati",

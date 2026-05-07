@@ -454,7 +454,19 @@
       "limitedHint": "Es werden nur die ausgewählten Fotos analysiert. Erlaube in den Einstellungen vollen Zugriff, um mehr Reisen zu finden.",
       "permissionDeniedTitle": "Foto-Zugriff erforderlich",
       "permissionDeniedBody": "Wir brauchen Zugriff auf deine Fotos, um Reise-Einträge zu erstellen. Bitte erlaube den Zugriff und versuche es erneut.",
-      "requestAgain": "Zugriff erneut anfragen"
+      "requestAgain": "Zugriff erneut anfragen",
+      "feature1": {
+        "title": "Reisen automatisch erfasst",
+        "desc": "Aus Ort und Datum deiner Fotos werden Reisen automatisch erstellt"
+      },
+      "feature2": {
+        "title": "Fotos bleiben sicher",
+        "desc": "Die Analyse läuft nur auf diesem Gerät, nichts wird hochgeladen"
+      },
+      "feature3": {
+        "title": "Jederzeit änderbar",
+        "desc": "Du kannst Berechtigungen jederzeit widerrufen oder ändern"
+      }
     },
     "suspect": {
       "title": "Diese Reisen brauchen einen kurzen Check",

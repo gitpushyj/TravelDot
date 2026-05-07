@@ -454,7 +454,19 @@
       "limitedHint": "目前僅分析所選的相片。可至設定改為完整存取,以找出更多旅行。",
       "permissionDeniedTitle": "需要相片存取權限",
       "permissionDeniedBody": "建立旅行紀錄需要存取相片。請允許權限後再試。",
-      "requestAgain": "再次要求權限"
+      "requestAgain": "再次要求權限",
+      "feature1": {
+        "title": "自動產生旅程",
+        "desc": "依照照片的位置與時間自動建立旅行紀錄"
+      },
+      "feature2": {
+        "title": "照片安全處理",
+        "desc": "分析僅在本機進行,不會上傳至外部"
+      },
+      "feature3": {
+        "title": "隨時可變更",
+        "desc": "您可以隨時變更或撤回設定"
+      }
     },
     "suspect": {
       "title": "這些旅行需要再確認",

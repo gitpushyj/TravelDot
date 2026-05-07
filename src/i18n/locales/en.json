@@ -517,7 +517,19 @@
       "limitedHint": "Only selected photos are being analyzed. Allow full access in Settings to find more trips.",
       "permissionDeniedTitle": "Photo access required",
       "permissionDeniedBody": "We need photo access to build your trip records. Please allow access and try again.",
-      "requestAgain": "Request access again"
+      "requestAgain": "Request access again",
+      "feature1": {
+        "title": "Trips created for you",
+        "desc": "Locations and dates from photos turn into trip records automatically"
+      },
+      "feature2": {
+        "title": "Photos stay private",
+        "desc": "All analysis runs on this device — nothing is uploaded"
+      },
+      "feature3": {
+        "title": "Change anytime",
+        "desc": "You can revoke or change permissions at any time"
+      }
     },
     "suspect": {
       "title": "These trips need a quick check",

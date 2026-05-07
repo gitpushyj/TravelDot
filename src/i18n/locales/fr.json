@@ -454,7 +454,19 @@
       "limitedHint": "Seules les photos sélectionnées sont analysées. Accorde l'accès complet dans les Réglages pour retrouver plus de voyages.",
       "permissionDeniedTitle": "Accès aux photos requis",
       "permissionDeniedBody": "Nous avons besoin d'accéder à tes photos pour créer tes enregistrements de voyage. Autorise l'accès puis réessaie.",
-      "requestAgain": "Redemander l'autorisation"
+      "requestAgain": "Redemander l'autorisation",
+      "feature1": {
+        "title": "Voyages créés pour toi",
+        "desc": "Lieux et dates des photos deviennent des enregistrements automatiquement"
+      },
+      "feature2": {
+        "title": "Photos sécurisées",
+        "desc": "L'analyse se fait sur cet appareil — rien n'est envoyé en ligne"
+      },
+      "feature3": {
+        "title": "Modifiable à tout moment",
+        "desc": "Tu peux révoquer ou modifier les autorisations quand tu veux"
+      }
     },
     "suspect": {
       "title": "Ces voyages méritent un coup d'œil",

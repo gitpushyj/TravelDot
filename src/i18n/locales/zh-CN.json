@@ -454,7 +454,19 @@
       "limitedHint": "目前仅分析所选照片。可在设置中改为完整访问,以发现更多旅行。",
       "permissionDeniedTitle": "需要照片访问权限",
       "permissionDeniedBody": "创建旅行记录需要访问照片。请允许权限后再试。",
-      "requestAgain": "再次请求权限"
+      "requestAgain": "再次请求权限",
+      "feature1": {
+        "title": "自动生成旅程",
+        "desc": "根据照片的位置和时间自动生成旅行记录"
+      },
+      "feature2": {
+        "title": "照片安全处理",
+        "desc": "分析仅在本机进行,不会上传到外部"
+      },
+      "feature3": {
+        "title": "随时可更改",
+        "desc": "您可以随时更改或撤销设置"
+      }
     },
     "suspect": {
       "title": "这些旅行需要再确认",
