@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   Pressable,
   StyleProp,
-  StyleSheet,
   Text,
   View,
   ViewStyle,
@@ -24,6 +23,9 @@ import { useVisitStore } from "../features/travel/visitStore";
 import { useTheme } from "../theme/themeStore";
 import { colorForVisitWith } from "../theme/theme";
 import type { CountryRef, DotData } from "../types";
+
+import { clamp, clampJs, clampPanX, clampPanY } from "./DotMap/clamps";
+import { styles } from "./DotMap/styles";
 
 const FILL_RATIO = 0.6;
 const MIN_SCALE = 1;
@@ -449,63 +451,3 @@ export default function DotMap({
   );
 }
 
-function clamp(v: number, min: number, max: number) {
-  "worklet";
-  return Math.max(min, Math.min(max, v));
-}
-
-function clampJs(v: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, v));
-}
-
-// scale=1일 때 콘텐츠가 뷰포트와 정확히 맞도록 설계되어 있으므로,
-// 줌이 들어가면 tx∈[w*(1-s), 0], ty∈[h*(1-s), 0] 안에서만 움직여야 콘텐츠가 화면을 비우지 않는다.
-function clampPanX(value: number, s: number, w: number) {
-  "worklet";
-  if (w <= 0) return 0;
-  const min = w * (1 - s);
-  return Math.min(0, Math.max(min, value));
-}
-
-function clampPanY(value: number, s: number, h: number) {
-  "worklet";
-  if (h <= 0) return 0;
-  const min = h * (1 - s);
-  return Math.min(0, Math.max(min, value));
-}
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: "transparent",
-  },
-  mapArea: {
-    width: "100%",
-    aspectRatio: 360 / 145,
-    backgroundColor: "transparent",
-    overflow: "hidden",
-  },
-  caption: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  captionLabel: {
-    fontSize: 12,
-    marginBottom: 8,
-  },
-  optionRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  optionBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 999,
-    borderWidth: 1,
-  },
-  optionText: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-});

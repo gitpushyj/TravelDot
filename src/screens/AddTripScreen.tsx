@@ -6,7 +6,6 @@ import {
   FlatList,
   Image,
   Pressable,
-  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -18,9 +17,12 @@ import {
   VisitPhotoInput,
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
+import { KO_NAME_BY_CODE } from "../lib/countryLookup";
 import { colorForCountry } from "../utils/countryColors";
 import { toLocalDateKey } from "../utils/date";
-import { BG_COLOR } from "../utils/heatmap";
+
+import { exifLatLng, exifTakenAt } from "./AddTripScreen/exif";
+import { styles } from "./AddTripScreen/styles";
 
 type Candidate = {
   id: string;
@@ -45,66 +47,7 @@ type Group = {
 
 type Props = { onClose: () => void };
 
-const KO_NAME_BY_CODE: Record<string, string> = {};
-
-function loadKoMap() {
-  if (Object.keys(KO_NAME_BY_CODE).length > 0) return;
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const list: { code: string; nameKo: string }[] = require("../../assets/data/countries.json");
-  for (const c of list) KO_NAME_BY_CODE[c.code] = c.nameKo;
-}
-
-function exifNumber(v: unknown): number | null {
-  if (typeof v === "number" && Number.isFinite(v)) return v;
-  if (typeof v === "string" && v.trim() !== "") {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : null;
-  }
-  return null;
-}
-
-function exifLatLng(exif: Record<string, unknown> | undefined): {
-  lat: number;
-  lng: number;
-} | null {
-  if (!exif) return null;
-  let lat = exifNumber(exif.GPSLatitude);
-  let lng = exifNumber(exif.GPSLongitude);
-  if (lat == null || lng == null) return null;
-  const latRef = exif.GPSLatitudeRef;
-  const lngRef = exif.GPSLongitudeRef;
-  if (latRef === "S") lat = -Math.abs(lat);
-  if (lngRef === "W") lng = -Math.abs(lng);
-  return { lat, lng };
-}
-
-function exifTakenAt(
-  exif: Record<string, unknown> | undefined,
-  fallback: number
-): number {
-  if (!exif) return fallback;
-  const raw =
-    (exif.DateTimeOriginal as string | undefined) ||
-    (exif.DateTimeDigitized as string | undefined) ||
-    (exif.DateTime as string | undefined);
-  if (!raw) return fallback;
-  // EXIF format: "YYYY:MM:DD HH:MM:SS"
-  const m = raw.match(/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
-  if (!m) return fallback;
-  const [_, y, mo, d, hh, mm, ss] = m;
-  const ms = new Date(
-    Number(y),
-    Number(mo) - 1,
-    Number(d),
-    Number(hh),
-    Number(mm),
-    Number(ss)
-  ).getTime();
-  return Number.isFinite(ms) ? ms : fallback;
-}
-
 export default function AddTripScreen({ onClose }: Props) {
-  loadKoMap();
   const refreshVisits = useVisitStore((s) => s.refreshVisits);
   const homeCountry = useVisitStore((s) => s.homeCountry);
 
@@ -363,81 +306,3 @@ export default function AddTripScreen({ onClose }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: BG_COLOR, paddingTop: 36 },
-  center: {
-    flex: 1,
-    backgroundColor: BG_COLOR,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-  },
-  dim: { color: "#7d8aa6", marginTop: 8 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  title: { color: "#e8eefc", fontSize: 17, fontWeight: "700" },
-  cancel: { color: "#7d8aa6", fontSize: 15 },
-  confirm: { color: "#2f6fed", fontSize: 15, fontWeight: "700" },
-  confirmDisabled: { color: "#3a4a6a" },
-  skipNote: {
-    color: "#7d8aa6",
-    fontSize: 12,
-    paddingHorizontal: 20,
-    paddingBottom: 8,
-  },
-  listContent: { padding: 20, gap: 16 },
-  group: {
-    backgroundColor: "#152037",
-    borderRadius: 12,
-    padding: 14,
-    gap: 10,
-  },
-  groupHead: { gap: 2 },
-  groupTitleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  countryDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-  groupTitle: { color: "#e8eefc", fontSize: 15, fontWeight: "700" },
-  groupSub: { color: "#7d8aa6", fontSize: 12 },
-  thumbRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  thumbWrap: {
-    borderRadius: 8,
-    overflow: "hidden",
-    borderWidth: 2,
-    borderColor: "transparent",
-  },
-  thumbWrapSelected: { borderColor: "#2f6fed" },
-  thumbWrapDisabled: { opacity: 0.4 },
-  thumb: { width: 84, height: 84 },
-  checkBadge: {
-    position: "absolute",
-    top: 4,
-    right: 4,
-    backgroundColor: "#2f6fed",
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkBadgeText: { color: "#fff", fontWeight: "700" },
-  full: { color: "#7d8aa6", fontSize: 12, marginTop: 4 },
-  empty: {
-    color: "#7d8aa6",
-    fontSize: 14,
-    textAlign: "center",
-    paddingVertical: 40,
-  },
-});

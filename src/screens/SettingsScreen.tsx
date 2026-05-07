@@ -1,30 +1,26 @@
 import React, { useMemo } from "react";
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import { useAuthStore } from "../features/auth/authStore";
+import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
+import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
 import {
   runFullSync,
   runIncrementalSync,
 } from "../features/photoSync/syncService";
-import { useTheme, useThemeStore } from "../theme/themeStore";
-import type { Theme, ThemeMode } from "../theme/theme";
-import { useAuthStore } from "../features/auth/authStore";
-import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
-import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
-import { useVisitStore } from "../features/travel/visitStore";
 import { getTierByCount } from "../features/travel/tierTitles";
+import { useVisitStore } from "../features/travel/visitStore";
 import {
   LOCALE_LABELS,
   SUPPORTED_LOCALES,
   type SupportedLocale,
 } from "../i18n";
+import type { ThemeMode } from "../theme/theme";
+import { useTheme, useThemeStore } from "../theme/themeStore";
+
+import ActionRow from "./SettingsScreen/ActionRow";
+import { makeStyles } from "./SettingsScreen/styles";
 
 type Props = {
   onClose: () => void;
@@ -282,150 +278,4 @@ export default function SettingsScreen({
       </ScrollView>
     </View>
   );
-}
-
-function ActionRow({
-  theme,
-  label,
-  sub,
-  onPress,
-  divider,
-  disabled,
-}: {
-  theme: Theme;
-  label: string;
-  sub: string;
-  onPress: () => void;
-  divider?: boolean;
-  disabled?: boolean;
-}) {
-  const styles = useMemo(() => makeStyles(theme), [theme]);
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      style={({ pressed }) => [
-        styles.row,
-        divider && styles.rowDivider,
-        !disabled && pressed && { backgroundColor: theme.rowPressedBg },
-      ]}
-    >
-      <View style={{ flex: 1 }}>
-        <Text style={styles.rowLabel}>{label}</Text>
-        <Text style={styles.rowSub} numberOfLines={1}>
-          {sub}
-        </Text>
-      </View>
-      {!disabled && <Text style={styles.chev}>›</Text>}
-    </Pressable>
-  );
-}
-
-function makeStyles(theme: Theme) {
-  return StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: theme.homeBg,
-      paddingTop: 56,
-    },
-    header: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingHorizontal: 20,
-      paddingVertical: 12,
-    },
-    title: {
-      color: theme.textPrimary,
-      fontSize: 17,
-      fontWeight: "700",
-    },
-    cancel: {
-      color: theme.accent,
-      fontSize: 15,
-      fontWeight: "600",
-      minWidth: 40,
-    },
-    content: {
-      paddingHorizontal: 20,
-      paddingTop: 12,
-      paddingBottom: 40,
-    },
-    sectionLabel: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      fontWeight: "700",
-      letterSpacing: 0.4,
-      marginBottom: 8,
-      marginLeft: 4,
-      textTransform: "uppercase",
-    },
-    sectionLabelSpaced: {
-      marginTop: 24,
-    },
-    card: {
-      backgroundColor: theme.cardBg,
-      borderRadius: 14,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      overflow: "hidden",
-    },
-    row: {
-      flexDirection: "row",
-      alignItems: "center",
-      paddingHorizontal: 16,
-      paddingVertical: 14,
-      gap: 12,
-    },
-    rowDivider: {
-      borderTopWidth: StyleSheet.hairlineWidth,
-      borderTopColor: theme.cardBorder,
-    },
-    rowLabel: {
-      color: theme.textPrimary,
-      fontSize: 15,
-      fontWeight: "600",
-    },
-    rowSub: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      marginTop: 2,
-    },
-    segment: {
-      flexDirection: "row",
-      backgroundColor: theme.tabRowBg,
-      borderRadius: 999,
-      padding: 4,
-      gap: 4,
-    },
-    segmentItem: {
-      flex: 1,
-      paddingVertical: 8,
-      borderRadius: 999,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    segmentItemActive: {
-      backgroundColor: theme.cardBg,
-      shadowColor: "#000",
-      shadowOpacity: 0.05,
-      shadowOffset: { width: 0, height: 1 },
-      shadowRadius: 2,
-      elevation: 1,
-    },
-    segmentText: {
-      color: theme.textSecondary,
-      fontSize: 13,
-      fontWeight: "600",
-    },
-    segmentTextActive: {
-      color: theme.textPrimary,
-      fontWeight: "700",
-    },
-    chev: {
-      color: theme.textMuted,
-      fontSize: 22,
-      fontWeight: "400",
-    },
-  });
 }

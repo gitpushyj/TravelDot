@@ -1,0 +1,81 @@
+import { StyleSheet } from "react-native";
+
+import { BG_COLOR } from "../../utils/heatmap";
+
+export const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: BG_COLOR, paddingTop: 36 },
+  center: {
+    flex: 1,
+    backgroundColor: BG_COLOR,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  dim: { color: "#7d8aa6", marginTop: 8 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  title: { color: "#e8eefc", fontSize: 17, fontWeight: "700" },
+  cancel: { color: "#7d8aa6", fontSize: 15 },
+  confirm: { color: "#2f6fed", fontSize: 15, fontWeight: "700" },
+  confirmDisabled: { color: "#3a4a6a" },
+  skipNote: {
+    color: "#7d8aa6",
+    fontSize: 12,
+    paddingHorizontal: 20,
+    paddingBottom: 8,
+  },
+  listContent: { padding: 20, gap: 16 },
+  group: {
+    backgroundColor: "#152037",
+    borderRadius: 12,
+    padding: 14,
+    gap: 10,
+  },
+  groupHead: { gap: 2 },
+  groupTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  countryDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  groupTitle: { color: "#e8eefc", fontSize: 15, fontWeight: "700" },
+  groupSub: { color: "#7d8aa6", fontSize: 12 },
+  thumbRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  thumbWrap: {
+    borderRadius: 8,
+    overflow: "hidden",
+    borderWidth: 2,
+    borderColor: "transparent",
+  },
+  thumbWrapSelected: { borderColor: "#2f6fed" },
+  thumbWrapDisabled: { opacity: 0.4 },
+  thumb: { width: 84, height: 84 },
+  checkBadge: {
+    position: "absolute",
+    top: 4,
+    right: 4,
+    backgroundColor: "#2f6fed",
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkBadgeText: { color: "#fff", fontWeight: "700" },
+  full: { color: "#7d8aa6", fontSize: 12, marginTop: 4 },
+  empty: {
+    color: "#7d8aa6",
+    fontSize: 14,
+    textAlign: "center",
+    paddingVertical: 40,
+  },
+});

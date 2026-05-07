@@ -8,7 +8,6 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   View,
@@ -30,16 +29,14 @@ import {
   VisitPhotoInput,
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
+import { KO_NAME_BY_CODE } from "../lib/countryLookup";
+import { useTheme } from "../theme/themeStore";
 import { isValidDateKey, toLocalDateKey } from "../utils/date";
 import { flagEmoji } from "../utils/flag";
-import { useTheme } from "../theme/themeStore";
-import type { Theme } from "../theme/theme";
-import countriesJson from "../../assets/data/countries.json";
 
-type CountryEntry = { code: string; name: string; nameKo: string };
-const COUNTRY_LIST = countriesJson as CountryEntry[];
-const KO_NAME_BY_CODE: Record<string, string> = {};
-for (const c of COUNTRY_LIST) KO_NAME_BY_CODE[c.code] = c.nameKo;
+import DateField from "./EditTripScreen/DateField";
+import { dayCount, exifTakenAt } from "./EditTripScreen/exif";
+import { makeStyles } from "./EditTripScreen/styles";
 
 type Props = {
   trip: RecentTrip;
@@ -56,30 +53,6 @@ type EditPhoto = {
   // 'kept' = 기존 DB 사진, 'added' = 새로 선택한 사진, 'removed' = 기존 사진을 삭제 표시
   state: "kept" | "added" | "removed";
 };
-
-function exifTakenAt(
-  exif: Record<string, unknown> | undefined,
-  fallback: number
-): number {
-  if (!exif) return fallback;
-  const raw =
-    (exif.DateTimeOriginal as string | undefined) ||
-    (exif.DateTimeDigitized as string | undefined) ||
-    (exif.DateTime as string | undefined);
-  if (!raw) return fallback;
-  const m = raw.match(/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
-  if (!m) return fallback;
-  const [, y, mo, d, hh, mm, ss] = m;
-  const ms = new Date(
-    Number(y),
-    Number(mo) - 1,
-    Number(d),
-    Number(hh),
-    Number(mm),
-    Number(ss)
-  ).getTime();
-  return Number.isFinite(ms) ? ms : fallback;
-}
 
 export default function EditTripScreen({ trip, onClose }: Props) {
   const theme = useTheme();
@@ -466,231 +439,4 @@ export default function EditTripScreen({ trip, onClose }: Props) {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-}
-
-function dayCount(start: string, end: string): number {
-  const [sy, sm, sd] = start.split("-").map(Number);
-  const [ey, em, ed] = end.split("-").map(Number);
-  const a = Date.UTC(sy, sm - 1, sd);
-  const b = Date.UTC(ey, em - 1, ed);
-  return Math.round((b - a) / 86400000) + 1;
-}
-
-function DateField({
-  theme,
-  label,
-  value,
-  onChange,
-}: {
-  theme: Theme;
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  const styles = useMemo(() => makeStyles(theme), [theme]);
-  return (
-    <View style={styles.dateField}>
-      <Text style={styles.dateLabel}>{label}</Text>
-      <TextInput
-        style={styles.dateInput}
-        value={value}
-        onChangeText={onChange}
-        placeholder="YYYY-MM-DD"
-        placeholderTextColor={theme.textMuted}
-        maxLength={10}
-        keyboardType="numbers-and-punctuation"
-        autoCorrect={false}
-        autoCapitalize="none"
-      />
-    </View>
-  );
-}
-
-function makeStyles(theme: Theme) {
-  return StyleSheet.create({
-    root: {
-      flex: 1,
-      backgroundColor: theme.homeBg,
-      paddingTop: 56,
-    },
-    center: { alignItems: "center", justifyContent: "center" },
-    header: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingHorizontal: 20,
-      paddingVertical: 12,
-    },
-    headerCenter: {
-      flex: 1,
-      flexDirection: "row",
-      alignItems: "baseline",
-      justifyContent: "center",
-      gap: 6,
-    },
-    headerFlag: { fontSize: 18 },
-    headerTitle: {
-      color: theme.textPrimary,
-      fontSize: 16,
-      fontWeight: "800",
-    },
-    cancel: {
-      color: theme.textSecondary,
-      fontSize: 15,
-      fontWeight: "600",
-      minWidth: 44,
-    },
-    confirm: {
-      color: theme.accent,
-      fontSize: 15,
-      fontWeight: "800",
-      minWidth: 44,
-      textAlign: "right",
-    },
-    confirmDisabled: {
-      color: theme.textMuted,
-    },
-    scrollContent: {
-      paddingHorizontal: 20,
-      paddingBottom: 60,
-      gap: 24,
-    },
-    section: { gap: 10 },
-    sectionLabel: {
-      color: theme.textSecondary,
-      fontSize: 13,
-      fontWeight: "700",
-      letterSpacing: 0.3,
-    },
-    sectionHeaderRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-    },
-    dateRow: {
-      flexDirection: "row",
-      alignItems: "flex-end",
-      gap: 8,
-    },
-    dateField: { flex: 1, gap: 4 },
-    dateLabel: {
-      color: theme.textMuted,
-      fontSize: 11,
-      fontWeight: "600",
-    },
-    dateInput: {
-      backgroundColor: theme.cardBg,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      borderRadius: 10,
-      paddingHorizontal: 12,
-      paddingVertical: 12,
-      color: theme.textPrimary,
-      fontSize: 15,
-      fontWeight: "600",
-    },
-    dateSeparator: {
-      color: theme.textMuted,
-      fontSize: 18,
-      paddingBottom: 12,
-    },
-    helpText: {
-      color: theme.textSecondary,
-      fontSize: 12,
-    },
-    errorText: {
-      color: theme.accent,
-      fontSize: 12,
-      fontWeight: "600",
-    },
-    noteInput: {
-      backgroundColor: theme.cardBg,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      borderRadius: 12,
-      paddingHorizontal: 14,
-      paddingVertical: 12,
-      color: theme.textPrimary,
-      fontSize: 14,
-      lineHeight: 22,
-      minHeight: 120,
-    },
-    addBtn: {
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      borderRadius: 999,
-      backgroundColor: theme.cardBg,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-    },
-    addBtnPressed: { backgroundColor: theme.tabRowBg },
-    addBtnText: {
-      color: theme.textPrimary,
-      fontSize: 12,
-      fontWeight: "700",
-    },
-    photoGrid: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      gap: 8,
-    },
-    photoCell: {
-      width: 96,
-      height: 96,
-      borderRadius: 8,
-      overflow: "hidden",
-      backgroundColor: theme.cardBg,
-    },
-    photoImage: { width: "100%", height: "100%" },
-    photoRemoveBtn: {
-      position: "absolute",
-      top: 4,
-      right: 4,
-      width: 22,
-      height: 22,
-      borderRadius: 11,
-      backgroundColor: "rgba(0,0,0,0.65)",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    photoRemoveText: {
-      color: "#fff",
-      fontSize: 16,
-      fontWeight: "800",
-      lineHeight: 18,
-    },
-    photoBadge: {
-      position: "absolute",
-      bottom: 4,
-      left: 4,
-      backgroundColor: theme.accent,
-      paddingHorizontal: 6,
-      paddingVertical: 2,
-      borderRadius: 4,
-    },
-    photoBadgeText: {
-      color: "#fff",
-      fontSize: 9,
-      fontWeight: "800",
-      letterSpacing: 0.5,
-    },
-    photoEmpty: {
-      paddingVertical: 16,
-      alignItems: "center",
-    },
-    undoBtn: {
-      alignSelf: "flex-start",
-      marginTop: 4,
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      borderRadius: 8,
-      backgroundColor: theme.tabRowBg,
-    },
-    undoBtnPressed: { opacity: 0.7 },
-    undoBtnText: {
-      color: theme.textPrimary,
-      fontSize: 12,
-      fontWeight: "600",
-    },
-  });
 }
