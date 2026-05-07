@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import {
-  FlatList,
   Pressable,
+  SectionList,
   StyleSheet,
   Text,
   TextInput,
@@ -22,6 +22,9 @@ type Props = {
   selectedCode?: string | null;
 };
 
+// UNWTO 기준 글로벌 출국 관광객 top5 (HK 제외, 단일 국가 기준) + KR
+const POPULAR_CODES = ["KR", "CN", "DE", "US", "GB", "FR"] as const;
+
 export default function CountryPicker({ onSelect, selectedCode }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -29,18 +32,31 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
   const [q, setQ] = useState("");
 
   const locale = getCurrentLocale();
-  const data = useMemo(() => {
+  const sections = useMemo(() => {
     const list = countries as Entry[];
-    if (!q.trim()) return list;
     const needle = q.trim().toLowerCase();
-    return list.filter(
-      (c) =>
-        c.code.toLowerCase().includes(needle) ||
-        c.name.toLowerCase().includes(needle) ||
-        c.nameKo.toLowerCase().includes(needle) ||
-        getCountryName(c.code, locale).toLowerCase().includes(needle)
+
+    if (needle) {
+      const filtered = list.filter(
+        (c) =>
+          c.code.toLowerCase().includes(needle) ||
+          c.name.toLowerCase().includes(needle) ||
+          c.nameKo.toLowerCase().includes(needle) ||
+          getCountryName(c.code, locale).toLowerCase().includes(needle)
+      );
+      return [{ key: "search", title: "", data: filtered }];
+    }
+
+    const byCode = new Map(list.map((c) => [c.code, c]));
+    const popular = POPULAR_CODES.map((code) => byCode.get(code)).filter(
+      (c): c is Entry => Boolean(c)
     );
-  }, [q, locale]);
+
+    return [
+      { key: "popular", title: t("countryPicker.popularSection"), data: popular },
+      { key: "all", title: t("countryPicker.allSection"), data: list },
+    ];
+  }, [q, locale, t]);
 
   return (
     <View style={styles.root}>
@@ -53,11 +69,17 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
         autoCorrect={false}
         style={styles.input}
       />
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.code}
+      <SectionList
+        sections={sections}
+        keyExtractor={(item, index) => `${item.code}-${index}`}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
+        stickySectionHeadersEnabled={false}
+        renderSectionHeader={({ section }) =>
+          section.title ? (
+            <Text style={styles.sectionHeader}>{section.title}</Text>
+          ) : null
+        }
         renderItem={({ item }) => {
           const selected = item.code === selectedCode;
           return (
@@ -95,6 +117,16 @@ function makeStyles(theme: Theme) {
       paddingVertical: 10,
       fontSize: 15,
       marginBottom: 12,
+    },
+    sectionHeader: {
+      color: theme.textSecondary,
+      fontSize: 12,
+      fontWeight: "600",
+      letterSpacing: 0.4,
+      textTransform: "uppercase",
+      paddingHorizontal: 14,
+      paddingTop: 14,
+      paddingBottom: 6,
     },
     row: {
       paddingVertical: 12,

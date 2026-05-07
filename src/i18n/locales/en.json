@@ -180,7 +180,9 @@
     "highlightPrompt": "Which country's dots should be highlighted?"
   },
   "countryPicker": {
-    "searchPlaceholder": "Search countries"
+    "searchPlaceholder": "Search countries",
+    "popularSection": "Popular",
+    "allSection": "All countries"
   },
   "tiers": {
     "T0": { "title": "Getting Ready", "description": "No footprints recorded yet" },

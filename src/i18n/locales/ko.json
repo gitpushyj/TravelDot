@@ -180,7 +180,9 @@
     "highlightPrompt": "어느 나라의 도트를 강조할까요?"
   },
   "countryPicker": {
-    "searchPlaceholder": "국가 검색"
+    "searchPlaceholder": "국가 검색",
+    "popularSection": "자주 선택",
+    "allSection": "전체"
   },
   "tiers": {
     "T0": { "title": "여행 준비 중", "description": "아직 기록된 발자취가 없는" },
