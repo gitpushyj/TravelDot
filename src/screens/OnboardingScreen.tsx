@@ -58,7 +58,7 @@ export default function OnboardingScreen({
         await changeHomeCountry({ code: entry.code, name: entry.nameKo });
         // 본국 변경은 기존 메인 화면으로 돌아가 스캔이 백그라운드로 진행된다.
         runFullSync().catch((err) => {
-          console.warn("[VisitGrid] sync failed", err);
+          console.warn("[TravelDot] sync failed", err);
         });
         onClose?.();
       } else {

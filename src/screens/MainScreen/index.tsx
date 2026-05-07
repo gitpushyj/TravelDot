@@ -264,7 +264,7 @@ export default function MainScreen({
     <View style={styles.root}>
       <StatusBar style={theme.statusBar} />
       <Animated.View style={[styles.topAppBar, topBarStyle]}>
-        <Text style={styles.topAppBarTitle}>VisitGrid</Text>
+        <Text style={styles.topAppBarTitle}>TravelDot</Text>
         <View style={styles.topAppBarActions}>
           <Pressable
             onPress={() => navigation.navigate("AllCountries")}

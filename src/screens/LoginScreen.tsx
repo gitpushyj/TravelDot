@@ -42,7 +42,7 @@ export default function LoginScreen() {
   return (
     <View style={styles.root}>
       <View style={styles.center}>
-        <Text style={styles.brand}>VisitGrid</Text>
+        <Text style={styles.brand}>TravelDot</Text>
         <Image
           source={require("../../assets/login_image.png")}
           style={styles.heroImage}
