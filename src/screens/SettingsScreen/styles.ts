@@ -51,6 +51,9 @@ export function makeStyles(theme: Theme) {
       borderColor: theme.cardBorder,
       overflow: "hidden",
     },
+    cardAfterSegment: {
+      marginTop: 12,
+    },
     row: {
       flexDirection: "row",
       alignItems: "center",

@@ -193,7 +193,29 @@ export default function SettingsScreen({
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionLabel}>{t("settings.section.theme")}</Text>
+        <Text style={styles.sectionLabel}>
+          {t("settings.section.account")}
+        </Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label={accountLabel}
+            sub={accountSub}
+            onPress={() => {}}
+            disabled
+          />
+          <ActionRow
+            theme={theme}
+            label={t("settings.account.signOut")}
+            sub={t("settings.account.signOutSub")}
+            onPress={handleSignOut}
+            divider
+          />
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          {t("settings.section.appSettings")}
+        </Text>
         <View style={styles.segment}>
           {themeOptions.map((opt) => {
             const selected = mode === opt.mode;
@@ -219,35 +241,7 @@ export default function SettingsScreen({
             );
           })}
         </View>
-
-        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("settings.section.title")}
-        </Text>
-        <View style={styles.card}>
-          <ActionRow
-            theme={theme}
-            label={t("settings.title.label")}
-            sub={titleSub}
-            onPress={onOpenTitles}
-          />
-        </View>
-
-        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("settings.section.milestone")}
-        </Text>
-        <View style={styles.card}>
-          <ActionRow
-            theme={theme}
-            label={t("settings.milestone.label")}
-            sub={milestoneSub}
-            onPress={onOpenMilestones}
-          />
-        </View>
-
-        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("settings.section.language")}
-        </Text>
-        <View style={styles.card}>
+        <View style={[styles.card, styles.cardAfterSegment]}>
           <ActionRow
             theme={theme}
             label={t("settings.language.label")}
@@ -257,40 +251,30 @@ export default function SettingsScreen({
         </View>
 
         <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("settings.section.account")}
+          {t("settings.section.features")}
         </Text>
         <View style={styles.card}>
           <ActionRow
             theme={theme}
-            label={accountLabel}
-            sub={accountSub}
-            onPress={() => {}}
-            disabled
+            label={t("settings.title.label")}
+            sub={titleSub}
+            onPress={onOpenTitles}
           />
           <ActionRow
             theme={theme}
-            label={t("settings.account.signOut")}
-            sub={t("settings.account.signOutSub")}
-            onPress={handleSignOut}
+            label={t("settings.milestone.label")}
+            sub={milestoneSub}
+            onPress={onOpenMilestones}
             divider
-          />
-        </View>
-
-        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("settings.section.home")}
-        </Text>
-        <View style={styles.card}>
-          <ActionRow
-            theme={theme}
-            label={t("settings.home.current")}
-            sub={homeCountry ? homeCountry.name : t("settings.home.notSet")}
-            onPress={() => {}}
-            disabled
           />
           {!homeChanged && (
             <ActionRow
               theme={theme}
-              label={t("settings.home.change")}
+              label={t("settings.home.changeWithName", {
+                name: homeCountry
+                  ? homeCountry.name
+                  : t("settings.home.notSet"),
+              })}
               sub={t("settings.home.changeSub")}
               onPress={handleChangeHome}
               divider

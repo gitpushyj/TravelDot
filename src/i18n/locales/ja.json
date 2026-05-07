@@ -318,8 +318,10 @@
     "heading": "設定",
     "section": {
       "account": "アカウント",
+      "appSettings": "アプリ設定",
+      "features": "機能",
       "home": "母国",
-      "trips": "旅の記録",
+      "trips": "旅行",
       "title": "称号",
       "theme": "テーマ",
       "language": "言語"
@@ -342,6 +344,7 @@
       "current": "現在の母国",
       "notSet": "未設定",
       "change": "母国を変更",
+      "changeWithName": "母国を変更 ({{name}})",
       "changeSub": "記録をすべて削除して写真を再スキャンします・1回限り",
       "changeConfirmTitle": "母国を変更",
       "changeConfirmBody": "記録された旅のデータがすべて削除され、最初に母国を選んだときと同じように端末の写真を再スキャンします。\n\nこの機能はアプリで一度しか使えません。続けますか？"

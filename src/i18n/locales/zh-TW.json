@@ -318,8 +318,10 @@
     "heading": "設定",
     "section": {
       "account": "帳號",
+      "appSettings": "應用設定",
+      "features": "功能",
       "home": "母國",
-      "trips": "旅行紀錄",
+      "trips": "旅行",
       "title": "稱號",
       "theme": "主題",
       "language": "語言"
@@ -342,6 +344,7 @@
       "current": "目前的母國",
       "notSet": "尚未設定",
       "change": "變更母國",
+      "changeWithName": "變更母國 ({{name}})",
       "changeSub": "會清除所有紀錄並重新掃描相片 · 僅限一次",
       "changeConfirmTitle": "變更母國",
       "changeConfirmBody": "所有已記錄的旅行資料將被刪除,並像首次設定母國時那樣重新掃描裝置中的相片。\n\n此功能在本 App 中僅可使用一次。是否繼續?"
