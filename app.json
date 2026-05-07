@@ -16,7 +16,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.gitpush.visitgrid",
       "appleTeamId": "27LS459HJ3",
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +26,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.gitpush.visitgrid"
+      "package": "com.gitpush.visitgrid",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,7 +41,19 @@
         }
       ],
       "expo-apple-authentication",
-      "expo-localization"
+      "expo-localization",
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static",
+            "buildReactNativeFromSource": true
+          }
+        }
+      ],
+      "./plugins/withPodfileModularHeaders"
     ]
   }
 }
