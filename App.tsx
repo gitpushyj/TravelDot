@@ -5,12 +5,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { initI18n } from "./src/i18n";
+import AppAlerts from "./src/components/AppAlerts";
 import { useAuthStore } from "./src/features/auth/authStore";
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
 import { useVisitStore } from "./src/features/travel/visitStore";
-import { useBadgeNotificationAlert } from "./src/hooks/useBadgeNotificationAlert";
-import { useHomeCleanupAlert } from "./src/hooks/useHomeCleanupAlert";
-import { useScanCompletionAlert } from "./src/hooks/useScanCompletionAlert";
 import { AppCtxProvider, type AppNavCtx } from "./src/navigation/AppCtx";
 import RootNavigator from "./src/navigation/RootNavigator";
 import type { YearMode } from "./src/navigation/types";
@@ -82,12 +80,6 @@ export default function App() {
     onboardingMarkCompleted,
   ]);
 
-  // 온보딩 동안에는 OnboardingFlow가 자체 안내 UI로 결과를 보여주므로
-  // useScanCompletionAlert의 토스트 중복 노출을 막는다.
-  useScanCompletionAlert(!onboardingCompleted);
-  useHomeCleanupAlert();
-  useBadgeNotificationAlert();
-
   const activeCounts = useMemo(() => {
     if (yearMode.kind === "year") {
       return visitCountsByYear[yearMode.year] ?? {};
@@ -105,11 +97,17 @@ export default function App() {
     return <View style={styles.root} />;
   }
 
+  // AppAlerts 는 useTranslation 을 사용하므로 i18n 초기화가 끝난 분기에서만
+  // 마운트한다. pendingInitialScan=true 일 때(온보딩 중) OnboardingFlow 가
+  // 자체 안내 UI 로 결과를 보여주므로 토스트 중복 노출을 막는다.
+  const alerts = <AppAlerts pendingInitialScan={!onboardingCompleted} />;
+
   // 온보딩 미완료 → OnboardingFlow가 모든 단계를 책임진다.
   if (!onboardingCompleted) {
     return (
       <GestureHandlerRootView style={styles.root}>
         <StatusBar style={theme.statusBar} />
+        {alerts}
         <OnboardingFlow />
       </GestureHandlerRootView>
     );
@@ -120,6 +118,7 @@ export default function App() {
     return (
       <GestureHandlerRootView style={styles.rootDark}>
         <StatusBar style="light" />
+        {alerts}
         <LoginScreen />
       </GestureHandlerRootView>
     );
@@ -131,6 +130,7 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AppCtxProvider value={ctxValue}>
+          {alerts}
           <RootNavigator />
         </AppCtxProvider>
       </SafeAreaProvider>
