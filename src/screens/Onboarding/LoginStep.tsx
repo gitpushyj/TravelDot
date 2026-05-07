@@ -1,27 +1,22 @@
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import AppleSignInButton from "../../components/auth/AppleSignInButton";
+import GoogleSignInButton from "../../components/auth/GoogleSignInButton";
 import { isAppleSignInAvailable } from "../../features/auth/appleSignIn";
 import { useAuthStore } from "../../features/auth/authStore";
 import { useTheme } from "../../theme/themeStore";
 
-import { makeOnboardingStyles } from "./styles";
+import LoginDivider from "./LoginDivider";
+import LoginFeatureCards from "./LoginFeatureCards";
+import LoginHero from "./LoginHero";
 
 type Props = { onNext: () => void };
 
 export default function LoginStep({ onNext }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const styles = useMemo(() => makeOnboardingStyles(theme), [theme]);
-  const localStyles = useMemo(() => makeLocalStyles(), []);
 
   const user = useAuthStore((s) => s.user);
   const signingIn = useAuthStore((s) => s.signingIn);
@@ -33,121 +28,74 @@ export default function LoginStep({ onNext }: Props) {
     isAppleSignInAvailable().then(setAppleAvailable);
   }, []);
 
+  // 로그인 성공 시 user가 채워지면 다음 단계로 진행한다.
+  // 재로그인 컨텍스트에서는 onNext가 no-op이어도 App.tsx 상위 분기가 authUser
+  // 변화를 감지해 메인 UI로 자동 전환한다.
   useEffect(() => {
     if (user) onNext();
   }, [user, onNext]);
 
   const onPressGoogle = async () => {
     const r = await signInGoogle();
-    if (r.ok) return; // useEffect가 onNext 호출
-    if (r.cancelled) return;
+    if (r.ok || r.cancelled) return;
     Alert.alert(t("alerts.loginFailed"), r.message);
   };
 
   const onPressApple = async () => {
     const r = await signInApple();
-    if (r.ok) return;
-    if (r.cancelled) return;
+    if (r.ok || r.cancelled) return;
     Alert.alert(t("alerts.loginFailed"), r.message);
   };
 
   return (
-    <>
-      <View style={styles.body}>
-        <Text style={styles.title}>{t("onboarding.login.title")}</Text>
-        <Text style={styles.subtitle}>{t("onboarding.login.subtitle")}</Text>
-      </View>
-      <View style={styles.footer}>
-        <Pressable
-          onPress={onPressGoogle}
-          disabled={signingIn}
-          style={({ pressed }) => [
-            localStyles.googleBtn,
-            pressed && !signingIn && localStyles.googleBtnPressed,
-            signingIn && { opacity: 0.6 },
-          ]}
-        >
-          {signingIn ? (
-            <ActivityIndicator color="#1a1a1a" />
-          ) : (
-            <>
-              <Text style={localStyles.googleIcon}>G</Text>
-              <Text style={localStyles.googleText}>{t("login.googleContinue")}</Text>
-            </>
-          )}
-        </Pressable>
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
+      <LoginHero
+        theme={theme}
+        title={t("onboarding.login.title")}
+        subtitle={t("onboarding.login.subtitle")}
+      />
 
+      <View style={styles.buttons}>
+        <GoogleSignInButton
+          label={t("login.googleContinue")}
+          onPress={onPressGoogle}
+          loading={signingIn}
+        />
         {appleAvailable && (
-          <Pressable
+          <AppleSignInButton
+            label={t("login.appleContinue")}
             onPress={onPressApple}
-            disabled={signingIn}
-            style={({ pressed }) => [
-              localStyles.appleBtn,
-              pressed && !signingIn && localStyles.appleBtnPressed,
-              signingIn && { opacity: 0.6 },
-            ]}
-          >
-            {signingIn ? (
-              <ActivityIndicator color="#ffffff" />
-            ) : (
-              <>
-                <Text style={localStyles.appleIcon}>{""}</Text>
-                <Text style={localStyles.appleText}>{t("login.appleContinue")}</Text>
-              </>
-            )}
-          </Pressable>
+            loading={signingIn}
+          />
         )}
       </View>
-    </>
+
+      <View style={styles.divider}>
+        <LoginDivider theme={theme} label={t("onboarding.login.dividerOr")} />
+      </View>
+
+      <LoginFeatureCards theme={theme} />
+    </ScrollView>
   );
 }
 
-function makeLocalStyles() {
-  return StyleSheet.create({
-    googleBtn: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 12,
-      backgroundColor: "#ffffff",
-      borderRadius: 14,
-      paddingVertical: 14,
-      width: "100%",
-      minHeight: 52,
-    },
-    googleBtnPressed: { backgroundColor: "#e8e8e8" },
-    googleIcon: {
-      color: "#4285F4",
-      fontSize: 20,
-      fontWeight: "900",
-    },
-    googleText: {
-      color: "#1a1a1a",
-      fontSize: 16,
-      fontWeight: "700",
-    },
-    appleBtn: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 10,
-      backgroundColor: "#000000",
-      borderRadius: 14,
-      paddingVertical: 14,
-      width: "100%",
-      minHeight: 52,
-      marginTop: 12,
-    },
-    appleBtnPressed: { backgroundColor: "#1f1f1f" },
-    appleIcon: {
-      color: "#ffffff",
-      fontSize: 20,
-      marginTop: -2,
-    },
-    appleText: {
-      color: "#ffffff",
-      fontSize: 16,
-      fontWeight: "700",
-    },
-  });
-}
+const styles = StyleSheet.create({
+  scroll: { flex: 1 },
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 36,
+  },
+  buttons: {
+    marginTop: 28,
+    gap: 12,
+  },
+  divider: {
+    marginTop: 24,
+    marginBottom: 20,
+  },
+});
