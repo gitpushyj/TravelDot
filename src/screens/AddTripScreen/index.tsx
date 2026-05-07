@@ -177,20 +177,22 @@ export default function AddTripScreen({ onClose }: Props) {
           </Text>
         </View>
         <View style={[styles.headerSide, { alignItems: "flex-end" }]}>
-          <Pressable
-            onPress={onNext}
-            hitSlop={8}
-            disabled={!canAdvance || submitting}
-          >
-            <Text
-              style={[
-                styles.primaryRight,
-                (!canAdvance || submitting) && styles.primaryRightDisabled,
-              ]}
+          {step > 0 && (
+            <Pressable
+              onPress={onNext}
+              hitSlop={8}
+              disabled={!canAdvance || submitting}
             >
-              {submitting ? t("addTrip.submitting") : rightLabel}
-            </Text>
-          </Pressable>
+              <Text
+                style={[
+                  styles.primaryRight,
+                  (!canAdvance || submitting) && styles.primaryRightDisabled,
+                ]}
+              >
+                {submitting ? t("addTrip.submitting") : rightLabel}
+              </Text>
+            </Pressable>
+          )}
         </View>
       </View>
 
@@ -201,7 +203,10 @@ export default function AddTripScreen({ onClose }: Props) {
           styles={styles}
           theme={theme}
           selectedCode={selected?.code ?? null}
-          onSelect={(s) => setSelected(s)}
+          onSelect={(s) => {
+            setSelected(s);
+            setStep(1);
+          }}
           onClear={() => setSelected(null)}
         />
       )}
