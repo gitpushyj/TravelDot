@@ -8,8 +8,9 @@ const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "";
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
 if (!isSupabaseConfigured) {
+  // 모듈 초기화 시점이라 i18n이 아직 준비되지 않았을 수 있어 영어 dev 경고로 남긴다.
   console.warn(
-    "[supabase] EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY가 설정되지 않았습니다. .env를 확인하세요."
+    "[supabase] EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY are not set. Check your .env file."
   );
 }
 

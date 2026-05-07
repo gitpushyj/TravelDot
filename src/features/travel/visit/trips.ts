@@ -1,3 +1,4 @@
+import i18n from "../../../i18n";
 import { getDb } from "../db";
 import type { RecentTrip, TripWithPhotos } from "./types";
 import { addOneDay, diffInDays, ensureVisitDay } from "./internal";
@@ -194,7 +195,7 @@ export async function updateTripDates(
   newEndDate: string
 ): Promise<void> {
   if (newStartDate > newEndDate) {
-    throw new Error("시작일이 종료일보다 늦을 수 없습니다.");
+    throw new Error(i18n.t("errors.trip.startAfterEnd"));
   }
   const db = await getDb();
   const now = Date.now();

@@ -7,6 +7,10 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import DotMap from "../../components/DotMap";
 import YearPickerModal from "../../components/YearPickerModal";
+import {
+  localizedBadgeTitle,
+  localizedTierTitle,
+} from "../../features/badges/badgeI18n";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "../../features/badges/countryNames";
 import { pickActiveBadge, useBadgeStore } from "../../features/badges/badgeStore";
 import {
@@ -14,6 +18,7 @@ import {
   TIER_CUTOFFS,
 } from "../../features/travel/tierTitles";
 import { useVisitStore } from "../../features/travel/visitStore";
+import { getCurrentLocale } from "../../i18n";
 import { TOTAL_COUNTRIES } from "../../lib/countryLookup";
 import { useAppCtx } from "../../navigation/AppCtx";
 import type { RootStackParamList } from "../../navigation/types";
@@ -198,8 +203,8 @@ export default function MainScreen({
                 numberOfLines={1}
               >
                 {activeBadge
-                  ? `${activeBadge.emoji} ${activeBadge.titleKo}`
-                  : tier.titleKo}
+                  ? `${activeBadge.emoji} ${localizedBadgeTitle(activeBadge, t, getCurrentLocale())}`
+                  : localizedTierTitle(tier, t)}
               </Text>
             </View>
             <View style={styles.statBigRow}>

@@ -3,7 +3,10 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 
+import i18n from "../../i18n";
 import { supabase } from "../../lib/supabase";
+
+const tr = (key: string) => i18n.t(key);
 
 let configured = false;
 
@@ -15,9 +18,7 @@ export function configureGoogleSignIn() {
   const iosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID;
 
   if (!webClientId) {
-    console.warn(
-      "[auth] EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID가 없습니다. Supabase가 ID 토큰을 검증하려면 Web Client ID가 필요합니다."
-    );
+    console.warn(`[auth] ${tr("errors.auth.missingClientId")}`);
     return;
   }
 
@@ -32,7 +33,7 @@ export function configureGoogleSignIn() {
 
 export class GoogleSignInCancelled extends Error {
   constructor() {
-    super("Google 로그인이 취소되었습니다.");
+    super(tr("errors.auth.googleSignInCancelled"));
     this.name = "GoogleSignInCancelled";
   }
 }
@@ -43,7 +44,7 @@ export class GoogleSignInCancelled extends Error {
  */
 export async function signInWithGoogle(): Promise<void> {
   if (!configured) {
-    throw new Error("Google Sign-In이 설정되지 않았습니다. 환경 변수를 확인하세요.");
+    throw new Error(tr("errors.auth.googleSignInNotConfigured"));
   }
 
   await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
@@ -55,7 +56,7 @@ export async function signInWithGoogle(): Promise<void> {
 
   const idToken = response.data.idToken;
   if (!idToken) {
-    throw new Error("Google에서 ID 토큰을 받지 못했습니다.");
+    throw new Error(tr("errors.auth.noIdToken"));
   }
 
   const { error } = await supabase.auth.signInWithIdToken({

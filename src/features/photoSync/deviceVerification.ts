@@ -1,5 +1,6 @@
 import * as MediaLibrary from "expo-media-library";
 
+import i18n from "../../i18n";
 import { resolveCountry } from "./countryResolver";
 import { iteratePhotos } from "./photoLibrary";
 import {
@@ -43,7 +44,7 @@ export function deviceLabel(
   const m = (make ?? "").trim();
   const md = (model ?? "").trim();
   if (m && md) return `${m} ${md}`;
-  return md || m || "알 수 없는 기기";
+  return md || m || i18n.t("errors.device.unknown");
 }
 
 // expo-media-library의 exif는 플랫폼/버전에 따라 평면화 또는 {TIFF} 서브딕트로

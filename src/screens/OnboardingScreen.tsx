@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import CountryPicker from "../components/CountryPicker";
 import { runFullSync } from "../features/photoSync/syncService";
@@ -29,6 +30,7 @@ export default function OnboardingScreen({
   onClose,
   onAfterSetup,
 }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const setHomeCountry = useVisitStore((s) => s.setHomeCountry);
@@ -64,7 +66,7 @@ export default function OnboardingScreen({
         // 스캔 트리거는 InitialScanScreen이 담당한다.
       }
     } catch (e) {
-      Alert.alert("저장 실패", String(e));
+      Alert.alert(t("alerts.saveFailed"), String(e));
       setSubmitting(false);
     }
   };
@@ -76,16 +78,14 @@ export default function OnboardingScreen({
       <View style={styles.header}>
         {isChange && onClose && (
           <Pressable onPress={onClose} hitSlop={8} style={styles.closeBtn}>
-            <Text style={styles.closeText}>닫기</Text>
+            <Text style={styles.closeText}>{t("common.close")}</Text>
           </Pressable>
         )}
         <Text style={styles.title}>
-          {isChange ? "새 본국을 골라주세요" : "본국을 골라주세요"}
+          {isChange ? t("changeHome.title") : t("onboarding.home.title")}
         </Text>
         <Text style={styles.subtitle}>
-          {isChange
-            ? "선택하면 기존 기록이 모두 정리되고 사진을 다시 스캔합니다."
-            : "본국 도트는 일수와 무관하게 파란색으로 표시됩니다.\n외국은 방문 일수만큼 색상이 진해져요."}
+          {isChange ? t("changeHome.subtitle") : t("onboarding.home.subtitle")}
         </Text>
       </View>
       <View style={styles.body}>
@@ -94,7 +94,9 @@ export default function OnboardingScreen({
           <View style={styles.overlay}>
             <ActivityIndicator color="#fff" />
             <Text style={styles.overlayText}>
-              {isChange ? "본국을 바꾸는 중..." : "준비 중..."}
+              {isChange
+                ? t("changeHome.loadingChanging")
+                : t("changeHome.loadingPreparing")}
             </Text>
           </View>
         )}

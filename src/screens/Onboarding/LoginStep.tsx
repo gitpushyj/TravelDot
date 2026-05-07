@@ -34,7 +34,7 @@ export default function LoginStep({ onNext }: Props) {
     const r = await signInGoogle();
     if (r.ok) return; // useEffect가 onNext 호출
     if (r.cancelled) return;
-    Alert.alert(t("onboarding.login.title"), r.message);
+    Alert.alert(t("alerts.loginFailed"), r.message);
   };
 
   return (
@@ -58,7 +58,7 @@ export default function LoginStep({ onNext }: Props) {
           ) : (
             <>
               <Text style={localStyles.googleIcon}>G</Text>
-              <Text style={localStyles.googleText}>Google로 계속하기</Text>
+              <Text style={localStyles.googleText}>{t("login.googleContinue")}</Text>
             </>
           )}
         </Pressable>

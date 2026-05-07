@@ -6,7 +6,186 @@
     "confirm": "確認",
     "save": "儲存",
     "delete": "刪除",
-    "back": "返回"
+    "back": "返回",
+    "continue": "繼續",
+    "remove": "移除",
+    "loading": "載入中…"
+  },
+  "alerts": {
+    "saveFailed": "儲存失敗",
+    "loginFailed": "登入失敗",
+    "permissionRequired": "需要權限",
+    "photoLibraryPermissionBody": "需要存取相片庫的權限。",
+    "registerCompleteTitle": "新增完成",
+    "registerCompleteBody": "已新增 {{count}} 張。",
+    "registerFailedTitle": "新增失敗",
+    "dateInvalidTitle": "請確認日期",
+    "dateInvalidBody": "日期須為 YYYY-MM-DD 格式,且開始日期不能晚於結束日期。",
+    "rangeChangeConfirmTitle": "變更旅行期間?",
+    "rangeChangeConfirmBody": "新期間之外的相片與備註將一併刪除。要繼續嗎?",
+    "partialPhotosTitle": "部分相片未新增",
+    "partialPhotosBody": "每天最多只能儲存 {{limit}} 張,因此 {{dropped}} 張未被新增。",
+    "tripDeleteTitle": "刪除旅行紀錄",
+    "tripDeleteBody": "刪除 {{startDate}} — {{endDate}}({{days}}天)的紀錄嗎?\n該期間的相片與備註也會一併移除。",
+    "notMyTripTitle": "不是我的旅行",
+    "notMyTripBody": "要將 {{country}} {{range}} 這趟旅行從紀錄中移除嗎?\n相關的 {{count}} 張相片也會一起整理。"
+  },
+  "history": {
+    "heading": "旅行紀錄",
+    "statCountriesUnit": "國",
+    "statVisitsUnit": "次造訪",
+    "statDaysUnit": "天累計",
+    "empty": "尚未有旅行紀錄。",
+    "tripDuration": "{{days}}天行程",
+    "sortRecent": "最新",
+    "sortDays": "天數",
+    "sortAz": "A-Z"
+  },
+  "allCountries": {
+    "heading": "所有國家",
+    "filterAll": "全部",
+    "filterVisited": "去過",
+    "filterUnvisited": "沒去過",
+    "sortName": "名稱",
+    "sortPopular": "熱門",
+    "metaTotal": "{{count}} 國",
+    "metaVisited": "· 去過 {{count}}",
+    "empty": "沒有符合的國家。"
+  },
+  "addTrip": {
+    "heading": "新增旅行",
+    "selectingPhotos": "選擇相片中…",
+    "submitButton": "新增 {{count}}",
+    "submitting": "儲存中…",
+    "skippedHint": "因 GPS/位置不明而略過的相片 {{count}} 張",
+    "homeBadgeSuffix": "(母國)",
+    "groupMeta": "{{date}} · 既有 {{existing}}/{{limit}} · 已選 {{selected}}/{{slot}}",
+    "dayFull": "這一天已經登記了 {{limit}} 張",
+    "noEligible": "沒有可新增的相片。",
+    "noEligibleSuffix": " 都沒有 GPS 或位置無法辨識。"
+  },
+  "editTrip": {
+    "heading": "編輯 {{country}}",
+    "savingState": "儲存中…",
+    "saveAction": "儲存",
+    "sectionDates": "旅行期間",
+    "dateLabelStart": "開始",
+    "dateLabelEnd": "結束",
+    "dateFormatHelp": "日期須為 YYYY-MM-DD 格式,且開始 ≤ 結束。",
+    "totalDays": "共 {{days}} 天",
+    "sectionNote": "備註",
+    "notePlaceholder": "這趟旅行想記下來的事…",
+    "sectionPhotos": "相片",
+    "addPhotos": "+ 新增",
+    "photoChanges": "新增 {{added}} · 刪除 {{removed}}",
+    "photoEmpty": "尚無已儲存的相片。",
+    "undoRemoves": "還原 {{count}} 張待刪除"
+  },
+  "tripDetail": {
+    "edit": "✎ 編輯",
+    "dayUnit": " 天行程",
+    "photoUnit": " 張相片",
+    "sectionDates": "旅行期間",
+    "sectionPhotos": "相片",
+    "viewAll": "查看全部 ({{count}}) →",
+    "photosLoading": "正在載入相片…",
+    "photosEmpty": "這趟旅行沒有儲存的相片。",
+    "noteSection": "紀錄",
+    "noteWritten": "{{date}} 撰寫",
+    "photosGridHeader": "{{count}} 張相片",
+    "photosGridEmpty": "這趟旅行沒有相片。"
+  },
+  "countryDetail": {
+    "statVisits": "次造訪",
+    "statDays": "天累計",
+    "statPhotos": "張相片",
+    "sectionTrips": "旅行紀錄",
+    "swipeToDelete": "← 向左滑動刪除",
+    "sortLatest": "最新",
+    "empty": "這個國家還沒有旅行紀錄。",
+    "tripPhotos": "{{count}} 張",
+    "tripRecent": "最近",
+    "tripDayOnly": "1 天(當日)",
+    "tripDuration": "{{days}} 天行程",
+    "deleteAction": "刪除"
+  },
+  "titles": {
+    "heading": "稱號",
+    "autoLabel": "自動(目前等級)",
+    "autoHint": "隨著造訪國家增加,等級稱號會自動更新。",
+    "autoActive": "使用中",
+    "autoSet": "改為自動",
+    "noCountryHint": "在同一國家停留 30 天以上即可解鎖該國常客稱號。",
+    "noneToShow": "沒有可顯示的稱號。"
+  },
+  "reviewSuspect": {
+    "heading": "確認旅行",
+    "introTitle": "這些旅行只有其他裝置拍攝的相片",
+    "introBody": "可能混入了朋友傳來的相片,而不是你自己去過的旅行。不是本人去過的請移除。",
+    "noneTitle": "沒有需要確認的旅行。",
+    "primaryAcceptAll": "剩下的都是我的旅行",
+    "primaryConfirm": "完成",
+    "deviceFallback": "其他裝置",
+    "deviceMore": "{{first}} 等 {{count}} 台",
+    "rowMeta": "{{range}} · {{days}} 天",
+    "rowPhotoLine": "{{count}} 張相片 · {{devices}}",
+    "actionAccept": "加入我的旅行"
+  },
+  "changeHome": {
+    "title": "請選擇新的母國",
+    "subtitle": "選擇後會清除所有現有紀錄並重新掃描相片。",
+    "loadingChanging": "正在變更母國...",
+    "loadingPreparing": "準備中..."
+  },
+  "login": {
+    "googleContinue": "透過 Google 繼續"
+  },
+  "yearPicker": {
+    "title": "選擇年份",
+    "viewAll": "查看全部",
+    "viewAllRange": "{{min}} — {{max}} · 所有紀錄",
+    "viewAllNoRange": "所有紀錄",
+    "noRecord": "沒有紀錄",
+    "yearMeta": "{{days}} 天 · {{countries}} 個點"
+  },
+  "dotMap": {
+    "highlightPrompt": "要強調哪一個國家的點?"
+  },
+  "countryPicker": {
+    "searchPlaceholder": "搜尋國家"
+  },
+  "tiers": {
+    "T0": { "title": "準備出發", "description": "還沒有任何足跡" },
+    "T1": { "title": "定居者", "description": "在母國留下第一道足跡" },
+    "T2": { "title": "第一步", "description": "跨越國境的第一步" },
+    "T3": { "title": "漫步者", "description": "腳步開始走出熟悉的街道" },
+    "T4": { "title": "旅途新手", "description": "旅行漸漸變得熟悉" },
+    "T5": { "title": "旅行者", "description": "已超過全球平均水準" },
+    "T6": { "title": "探險者", "description": "陌生的地方已不再令人害怕" },
+    "T7": { "title": "老手", "description": "把旅行當作一門技藝" },
+    "T8": { "title": "遊牧者", "description": "比定居更習慣於移動" },
+    "T9": { "title": "世界公民", "description": "把地球的任何角落都當作家" },
+    "T10": { "title": "世界收藏家", "description": "收藏世界的人 — 全球前 1%" },
+    "MASTER": { "title": "大師", "description": "成為旅行本身的人" },
+    "GRANDMASTER": { "title": "宗師", "description": "100 國的足跡 — TCC 入會門檻" },
+    "LEGEND": { "title": "傳奇", "description": "留下足以成為傳說的足跡" },
+    "UN_MASTER": { "title": "UN 大師", "description": "集齊地球上所有國旗的人" }
+  },"errors": {
+    "auth": {
+      "missingClientId": "使用 Google 登入需要環境變數 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID。",
+      "googleSignInCancelled": "已取消 Google 登入。",
+      "googleSignInNotConfigured": "Google Sign-In 未設定。請確認環境變數。",
+      "noIdToken": "無法從 Google 取得 ID 權杖。"
+    },
+    "trip": {
+      "startAfterEnd": "開始日期不能晚於結束日期。"
+    },
+    "device": {
+      "unknown": "未知裝置"
+    },
+    "supabase": {
+      "missingEnv": "未設定 Supabase 環境變數(EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY)。請確認 .env 檔。"
+    }
   },
   "home": {
     "all": "全部",
@@ -51,6 +230,53 @@
     "body": "母國({{country}})將不再納入自動新增。\n已整理先前自動新增的 {{days}} 天 / 相片 {{photos}} 張。\n\n在母國拍攝的相片仍可從選單 >「新增旅行」自選日期手動新增。"
   },
   "badges": {
+    "category": {
+      "tier": "等級",
+      "days": "旅行天數",
+      "continent": "洲",
+      "country": "國家常客",
+      "foreign": "海外相片"
+    },
+    "days": {
+      "title7": "週末旅人",
+      "title30": "一個月的漫遊",
+      "title100": "百日旅程",
+      "title365": "一年的流浪者",
+      "title730": "兩年漂泊者",
+      "title1000": "永遠的旅人",
+      "description": "累計旅行 {{threshold}} 天以上"
+    },
+    "foreign": {
+      "title100": "海外收藏家",
+      "title500": "海外發燒友",
+      "title1000": "海外大師",
+      "title3000": "海外傳奇",
+      "description": "在海外拍攝 {{threshold}} 張以上相片"
+    },
+    "continent": {
+      "name": {
+        "AS": "亞洲",
+        "EU": "歐洲",
+        "AF": "非洲",
+        "NA": "北美洲",
+        "SA": "南美洲",
+        "OC": "大洋洲",
+        "AN": "南極洲"
+      },
+      "wandererTitle": "{{continent}} 漫遊者",
+      "conquerorTitle": "{{continent}} 征服者",
+      "wandererDescription": "在{{continent}}造訪過 {{count}} 個以上國家",
+      "conquerorDescription": "在{{continent}}造訪過 {{count}} 個以上國家",
+      "antarcticaPioneerTitle": "南極探險者",
+      "antarcticaPioneerDescription": "在地球最南端留下足跡的人"
+    },
+    "country": {
+      "suffix30": "常客",
+      "suffix100": "第二故鄉",
+      "suffix365": "在地人",
+      "title": "{{country}} {{suffix}}",
+      "description": "在{{country}}停留 {{threshold}} 天以上的人"
+    },
     "newSingleTitle": "獲得了一枚新徽章!",
     "newMultipleTitle": "獲得了 {{count}} 枚新徽章!",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n可在「設定 > 稱號」中選擇並顯示於主畫面。",
@@ -107,6 +333,43 @@
     "language": {
       "label": "語言",
       "current": "目前:{{name}}"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "用相片描繪的旅行紀錄",
+      "point1": "從相片的 GPS 資訊自動辨識你去過哪裡",
+      "point2": "不必手動輸入,旅行自動整理,地圖也慢慢被填滿",
+      "point3": "相片不會離開你的手機,使用更安心",
+      "next": "下一步"
+    },
+    "login": {
+      "title": "開始使用 VisitGrid",
+      "subtitle": "請登入,以便將紀錄安全地保存在這台裝置上"
+    },
+    "home": {
+      "title": "請選擇母國",
+      "subtitle": "母國的圓點不論天數都以藍色顯示。\n其他國家停留越久,顏色就越深。"
+    },
+    "sync": {
+      "title": "開始同步旅行紀錄",
+      "body": "我們會掃描你的手機相片,自動整理出旅行紀錄。",
+      "fullAccessHint": "為了讓自動紀錄更順暢,請選擇「允許存取所有相片」。",
+      "button": "開始同步",
+      "scanning": "正在檢視 {{processed}} 張相片…",
+      "preparing": "正在準備掃描相片…",
+      "limitedHint": "目前僅分析所選的相片。可至設定改為完整存取,以找出更多旅行。",
+      "permissionDeniedTitle": "需要相片存取權限",
+      "permissionDeniedBody": "建立旅行紀錄需要存取相片。請允許權限後再試。",
+      "requestAgain": "再次要求權限"
+    },
+    "suspect": {
+      "title": "這些旅行需要再確認",
+      "subtitle": "這些旅行只有其他裝置拍攝的相片。若不是你的旅行,請從紀錄中移除。",
+      "allClearedTitle": "旅行紀錄已整理完畢",
+      "allClearedBody": "沒有需要確認的旅行。可以前往地圖查看你的旅行紀錄了。",
+      "acceptAll": "剩下的都是我的旅行",
+      "goHome": "前往主畫面"
     }
   }
 }

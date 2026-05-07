@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import {
   loadAllTrips,
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   // recentTrips가 바뀌면(여행 추가/삭제 등) 리스트를 다시 불러온다.
@@ -86,7 +88,7 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
         >
           <Text style={styles.iconBtnText}>‹</Text>
         </Pressable>
-        <Text style={styles.headerTitle}>여행 기록</Text>
+        <Text style={styles.headerTitle}>{t("history.heading")}</Text>
         <View style={styles.iconBtnPlaceholder} />
       </View>
 
@@ -98,11 +100,23 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
         ListHeaderComponent={
           <>
             <View style={styles.statsCard}>
-              <StatCol value={totals.countries} unit="개국" theme={theme} />
+              <StatCol
+                value={totals.countries}
+                unit={t("history.statCountriesUnit")}
+                theme={theme}
+              />
               <View style={styles.statDivider} />
-              <StatCol value={totals.visits} unit="회 방문" theme={theme} />
+              <StatCol
+                value={totals.visits}
+                unit={t("history.statVisitsUnit")}
+                theme={theme}
+              />
               <View style={styles.statDivider} />
-              <StatCol value={totals.days} unit="일 누적" theme={theme} />
+              <StatCol
+                value={totals.days}
+                unit={t("history.statDaysUnit")}
+                theme={theme}
+              />
             </View>
             <SortTabs theme={theme} value={sort} onChange={setSort} />
           </>
@@ -110,13 +124,11 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
         ListEmptyComponent={
           trips == null ? (
             <View style={styles.emptyWrap}>
-              <Text style={styles.emptyText}>불러오는 중…</Text>
+              <Text style={styles.emptyText}>{t("common.loading")}</Text>
             </View>
           ) : (
             <View style={styles.emptyWrap}>
-              <Text style={styles.emptyText}>
-                아직 기록된 여행이 없어요.
-              </Text>
+              <Text style={styles.emptyText}>{t("history.empty")}</Text>
             </View>
           )
         }

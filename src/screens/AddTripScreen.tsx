@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import { resolveCountry } from "../features/photoSync/countryResolver";
 import {
@@ -17,7 +18,8 @@ import {
   VisitPhotoInput,
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
-import { KO_NAME_BY_CODE } from "../lib/countryLookup";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import { colorForCountry } from "../utils/countryColors";
 import { toLocalDateKey } from "../utils/date";
 
@@ -48,8 +50,10 @@ type Group = {
 type Props = { onClose: () => void };
 
 export default function AddTripScreen({ onClose }: Props) {
+  const { t } = useTranslation();
   const refreshVisits = useVisitStore((s) => s.refreshVisits);
   const homeCountry = useVisitStore((s) => s.homeCountry);
+  const PHOTO_LIMIT = 3;
 
   const [groups, setGroups] = useState<Group[] | null>(null);
   const [skipped, setSkipped] = useState(0);
@@ -65,7 +69,10 @@ export default function AddTripScreen({ onClose }: Props) {
     try {
       const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!perm.granted) {
-        Alert.alert("권한 필요", "사진 라이브러리 권한이 필요합니다.");
+        Alert.alert(
+          t("alerts.permissionRequired"),
+          t("alerts.photoLibraryPermissionBody")
+        );
         onClose();
         return;
       }
@@ -101,7 +108,7 @@ export default function AddTripScreen({ onClose }: Props) {
           lng: ll.lng,
           takenAt,
           countryCode: code,
-          countryName: KO_NAME_BY_CODE[code] ?? code,
+          countryName: getCountryName(code, getCurrentLocale()),
           date: toLocalDateKey(takenAt),
         });
       }
@@ -185,10 +192,13 @@ export default function AddTripScreen({ onClose }: Props) {
       }
       const added = await addPhotos(inputs);
       await refreshVisits();
-      Alert.alert("등록 완료", `${added}장 추가되었습니다.`);
+      Alert.alert(
+        t("alerts.registerCompleteTitle"),
+        t("alerts.registerCompleteBody", { count: added })
+      );
       onClose();
     } catch (e) {
-      Alert.alert("등록 실패", String(e));
+      Alert.alert(t("alerts.registerFailedTitle"), String(e));
       setSubmitting(false);
     }
   };
@@ -197,7 +207,7 @@ export default function AddTripScreen({ onClose }: Props) {
     return (
       <View style={styles.center}>
         <ActivityIndicator color="#fff" />
-        <Text style={styles.dim}>사진 선택 중…</Text>
+        <Text style={styles.dim}>{t("addTrip.selectingPhotos")}</Text>
       </View>
     );
   }
@@ -214,9 +224,9 @@ export default function AddTripScreen({ onClose }: Props) {
     <View style={styles.root}>
       <View style={styles.header}>
         <Pressable onPress={onClose} hitSlop={8}>
-          <Text style={styles.cancel}>취소</Text>
+          <Text style={styles.cancel}>{t("common.cancel")}</Text>
         </Pressable>
-        <Text style={styles.title}>여행 추가</Text>
+        <Text style={styles.title}>{t("addTrip.heading")}</Text>
         <Pressable
           onPress={onConfirm}
           disabled={totalSelected === 0 || submitting}
@@ -228,14 +238,16 @@ export default function AddTripScreen({ onClose }: Props) {
               (totalSelected === 0 || submitting) && styles.confirmDisabled,
             ]}
           >
-            {submitting ? "저장 중…" : `등록 ${totalSelected}`}
+            {submitting
+              ? t("addTrip.submitting")
+              : t("addTrip.submitButton", { count: totalSelected })}
           </Text>
         </Pressable>
       </View>
 
       {skipped > 0 && (
         <Text style={styles.skipNote}>
-          GPS/위치 미상으로 건너뛴 사진 {skipped}장
+          {t("addTrip.skippedHint", { count: skipped })}
         </Text>
       )}
 
@@ -259,12 +271,17 @@ export default function AddTripScreen({ onClose }: Props) {
                   />
                   <Text style={styles.groupTitle}>
                     {g.countryName}
-                    {isHome ? " (본국)" : ""}
+                    {isHome ? t("addTrip.homeBadgeSuffix") : ""}
                   </Text>
                 </View>
                 <Text style={styles.groupSub}>
-                  {g.date} · 기존 {g.existing}/3 · 선택 {g.selectedIds.size}/
-                  {slot}
+                  {t("addTrip.groupMeta", {
+                    date: g.date,
+                    existing: g.existing,
+                    limit: PHOTO_LIMIT,
+                    selected: g.selectedIds.size,
+                    slot,
+                  })}
                 </Text>
               </View>
               <View style={styles.thumbRow}>
@@ -292,14 +309,17 @@ export default function AddTripScreen({ onClose }: Props) {
                 })}
               </View>
               {slot === 0 && (
-                <Text style={styles.full}>이 날짜는 이미 3장이 등록됨</Text>
+                <Text style={styles.full}>
+                  {t("addTrip.dayFull", { limit: PHOTO_LIMIT })}
+                </Text>
               )}
             </View>
           );
         }}
         ListEmptyComponent={
           <Text style={styles.empty}>
-            등록 가능한 사진이 없습니다.{skipped > 0 ? " 모두 GPS가 없거나 알 수 없는 위치였어요." : ""}
+            {t("addTrip.noEligible")}
+            {skipped > 0 ? t("addTrip.noEligibleSuffix") : ""}
           </Text>
         }
       />

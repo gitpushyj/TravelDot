@@ -1,7 +1,13 @@
 import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
+import {
+  localizedBadgeDescription,
+  localizedBadgeTitle,
+} from "../../features/badges/badgeI18n";
 import type { BadgeDefinition } from "../../features/badges/badges";
+import { getCurrentLocale } from "../../i18n";
 import type { Theme } from "../../theme/theme";
 
 import { makeStyles } from "./styles";
@@ -21,7 +27,9 @@ export default function BadgeCard({
   active,
   onPress,
 }: Props) {
+  const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const locale = getCurrentLocale();
   return (
     <Pressable
       onPress={onPress}
@@ -40,13 +48,13 @@ export default function BadgeCard({
         style={[styles.cardTitle, locked && styles.cardTitleLocked]}
         numberOfLines={2}
       >
-        {badge.titleKo}
+        {localizedBadgeTitle(badge, t, locale)}
       </Text>
       <Text
         style={[styles.cardDesc, locked && styles.cardDescLocked]}
         numberOfLines={3}
       >
-        {badge.description}
+        {localizedBadgeDescription(badge, t, locale)}
       </Text>
       {active && !locked && (
         <View style={styles.activeMark}>

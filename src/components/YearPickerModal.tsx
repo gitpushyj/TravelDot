@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import {
   loadYearSummaries,
@@ -33,6 +34,7 @@ export default function YearPickerModal({
   onCancel,
   onApply,
 }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [summaries, setSummaries] = useState<YearSummary[] | null>(null);
@@ -95,9 +97,9 @@ export default function YearPickerModal({
           </View>
           <View style={styles.headerRow}>
             <Pressable hitSlop={8} onPress={onCancel}>
-              <Text style={styles.cancelText}>취소</Text>
+              <Text style={styles.cancelText}>{t("common.cancel")}</Text>
             </Pressable>
-            <Text style={styles.titleText}>연도 선택</Text>
+            <Text style={styles.titleText}>{t("yearPicker.title")}</Text>
             <View style={styles.headerSpacer} />
           </View>
 
@@ -108,11 +110,14 @@ export default function YearPickerModal({
           >
             <YearRow
               theme={theme}
-              title="전체 보기"
+              title={t("yearPicker.viewAll")}
               subtitle={
                 allRange
-                  ? `${allRange.min} — ${allRange.max} · 모든 기록`
-                  : "모든 기록"
+                  ? t("yearPicker.viewAllRange", {
+                      min: allRange.min,
+                      max: allRange.max,
+                    })
+                  : t("yearPicker.viewAllNoRange")
               }
               monthly={totalsMonthly}
               selected={initial.kind === "all"}
@@ -122,8 +127,11 @@ export default function YearPickerModal({
             {rows.map((s) => {
               const isEmpty = s.days === 0;
               const subtitle = isEmpty
-                ? "기록 없음"
-                : `${s.days}일 · ${s.countries} 도트`;
+                ? t("yearPicker.noRecord")
+                : t("yearPicker.yearMeta", {
+                    days: s.days,
+                    countries: s.countries,
+                  });
               return (
                 <YearRow
                   key={s.year}

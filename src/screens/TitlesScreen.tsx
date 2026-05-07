@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
+import { localizedCategoryLabel } from "../features/badges/badgeI18n";
 import {
   badgeFromId,
   BadgeCategory,
   BadgeDefinition,
-  CATEGORY_LABEL,
   CATEGORY_ORDER,
   getStaticBadgeCatalog,
   sortBadges,
@@ -22,6 +23,7 @@ import { makeStyles } from "./TitlesScreen/styles";
 type Props = { onClose: () => void };
 
 export default function TitlesScreen({ onClose }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
@@ -64,11 +66,11 @@ export default function TitlesScreen({ onClose }: Props) {
 
     return CATEGORY_ORDER.map((cat) => ({
       category: cat,
-      label: CATEGORY_LABEL[cat],
+      label: localizedCategoryLabel(cat, t),
       // rank 내림차순 — 등급은 위에서부터 명예→T10→T1 순으로 보이도록
       items: sortBadges(groups[cat]),
     }));
-  }, [unlocked]);
+  }, [unlocked, t]);
 
   const handlePick = (id: string) => {
     // 사용자가 현재 등급 뱃지를 직접 골랐다면 "자동" 모드로 처리해 등급 상승 시 자동 갱신되도록 한다.
@@ -85,19 +87,17 @@ export default function TitlesScreen({ onClose }: Props) {
     <View style={styles.root}>
       <View style={styles.header}>
         <Pressable onPress={onClose} hitSlop={8} style={styles.headerSide}>
-          <Text style={styles.cancel}>닫기</Text>
+          <Text style={styles.cancel}>{t("common.close")}</Text>
         </Pressable>
-        <Text style={styles.title}>호칭</Text>
+        <Text style={styles.title}>{t("titles.heading")}</Text>
         <View style={styles.headerSide} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.autoCard}>
           <View style={{ flex: 1 }}>
-            <Text style={styles.autoLabel}>자동 (현재 등급)</Text>
-            <Text style={styles.autoSub}>
-              여행한 국가가 늘어나면 등급 호칭이 자동으로 갱신됩니다.
-            </Text>
+            <Text style={styles.autoLabel}>{t("titles.autoLabel")}</Text>
+            <Text style={styles.autoSub}>{t("titles.autoHint")}</Text>
           </View>
           <Pressable
             onPress={() => void setActive(null)}
@@ -114,7 +114,7 @@ export default function TitlesScreen({ onClose }: Props) {
                 isAutoActive && styles.autoBtnTextActive,
               ]}
             >
-              {isAutoActive ? "사용 중" : "자동으로"}
+              {isAutoActive ? t("titles.autoActive") : t("titles.autoSet")}
             </Text>
           </Pressable>
         </View>
@@ -134,8 +134,8 @@ export default function TitlesScreen({ onClose }: Props) {
               {section.items.length === 0 ? (
                 <Text style={styles.emptyText}>
                   {section.category === "country"
-                    ? "한 국가에서 30일 이상 머무르면 단골 호칭이 잠금 해제됩니다."
-                    : "표시할 호칭이 없어요."}
+                    ? t("titles.noCountryHint")
+                    : t("titles.noneToShow")}
                 </Text>
               ) : (
                 <View style={styles.grid}>

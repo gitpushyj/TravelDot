@@ -12,6 +12,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
 import {
@@ -29,7 +30,8 @@ import {
   VisitPhotoInput,
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
-import { KO_NAME_BY_CODE } from "../lib/countryLookup";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 import { isValidDateKey, toLocalDateKey } from "../utils/date";
 import { flagEmoji } from "../utils/flag";
@@ -55,6 +57,7 @@ type EditPhoto = {
 };
 
 export default function EditTripScreen({ trip, onClose }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const refreshVisits = useVisitStore((s) => s.refreshVisits);
@@ -98,7 +101,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
     };
   }, [trip.countryCode, trip.startDate, trip.endDate]);
 
-  const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
+  const koName = getCountryName(trip.countryCode, getCurrentLocale());
   const flag = flagEmoji(trip.countryCode);
 
   const datesValid =
@@ -135,7 +138,10 @@ export default function EditTripScreen({ trip, onClose }: Props) {
   const onAddPhotos = async () => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!perm.granted) {
-      Alert.alert("권한 필요", "사진 라이브러리 권한이 필요합니다.");
+      Alert.alert(
+        t("alerts.permissionRequired"),
+        t("alerts.photoLibraryPermissionBody")
+      );
       return;
     }
     const res = await ImagePicker.launchImageLibraryAsync({
@@ -176,10 +182,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
   const onSave = async () => {
     if (!dirty || submitting) return;
     if (!datesValid) {
-      Alert.alert(
-        "날짜 확인",
-        "날짜는 YYYY-MM-DD 형식이어야 하고 시작일이 종료일보다 늦을 수 없어요."
-      );
+      Alert.alert(t("alerts.dateInvalidTitle"), t("alerts.dateInvalidBody"));
       return;
     }
 
@@ -190,11 +193,19 @@ export default function EditTripScreen({ trip, onClose }: Props) {
     if (willTrimOldRange) {
       const ok = await new Promise<boolean>((resolve) => {
         Alert.alert(
-          "기간 변경 확인",
-          "새 기간 밖에 있는 사진과 메모는 함께 삭제됩니다. 계속할까요?",
+          t("alerts.rangeChangeConfirmTitle"),
+          t("alerts.rangeChangeConfirmBody"),
           [
-            { text: "취소", style: "cancel", onPress: () => resolve(false) },
-            { text: "계속", style: "destructive", onPress: () => resolve(true) },
+            {
+              text: t("common.cancel"),
+              style: "cancel",
+              onPress: () => resolve(false),
+            },
+            {
+              text: t("common.continue"),
+              style: "destructive",
+              onPress: () => resolve(true),
+            },
           ]
         );
       });
@@ -263,15 +274,18 @@ export default function EditTripScreen({ trip, onClose }: Props) {
       await refreshVisits();
       if (dropped > 0) {
         Alert.alert(
-          "일부 사진 미추가",
-          `하루에 최대 ${PHOTO_LIMIT_PER_DAY}장까지만 저장되어 ${dropped}장은 추가되지 않았어요.`,
-          [{ text: "확인", onPress: () => onClose(true) }]
+          t("alerts.partialPhotosTitle"),
+          t("alerts.partialPhotosBody", {
+            limit: PHOTO_LIMIT_PER_DAY,
+            dropped,
+          }),
+          [{ text: t("common.ok"), onPress: () => onClose(true) }]
         );
       } else {
         onClose(true);
       }
     } catch (e) {
-      Alert.alert("저장 실패", String(e));
+      Alert.alert(t("alerts.saveFailed"), String(e));
       setSubmitting(false);
     }
   };
@@ -295,11 +309,13 @@ export default function EditTripScreen({ trip, onClose }: Props) {
     >
       <View style={styles.header}>
         <Pressable onPress={() => onClose(false)} hitSlop={8}>
-          <Text style={styles.cancel}>취소</Text>
+          <Text style={styles.cancel}>{t("common.cancel")}</Text>
         </Pressable>
         <View style={styles.headerCenter}>
           <Text style={styles.headerFlag}>{flag}</Text>
-          <Text style={styles.headerTitle}>{koName} 수정</Text>
+          <Text style={styles.headerTitle}>
+            {t("editTrip.heading", { country: koName })}
+          </Text>
         </View>
         <Pressable
           onPress={onSave}
@@ -312,7 +328,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
               (!dirty || !datesValid || submitting) && styles.confirmDisabled,
             ]}
           >
-            {submitting ? "저장 중…" : "저장"}
+            {submitting ? t("editTrip.savingState") : t("editTrip.saveAction")}
           </Text>
         </Pressable>
       </View>
@@ -323,41 +339,41 @@ export default function EditTripScreen({ trip, onClose }: Props) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>여행 기간</Text>
+          <Text style={styles.sectionLabel}>{t("editTrip.sectionDates")}</Text>
           <View style={styles.dateRow}>
             <DateField
               theme={theme}
-              label="시작"
+              label={t("editTrip.dateLabelStart")}
               value={startDate}
               onChange={setStartDate}
             />
             <Text style={styles.dateSeparator}>—</Text>
             <DateField
               theme={theme}
-              label="종료"
+              label={t("editTrip.dateLabelEnd")}
               value={endDate}
               onChange={setEndDate}
             />
           </View>
           {!datesValid && (
             <Text style={styles.errorText}>
-              YYYY-MM-DD 형식이어야 하고 시작일 ≤ 종료일이어야 해요.
+              {t("editTrip.dateFormatHelp")}
             </Text>
           )}
           {datesValid && (
             <Text style={styles.helpText}>
-              총 {dayCount(startDate, endDate)}일
+              {t("editTrip.totalDays", { days: dayCount(startDate, endDate) })}
             </Text>
           )}
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>메모</Text>
+          <Text style={styles.sectionLabel}>{t("editTrip.sectionNote")}</Text>
           <TextInput
             style={styles.noteInput}
             value={noteBody}
             onChangeText={setNoteBody}
-            placeholder="이 여행에서 기억하고 싶은 것들…"
+            placeholder={t("editTrip.notePlaceholder")}
             placeholderTextColor={theme.textMuted}
             multiline
             textAlignVertical="top"
@@ -366,7 +382,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
 
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionLabel}>사진</Text>
+            <Text style={styles.sectionLabel}>{t("editTrip.sectionPhotos")}</Text>
             <Pressable
               onPress={onAddPhotos}
               hitSlop={6}
@@ -375,17 +391,20 @@ export default function EditTripScreen({ trip, onClose }: Props) {
                 pressed && styles.addBtnPressed,
               ]}
             >
-              <Text style={styles.addBtnText}>+ 추가</Text>
+              <Text style={styles.addBtnText}>{t("editTrip.addPhotos")}</Text>
             </Pressable>
           </View>
           {(addedCount > 0 || removedCount > 0) && (
             <Text style={styles.helpText}>
-              추가 {addedCount} · 삭제 {removedCount}
+              {t("editTrip.photoChanges", {
+                added: addedCount,
+                removed: removedCount,
+              })}
             </Text>
           )}
           {visiblePhotos.length === 0 ? (
             <View style={styles.photoEmpty}>
-              <Text style={styles.helpText}>저장된 사진이 없어요.</Text>
+              <Text style={styles.helpText}>{t("editTrip.photoEmpty")}</Text>
             </View>
           ) : (
             <View style={styles.photoGrid}>
@@ -431,7 +450,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
               ]}
             >
               <Text style={styles.undoBtnText}>
-                삭제 표시 {removedCount}장 되돌리기
+                {t("editTrip.undoRemoves", { count: removedCount })}
               </Text>
             </Pressable>
           )}

@@ -6,7 +6,186 @@
     "confirm": "Confirm",
     "save": "Save",
     "delete": "Delete",
-    "back": "Back"
+    "back": "Back",
+    "continue": "Continue",
+    "remove": "Remove",
+    "loading": "Loading…"
+  },
+  "alerts": {
+    "saveFailed": "Save failed",
+    "loginFailed": "Sign-in failed",
+    "permissionRequired": "Permission needed",
+    "photoLibraryPermissionBody": "Photo library access is required.",
+    "registerCompleteTitle": "Photos added",
+    "registerCompleteBody": "{{count}} photos were added.",
+    "registerFailedTitle": "Couldn't add photos",
+    "dateInvalidTitle": "Check the dates",
+    "dateInvalidBody": "Dates must be in YYYY-MM-DD format and the start date can't be later than the end date.",
+    "rangeChangeConfirmTitle": "Change trip period?",
+    "rangeChangeConfirmBody": "Photos and notes outside the new range will be deleted along with it. Continue?",
+    "partialPhotosTitle": "Some photos weren't added",
+    "partialPhotosBody": "Only up to {{limit}} photos per day can be saved, so {{dropped}} weren't added.",
+    "tripDeleteTitle": "Delete this trip",
+    "tripDeleteBody": "Delete the {{startDate}} — {{endDate}} ({{days}} days) record?\nPhotos and notes from this period will be removed too.",
+    "notMyTripTitle": "Not my trip",
+    "notMyTripBody": "Remove the {{country}} {{range}} trip from your records?\nIts {{count}} photos will be cleaned up too."
+  },
+  "history": {
+    "heading": "Trip history",
+    "statCountriesUnit": "countries",
+    "statVisitsUnit": "visits",
+    "statDaysUnit": "days total",
+    "empty": "No trips recorded yet.",
+    "tripDuration": "{{days}}-day trip",
+    "sortRecent": "Recent",
+    "sortDays": "Longest",
+    "sortAz": "A–Z"
+  },
+  "allCountries": {
+    "heading": "All countries",
+    "filterAll": "All",
+    "filterVisited": "Visited",
+    "filterUnvisited": "Not visited",
+    "sortName": "Name",
+    "sortPopular": "Popularity",
+    "metaTotal": "{{count}} countries",
+    "metaVisited": "· {{count}} visited",
+    "empty": "No countries match."
+  },
+  "addTrip": {
+    "heading": "Add trip",
+    "selectingPhotos": "Selecting photos…",
+    "submitButton": "Add {{count}}",
+    "submitting": "Saving…",
+    "skippedHint": "{{count}} photos skipped — no GPS or unknown location",
+    "homeBadgeSuffix": " (Home)",
+    "groupMeta": "{{date}} · existing {{existing}}/{{limit}} · selected {{selected}}/{{slot}}",
+    "dayFull": "{{limit}} photos already saved for this day",
+    "noEligible": "No photos can be added.",
+    "noEligibleSuffix": " None had GPS or a recognizable location."
+  },
+  "editTrip": {
+    "heading": "Edit {{country}}",
+    "savingState": "Saving…",
+    "saveAction": "Save",
+    "sectionDates": "Trip period",
+    "dateLabelStart": "Start",
+    "dateLabelEnd": "End",
+    "dateFormatHelp": "Dates must be in YYYY-MM-DD format and start ≤ end.",
+    "totalDays": "{{days}} days total",
+    "sectionNote": "Note",
+    "notePlaceholder": "What you want to remember from this trip…",
+    "sectionPhotos": "Photos",
+    "addPhotos": "+ Add",
+    "photoChanges": "Added {{added}} · Removed {{removed}}",
+    "photoEmpty": "No saved photos.",
+    "undoRemoves": "Undo {{count}} pending removals"
+  },
+  "tripDetail": {
+    "edit": "✎ Edit",
+    "dayUnit": " day trip",
+    "photoUnit": " photos",
+    "sectionDates": "Trip period",
+    "sectionPhotos": "Photos",
+    "viewAll": "View all ({{count}}) →",
+    "photosLoading": "Loading photos…",
+    "photosEmpty": "No photos saved for this trip.",
+    "noteSection": "Note",
+    "noteWritten": "Written {{date}}",
+    "photosGridHeader": "{{count}} photos",
+    "photosGridEmpty": "No photos for this trip."
+  },
+  "countryDetail": {
+    "statVisits": "visits",
+    "statDays": "days total",
+    "statPhotos": "photos",
+    "sectionTrips": "Trip history",
+    "swipeToDelete": "← Swipe to delete",
+    "sortLatest": "Newest",
+    "empty": "No trips recorded for this country yet.",
+    "tripPhotos": "{{count}} photos",
+    "tripRecent": "Latest",
+    "tripDayOnly": "1 day (same-day)",
+    "tripDuration": "{{days}}-day trip",
+    "deleteAction": "Delete"
+  },
+  "titles": {
+    "heading": "Title",
+    "autoLabel": "Auto (current rank)",
+    "autoHint": "Your rank title updates automatically as you visit more countries.",
+    "autoActive": "On",
+    "autoSet": "Use auto",
+    "noCountryHint": "Stay 30+ days in one country to unlock its regular title.",
+    "noneToShow": "No titles to show."
+  },
+  "reviewSuspect": {
+    "heading": "Review trips",
+    "introTitle": "These trips only have photos from another device",
+    "introBody": "Photos sent by friends may have slipped in here. Remove anything that isn't your own trip.",
+    "noneTitle": "Nothing left to review.",
+    "primaryAcceptAll": "Keep all remaining as my trips",
+    "primaryConfirm": "Done",
+    "deviceFallback": "Another device",
+    "deviceMore": "{{first}} +{{count}} more",
+    "rowMeta": "{{range}} · {{days}} days",
+    "rowPhotoLine": "{{count}} photos · {{devices}}",
+    "actionAccept": "Add to my trips"
+  },
+  "changeHome": {
+    "title": "Choose a new home country",
+    "subtitle": "All existing records will be cleared and your photos will be rescanned.",
+    "loadingChanging": "Changing home country…",
+    "loadingPreparing": "Getting ready…"
+  },
+  "login": {
+    "googleContinue": "Continue with Google"
+  },
+  "yearPicker": {
+    "title": "Select year",
+    "viewAll": "View all",
+    "viewAllRange": "{{min}} — {{max}} · all records",
+    "viewAllNoRange": "All records",
+    "noRecord": "No records",
+    "yearMeta": "{{days}} days · {{countries}} dots"
+  },
+  "dotMap": {
+    "highlightPrompt": "Which country's dots should be highlighted?"
+  },
+  "countryPicker": {
+    "searchPlaceholder": "Search countries"
+  },
+  "tiers": {
+    "T0": { "title": "Getting Ready", "description": "No footprints recorded yet" },
+    "T1": { "title": "Settler", "description": "First footprint at home" },
+    "T2": { "title": "First Step", "description": "First step across a border" },
+    "T3": { "title": "Stroller", "description": "Stretching beyond familiar streets" },
+    "T4": { "title": "Wayfarer", "description": "Travel is starting to feel natural" },
+    "T5": { "title": "Traveler", "description": "Above the global average" },
+    "T6": { "title": "Explorer", "description": "Unfamiliar places no longer feel scary" },
+    "T7": { "title": "Veteran", "description": "Travel handled like a craft" },
+    "T8": { "title": "Nomad", "description": "Movement comes more naturally than settling" },
+    "T9": { "title": "Globetrotter", "description": "At home anywhere on Earth" },
+    "T10": { "title": "World Collector", "description": "Collecting the world — top 1%" },
+    "MASTER": { "title": "Master", "description": "Travel itself, embodied" },
+    "GRANDMASTER": { "title": "Grandmaster", "description": "100 countries — into the TCC ranks" },
+    "LEGEND": { "title": "Legend", "description": "Footsteps that become a legend" },
+    "UN_MASTER": { "title": "UN Master", "description": "Every flag on Earth, collected" }
+  },"errors": {
+    "auth": {
+      "missingClientId": "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID is required for Google Sign-In.",
+      "googleSignInCancelled": "Google sign-in was cancelled.",
+      "googleSignInNotConfigured": "Google Sign-In isn't configured. Check your environment variables.",
+      "noIdToken": "Couldn't get an ID token from Google."
+    },
+    "trip": {
+      "startAfterEnd": "Start date can't be later than end date."
+    },
+    "device": {
+      "unknown": "Unknown device"
+    },
+    "supabase": {
+      "missingEnv": "EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY aren't set. Check your .env file."
+    }
   },
   "home": {
     "all": "All",
@@ -51,6 +230,53 @@
     "body": "Your home country ({{country}}) is now excluded from automatic tracking.\nWe cleaned up {{days}} days and {{photos}} photos that had been auto-added.\n\nFor home-country photos, you can still add specific dates manually from Menu > \"Add Trip\"."
   },
   "badges": {
+    "category": {
+      "tier": "Rank",
+      "days": "Travel days",
+      "continent": "Continent",
+      "country": "Country regulars",
+      "foreign": "Photos abroad"
+    },
+    "days": {
+      "title7": "Weekender",
+      "title30": "Monthly Wanderer",
+      "title100": "Centenary Voyager",
+      "title365": "Yearling Drifter",
+      "title730": "Biennial Drifter",
+      "title1000": "Eternal Traveler",
+      "description": "{{threshold}}+ days of cumulative travel"
+    },
+    "foreign": {
+      "title100": "Overseas Collector",
+      "title500": "Overseas Enthusiast",
+      "title1000": "Overseas Master",
+      "title3000": "Overseas Legend",
+      "description": "{{threshold}}+ photos taken abroad"
+    },
+    "continent": {
+      "name": {
+        "AS": "Asia",
+        "EU": "Europe",
+        "AF": "Africa",
+        "NA": "North America",
+        "SA": "South America",
+        "OC": "Oceania",
+        "AN": "Antarctica"
+      },
+      "wandererTitle": "{{continent}} Wanderer",
+      "conquerorTitle": "{{continent}} Conqueror",
+      "wandererDescription": "Visited {{count}}+ countries in {{continent}}",
+      "conquerorDescription": "Visited {{count}}+ countries in {{continent}}",
+      "antarcticaPioneerTitle": "Antarctica Pioneer",
+      "antarcticaPioneerDescription": "Footprints at the southernmost point on Earth"
+    },
+    "country": {
+      "suffix30": "Regular",
+      "suffix100": "Second Home",
+      "suffix365": "Local",
+      "title": "{{country}} {{suffix}}",
+      "description": "Spent {{threshold}}+ days in {{country}}"
+    },
     "newSingleTitle": "You earned a new badge!",
     "newMultipleTitle": "You earned {{count}} new badges!",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nChoose it from Settings > Titles to display on your home screen.",

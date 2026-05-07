@@ -6,7 +6,186 @@
     "confirm": "Подтвердить",
     "save": "Сохранить",
     "delete": "Удалить",
-    "back": "Назад"
+    "back": "Назад",
+    "continue": "Продолжить",
+    "remove": "Удалить",
+    "loading": "Загрузка…"
+  },
+  "alerts": {
+    "saveFailed": "Не удалось сохранить",
+    "loginFailed": "Не удалось войти",
+    "permissionRequired": "Нужно разрешение",
+    "photoLibraryPermissionBody": "Нужен доступ к фотогалерее.",
+    "registerCompleteTitle": "Фото добавлены",
+    "registerCompleteBody": "Добавлено {{count}} фото.",
+    "registerFailedTitle": "Не удалось добавить фото",
+    "dateInvalidTitle": "Проверьте даты",
+    "dateInvalidBody": "Даты должны быть в формате YYYY-MM-DD, дата начала не может быть позже даты окончания.",
+    "rangeChangeConfirmTitle": "Изменить даты поездки?",
+    "rangeChangeConfirmBody": "Фото и заметки за пределами нового периода будут удалены вместе с ним. Продолжить?",
+    "partialPhotosTitle": "Часть фото не добавлена",
+    "partialPhotosBody": "В день можно сохранить не более {{limit}} фото — {{dropped}} не добавлено.",
+    "tripDeleteTitle": "Удалить запись о поездке",
+    "tripDeleteBody": "Удалить запись {{startDate}} — {{endDate}} ({{days}} дн.)?\nФото и заметки за этот период тоже будут удалены.",
+    "notMyTripTitle": "Не моя поездка",
+    "notMyTripBody": "Удалить поездку в {{country}} ({{range}}) из записей?\n{{count}} фото также будут вычищены."
+  },
+  "history": {
+    "heading": "История поездок",
+    "statCountriesUnit": "стран",
+    "statVisitsUnit": "поездок",
+    "statDaysUnit": "дн. всего",
+    "empty": "Поездок пока не записано.",
+    "tripDuration": "поездка на {{days}} дн.",
+    "sortRecent": "Свежее",
+    "sortDays": "Дольше",
+    "sortAz": "А–Я"
+  },
+  "allCountries": {
+    "heading": "Все страны",
+    "filterAll": "Все",
+    "filterVisited": "Посещённые",
+    "filterUnvisited": "Не посещённые",
+    "sortName": "Название",
+    "sortPopular": "Популярность",
+    "metaTotal": "{{count}} стран",
+    "metaVisited": "· посещено {{count}}",
+    "empty": "Стран не найдено."
+  },
+  "addTrip": {
+    "heading": "Добавить поездку",
+    "selectingPhotos": "Выбираем фото…",
+    "submitButton": "Добавить {{count}}",
+    "submitting": "Сохраняем…",
+    "skippedHint": "Пропущено {{count}} фото — без GPS или с неизвестным местом",
+    "homeBadgeSuffix": " (родная страна)",
+    "groupMeta": "{{date}} · уже {{existing}}/{{limit}} · выбрано {{selected}}/{{slot}}",
+    "dayFull": "На этот день уже сохранено {{limit}} фото",
+    "noEligible": "Нет фото, которые можно добавить.",
+    "noEligibleSuffix": " Ни на одном нет GPS или узнаваемого места."
+  },
+  "editTrip": {
+    "heading": "Редактирование: {{country}}",
+    "savingState": "Сохраняем…",
+    "saveAction": "Сохранить",
+    "sectionDates": "Даты поездки",
+    "dateLabelStart": "Начало",
+    "dateLabelEnd": "Конец",
+    "dateFormatHelp": "Даты в формате YYYY-MM-DD, начало ≤ конец.",
+    "totalDays": "Всего {{days}} дн.",
+    "sectionNote": "Заметка",
+    "notePlaceholder": "Что хочется запомнить из этой поездки…",
+    "sectionPhotos": "Фото",
+    "addPhotos": "+ Добавить",
+    "photoChanges": "Добавлено {{added}} · Удалено {{removed}}",
+    "photoEmpty": "Сохранённых фото нет.",
+    "undoRemoves": "Отменить удаление: {{count}}"
+  },
+  "tripDetail": {
+    "edit": "✎ Изменить",
+    "dayUnit": " дн. поездка",
+    "photoUnit": " фото",
+    "sectionDates": "Даты поездки",
+    "sectionPhotos": "Фото",
+    "viewAll": "Все ({{count}}) →",
+    "photosLoading": "Загружаем фото…",
+    "photosEmpty": "Для этой поездки фото не сохранены.",
+    "noteSection": "Заметка",
+    "noteWritten": "Записано {{date}}",
+    "photosGridHeader": "Фото: {{count}}",
+    "photosGridEmpty": "Для этой поездки нет фото."
+  },
+  "countryDetail": {
+    "statVisits": "поездок",
+    "statDays": "дн. всего",
+    "statPhotos": "фото",
+    "sectionTrips": "История поездок",
+    "swipeToDelete": "← Свайп для удаления",
+    "sortLatest": "Свежее",
+    "empty": "Поездок в эту страну ещё не записано.",
+    "tripPhotos": "{{count}} фото",
+    "tripRecent": "Свежее",
+    "tripDayOnly": "1 день (на день)",
+    "tripDuration": "поездка на {{days}} дн.",
+    "deleteAction": "Удалить"
+  },
+  "titles": {
+    "heading": "Звание",
+    "autoLabel": "Авто (текущий уровень)",
+    "autoHint": "Звание уровня обновляется само, когда вы посещаете больше стран.",
+    "autoActive": "Включено",
+    "autoSet": "Включить авто",
+    "noCountryHint": "Проведите 30 дней и более в одной стране, чтобы открыть её «постоянное» звание.",
+    "noneToShow": "Звания не найдены."
+  },
+  "reviewSuspect": {
+    "heading": "Проверка поездок",
+    "introTitle": "В этих поездках только фото с другого устройства",
+    "introBody": "Возможно, сюда попали фотографии от друзей. Удалите всё, что не относится к вашим поездкам.",
+    "noneTitle": "Проверять больше нечего.",
+    "primaryAcceptAll": "Оставшиеся — мои поездки",
+    "primaryConfirm": "Готово",
+    "deviceFallback": "Другое устройство",
+    "deviceMore": "{{first}} и ещё {{count}}",
+    "rowMeta": "{{range}} · {{days}} дн.",
+    "rowPhotoLine": "{{count}} фото · {{devices}}",
+    "actionAccept": "В мои поездки"
+  },
+  "changeHome": {
+    "title": "Выберите новую родную страну",
+    "subtitle": "После выбора все записи будут удалены, а фото — пересканированы.",
+    "loadingChanging": "Меняем родную страну…",
+    "loadingPreparing": "Готовимся…"
+  },
+  "login": {
+    "googleContinue": "Продолжить с Google"
+  },
+  "yearPicker": {
+    "title": "Выбор года",
+    "viewAll": "Показать всё",
+    "viewAllRange": "{{min}} — {{max}} · все записи",
+    "viewAllNoRange": "Все записи",
+    "noRecord": "Записей нет",
+    "yearMeta": "{{days}} дн. · {{countries}} точек"
+  },
+  "dotMap": {
+    "highlightPrompt": "Какие точки страны выделить?"
+  },
+  "countryPicker": {
+    "searchPlaceholder": "Поиск страны"
+  },
+  "tiers": {
+    "T0": { "title": "Готовлюсь в путь", "description": "Пока ни одного следа" },
+    "T1": { "title": "Оседлый", "description": "Первый след в родной стране" },
+    "T2": { "title": "Первый шаг", "description": "Первый шаг за границу" },
+    "T3": { "title": "Прогуливающийся", "description": "Шаги выходят за привычные улицы" },
+    "T4": { "title": "Путник", "description": "Дорога постепенно становится привычной" },
+    "T5": { "title": "Путешественник", "description": "Выше мирового среднего" },
+    "T6": { "title": "Исследователь", "description": "Незнакомое уже не пугает" },
+    "T7": { "title": "Ветеран", "description": "Путешествие как ремесло" },
+    "T8": { "title": "Кочевник", "description": "Двигаться привычнее, чем оседать" },
+    "T9": { "title": "Гражданин мира", "description": "Дома в любом уголке планеты" },
+    "T10": { "title": "Коллекционер мира", "description": "Коллекционирует мир — топ 1%" },
+    "MASTER": { "title": "Мастер", "description": "Само путешествие во плоти" },
+    "GRANDMASTER": { "title": "Гроссмейстер", "description": "100 стран — порог TCC" },
+    "LEGEND": { "title": "Легенда", "description": "Шаги, которые становятся легендой" },
+    "UN_MASTER": { "title": "Мастер ООН", "description": "Собрал все флаги планеты" }
+  },"errors": {
+    "auth": {
+      "missingClientId": "Для входа через Google нужна переменная EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.",
+      "googleSignInCancelled": "Вход через Google отменён.",
+      "googleSignInNotConfigured": "Google Sign-In не настроен. Проверьте переменные окружения.",
+      "noIdToken": "Не удалось получить ID-токен от Google."
+    },
+    "trip": {
+      "startAfterEnd": "Дата начала не может быть позже даты окончания."
+    },
+    "device": {
+      "unknown": "Неизвестное устройство"
+    },
+    "supabase": {
+      "missingEnv": "Не заданы EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY. Проверьте файл .env."
+    }
   },
   "home": {
     "all": "Всё",
@@ -51,6 +230,53 @@
     "body": "Родная страна ({{country}}) больше не учитывается в автоматическом добавлении.\nУже добавленные автоматически {{days}} дн. и {{photos}} фото удалены.\n\nФото, снятые в родной стране, можно по-прежнему добавлять вручную через Меню > «Добавить поездку», выбирая нужные даты."
   },
   "badges": {
+    "category": {
+      "tier": "Звание",
+      "days": "Дни в поездках",
+      "continent": "Континент",
+      "country": "Завсегдатай страны",
+      "foreign": "Фото за рубежом"
+    },
+    "days": {
+      "title7": "Путешественник выходного дня",
+      "title30": "Скиталец месяца",
+      "title100": "Столетний странник",
+      "title365": "Странник года",
+      "title730": "Бродяга двухлетия",
+      "title1000": "Вечный путешественник",
+      "description": "{{threshold}}+ дней в поездках суммарно"
+    },
+    "foreign": {
+      "title100": "Зарубежный коллекционер",
+      "title500": "Зарубежный энтузиаст",
+      "title1000": "Зарубежный мастер",
+      "title3000": "Зарубежная легенда",
+      "description": "{{threshold}}+ фото, сделанных за границей"
+    },
+    "continent": {
+      "name": {
+        "AS": "Азия",
+        "EU": "Европа",
+        "AF": "Африка",
+        "NA": "Северная Америка",
+        "SA": "Южная Америка",
+        "OC": "Океания",
+        "AN": "Антарктида"
+      },
+      "wandererTitle": "Странник {{continent}}",
+      "conquerorTitle": "Покоритель {{continent}}",
+      "wandererDescription": "Посетил(а) {{count}}+ стран в {{continent}}",
+      "conquerorDescription": "Посетил(а) {{count}}+ стран в {{continent}}",
+      "antarcticaPioneerTitle": "Первопроходец Антарктиды",
+      "antarcticaPioneerDescription": "Следы на самой южной точке планеты"
+    },
+    "country": {
+      "suffix30": "Завсегдатай",
+      "suffix100": "Вторая родина",
+      "suffix365": "Местный",
+      "title": "{{country}}: {{suffix}}",
+      "description": "{{threshold}}+ дней проведено в {{country}}"
+    },
     "newSingleTitle": "Получен новый значок!",
     "newMultipleTitle": "Получено новых значков: {{count}}!",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nВыберите его в «Настройки > Звания», чтобы показывать на главном экране.",
@@ -107,6 +333,43 @@
     "language": {
       "label": "Язык",
       "current": "Текущий: {{name}}"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Поездки, собранные из ваших фото",
+      "point1": "Считываем GPS-данные ваших фотографий и узнаём, где вы были",
+      "point2": "Поездки появляются сами — никакого ручного ввода",
+      "point3": "Фотографии не покидают ваш телефон",
+      "next": "Далее"
+    },
+    "login": {
+      "title": "Начнём пользоваться VisitGrid",
+      "subtitle": "Войдите, чтобы записи надёжно хранились на этом устройстве"
+    },
+    "home": {
+      "title": "Выберите родную страну",
+      "subtitle": "Точка родной страны всегда показана синим, независимо от числа дней.\nДругие страны темнеют с каждым проведённым там днём."
+    },
+    "sync": {
+      "title": "Синхронизируем ваши поездки",
+      "body": "Мы просмотрим фотографии в телефоне и автоматически соберём записи о поездках.",
+      "fullAccessHint": "Для точной автоматической записи выберите «Разрешить доступ ко всем фото».",
+      "button": "Запустить синхронизацию",
+      "scanning": "Просматриваем {{processed}} фото…",
+      "preparing": "Готовимся к проверке фотографий…",
+      "limitedHint": "Сейчас анализируются только выбранные фото. В настройках можно дать полный доступ, чтобы найти больше поездок.",
+      "permissionDeniedTitle": "Нужен доступ к фото",
+      "permissionDeniedBody": "Чтобы собирать записи о поездках, нужен доступ к фото. Разрешите доступ и повторите попытку.",
+      "requestAgain": "Запросить доступ снова"
+    },
+    "suspect": {
+      "title": "Эти поездки стоит уточнить",
+      "subtitle": "В этих поездках есть только фотографии с другого устройства. Удалите те, что не ваши.",
+      "allClearedTitle": "Ваши поездки готовы",
+      "allClearedBody": "Проверять больше нечего. Можно открывать карту.",
+      "acceptAll": "Оставшиеся — мои",
+      "goHome": "На главный экран"
     }
   }
 }

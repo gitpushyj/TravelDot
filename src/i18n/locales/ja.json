@@ -6,7 +6,186 @@
     "confirm": "確認",
     "save": "保存",
     "delete": "削除",
-    "back": "戻る"
+    "back": "戻る",
+    "continue": "続ける",
+    "remove": "削除",
+    "loading": "読み込み中…"
+  },
+  "alerts": {
+    "saveFailed": "保存に失敗しました",
+    "loginFailed": "ログインに失敗しました",
+    "permissionRequired": "権限が必要です",
+    "photoLibraryPermissionBody": "写真ライブラリへのアクセス権限が必要です。",
+    "registerCompleteTitle": "登録完了",
+    "registerCompleteBody": "{{count}}枚を追加しました。",
+    "registerFailedTitle": "登録に失敗しました",
+    "dateInvalidTitle": "日付を確認してください",
+    "dateInvalidBody": "日付はYYYY-MM-DD形式で、開始日は終了日より後にできません。",
+    "rangeChangeConfirmTitle": "期間を変更しますか？",
+    "rangeChangeConfirmBody": "新しい期間の外にある写真とメモは一緒に削除されます。続けますか？",
+    "partialPhotosTitle": "一部の写真は追加されませんでした",
+    "partialPhotosBody": "1日に最大{{limit}}枚までしか保存できないため、{{dropped}}枚は追加されませんでした。",
+    "tripDeleteTitle": "旅の記録を削除",
+    "tripDeleteBody": "{{startDate}} 〜 {{endDate}}（{{days}}日間）の記録を削除しますか？\nこの期間の写真とメモも一緒に削除されます。",
+    "notMyTripTitle": "自分の旅ではない",
+    "notMyTripBody": "{{country}}（{{range}}）の旅を記録から削除しますか？\n写真{{count}}枚も一緒に整理されます。"
+  },
+  "history": {
+    "heading": "旅の記録",
+    "statCountriesUnit": "カ国",
+    "statVisitsUnit": "回訪問",
+    "statDaysUnit": "日累計",
+    "empty": "まだ記録された旅がありません。",
+    "tripDuration": "{{days}}日間の旅",
+    "sortRecent": "新しい順",
+    "sortDays": "滞在日数順",
+    "sortAz": "A-Z"
+  },
+  "allCountries": {
+    "heading": "すべての国",
+    "filterAll": "全部",
+    "filterVisited": "行ったことがある",
+    "filterUnvisited": "未訪問",
+    "sortName": "名前順",
+    "sortPopular": "人気順",
+    "metaTotal": "{{count}}カ国",
+    "metaVisited": "· 訪問済み {{count}}",
+    "empty": "該当する国がありません。"
+  },
+  "addTrip": {
+    "heading": "旅を追加",
+    "selectingPhotos": "写真を選択中…",
+    "submitButton": "登録 {{count}}",
+    "submitting": "保存中…",
+    "skippedHint": "GPS/位置不明でスキップした写真 {{count}}枚",
+    "homeBadgeSuffix": "（母国）",
+    "groupMeta": "{{date}}・既存 {{existing}}/{{limit}}・選択 {{selected}}/{{slot}}",
+    "dayFull": "この日付はすでに{{limit}}枚登録されています",
+    "noEligible": "登録できる写真がありません。",
+    "noEligibleSuffix": " GPSがない、または位置を特定できない写真ばかりでした。"
+  },
+  "editTrip": {
+    "heading": "{{country}}を編集",
+    "savingState": "保存中…",
+    "saveAction": "保存",
+    "sectionDates": "旅の期間",
+    "dateLabelStart": "開始",
+    "dateLabelEnd": "終了",
+    "dateFormatHelp": "日付はYYYY-MM-DD形式で、開始日 ≤ 終了日である必要があります。",
+    "totalDays": "合計 {{days}}日",
+    "sectionNote": "メモ",
+    "notePlaceholder": "この旅で覚えておきたいこと…",
+    "sectionPhotos": "写真",
+    "addPhotos": "+ 追加",
+    "photoChanges": "追加 {{added}}・削除 {{removed}}",
+    "photoEmpty": "保存された写真はありません。",
+    "undoRemoves": "削除予定の{{count}}枚を元に戻す"
+  },
+  "tripDetail": {
+    "edit": "✎ 編集",
+    "dayUnit": "日間の旅",
+    "photoUnit": "枚の写真",
+    "sectionDates": "旅の期間",
+    "sectionPhotos": "写真",
+    "viewAll": "すべて見る ({{count}}) →",
+    "photosLoading": "写真を読み込み中…",
+    "photosEmpty": "この旅に保存された写真はありません。",
+    "noteSection": "メモ",
+    "noteWritten": "{{date}} 作成",
+    "photosGridHeader": "写真 {{count}}",
+    "photosGridEmpty": "この旅の写真はありません。"
+  },
+  "countryDetail": {
+    "statVisits": "回訪問",
+    "statDays": "日累計",
+    "statPhotos": "枚の写真",
+    "sectionTrips": "旅の記録",
+    "swipeToDelete": "← 横にスワイプで削除",
+    "sortLatest": "新しい順",
+    "empty": "この国の旅の記録はまだありません。",
+    "tripPhotos": "{{count}}枚",
+    "tripRecent": "最新",
+    "tripDayOnly": "1日（日帰り）",
+    "tripDuration": "{{days}}日間の旅",
+    "deleteAction": "削除"
+  },
+  "titles": {
+    "heading": "称号",
+    "autoLabel": "自動（現在の等級）",
+    "autoHint": "訪問した国が増えると、等級称号が自動で更新されます。",
+    "autoActive": "使用中",
+    "autoSet": "自動にする",
+    "noCountryHint": "一つの国に30日以上滞在すると、常連称号がアンロックされます。",
+    "noneToShow": "表示できる称号がありません。"
+  },
+  "reviewSuspect": {
+    "heading": "旅を確認する",
+    "introTitle": "他の端末で撮影された写真しかない旅です",
+    "introBody": "友人から受け取った写真など、自分が行った旅でない写真が混ざっている可能性があります。自分の旅でないものは削除してください。",
+    "noneTitle": "確認が必要な旅はありません。",
+    "primaryAcceptAll": "残りはすべて自分の旅",
+    "primaryConfirm": "確認",
+    "deviceFallback": "他の端末",
+    "deviceMore": "{{first}} 他{{count}}台",
+    "rowMeta": "{{range}}・{{days}}日",
+    "rowPhotoLine": "写真{{count}}枚・{{devices}}",
+    "actionAccept": "自分の旅に追加"
+  },
+  "changeHome": {
+    "title": "新しい母国を選んでください",
+    "subtitle": "選択すると既存の記録がすべて整理され、写真が再スキャンされます。",
+    "loadingChanging": "母国を変更中...",
+    "loadingPreparing": "準備中..."
+  },
+  "login": {
+    "googleContinue": "Googleで続ける"
+  },
+  "yearPicker": {
+    "title": "年の選択",
+    "viewAll": "すべて表示",
+    "viewAllRange": "{{min}} 〜 {{max}}・すべての記録",
+    "viewAllNoRange": "すべての記録",
+    "noRecord": "記録なし",
+    "yearMeta": "{{days}}日・{{countries}}ドット"
+  },
+  "dotMap": {
+    "highlightPrompt": "どの国のドットを強調しますか？"
+  },
+  "countryPicker": {
+    "searchPlaceholder": "国を検索"
+  },
+  "tiers": {
+    "T0": { "title": "旅の準備中", "description": "まだ記録された足跡がない" },
+    "T1": { "title": "定住者", "description": "母国に最初の足跡を残した人" },
+    "T2": { "title": "最初の一歩", "description": "国境を越えた最初の一歩" },
+    "T3": { "title": "散策者", "description": "近場を超えて足を伸ばし始めた" },
+    "T4": { "title": "旅人見習い", "description": "旅が少しずつ身についてきた" },
+    "T5": { "title": "旅人", "description": "世界平均を超える旅好き" },
+    "T6": { "title": "探検家", "description": "見知らぬ場所がもう怖くない" },
+    "T7": { "title": "ベテラン", "description": "旅をひとつの仕事のように扱う" },
+    "T8": { "title": "ノマド", "description": "定住より移動が自然な人" },
+    "T9": { "title": "世界市民", "description": "地球上のどこでも我が家のよう" },
+    "T10": { "title": "ワールドコレクター", "description": "世界を集める人 — 上位1%" },
+    "MASTER": { "title": "マスター", "description": "旅そのものを体現する人" },
+    "GRANDMASTER": { "title": "グランドマスター", "description": "100カ国の足跡 — TCC入会ライン" },
+    "LEGEND": { "title": "レジェンド", "description": "伝説として語り継がれる足跡" },
+    "UN_MASTER": { "title": "UNマスター", "description": "地球上すべての国旗を集めた人" }
+  },"errors": {
+    "auth": {
+      "missingClientId": "Googleログインを使うには EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID 環境変数が必要です。",
+      "googleSignInCancelled": "Googleログインがキャンセルされました。",
+      "googleSignInNotConfigured": "Google Sign-Inが設定されていません。環境変数を確認してください。",
+      "noIdToken": "GoogleからIDトークンを取得できませんでした。"
+    },
+    "trip": {
+      "startAfterEnd": "開始日は終了日より後にできません。"
+    },
+    "device": {
+      "unknown": "不明な端末"
+    },
+    "supabase": {
+      "missingEnv": "Supabaseの環境変数（EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY）が設定されていません。.envファイルを確認してください。"
+    }
   },
   "home": {
     "all": "全期間",
@@ -51,6 +230,53 @@
     "body": "母国（{{country}}）は今後、自動追加の対象から除外されます。\n自動で追加されていた{{days}}日 / 写真{{photos}}枚を整理しました。\n\n母国で撮った写真は、メニュー >「旅を追加」から日付を指定して手動で追加できます。"
   },
   "badges": {
+    "category": {
+      "tier": "等級",
+      "days": "旅の日数",
+      "continent": "大陸",
+      "country": "国の常連",
+      "foreign": "海外の写真"
+    },
+    "days": {
+      "title7": "1週間の旅人",
+      "title30": "ひと月の彷徨い",
+      "title100": "百日の旅路",
+      "title365": "1年の流離い",
+      "title730": "二年の漂泊者",
+      "title1000": "永遠の旅人",
+      "description": "累計の旅日数 {{threshold}}日以上"
+    },
+    "foreign": {
+      "title100": "海外コレクター",
+      "title500": "海外マニア",
+      "title1000": "海外マスター",
+      "title3000": "海外レジェンド",
+      "description": "海外で写真を{{threshold}}枚以上撮影"
+    },
+    "continent": {
+      "name": {
+        "AS": "アジア",
+        "EU": "ヨーロッパ",
+        "AF": "アフリカ",
+        "NA": "北米",
+        "SA": "南米",
+        "OC": "オセアニア",
+        "AN": "南極"
+      },
+      "wandererTitle": "{{continent}}探訪家",
+      "conquerorTitle": "{{continent}}制覇者",
+      "wandererDescription": "{{continent}}で{{count}}カ国以上を訪問",
+      "conquerorDescription": "{{continent}}で{{count}}カ国以上を訪問",
+      "antarcticaPioneerTitle": "南極探検家",
+      "antarcticaPioneerDescription": "地球最南端まで足跡を残した人"
+    },
+    "country": {
+      "suffix30": "常連",
+      "suffix100": "第二の故郷",
+      "suffix365": "土地の人",
+      "title": "{{country}}の{{suffix}}",
+      "description": "{{country}}に{{threshold}}日以上滞在した人"
+    },
     "newSingleTitle": "新しいバッジを獲得！",
     "newMultipleTitle": "新しいバッジを{{count}}個獲得！",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n設定 > 称号から選んでホーム画面に表示できます。",
@@ -107,6 +333,43 @@
     "language": {
       "label": "言語",
       "current": "現在: {{name}}"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "写真でたどる旅の記録",
+      "point1": "写真のGPS情報から、どこへ行ったかを自動で読み取ります",
+      "point2": "手入力なしで旅が整理され、地図が埋まっていきます",
+      "point3": "写真は端末の外に送られないので安心です",
+      "next": "次へ"
+    },
+    "login": {
+      "title": "VisitGridをはじめましょう",
+      "subtitle": "記録をこの端末に安全に保存するため、ログインしてください"
+    },
+    "home": {
+      "title": "母国を選んでください",
+      "subtitle": "母国のドットは滞在日数に関わらず青色で表示されます。\n海外は滞在日数が多いほど色が濃くなります。"
+    },
+    "sync": {
+      "title": "旅の記録を同期します",
+      "body": "端末の写真を確認して、自動で旅の記録を作成します。",
+      "fullAccessHint": "より正確に記録するため、「すべての写真へのアクセスを許可」を選んでください。",
+      "button": "同期を開始",
+      "scanning": "写真を{{processed}}枚確認中…",
+      "preparing": "写真を確認する準備をしています…",
+      "limitedHint": "選択した写真のみ分析されています。設定でフルアクセスを許可すると、もっと多くの旅が見つかります。",
+      "permissionDeniedTitle": "写真へのアクセス許可が必要です",
+      "permissionDeniedBody": "旅の記録を作成するには写真へのアクセスが必要です。許可してから再度お試しください。",
+      "requestAgain": "もう一度許可を求める"
+    },
+    "suspect": {
+      "title": "確認が必要な旅があります",
+      "subtitle": "他の端末で撮影された写真しかない旅です。自分の旅でないものは記録から外してください。",
+      "allClearedTitle": "旅の記録の整理が終わりました",
+      "allClearedBody": "確認が必要な旅はありません。地図で旅の記録を見てみましょう。",
+      "acceptAll": "残りはすべて自分の旅",
+      "goHome": "ホームへ"
     }
   }
 }

@@ -3,6 +3,7 @@ import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "../features/auth/authStore";
+import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
 import {
@@ -12,6 +13,7 @@ import {
 import { getTierByCount } from "../features/travel/tierTitles";
 import { useVisitStore } from "../features/travel/visitStore";
 import {
+  getCurrentLocale,
   LOCALE_LABELS,
   SUPPORTED_LOCALES,
   type SupportedLocale,
@@ -123,11 +125,11 @@ export default function SettingsScreen({
     ? activeId == null
       ? t("settings.title.previewAuto", {
           emoji: activeBadge.emoji,
-          title: activeBadge.titleKo,
+          title: localizedBadgeTitle(activeBadge, t, getCurrentLocale()),
         })
       : t("settings.title.preview", {
           emoji: activeBadge.emoji,
-          title: activeBadge.titleKo,
+          title: localizedBadgeTitle(activeBadge, t, getCurrentLocale()),
         })
     : t("settings.title.none");
 

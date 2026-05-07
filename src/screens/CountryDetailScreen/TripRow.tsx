@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Animated, Easing, Pressable, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import Swipeable from "react-native-gesture-handler/Swipeable";
+import { useTranslation } from "react-i18next";
 
 import type { TripWithPhotos } from "../../features/travel/visitRepository";
 import type { Theme } from "../../theme/theme";
@@ -27,6 +28,7 @@ export default function TripRow({
   onPress,
   onDelete,
 }: Props) {
+  const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const countryColor = colorForCountry(trip.countryCode);
 
@@ -85,7 +87,9 @@ export default function TripRow({
           style={[styles.tripThumbInner, { backgroundColor: countryColor.dot }]}
         />
         <View style={styles.tripThumbBadge}>
-          <Text style={styles.tripThumbBadgeText}>{trip.photos}장</Text>
+          <Text style={styles.tripThumbBadgeText}>
+            {t("countryDetail.tripPhotos", { count: trip.photos })}
+          </Text>
         </View>
       </View>
       <View style={styles.tripBody}>
@@ -95,12 +99,16 @@ export default function TripRow({
           </Text>
           {showRecent && (
             <View style={styles.recentBadge}>
-              <Text style={styles.recentBadgeText}>최근</Text>
+              <Text style={styles.recentBadgeText}>
+                {t("countryDetail.tripRecent")}
+              </Text>
             </View>
           )}
         </View>
         <Text style={styles.tripSub}>
-          {trip.days === 1 ? "1일 (당일)" : `${trip.days}일 여행`}
+          {trip.days === 1
+            ? t("countryDetail.tripDayOnly")
+            : t("countryDetail.tripDuration", { days: trip.days })}
         </Text>
       </View>
       {!editMode && <Text style={styles.chev}>›</Text>}
@@ -109,7 +117,7 @@ export default function TripRow({
 
   const renderRightActions = () => (
     <RectButton style={styles.deleteAction} onPress={onDelete}>
-      <Text style={styles.deleteActionText}>삭제</Text>
+      <Text style={styles.deleteActionText}>{t("countryDetail.deleteAction")}</Text>
     </RectButton>
   );
 

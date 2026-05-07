@@ -7,8 +7,11 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import countries from "../../assets/data/countries.json";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import type { Theme } from "../theme/theme";
 import { useTheme } from "../theme/themeStore";
 
@@ -20,10 +23,12 @@ type Props = {
 };
 
 export default function CountryPicker({ onSelect, selectedCode }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [q, setQ] = useState("");
 
+  const locale = getCurrentLocale();
   const data = useMemo(() => {
     const list = countries as Entry[];
     if (!q.trim()) return list;
@@ -32,16 +37,17 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
       (c) =>
         c.code.toLowerCase().includes(needle) ||
         c.name.toLowerCase().includes(needle) ||
-        c.nameKo.toLowerCase().includes(needle)
+        c.nameKo.toLowerCase().includes(needle) ||
+        getCountryName(c.code, locale).toLowerCase().includes(needle)
     );
-  }, [q]);
+  }, [q, locale]);
 
   return (
     <View style={styles.root}>
       <TextInput
         value={q}
         onChangeText={setQ}
-        placeholder="국가 검색 (한글/영문/코드)"
+        placeholder={t("countryPicker.searchPlaceholder")}
         placeholderTextColor={theme.textMuted}
         autoCapitalize="none"
         autoCorrect={false}
@@ -63,7 +69,9 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
               ]}
               onPress={() => onSelect(item)}
             >
-              <Text style={styles.rowKo}>{item.nameKo}</Text>
+              <Text style={styles.rowKo}>
+                {getCountryName(item.code, locale)}
+              </Text>
               <Text style={styles.rowMeta}>
                 {item.name} · {item.code}
               </Text>

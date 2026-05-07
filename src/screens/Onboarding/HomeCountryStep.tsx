@@ -40,7 +40,7 @@ export default function HomeCountryStep({ onNext }: Props) {
       onNext();
     } catch (e) {
       setSubmitting(false);
-      Alert.alert("저장 실패", String(e));
+      Alert.alert(t("alerts.saveFailed"), String(e));
     }
   };
 

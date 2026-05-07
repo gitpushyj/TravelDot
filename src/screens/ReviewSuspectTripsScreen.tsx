@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 import type { SuspectTrip } from "../features/photoSync/deviceVerification";
 import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
 import { loadPhotoUrisByIds } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
-import { KO_NAME_BY_CODE } from "../lib/countryLookup";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 
 import { makeStyles } from "./ReviewSuspectTripsScreen/styles";
@@ -17,6 +19,7 @@ const PREVIEW_PHOTO_LIMIT = 5;
 type Props = { onClose: () => void };
 
 export default function ReviewSuspectTripsScreen({ onClose }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const suspectTrips = useVisitStore((s) => s.suspectTrips);
@@ -57,14 +60,18 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
   }, [suspectTrips]);
 
   const handleReject = (trip: SuspectTrip) => {
-    const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
+    const koName = getCountryName(trip.countryCode, getCurrentLocale());
     Alert.alert(
-      "내 여행 아님",
-      `${koName} ${formatRange(trip.startDate, trip.endDate)} 여행을 기록에서 제거할까요?\n사진 ${trip.photoCount}장이 함께 정리됩니다.`,
+      t("alerts.notMyTripTitle"),
+      t("alerts.notMyTripBody", {
+        country: koName,
+        range: formatRange(trip.startDate, trip.endDate),
+        count: trip.photoCount,
+      }),
       [
-        { text: "취소", style: "cancel" },
+        { text: t("common.cancel"), style: "cancel" },
         {
-          text: "제거",
+          text: t("common.remove"),
           style: "destructive",
           onPress: () => {
             void rejectSuspectTrip(trip);
@@ -91,27 +98,26 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
     <View style={styles.root}>
       <View style={styles.header}>
         <Pressable onPress={onClose} hitSlop={8}>
-          <Text style={styles.cancel}>닫기</Text>
+          <Text style={styles.cancel}>{t("common.close")}</Text>
         </Pressable>
-        <Text style={styles.title}>여행 확인하기</Text>
+        <Text style={styles.title}>{t("reviewSuspect.heading")}</Text>
         <View style={{ minWidth: 40 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.intro}>
           <Text style={styles.introTitle}>
-            다른 기기로 찍힌 사진만 있는 여행이에요
+            {t("reviewSuspect.introTitle")}
           </Text>
           <Text style={styles.introBody}>
-            친구한테서 받은 사진처럼, 본인이 다녀온 여행이 아닌 사진이 섞여
-            있을 수 있어요. 본인 여행이 아닌 건 제거해 주세요.
+            {t("reviewSuspect.introBody")}
           </Text>
         </View>
 
         {suspectTrips.length === 0 ? (
           <View style={styles.emptyWrap}>
             <Text style={styles.emptyText}>
-              확인이 필요한 여행이 없어요.
+              {t("reviewSuspect.noneTitle")}
             </Text>
           </View>
         ) : (
@@ -149,8 +155,8 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
         >
           <Text style={styles.primaryBtnText}>
             {suspectTrips.length === 0
-              ? "확인"
-              : "남은 여행은 모두 내 여행"}
+              ? t("reviewSuspect.primaryConfirm")
+              : t("reviewSuspect.primaryAcceptAll")}
           </Text>
         </Pressable>
       </View>

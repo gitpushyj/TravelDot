@@ -1,9 +1,11 @@
 import React, { useMemo } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import Animated, { FadeOut } from "react-native-reanimated";
+import { useTranslation } from "react-i18next";
 
 import type { SuspectTrip } from "../../features/photoSync/deviceVerification";
-import { KO_NAME_BY_CODE } from "../../lib/countryLookup";
+import { getCurrentLocale } from "../../i18n";
+import { getCountryName } from "../../lib/countryName";
 import type { Theme } from "../../theme/theme";
 import { flagEmoji } from "../../utils/flag";
 
@@ -24,14 +26,18 @@ export default function SuspectRow({
   onReject,
   onAccept,
 }: Props) {
+  const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
-  const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
+  const koName = getCountryName(trip.countryCode, getCurrentLocale());
   const deviceText =
     trip.deviceLabels.length === 0
-      ? "다른 기기"
+      ? t("reviewSuspect.deviceFallback")
       : trip.deviceLabels.length === 1
         ? trip.deviceLabels[0]
-        : `${trip.deviceLabels[0]} 외 ${trip.deviceLabels.length - 1}대`;
+        : t("reviewSuspect.deviceMore", {
+            first: trip.deviceLabels[0],
+            count: trip.deviceLabels.length - 1,
+          });
   const remainingPhotos = Math.max(0, trip.photoCount - previewUris.length);
 
   return (
@@ -44,10 +50,16 @@ export default function SuspectRow({
             <Text style={styles.rowCode}> {trip.countryCode}</Text>
           </View>
           <Text style={styles.rowDate}>
-            {formatRange(trip.startDate, trip.endDate)} · {trip.days}일
+            {t("reviewSuspect.rowMeta", {
+              range: formatRange(trip.startDate, trip.endDate),
+              days: trip.days,
+            })}
           </Text>
           <Text style={styles.rowMeta}>
-            사진 {trip.photoCount}장 · {deviceText}
+            {t("reviewSuspect.rowPhotoLine", {
+              count: trip.photoCount,
+              devices: deviceText,
+            })}
           </Text>
         </View>
       </View>
@@ -77,7 +89,7 @@ export default function SuspectRow({
           ]}
         >
           <Text style={styles.rejectBtnIcon}>✕</Text>
-          <Text style={styles.rejectBtnText}>제거</Text>
+          <Text style={styles.rejectBtnText}>{t("common.remove")}</Text>
         </Pressable>
         <Pressable
           onPress={onAccept}
@@ -87,7 +99,9 @@ export default function SuspectRow({
             pressed && styles.actionBtnPressed,
           ]}
         >
-          <Text style={styles.acceptBtnText}>내 여행에 추가</Text>
+          <Text style={styles.acceptBtnText}>
+            {t("reviewSuspect.actionAccept")}
+          </Text>
         </Pressable>
       </View>
     </Animated.View>

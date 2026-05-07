@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import {
   countPhotosForCountry,
@@ -10,6 +11,8 @@ import {
   TripWithPhotos,
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 import { flagEmoji } from "../utils/flag";
 
@@ -23,6 +26,7 @@ type Props = {
 };
 
 export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
@@ -72,12 +76,16 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
     if (!selectedCountry) return;
     const code = selectedCountry.code;
     Alert.alert(
-      "여행 기록 삭제",
-      `${formatMD(trip.startDate)} — ${formatMD(trip.endDate)} (${trip.days}일) 기록을 삭제할까요?\n해당 기간의 사진/메모도 함께 사라집니다.`,
+      t("alerts.tripDeleteTitle"),
+      t("alerts.tripDeleteBody", {
+        startDate: formatMD(trip.startDate),
+        endDate: formatMD(trip.endDate),
+        days: trip.days,
+      }),
       [
-        { text: "취소", style: "cancel" },
+        { text: t("common.cancel"), style: "cancel" },
         {
-          text: "삭제",
+          text: t("common.delete"),
           style: "destructive",
           onPress: async () => {
             await deleteTrip(code, trip.startDate, trip.endDate);
@@ -112,7 +120,7 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
         <View style={styles.headerCenter}>
           <Text style={styles.headerFlag}>{flag}</Text>
           <Text style={styles.headerTitle} numberOfLines={1}>
-            {selectedCountry.name}
+            {getCountryName(selectedCountry.code, getCurrentLocale())}
           </Text>
           <Text style={styles.headerCode}>{selectedCountry.code}</Text>
         </View>
@@ -144,31 +152,41 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.statsCard}>
-          <StatCol value={trips?.length ?? 0} unit="회 방문" />
+          <StatCol
+            value={trips?.length ?? 0}
+            unit={t("countryDetail.statVisits")}
+          />
           <View style={styles.statDivider} />
-          <StatCol value={totalDays} unit="일 누적" />
+          <StatCol value={totalDays} unit={t("countryDetail.statDays")} />
           <View style={styles.statDivider} />
-          <StatCol value={photoTotal ?? 0} unit="장의 사진" />
+          <StatCol
+            value={photoTotal ?? 0}
+            unit={t("countryDetail.statPhotos")}
+          />
         </View>
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>여행 기록</Text>
+          <Text style={styles.sectionTitle}>
+            {t("countryDetail.sectionTrips")}
+          </Text>
           {editMode ? (
-            <Text style={styles.editHint}>← 옆으로 밀어 삭제</Text>
+            <Text style={styles.editHint}>
+              {t("countryDetail.swipeToDelete")}
+            </Text>
           ) : (
-            <Text style={styles.sortLabel}>최신순</Text>
+            <Text style={styles.sortLabel}>
+              {t("countryDetail.sortLatest")}
+            </Text>
           )}
         </View>
 
         {trips == null ? (
           <View style={styles.emptyWrap}>
-            <Text style={styles.emptyText}>불러오는 중…</Text>
+            <Text style={styles.emptyText}>{t("common.loading")}</Text>
           </View>
         ) : trips.length === 0 ? (
           <View style={styles.emptyWrap}>
-            <Text style={styles.emptyText}>
-              아직 이 나라의 여행 기록이 없어요.
-            </Text>
+            <Text style={styles.emptyText}>{t("countryDetail.empty")}</Text>
           </View>
         ) : (
           grouped.map((g) => (

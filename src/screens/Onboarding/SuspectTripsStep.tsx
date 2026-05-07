@@ -7,7 +7,8 @@ import type { SuspectTrip } from "../../features/photoSync/deviceVerification";
 import { resolveDisplayUris } from "../../features/photoSync/photoLibrary";
 import { loadPhotoUrisByIds } from "../../features/travel/visitRepository";
 import { useVisitStore } from "../../features/travel/visitStore";
-import { KO_NAME_BY_CODE } from "../../lib/countryLookup";
+import { getCurrentLocale } from "../../i18n";
+import { getCountryName } from "../../lib/countryName";
 import SuspectRow from "../InitialScanScreen/SuspectRow";
 import { useTheme } from "../../theme/themeStore";
 
@@ -56,14 +57,18 @@ export default function SuspectTripsStep({ onFinish }: Props) {
   }, [suspectTrips]);
 
   const handleReject = (trip: SuspectTrip) => {
-    const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
+    const koName = getCountryName(trip.countryCode, getCurrentLocale());
     Alert.alert(
-      "내 여행 아님",
-      `${koName} ${formatRange(trip.startDate, trip.endDate)} 여행을 기록에서 제거할까요?\n사진 ${trip.photoCount}장이 함께 정리됩니다.`,
+      t("alerts.notMyTripTitle"),
+      t("alerts.notMyTripBody", {
+        country: koName,
+        range: formatRange(trip.startDate, trip.endDate),
+        count: trip.photoCount,
+      }),
       [
-        { text: "취소", style: "cancel" },
+        { text: t("common.cancel"), style: "cancel" },
         {
-          text: "제거",
+          text: t("common.remove"),
           style: "destructive",
           onPress: () => {
             void rejectSuspectTrip(trip);

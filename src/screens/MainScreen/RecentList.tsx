@@ -3,7 +3,8 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import type { RecentTrip } from "../../features/travel/visitRepository";
-import { KO_NAME_BY_CODE } from "../../lib/countryLookup";
+import { getCurrentLocale } from "../../i18n";
+import { getCountryName } from "../../lib/countryName";
 import type { Theme } from "../../theme/theme";
 import { flagEmoji } from "../../utils/flag";
 import { makeStyles } from "./styles";
@@ -32,7 +33,7 @@ export default function RecentList({ theme, trips, onSelect }: Props) {
       scrollEnabled={false}
       ItemSeparatorComponent={() => <View style={styles.rowSep} />}
       renderItem={({ item, index }) => {
-        const koName = KO_NAME_BY_CODE[item.countryCode] ?? item.countryCode;
+        const koName = getCountryName(item.countryCode, getCurrentLocale());
         const [y, m, d] = item.startDate.split("-");
         return (
           <Pressable

@@ -6,9 +6,12 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import countriesJson from "../../assets/data/countries.json";
 import { useVisitStore } from "../features/travel/visitStore";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 import { popularityRank } from "../utils/countryPopularity";
 import { flagEmoji } from "../utils/flag";
@@ -30,16 +33,18 @@ const COUNTRIES = (countriesJson as CountryEntry[]).filter((c) =>
 type FilterKey = "all" | "visited" | "unvisited";
 type SortKey = "name" | "popular";
 
-const FILTERS: { key: FilterKey; label: string }[] = [
-  { key: "all", label: "전체" },
-  { key: "visited", label: "가본 나라" },
-  { key: "unvisited", label: "안 가본 나라" },
-];
+const FILTER_KEYS: FilterKey[] = ["all", "visited", "unvisited"];
+const FILTER_I18N: Record<FilterKey, string> = {
+  all: "allCountries.filterAll",
+  visited: "allCountries.filterVisited",
+  unvisited: "allCountries.filterUnvisited",
+};
 
-const SORTS: { key: SortKey; label: string }[] = [
-  { key: "name", label: "이름순" },
-  { key: "popular", label: "인기순" },
-];
+const SORT_KEYS: SortKey[] = ["name", "popular"];
+const SORT_I18N: Record<SortKey, string> = {
+  name: "allCountries.sortName",
+  popular: "allCountries.sortPopular",
+};
 
 type Props = {
   onClose: () => void;
@@ -50,6 +55,7 @@ export default function AllCountriesScreen({
   onClose,
   onSelectCountry,
 }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const { width: windowWidth } = useWindowDimensions();
@@ -109,17 +115,17 @@ export default function AllCountriesScreen({
         >
           <Text style={styles.iconBtnText}>‹</Text>
         </Pressable>
-        <Text style={styles.headerTitle}>모든 나라</Text>
+        <Text style={styles.headerTitle}>{t("allCountries.heading")}</Text>
         <View style={styles.iconBtnPlaceholder} />
       </View>
 
       <View style={styles.filterRow}>
-        {FILTERS.map((f) => {
-          const active = f.key === filter;
+        {FILTER_KEYS.map((key) => {
+          const active = key === filter;
           return (
             <Pressable
-              key={f.key}
-              onPress={() => setFilter(f.key)}
+              key={key}
+              onPress={() => setFilter(key)}
               style={({ pressed }) => [
                 styles.filterChip,
                 active && styles.filterChipActive,
@@ -132,7 +138,7 @@ export default function AllCountriesScreen({
                   active && styles.filterChipTextActive,
                 ]}
               >
-                {f.label}
+                {t(FILTER_I18N[key])}
               </Text>
             </Pressable>
           );
@@ -141,16 +147,18 @@ export default function AllCountriesScreen({
 
       <View style={styles.metaRow}>
         <Text style={styles.metaText}>
-          {data.length}개국{" "}
-          <Text style={styles.metaTextMuted}>· 가본 {visitedCount}</Text>
+          {t("allCountries.metaTotal", { count: data.length })}{" "}
+          <Text style={styles.metaTextMuted}>
+            {t("allCountries.metaVisited", { count: visitedCount })}
+          </Text>
         </Text>
         <View style={styles.sortPills}>
-          {SORTS.map((s) => {
-            const active = s.key === sort;
+          {SORT_KEYS.map((key) => {
+            const active = key === sort;
             return (
               <Pressable
-                key={s.key}
-                onPress={() => setSort(s.key)}
+                key={key}
+                onPress={() => setSort(key)}
                 style={[
                   styles.sortChip,
                   active && styles.sortChipActive,
@@ -162,7 +170,7 @@ export default function AllCountriesScreen({
                     active && styles.sortChipTextActive,
                   ]}
                 >
-                  {s.label}
+                  {t(SORT_I18N[key])}
                 </Text>
               </Pressable>
             );
@@ -178,7 +186,7 @@ export default function AllCountriesScreen({
         columnWrapperStyle={styles.gridRow}
         ListEmptyComponent={
           <View style={styles.emptyWrap}>
-            <Text style={styles.emptyText}>해당하는 나라가 없어요.</Text>
+            <Text style={styles.emptyText}>{t("allCountries.empty")}</Text>
           </View>
         }
         renderItem={({ item }) => {
@@ -203,11 +211,11 @@ export default function AllCountriesScreen({
                 ]}
                 numberOfLines={2}
               >
-                {item.nameKo}
+                {getCountryName(item.code, getCurrentLocale())}
               </Text>
               {isHome && (
                 <View style={styles.homeBadge}>
-                  <Text style={styles.homeBadgeText}>본국</Text>
+                  <Text style={styles.homeBadgeText}>{t("home.homeBadge")}</Text>
                 </View>
               )}
             </Pressable>

@@ -7,11 +7,13 @@ import {
   Text,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "../features/auth/authStore";
 import { BG_COLOR } from "../utils/heatmap";
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const signingIn = useAuthStore((s) => s.signingIn);
   const signInGoogle = useAuthStore((s) => s.signInGoogle);
 
@@ -19,7 +21,7 @@ export default function LoginScreen() {
     const r = await signInGoogle();
     if (r.ok) return;
     if (r.cancelled) return;
-    Alert.alert("로그인 실패", r.message);
+    Alert.alert(t("alerts.loginFailed"), r.message);
   };
 
   return (
@@ -43,7 +45,7 @@ export default function LoginScreen() {
           ) : (
             <>
               <Text style={styles.googleIcon}>G</Text>
-              <Text style={styles.googleText}>Google로 계속하기</Text>
+              <Text style={styles.googleText}>{t("login.googleContinue")}</Text>
             </>
           )}
         </Pressable>

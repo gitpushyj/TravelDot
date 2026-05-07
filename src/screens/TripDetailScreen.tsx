@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import CountryDotMap from "../components/CountryDotMap";
 import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
@@ -11,7 +12,8 @@ import {
   TripPhoto,
   VisitNote,
 } from "../features/travel/visitRepository";
-import { KO_NAME_BY_CODE } from "../lib/countryLookup";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 import { colorForCountry } from "../utils/countryColors";
 import { flagEmoji } from "../utils/flag";
@@ -40,6 +42,7 @@ type DisplayPhoto = {
 const PREVIEW_PHOTO_COUNT = 5;
 
 export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
@@ -111,7 +114,7 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
     };
   }, [trip.countryCode, trip.startDate, trip.endDate]);
 
-  const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
+  const koName = getCountryName(trip.countryCode, getCurrentLocale());
   const flag = flagEmoji(trip.countryCode);
   const countryColor = colorForCountry(trip.countryCode);
 
@@ -219,7 +222,7 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
             pressed && styles.editBtnPressed,
           ]}
         >
-          <Text style={styles.editBtnText}>✎ 수정</Text>
+          <Text style={styles.editBtnText}>{t("tripDetail.edit")}</Text>
         </Pressable>
       </View>
 
@@ -237,30 +240,30 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
           <View style={styles.heroBadgeRow}>
             <View style={styles.heroBadge}>
               <Text style={styles.heroBadgeNum}>{trip.days}</Text>
-              <Text style={styles.heroBadgeUnit}> 일 여행</Text>
+              <Text style={styles.heroBadgeUnit}>{t("tripDetail.dayUnit")}</Text>
             </View>
             <View style={styles.heroBadge}>
               <Text style={styles.heroBadgeNum}>
                 {totalPhotos ?? "—"}
               </Text>
-              <Text style={styles.heroBadgeUnit}> 장의 사진</Text>
+              <Text style={styles.heroBadgeUnit}>{t("tripDetail.photoUnit")}</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>여행 기간</Text>
+          <Text style={styles.sectionLabel}>{t("tripDetail.sectionDates")}</Text>
           <Text style={styles.sectionDate}>
             {formatDateLong(trip.startDate)} — {formatDateShort(trip.endDate)}
           </Text>
         </View>
 
         <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionTitle}>사진</Text>
+          <Text style={styles.sectionTitle}>{t("tripDetail.sectionPhotos")}</Text>
           {totalPhotos != null && totalPhotos > 0 && (
             <Pressable onPress={() => setView("all")} hitSlop={8}>
               <Text style={styles.allLink}>
-                전체보기 ({totalPhotos}) →
+                {t("tripDetail.viewAll", { count: totalPhotos })}
               </Text>
             </Pressable>
           )}
@@ -270,8 +273,8 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
           <View style={styles.emptyPhotos}>
             <Text style={styles.emptyText}>
               {savedPhotos == null
-                ? "사진을 불러오는 중…"
-                : "이 여행에 저장된 사진이 없어요."}
+                ? t("tripDetail.photosLoading")
+                : t("tripDetail.photosEmpty")}
             </Text>
           </View>
         ) : (
@@ -301,9 +304,9 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
         {note && (
           <View style={styles.noteCard}>
             <View style={styles.noteHeader}>
-              <Text style={styles.noteTitle}>기록</Text>
+              <Text style={styles.noteTitle}>{t("tripDetail.noteSection")}</Text>
               <Text style={styles.noteDate}>
-                {formatDateLong(note.date)} 작성
+                {t("tripDetail.noteWritten", { date: formatDateLong(note.date) })}
               </Text>
             </View>
             <Text style={styles.noteBody}>{note.body}</Text>

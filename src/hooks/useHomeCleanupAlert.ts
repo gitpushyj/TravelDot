@@ -3,7 +3,8 @@ import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useVisitStore } from "../features/travel/visitStore";
-import { KO_NAME_BY_CODE } from "../lib/countryLookup";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 
 // 본국 변경 시 기존 본국에서 자동 삭제된 일수/사진 수를 사용자에게 알려준다.
 export function useHomeCleanupAlert() {
@@ -13,9 +14,10 @@ export function useHomeCleanupAlert() {
 
   useEffect(() => {
     if (!homeCleanupReport) return;
-    const koName =
-      KO_NAME_BY_CODE[homeCleanupReport.countryCode] ??
-      homeCleanupReport.countryCode;
+    const koName = getCountryName(
+      homeCleanupReport.countryCode,
+      getCurrentLocale()
+    );
     Alert.alert(
       t("homeCleanup.title"),
       t("homeCleanup.body", {

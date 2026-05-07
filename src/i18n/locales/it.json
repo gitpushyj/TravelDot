@@ -6,7 +6,186 @@
     "confirm": "Conferma",
     "save": "Salva",
     "delete": "Elimina",
-    "back": "Indietro"
+    "back": "Indietro",
+    "continue": "Continua",
+    "remove": "Rimuovi",
+    "loading": "Caricamento…"
+  },
+  "alerts": {
+    "saveFailed": "Salvataggio non riuscito",
+    "loginFailed": "Accesso non riuscito",
+    "permissionRequired": "Autorizzazione necessaria",
+    "photoLibraryPermissionBody": "Serve l'accesso alla libreria foto.",
+    "registerCompleteTitle": "Foto aggiunte",
+    "registerCompleteBody": "Sono state aggiunte {{count}} foto.",
+    "registerFailedTitle": "Impossibile aggiungere le foto",
+    "dateInvalidTitle": "Controlla le date",
+    "dateInvalidBody": "Le date devono essere nel formato YYYY-MM-DD e la data di inizio non può essere successiva a quella di fine.",
+    "rangeChangeConfirmTitle": "Modificare il periodo del viaggio?",
+    "rangeChangeConfirmBody": "Le foto e le note al di fuori del nuovo periodo verranno eliminate insieme. Continuare?",
+    "partialPhotosTitle": "Alcune foto non sono state aggiunte",
+    "partialPhotosBody": "Si possono salvare al massimo {{limit}} foto al giorno: {{dropped}} non sono state aggiunte.",
+    "tripDeleteTitle": "Eliminare questo viaggio",
+    "tripDeleteBody": "Eliminare il record {{startDate}} — {{endDate}} ({{days}} giorni)?\nAnche le foto e le note di quel periodo verranno rimosse.",
+    "notMyTripTitle": "Non è il mio viaggio",
+    "notMyTripBody": "Rimuovere il viaggio in {{country}} ({{range}}) dai tuoi registri?\nAnche le sue {{count}} foto verranno ripulite."
+  },
+  "history": {
+    "heading": "Storico viaggi",
+    "statCountriesUnit": "paesi",
+    "statVisitsUnit": "visite",
+    "statDaysUnit": "giorni totali",
+    "empty": "Nessun viaggio registrato finora.",
+    "tripDuration": "viaggio di {{days}} giorni",
+    "sortRecent": "Recenti",
+    "sortDays": "Più lunghi",
+    "sortAz": "A–Z"
+  },
+  "allCountries": {
+    "heading": "Tutti i paesi",
+    "filterAll": "Tutti",
+    "filterVisited": "Visitati",
+    "filterUnvisited": "Non visitati",
+    "sortName": "Nome",
+    "sortPopular": "Popolarità",
+    "metaTotal": "{{count}} paesi",
+    "metaVisited": "· {{count}} visitati",
+    "empty": "Nessun paese corrisponde."
+  },
+  "addTrip": {
+    "heading": "Aggiungi viaggio",
+    "selectingPhotos": "Selezione delle foto…",
+    "submitButton": "Aggiungi {{count}}",
+    "submitting": "Salvataggio…",
+    "skippedHint": "{{count}} foto saltate — niente GPS o posizione sconosciuta",
+    "homeBadgeSuffix": " (paese di residenza)",
+    "groupMeta": "{{date}} · esistenti {{existing}}/{{limit}} · selezionate {{selected}}/{{slot}}",
+    "dayFull": "Per questa data ci sono già {{limit}} foto",
+    "noEligible": "Nessuna foto da aggiungere.",
+    "noEligibleSuffix": " Nessuna aveva GPS né una posizione riconoscibile."
+  },
+  "editTrip": {
+    "heading": "Modifica {{country}}",
+    "savingState": "Salvataggio…",
+    "saveAction": "Salva",
+    "sectionDates": "Periodo del viaggio",
+    "dateLabelStart": "Inizio",
+    "dateLabelEnd": "Fine",
+    "dateFormatHelp": "Le date devono essere nel formato YYYY-MM-DD e inizio ≤ fine.",
+    "totalDays": "{{days}} giorni totali",
+    "sectionNote": "Nota",
+    "notePlaceholder": "Cosa vuoi ricordare di questo viaggio…",
+    "sectionPhotos": "Foto",
+    "addPhotos": "+ Aggiungi",
+    "photoChanges": "Aggiunte {{added}} · Rimosse {{removed}}",
+    "photoEmpty": "Nessuna foto salvata.",
+    "undoRemoves": "Annulla le {{count}} contrassegnate per la rimozione"
+  },
+  "tripDetail": {
+    "edit": "✎ Modifica",
+    "dayUnit": " giorni",
+    "photoUnit": " foto",
+    "sectionDates": "Periodo del viaggio",
+    "sectionPhotos": "Foto",
+    "viewAll": "Vedi tutto ({{count}}) →",
+    "photosLoading": "Caricamento delle foto…",
+    "photosEmpty": "Nessuna foto salvata per questo viaggio.",
+    "noteSection": "Nota",
+    "noteWritten": "Scritta il {{date}}",
+    "photosGridHeader": "{{count}} foto",
+    "photosGridEmpty": "Nessuna foto per questo viaggio."
+  },
+  "countryDetail": {
+    "statVisits": "visite",
+    "statDays": "giorni totali",
+    "statPhotos": "foto",
+    "sectionTrips": "Storico viaggi",
+    "swipeToDelete": "← Scorri per eliminare",
+    "sortLatest": "Più recenti",
+    "empty": "Per questo paese non ci sono ancora viaggi registrati.",
+    "tripPhotos": "{{count}} foto",
+    "tripRecent": "Recente",
+    "tripDayOnly": "1 giorno (in giornata)",
+    "tripDuration": "viaggio di {{days}} giorni",
+    "deleteAction": "Elimina"
+  },
+  "titles": {
+    "heading": "Titolo",
+    "autoLabel": "Auto (livello attuale)",
+    "autoHint": "Il tuo titolo si aggiorna in automatico man mano che visiti più paesi.",
+    "autoActive": "Attivo",
+    "autoSet": "Passa ad auto",
+    "noCountryHint": "Trascorri 30 giorni o più in un paese per sbloccare il titolo da abituale.",
+    "noneToShow": "Nessun titolo da mostrare."
+  },
+  "reviewSuspect": {
+    "heading": "Verifica viaggi",
+    "introTitle": "Questi viaggi contengono solo foto di un altro dispositivo",
+    "introBody": "Potrebbero esserci foto inviate da amici. Rimuovi tutto ciò che non è un tuo viaggio.",
+    "noneTitle": "Non c'è altro da verificare.",
+    "primaryAcceptAll": "Tieni tutti gli altri come miei viaggi",
+    "primaryConfirm": "Fatto",
+    "deviceFallback": "Altro dispositivo",
+    "deviceMore": "{{first}} e altri {{count}}",
+    "rowMeta": "{{range}} · {{days}} giorni",
+    "rowPhotoLine": "{{count}} foto · {{devices}}",
+    "actionAccept": "Aggiungi ai miei viaggi"
+  },
+  "changeHome": {
+    "title": "Scegli il nuovo paese di residenza",
+    "subtitle": "Selezionandolo, tutti i registri verranno cancellati e le foto verranno scansionate di nuovo.",
+    "loadingChanging": "Modifica del paese di residenza…",
+    "loadingPreparing": "Preparazione…"
+  },
+  "login": {
+    "googleContinue": "Continua con Google"
+  },
+  "yearPicker": {
+    "title": "Seleziona anno",
+    "viewAll": "Vedi tutto",
+    "viewAllRange": "{{min}} — {{max}} · tutti i record",
+    "viewAllNoRange": "Tutti i record",
+    "noRecord": "Nessun record",
+    "yearMeta": "{{days}} giorni · {{countries}} punti"
+  },
+  "dotMap": {
+    "highlightPrompt": "Quali punti del paese vuoi evidenziare?"
+  },
+  "countryPicker": {
+    "searchPlaceholder": "Cerca paese"
+  },
+  "tiers": {
+    "T0": { "title": "In partenza", "description": "Nessuna traccia registrata ancora" },
+    "T1": { "title": "Stanziale", "description": "Prima impronta nel paese di residenza" },
+    "T2": { "title": "Primo passo", "description": "Primo passo oltre il confine" },
+    "T3": { "title": "Passeggiatore", "description": "Esci dai vicoli familiari" },
+    "T4": { "title": "Viandante", "description": "Il viaggio inizia a sembrare naturale" },
+    "T5": { "title": "Viaggiatore", "description": "Sopra la media mondiale" },
+    "T6": { "title": "Esploratore", "description": "I luoghi sconosciuti non spaventano più" },
+    "T7": { "title": "Veterano", "description": "Viaggi come si pratica un mestiere" },
+    "T8": { "title": "Nomade", "description": "Muoversi ti viene più naturale che fermarti" },
+    "T9": { "title": "Cittadino del mondo", "description": "A casa in qualunque angolo del pianeta" },
+    "T10": { "title": "Collezionista del mondo", "description": "Collezioni il mondo — top 1%" },
+    "MASTER": { "title": "Maestro", "description": "Il viaggio in persona" },
+    "GRANDMASTER": { "title": "Gran Maestro", "description": "100 paesi — soglia del TCC" },
+    "LEGEND": { "title": "Leggenda", "description": "Passi che diventano leggenda" },
+    "UN_MASTER": { "title": "Maestro ONU", "description": "Hai raccolto tutte le bandiere del pianeta" }
+  },"errors": {
+    "auth": {
+      "missingClientId": "Per Google Sign-In serve la variabile EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.",
+      "googleSignInCancelled": "Accesso con Google annullato.",
+      "googleSignInNotConfigured": "Google Sign-In non è configurato. Controlla le variabili d'ambiente.",
+      "noIdToken": "Impossibile ottenere un ID token da Google."
+    },
+    "trip": {
+      "startAfterEnd": "La data di inizio non può essere successiva a quella di fine."
+    },
+    "device": {
+      "unknown": "Dispositivo sconosciuto"
+    },
+    "supabase": {
+      "missingEnv": "Le variabili EXPO_PUBLIC_SUPABASE_URL / EXPO_PUBLIC_SUPABASE_ANON_KEY non sono impostate. Controlla il file .env."
+    }
   },
   "home": {
     "all": "Tutto",
@@ -51,6 +230,53 @@
     "body": "Il tuo paese di residenza ({{country}}) ora è escluso dall'aggiunta automatica.\nSono stati eliminati {{days}} giorni e {{photos}} foto aggiunte in automatico.\n\nLe foto scattate nel paese di residenza si possono comunque aggiungere manualmente da Menu > « Aggiungi viaggio » selezionando le date desiderate."
   },
   "badges": {
+    "category": {
+      "tier": "Livello",
+      "days": "Giorni di viaggio",
+      "continent": "Continente",
+      "country": "Habitué di un paese",
+      "foreign": "Foto all'estero"
+    },
+    "days": {
+      "title7": "Viaggiatore del weekend",
+      "title30": "Errante di un mese",
+      "title100": "Viaggiatore centenario",
+      "title365": "Errante annuale",
+      "title730": "Vagabondo biennale",
+      "title1000": "Viaggiatore eterno",
+      "description": "{{threshold}}+ giorni di viaggio totali"
+    },
+    "foreign": {
+      "title100": "Collezionista all'estero",
+      "title500": "Appassionato dell'estero",
+      "title1000": "Maestro dell'estero",
+      "title3000": "Leggenda dell'estero",
+      "description": "{{threshold}}+ foto scattate all'estero"
+    },
+    "continent": {
+      "name": {
+        "AS": "Asia",
+        "EU": "Europa",
+        "AF": "Africa",
+        "NA": "Nord America",
+        "SA": "Sud America",
+        "OC": "Oceania",
+        "AN": "Antartide"
+      },
+      "wandererTitle": "Errante in {{continent}}",
+      "conquerorTitle": "Conquistatore di {{continent}}",
+      "wandererDescription": "{{count}}+ paesi visitati in {{continent}}",
+      "conquerorDescription": "{{count}}+ paesi visitati in {{continent}}",
+      "antarcticaPioneerTitle": "Pioniere dell'Antartide",
+      "antarcticaPioneerDescription": "Tracce nel punto più meridionale del pianeta"
+    },
+    "country": {
+      "suffix30": "Habitué",
+      "suffix100": "Seconda patria",
+      "suffix365": "Locale",
+      "title": "{{country}}: {{suffix}}",
+      "description": "{{threshold}}+ giorni trascorsi in {{country}}"
+    },
     "newSingleTitle": "Hai ottenuto un nuovo badge!",
     "newMultipleTitle": "Hai ottenuto {{count}} nuovi badge!",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nScegli il badge da Impostazioni > Titoli per mostrarlo nella schermata principale.",
@@ -107,6 +333,43 @@
     "language": {
       "label": "Lingua",
       "current": "Attuale: {{name}}"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "I tuoi viaggi, raccontati dalle tue foto",
+      "point1": "Leggiamo i dati GPS delle tue foto per scoprire dove sei stato",
+      "point2": "I viaggi compaiono in automatico, senza dover scrivere nulla",
+      "point3": "Le tue foto non escono mai dal telefono",
+      "next": "Avanti"
+    },
+    "login": {
+      "title": "Iniziamo con VisitGrid",
+      "subtitle": "Accedi per conservare i tuoi dati al sicuro su questo dispositivo"
+    },
+    "home": {
+      "title": "Scegli il paese di residenza",
+      "subtitle": "Il punto del paese di residenza resta blu, indipendentemente dai giorni.\nGli altri paesi diventano più scuri man mano che ci passi del tempo."
+    },
+    "sync": {
+      "title": "Sincronizziamo i tuoi viaggi",
+      "body": "Esamineremo le tue foto e creeremo automaticamente i registri di viaggio.",
+      "fullAccessHint": "Per un riconoscimento accurato, scegli \"Consenti l'accesso a tutte le foto\".",
+      "button": "Avvia sincronizzazione",
+      "scanning": "Sto esaminando {{processed}} foto…",
+      "preparing": "Preparazione dell'analisi delle foto…",
+      "limitedHint": "Sto analizzando solo le foto selezionate. Concedi l'accesso completo in Impostazioni per trovare più viaggi.",
+      "permissionDeniedTitle": "Accesso alle foto necessario",
+      "permissionDeniedBody": "Per creare i registri di viaggio serve l'accesso alle foto. Concedi il permesso e riprova.",
+      "requestAgain": "Richiedi di nuovo l'accesso"
+    },
+    "suspect": {
+      "title": "Questi viaggi vanno controllati",
+      "subtitle": "Questi viaggi contengono solo foto da un altro dispositivo. Rimuovi quelli che non sono tuoi.",
+      "allClearedTitle": "I tuoi viaggi sono pronti",
+      "allClearedBody": "Non c'è altro da verificare. Ora puoi esplorare la tua mappa.",
+      "acceptAll": "Tieni i restanti",
+      "goHome": "Vai alla home"
     }
   }
 }

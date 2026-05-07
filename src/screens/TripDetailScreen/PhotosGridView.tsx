@@ -1,5 +1,6 @@
 import React from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import { GRID_COLS, type TripDetailStyles } from "./styles";
 
@@ -22,6 +23,7 @@ export default function PhotosGridView({
   styles,
   onBack,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <View style={styles.root}>
       <View style={styles.header}>
@@ -38,14 +40,18 @@ export default function PhotosGridView({
         <View style={styles.headerCenter}>
           <Text style={styles.headerFlag}>{flag}</Text>
           <Text style={styles.headerTitle}>{countryName}</Text>
-          <Text style={styles.headerCode}>사진 {photos.length}</Text>
+          <Text style={styles.headerCode}>
+            {t("tripDetail.photosGridHeader", { count: photos.length })}
+          </Text>
         </View>
         <View style={{ width: 40 }} />
       </View>
       {photos.length === 0 ? (
         <View style={styles.gridEmpty}>
           <Text style={styles.emptyText}>
-            {loading ? "사진을 불러오는 중…" : "이 여행의 사진이 없어요."}
+            {loading
+              ? t("tripDetail.photosLoading")
+              : t("tripDetail.photosGridEmpty")}
           </Text>
         </View>
       ) : (

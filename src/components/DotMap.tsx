@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Canvas, Group, RoundedRect } from "@shopify/react-native-skia";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { useTranslation } from "react-i18next";
 import {
   cancelAnimation,
   Easing,
@@ -66,6 +67,7 @@ export default function DotMap({
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
   const setSelectedCountry = useVisitStore((s) => s.setSelectedCountry);
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const viewBoxW = 360;
   const drawWidth = size.width;
@@ -403,7 +405,7 @@ export default function DotMap({
       {pending && pending.length > 0 && (
         <View style={styles.caption}>
           <Text style={[styles.captionLabel, { color: theme.textSecondary }]}>
-            어느 나라의 도트를 강조할까요?
+            {t("dotMap.highlightPrompt")}
           </Text>
           <View style={styles.optionRow}>
             {pending.map((c) => (
@@ -441,7 +443,7 @@ export default function DotMap({
               onPress={() => setPending(null)}
             >
               <Text style={[styles.optionText, { color: theme.textPrimary }]}>
-                취소
+                {t("common.cancel")}
               </Text>
             </Pressable>
           </View>

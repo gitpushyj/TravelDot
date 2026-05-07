@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import type { TripWithPhotos } from "../../features/travel/visitRepository";
-import { KO_NAME_BY_CODE } from "../../lib/countryLookup";
+import { getCurrentLocale } from "../../i18n";
+import { getCountryName } from "../../lib/countryName";
 import type { Theme } from "../../theme/theme";
 import { flagEmoji } from "../../utils/flag";
 
@@ -15,8 +17,9 @@ type Props = {
 };
 
 export default function TripRow({ theme, trip, onPress }: Props) {
+  const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
-  const koName = KO_NAME_BY_CODE[trip.countryCode] ?? trip.countryCode;
+  const koName = getCountryName(trip.countryCode, getCurrentLocale());
   const [y, m, d] = trip.startDate.split("-");
   return (
     <Pressable
@@ -34,7 +37,9 @@ export default function TripRow({ theme, trip, onPress }: Props) {
           <Text style={styles.rowName}>{koName}</Text>
           <Text style={styles.rowCode}> {trip.countryCode}</Text>
         </View>
-        <Text style={styles.rowSub}>{trip.days}일 여행</Text>
+        <Text style={styles.rowSub}>
+          {t("history.tripDuration", { days: trip.days })}
+        </Text>
       </View>
       <Text style={styles.rowDate}>
         {y} · {m} · {d}
