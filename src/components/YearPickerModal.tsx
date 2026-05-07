@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  LayoutChangeEvent,
   Modal,
   Platform,
   Pressable,
@@ -8,6 +9,13 @@ import {
   Text,
   View,
 } from "react-native";
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -27,6 +35,8 @@ type Props = {
 };
 
 const NUM_SEGMENTS = 12;
+const OPEN_DURATION = 240;
+const CLOSE_DURATION = 200;
 
 export default function YearPickerModal({
   visible,
@@ -38,6 +48,41 @@ export default function YearPickerModal({
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [summaries, setSummaries] = useState<YearSummary[] | null>(null);
+
+  const [mounted, setMounted] = useState(visible);
+  const progress = useSharedValue(0);
+  const sheetHeight = useSharedValue(1000);
+
+  useEffect(() => {
+    if (visible) {
+      setMounted(true);
+      progress.value = withTiming(1, {
+        duration: OPEN_DURATION,
+        easing: Easing.out(Easing.cubic),
+      });
+    } else if (mounted) {
+      progress.value = withTiming(
+        0,
+        { duration: CLOSE_DURATION, easing: Easing.in(Easing.cubic) },
+        (finished) => {
+          if (finished) runOnJS(setMounted)(false);
+        },
+      );
+    }
+  }, [visible, mounted, progress]);
+
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: progress.value,
+  }));
+
+  const sheetStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: (1 - progress.value) * sheetHeight.value }],
+  }));
+
+  const onSheetLayout = (e: LayoutChangeEvent) => {
+    const h = e.nativeEvent.layout.height;
+    if (h > 0) sheetHeight.value = h;
+  };
 
   useEffect(() => {
     if (!visible) return;
@@ -81,17 +126,24 @@ export default function YearPickerModal({
     return acc;
   }, [summaries]);
 
+  if (!mounted) return null;
+
   return (
     <Modal
-      visible={visible}
+      visible
       transparent
-      animationType="slide"
+      animationType="none"
       onRequestClose={onCancel}
       statusBarTranslucent
     >
-      <View style={styles.backdrop}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
-        <View style={styles.sheet}>
+      <View style={styles.root}>
+        <Animated.View style={[styles.backdrop, backdropStyle]}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
+        </Animated.View>
+        <Animated.View
+          style={[styles.sheet, sheetStyle]}
+          onLayout={onSheetLayout}
+        >
           <View style={styles.handleWrap}>
             <View style={styles.handle} />
           </View>
@@ -148,7 +200,7 @@ export default function YearPickerModal({
               );
             })}
           </ScrollView>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
@@ -233,8 +285,11 @@ function SegmentBar({
 
 function makeStyles(theme: Theme) {
   return StyleSheet.create({
-    backdrop: {
+    root: {
       flex: 1,
+    },
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
       backgroundColor: theme.backdrop,
     },
     sheet: {
