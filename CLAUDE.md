@@ -60,6 +60,14 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
+## 5. Split Files Aggressively
+
+**한 파일은 작게. 협업 시 머지 충돌을 줄이기 위함.**
+
+- 새 코드를 작성할 땐 항상 책임 단위로 파일을 쪼갠다 (컴포넌트 1개 = 파일 1개, 화면별 wrapper도 파일 1개씩, 스타일·hook·상수는 별도 파일).
+- 기존 파일이 200줄을 넘기 시작하면 분리할 자연스러운 경계가 있는지 먼저 검토한다.
+- 같은 디렉터리 안에서 한 작업이 여러 파일을 동시에 수정해야 한다면 분리가 잘못됐다는 신호다.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
