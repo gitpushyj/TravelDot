@@ -222,6 +222,9 @@ export function makeStyles(theme: Theme) {
       minHeight: 140,
       justifyContent: "space-between",
     },
+    statCardPressed: {
+      opacity: 0.7,
+    },
     statHeaderRow: {
       flexDirection: "row",
       justifyContent: "space-between",

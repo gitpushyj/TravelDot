@@ -236,7 +236,13 @@ export default function MainScreen({
             visitCounts={activeCounts}
             onPress={() => navigation.navigate("CountryDetail")}
           />
-          <View style={styles.statCard}>
+          <Pressable
+            onPress={() => navigation.navigate("Titles")}
+            style={({ pressed }) => [
+              styles.statCard,
+              pressed && styles.statCardPressed,
+            ]}
+          >
             <View style={styles.statHeaderRow}>
               <Text style={styles.statTitle}>{t("home.statTitle")}</Text>
               <Text
@@ -282,7 +288,7 @@ export default function MainScreen({
                 </Text>
               </Text>
             </View>
-          </View>
+          </Pressable>
         </View>
 
         <View style={styles.recentHeader}>
