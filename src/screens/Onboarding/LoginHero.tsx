@@ -32,12 +32,13 @@ const styles = StyleSheet.create({
   },
   left: {
     flex: 1,
-    paddingRight: 8,
+    paddingRight: 12,
   },
   title: {
-    fontSize: 26,
+    // 처음 참조 이미지의 큼직한 헤드라인 비율을 맞추기 위해 fontSize/lineHeight 상향.
+    fontSize: 28,
     fontWeight: "800",
-    lineHeight: 34,
+    lineHeight: 36,
   },
   subtitle: {
     fontSize: 13,
@@ -45,7 +46,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   image: {
-    width: 150,
-    height: 150,
+    // 1024×1024(1:1) 신규 자산. 화면 가로의 약 45% 비율로 노출.
+    width: 175,
+    height: 175,
   },
 });
