@@ -97,9 +97,14 @@ export default function CountryDotMap({ countryCode, color }: Props) {
     }
     const bboxW = maxLng - minLng + GRID_SIZE;
     const bboxH = maxLat - minLat + GRID_SIZE;
-    const PADDING = 12;
-    const drawableW = Math.max(1, size.width - PADDING * 2);
-    const drawableH = Math.max(1, size.height - PADDING * 2);
+    // 컨테이너의 짧은 변 기준 비율 패딩. 카드형 hero(아스펙트 16/11)에서
+    // 도트가 둥근 모서리에 닿거나 너무 빠듯해 보이는 걸 막는다.
+    const padding = Math.max(
+      16,
+      Math.min(40, Math.min(size.width, size.height) * 0.1),
+    );
+    const drawableW = Math.max(1, size.width - padding * 2);
+    const drawableH = Math.max(1, size.height - padding * 2);
     const scale = Math.min(drawableW / bboxW, drawableH / bboxH);
     const drawnW = bboxW * scale;
     const drawnH = bboxH * scale;
