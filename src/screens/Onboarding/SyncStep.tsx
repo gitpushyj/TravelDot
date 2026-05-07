@@ -82,14 +82,18 @@ export default function SyncStep({ onNext }: Props) {
 
   if (phase === "syncing") {
     const processed = syncStatus.processed;
+    const message =
+      syncStatus.phase === "saving"
+        ? t("onboarding.sync.saving")
+        : syncStatus.phase === "verifying"
+          ? t("onboarding.sync.verifying")
+          : processed > 0
+            ? t("onboarding.sync.scanning", { processed })
+            : t("onboarding.sync.preparing");
     return (
       <View style={styles.centerWrap}>
         <ActivityIndicator color={theme.accent} size="large" />
-        <Text style={styles.centerTitle}>
-          {processed > 0
-            ? t("onboarding.sync.scanning", { processed })
-            : t("onboarding.sync.preparing")}
-        </Text>
+        <Text style={styles.centerTitle}>{message}</Text>
         {permission === "limited" && (
           <Text style={styles.smallNote}>{t("onboarding.sync.limitedHint")}</Text>
         )}

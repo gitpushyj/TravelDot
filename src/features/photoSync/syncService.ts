@@ -28,7 +28,7 @@ async function runSync(sinceDate: string | null): Promise<void> {
     return;
   }
 
-  store.setSyncStatus({ running: true, processed: 0 });
+  store.setSyncStatus({ running: true, processed: 0, phase: "scanning" });
 
   // (country|date) → DB 한도(PHOTO_LIMIT_PER_DAY)와 동일한 장수만 후보로 모은다.
   const buffer = new Map<string, VisitPhotoInput[]>();
@@ -45,7 +45,11 @@ async function runSync(sinceDate: string | null): Promise<void> {
       if (scanned % 50 === 0) {
         useVisitStore
           .getState()
-          .setSyncStatus({ running: true, processed: scanned });
+          .setSyncStatus({
+            running: true,
+            processed: scanned,
+            phase: "scanning",
+          });
       }
       if (p.lat == null || p.lng == null) continue;
       withGps += 1;
@@ -78,6 +82,10 @@ async function runSync(sinceDate: string | null): Promise<void> {
       buffer.set(key, list);
     }
 
+    useVisitStore
+      .getState()
+      .setSyncStatus({ running: true, processed: scanned, phase: "saving" });
+
     const all: VisitPhotoInput[] = [];
     for (const items of buffer.values()) all.push(...items);
     const added = await addPhotos(all);
@@ -86,6 +94,13 @@ async function runSync(sinceDate: string | null): Promise<void> {
     // 사진 추가가 끝났다면 곧바로 디바이스 검증을 돌려 의심 여행을 추려둔다.
     // 본국이 없으면(온보딩 직전 등) 검증을 건너뛴다.
     if (homeCode) {
+      useVisitStore
+        .getState()
+        .setSyncStatus({
+          running: true,
+          processed: scanned,
+          phase: "verifying",
+        });
       try {
         const suspects = await reviewSuspectTrips({ homeCode });
         useVisitStore.getState().setSuspectTrips(suspects);

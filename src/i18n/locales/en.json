@@ -398,6 +398,8 @@
       "button": "Start sync",
       "scanning": "Reviewing {{processed}} photos...",
       "preparing": "Getting ready to scan your photos...",
+      "saving": "Saving your trip records...",
+      "verifying": "Checking which photos came from your device...",
       "limitedHint": "Only selected photos are being analyzed. Allow full access in Settings to find more trips.",
       "permissionDeniedTitle": "Photo access required",
       "permissionDeniedBody": "We need photo access to build your trip records. Please allow access and try again.",

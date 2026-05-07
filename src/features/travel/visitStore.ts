@@ -27,7 +27,13 @@ import { COUNTRY_NAME_KO_BY_CODE } from "../badges/countryNames";
 
 const HOME_AUTO_CLEANUP_FLAG = "visitgrid:migration:autoHomeCleanup_v1";
 
-type SyncStatus = { running: boolean; processed: number };
+// phase: scanning(라이브러리 순회) → saving(DB 적재) → verifying(기기 검증).
+// processed는 scanning 단계에서만 의미가 있고 이후 단계에서는 마지막 값을 그대로 들고 간다.
+type SyncStatus = {
+  running: boolean;
+  processed: number;
+  phase?: "scanning" | "saving" | "verifying";
+};
 
 export type SyncReport = {
   permission: "granted" | "limited" | "denied";
