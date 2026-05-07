@@ -1,13 +1,28 @@
 import * as SQLite from "expo-sqlite";
 
-let _db: SQLite.SQLiteDatabase | null = null;
-
 // 개발 단계에서 스키마를 재설계하면서 기존 visitgrid.db는 버리고
 // 새 파일 이름으로 시작한다. 마이그레이션은 추후 정식 출시 전에 도입.
 const DB_NAME = "visitgrid_v2.db";
 
-export async function getDb(): Promise<SQLite.SQLiteDatabase> {
-  if (_db) return _db;
+// promise를 캐시해 동시 호출이 모두 같은 인스턴스를 await하도록 한다.
+// 인스턴스(_db)를 캐시하면 첫 호출의 schema 작업이 await로 양보하는 사이
+// 두 번째 caller도 _db===null 을 보고 openDatabaseAsync 를 다시 호출해
+// 핸들이 두 개 만들어진다. Android expo-sqlite는 같은 이름의 native ptr을
+// 공유해, 한 핸들의 dispose가 캐시에 남은 핸들의 prepareAsync 호출을
+// NullPointerException 으로 거절한다.
+let _dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
+
+export function getDb(): Promise<SQLite.SQLiteDatabase> {
+  if (!_dbPromise) {
+    _dbPromise = openAndInit().catch((e) => {
+      _dbPromise = null;
+      throw e;
+    });
+  }
+  return _dbPromise;
+}
+
+async function openAndInit(): Promise<SQLite.SQLiteDatabase> {
   const db = await SQLite.openDatabaseAsync(DB_NAME);
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
@@ -69,7 +84,6 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
     "user_reviewed_at",
     "user_reviewed_at INTEGER"
   );
-  _db = db;
   return db;
 }
 
