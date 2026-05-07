@@ -252,8 +252,8 @@
     "visitedDays": "{{days}} days visited",
     "isHome": "Home",
     "milestoneFooter": {
-      "countries": "{{count}} more to next title",
-      "days": "{{count}} more days to next title",
+      "countries": "{{count}} more to {{title}}",
+      "days": "{{count}} more days to {{title}}",
       "completed": "Top tier reached 🎉"
     },
     "recentTitle": "Recent Trips",

@@ -71,23 +71,50 @@ export function makeStyles(theme: Theme) {
       paddingVertical: 12,
       gap: 12,
     },
+    headerLeft: {
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: 6,
+      flexShrink: 1,
+      minWidth: 0,
+    },
+    headerBadgeChip: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 6,
+      backgroundColor: theme.accentSoftBg,
+      maxWidth: 220,
+      // 칩 내부 텍스트 시작점을 컬럼의 좌측(통계 시작점)과 시각적으로 정렬
+      marginLeft: -10,
+    },
+    headerBadgeChipPressed: {
+      opacity: 0.7,
+    },
+    headerBadgeChipText: {
+      color: theme.accentSoftText,
+      fontSize: 13,
+      fontWeight: "700",
+    },
     headerStatRow: {
       flexDirection: "row",
       alignItems: "baseline",
+      flexShrink: 1,
     },
     headerStatNum: {
       color: theme.textPrimary,
-      fontSize: 28,
+      fontSize: 18,
       fontWeight: "800",
     },
     headerStatUnit: {
       color: theme.textPrimary,
-      fontSize: 14,
+      fontSize: 12,
       fontWeight: "600",
     },
     headerStatDot: {
       color: theme.textMuted,
-      fontSize: 18,
+      fontSize: 14,
     },
     tabPills: {
       flexDirection: "row",
@@ -250,55 +277,29 @@ export function makeStyles(theme: Theme) {
       borderWidth: 1,
       borderColor: theme.cardBorder,
       padding: 14,
-      minHeight: 140,
-      justifyContent: "space-between",
     },
     statCardPressed: {
       opacity: 0.7,
     },
-    statHeaderRow: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    statTitle: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      fontWeight: "600",
-    },
-    statTier: {
-      color: theme.accent,
-      fontSize: 12,
-      fontWeight: "700",
-      maxWidth: 180,
-      flexShrink: 1,
-    },
-    statTierPrestige: {
-      color: theme.accentSoftText,
-      backgroundColor: theme.accentSoftBg,
-      paddingHorizontal: 8,
-      paddingVertical: 3,
-      borderRadius: 999,
-      overflow: "hidden",
-    },
     statBigRow: {
       flexDirection: "row",
       alignItems: "baseline",
-      marginTop: 6,
+      marginTop: "auto",
+      paddingTop: 12,
     },
     statBigNum: {
       color: theme.textPrimary,
-      fontSize: 16,
+      fontSize: 22,
       fontWeight: "700",
     },
     statBigDenom: {
       color: theme.textMuted,
-      fontSize: 13,
+      fontSize: 16,
       fontWeight: "600",
     },
     statBigPercent: {
       color: theme.accent,
-      fontSize: 13,
+      fontSize: 16,
       fontWeight: "700",
     },
     progressTrack: {
@@ -306,30 +307,20 @@ export function makeStyles(theme: Theme) {
       borderRadius: 5,
       backgroundColor: theme.tabRowBg,
       overflow: "hidden",
-      marginTop: 8,
+      marginTop: 4,
     },
     progressFill: {
       height: "100%",
       borderRadius: 5,
       backgroundColor: theme.accent,
     },
-    statFooter: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      marginTop: 8,
-    },
     statFooterLabel: {
       color: theme.textSecondary,
-      fontSize: 11,
+      fontSize: 14,
+      lineHeight: 20,
     },
     statFooterStrong: {
       color: theme.textPrimary,
-      fontWeight: "700",
-    },
-    statFooterAccent: {
-      color: theme.accent,
-      fontSize: 11,
       fontWeight: "700",
     },
     recentHeader: {

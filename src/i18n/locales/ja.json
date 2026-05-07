@@ -226,8 +226,8 @@
     "visitedDays": "{{days}}日間滞在",
     "isHome": "母国",
     "milestoneFooter": {
-      "countries": "次の称号まであと{{count}}カ国",
-      "days": "次の称号まであと{{count}}日",
+      "countries": "{{title}}まであと{{count}}カ国",
+      "days": "{{title}}まであと{{count}}日",
       "completed": "最高ランク達成 🎉"
     },
     "recentTitle": "最近の旅",

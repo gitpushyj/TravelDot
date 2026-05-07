@@ -226,8 +226,8 @@
     "visitedDays": "{{days}} дн. в стране",
     "isHome": "Родная страна",
     "milestoneFooter": {
-      "countries": "До следующего звания {{count}} стран",
-      "days": "До следующего звания {{count}} дней",
+      "countries": "До «{{title}}» {{count}} стран",
+      "days": "До «{{title}}» {{count}} дней",
       "completed": "Высший уровень достигнут 🎉"
     },
     "recentTitle": "Недавние поездки",

@@ -226,8 +226,8 @@
     "visitedDays": "停留 {{days}} 天",
     "isHome": "本国",
     "milestoneFooter": {
-      "countries": "距下一称号还有 {{count}} 国",
-      "days": "距下一称号还有 {{count}} 天",
+      "countries": "距「{{title}}」还有 {{count}} 国",
+      "days": "距「{{title}}」还有 {{count}} 天",
       "completed": "已达最高等级 🎉"
     },
     "recentTitle": "最近的旅行",

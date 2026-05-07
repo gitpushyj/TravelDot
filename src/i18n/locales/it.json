@@ -226,8 +226,8 @@
     "visitedDays": "{{days}} giorni di permanenza",
     "isHome": "Paese di residenza",
     "milestoneFooter": {
-      "countries": "{{count}} paesi al prossimo titolo",
-      "days": "{{count}} giorni al prossimo titolo",
+      "countries": "{{count}} paesi a {{title}}",
+      "days": "{{count}} giorni a {{title}}",
       "completed": "Massimo livello raggiunto 🎉"
     },
     "recentTitle": "Viaggi recenti",

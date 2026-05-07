@@ -31,10 +31,8 @@ import AddTripActionSheet from "../../components/AddTripActionSheet";
 import DotMap from "../../components/DotMap";
 import YearPickerModal from "../../components/YearPickerModal";
 import { runIncrementalSync } from "../../features/photoSync/syncService";
-import {
-  localizedBadgeTitle,
-  localizedTierTitle,
-} from "../../features/badges/badgeI18n";
+import { localizedBadgeTitle } from "../../features/badges/badgeI18n";
+import { badgeFromId } from "../../features/badges/badges";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "../../features/badges/countryNames";
 import { pickActiveBadge, useBadgeStore } from "../../features/badges/badgeStore";
 import { getTierByCount } from "../../features/travel/tierTitles";
@@ -46,6 +44,7 @@ import { useAppCtx } from "../../navigation/AppCtx";
 import type { RootStackParamList } from "../../navigation/types";
 import { useTheme } from "../../theme/themeStore";
 import MiniCard from "./MiniCard";
+import { MilestoneFooterText } from "./MilestoneFooterText";
 import RecentList from "./RecentList";
 import {
   loadMapExtraHeight,
@@ -249,6 +248,15 @@ export default function MainScreen({
     [activeBadgeId, tier.id]
   );
 
+  // 다음 목표 호칭 라벨 (예: "아시아 전문가")
+  const nextTitleLabel = useMemo(() => {
+    const id = milestoneProgress.nextTitleBadgeId;
+    if (!id) return "";
+    const badge = badgeFromId(id, BADGE_KO_NAMES);
+    if (!badge) return "";
+    return localizedBadgeTitle(badge, t, getCurrentLocale());
+  }, [milestoneProgress.nextTitleBadgeId, t]);
+
   const openYearPicker = () => {
     if (availableYears.length === 0) {
       Alert.alert(
@@ -313,15 +321,32 @@ export default function MainScreen({
 
         <View style={styles.mapStatsCard}>
           <View style={styles.mapStatsHeader}>
-            <View style={styles.headerStatRow}>
-              <Text style={styles.headerStatNum}>{totals.countries}</Text>
-              <Text style={styles.headerStatUnit}>
-                {" "}
-                {t("home.countriesUnit")}
-              </Text>
-              <Text style={styles.headerStatDot}> · </Text>
-              <Text style={styles.headerStatNum}>{totals.days}</Text>
-              <Text style={styles.headerStatUnit}> {t("home.daysUnit")}</Text>
+            <View style={styles.headerLeft}>
+              {activeBadge ? (
+                <Pressable
+                  onPress={() => navigation.navigate("Milestones")}
+                  hitSlop={6}
+                  style={({ pressed }) => [
+                    styles.headerBadgeChip,
+                    pressed && styles.headerBadgeChipPressed,
+                  ]}
+                >
+                  <Text style={styles.headerBadgeChipText} numberOfLines={1}>
+                    {activeBadge.emoji}{" "}
+                    {localizedBadgeTitle(activeBadge, t, getCurrentLocale())}
+                  </Text>
+                </Pressable>
+              ) : null}
+              <View style={styles.headerStatRow}>
+                <Text style={styles.headerStatNum}>{totals.countries}</Text>
+                <Text style={styles.headerStatUnit}>
+                  {" "}
+                  {t("home.countriesUnit")}
+                </Text>
+                <Text style={styles.headerStatDot}> · </Text>
+                <Text style={styles.headerStatNum}>{totals.days}</Text>
+                <Text style={styles.headerStatUnit}> {t("home.daysUnit")}</Text>
+              </View>
             </View>
             <View style={styles.tabPills}>
               <Pressable
@@ -405,27 +430,13 @@ export default function MainScreen({
               pressed && styles.statCardPressed,
             ]}
           >
-            <View style={styles.statHeaderRow}>
-              <Text style={styles.statTitle}>
-                {t(`milestones.option.${milestoneKind}`)}
-              </Text>
-              <Text
-                style={[
-                  styles.statTier,
-                  // 활성 뱃지가 등급 뱃지가 아니면(=사용자가 직접 고른 테마 뱃지면) 강조
-                  activeBadge && !activeBadge.isTier
-                    ? styles.statTierPrestige
-                    : tier.prestige
-                      ? styles.statTierPrestige
-                      : null,
-                ]}
-                numberOfLines={1}
-              >
-                {activeBadge
-                  ? `${activeBadge.emoji} ${localizedBadgeTitle(activeBadge, t, getCurrentLocale())}`
-                  : localizedTierTitle(tier, t)}
-              </Text>
-            </View>
+            <Text style={styles.statFooterLabel}>
+              <MilestoneFooterText
+                progress={milestoneProgress}
+                nextTitleLabel={nextTitleLabel}
+                strongStyle={styles.statFooterStrong}
+              />
+            </Text>
             <View style={styles.statBigRow}>
               <Text style={styles.statBigNum}>{milestoneProgress.current}</Text>
               <Text style={styles.statBigDenom}>
@@ -444,19 +455,6 @@ export default function MainScreen({
                   { width: `${milestoneProgress.percent}%` },
                 ]}
               />
-            </View>
-            <View style={styles.statFooter}>
-              <Text style={styles.statFooterLabel}>
-                {milestoneProgress.reachedFinal
-                  ? t("home.milestoneFooter.completed")
-                  : milestoneProgress.unit === "days"
-                    ? t("home.milestoneFooter.days", {
-                        count: (milestoneProgress.next ?? 0) - milestoneProgress.current,
-                      })
-                    : t("home.milestoneFooter.countries", {
-                        count: (milestoneProgress.next ?? 0) - milestoneProgress.current,
-                      })}
-              </Text>
             </View>
           </Pressable>
         </View>

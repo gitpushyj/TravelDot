@@ -252,8 +252,8 @@
     "visitedDays": "{{days}}일 방문",
     "isHome": "본국",
     "milestoneFooter": {
-      "countries": "다음 호칭 획득까지 {{count}}개국",
-      "days": "다음 호칭 획득까지 {{count}}일",
+      "countries": "{{title}} 호칭 획득까지 {{count}}개국",
+      "days": "{{title}} 호칭 획득까지 {{count}}일",
       "completed": "최고 단계 달성 🎉"
     },
     "recentTitle": "최근 방문",
