@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Animated, View } from "react-native";
+import { Animated, Text, View } from "react-native";
 
 import { useTheme } from "../../theme/themeStore";
 
@@ -31,8 +31,11 @@ export default function OnboardingProgress({ current, total }: Props) {
 
   return (
     <View style={styles.progressWrap}>
-      <View style={styles.progressTrack}>
-        <Animated.View style={[styles.progressFill, { width: widthInterp }]} />
+      <View style={styles.progressRow}>
+        <View style={styles.progressTrack}>
+          <Animated.View style={[styles.progressFill, { width: widthInterp }]} />
+        </View>
+        <Text style={styles.progressLabel}>{`${current}/${total}`}</Text>
       </View>
     </View>
   );

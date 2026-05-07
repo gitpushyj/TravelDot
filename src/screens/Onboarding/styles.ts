@@ -13,7 +13,13 @@ export function makeOnboardingStyles(theme: Theme) {
       paddingTop: 56,
       paddingBottom: 8,
     },
+    progressRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
     progressTrack: {
+      flex: 1,
       height: 6,
       borderRadius: 3,
       backgroundColor: theme.tabRowBg,
@@ -23,6 +29,13 @@ export function makeOnboardingStyles(theme: Theme) {
       height: "100%",
       borderRadius: 3,
       backgroundColor: theme.accent,
+    },
+    progressLabel: {
+      color: theme.accent,
+      fontSize: 13,
+      fontWeight: "700",
+      minWidth: 32,
+      textAlign: "right",
     },
     body: {
       flex: 1,
