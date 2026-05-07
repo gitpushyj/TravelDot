@@ -109,5 +109,42 @@
       "label": "Language",
       "current": "Current: {{name}}"
     }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Your trips, drawn from your photos",
+      "point1": "We read GPS data in your photos to find where you've been",
+      "point2": "Trips appear automatically — no manual input needed",
+      "point3": "Photos never leave your phone",
+      "next": "Next"
+    },
+    "login": {
+      "title": "Let's get started",
+      "subtitle": "Sign in to keep your records safe on this device"
+    },
+    "home": {
+      "title": "Choose your home country",
+      "subtitle": "Your home dot is shown in blue regardless of days.\nForeign countries get darker the more days you spent there."
+    },
+    "sync": {
+      "title": "Let's sync your trips",
+      "body": "We'll go through your photos and build trip records automatically.",
+      "fullAccessHint": "For best results, please choose \"Allow full photo access\".",
+      "button": "Start sync",
+      "scanning": "Reviewing {{processed}} photos...",
+      "preparing": "Getting ready to scan your photos...",
+      "limitedHint": "Only selected photos are being analyzed. Allow full access in Settings to find more trips.",
+      "permissionDeniedTitle": "Photo access required",
+      "permissionDeniedBody": "We need photo access to build your trip records. Please allow access and try again.",
+      "requestAgain": "Request access again"
+    },
+    "suspect": {
+      "title": "These trips need a quick check",
+      "subtitle": "These trips only contain photos from another device. Remove any that aren't yours.",
+      "allClearedTitle": "Your trips are all set",
+      "allClearedBody": "Nothing needs review. You're ready to explore your map.",
+      "acceptAll": "Keep all remaining",
+      "goHome": "Go to home"
+    }
   }
 }
