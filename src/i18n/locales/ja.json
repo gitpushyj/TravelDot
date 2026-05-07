@@ -33,7 +33,7 @@
   "history": {
     "heading": "旅の記録",
     "statCountriesUnit": "カ国",
-    "statVisitsUnit": "回訪問",
+    "statVisitsUnit": "回旅行",
     "statDaysUnit": "日累計",
     "empty": "まだ記録された旅がありません。",
     "tripDuration": "{{days}}日間の旅",

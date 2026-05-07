@@ -33,7 +33,7 @@
   "history": {
     "heading": "Storico viaggi",
     "statCountriesUnit": "paesi",
-    "statVisitsUnit": "visite",
+    "statVisitsUnit": "viaggi",
     "statDaysUnit": "giorni totali",
     "empty": "Nessun viaggio registrato finora.",
     "tripDuration": "viaggio di {{days}} giorni",

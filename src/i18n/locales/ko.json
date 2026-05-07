@@ -33,7 +33,7 @@
   "history": {
     "heading": "여행 기록",
     "statCountriesUnit": "개국",
-    "statVisitsUnit": "회 방문",
+    "statVisitsUnit": "회 여행",
     "statDaysUnit": "일 누적",
     "empty": "아직 기록된 여행이 없어요.",
     "tripDuration": "{{days}}일 여행",

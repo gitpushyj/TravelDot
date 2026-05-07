@@ -33,7 +33,7 @@
   "history": {
     "heading": "旅行记录",
     "statCountriesUnit": "国",
-    "statVisitsUnit": "次访问",
+    "statVisitsUnit": "次行程",
     "statDaysUnit": "天累计",
     "empty": "尚未有旅行记录。",
     "tripDuration": "{{days}}天行程",

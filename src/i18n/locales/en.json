@@ -33,7 +33,7 @@
   "history": {
     "heading": "Trip history",
     "statCountriesUnit": "countries",
-    "statVisitsUnit": "visits",
+    "statVisitsUnit": "trips",
     "statDaysUnit": "days total",
     "empty": "No trips recorded yet.",
     "tripDuration": "{{days}}-day trip",

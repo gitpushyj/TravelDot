@@ -33,7 +33,7 @@
   "history": {
     "heading": "Reiseverlauf",
     "statCountriesUnit": "Länder",
-    "statVisitsUnit": "Besuche",
+    "statVisitsUnit": "Reisen",
     "statDaysUnit": "Tage gesamt",
     "empty": "Noch keine Reisen erfasst.",
     "tripDuration": "{{days}}-tägige Reise",
