@@ -31,6 +31,9 @@ import { styles } from "./DotMap/styles";
 const FILL_RATIO = 0.6;
 const MIN_SCALE = 1;
 const MAX_SCALE = 10;
+// 인트로 줌아웃이 멈추는 최종 배율. 1이면 세계지도 전체가 보이는데
+// 도트가 너무 작아져서 약간 줌인된 상태에서 멈춘다 (세계의 약 3/4가 viewport에 들어옴).
+const INTRO_END_SCALE = 1.33;
 
 type Props = {
   visitCounts?: Record<string, number>;
@@ -319,15 +322,29 @@ export default function DotMap({
     savedTx.value = targetTx;
     savedTy.value = targetTy;
 
+    // 종료 위치: 본국이 화면 중앙에 오도록 두되 콘텐츠가 viewport 밖으로
+    // 나가지 않도록 clamp.
+    const endScale = INTRO_END_SCALE;
+    const endTx = clampJs(
+      size.width / 2 - endScale * cx0,
+      size.width * (1 - endScale),
+      0
+    );
+    const endTy = clampJs(
+      size.height / 2 - endScale * cy0,
+      size.height * (1 - endScale),
+      0
+    );
+
     const easing = Easing.inOut(Easing.cubic);
-    scale.value = withDelay(500, withTiming(1, { duration: 4000, easing }));
-    tx.value = withDelay(500, withTiming(0, { duration: 4000, easing }));
+    scale.value = withDelay(500, withTiming(endScale, { duration: 4000, easing }));
+    tx.value = withDelay(500, withTiming(endTx, { duration: 4000, easing }));
     ty.value = withDelay(
       500,
-      withTiming(0, { duration: 4000, easing }, (finished) => {
+      withTiming(endTy, { duration: 4000, easing }, (finished) => {
         if (finished) {
-          savedTx.value = 0;
-          savedTy.value = 0;
+          savedTx.value = endTx;
+          savedTy.value = endTy;
         }
       })
     );
