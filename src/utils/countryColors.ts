@@ -161,22 +161,52 @@ export function hasCountryColor(code: string | null | undefined): boolean {
   return code.toUpperCase() in COUNTRY_COLORS;
 }
 
-// 배경 hex 색에 대비되는 텍스트 색을 반환. WCAG 상대 휘도 기준으로 흰색/검정 중 선택.
-export function readableTextOn(bgHex: string): string {
-  const hex = bgHex.replace("#", "");
-  if (hex.length !== 3 && hex.length !== 6) return "#ffffff";
+function parseHexRgb(hex: string): { r: number; g: number; b: number } | null {
+  const cleaned = hex.replace("#", "");
+  if (cleaned.length !== 3 && cleaned.length !== 6) return null;
   const full =
-    hex.length === 3
-      ? hex
+    cleaned.length === 3
+      ? cleaned
           .split("")
           .map((c) => c + c)
           .join("")
-      : hex;
-  const r = parseInt(full.slice(0, 2), 16) / 255;
-  const g = parseInt(full.slice(2, 4), 16) / 255;
-  const b = parseInt(full.slice(4, 6), 16) / 255;
-  const toLin = (v: number) =>
-    v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-  const lum = 0.2126 * toLin(r) + 0.7152 * toLin(g) + 0.0722 * toLin(b);
-  return lum > 0.5 ? "#1a1a1a" : "#ffffff";
+      : cleaned;
+  return {
+    r: parseInt(full.slice(0, 2), 16),
+    g: parseInt(full.slice(2, 4), 16),
+    b: parseInt(full.slice(4, 6), 16),
+  };
+}
+
+function relativeLuminance(hex: string): number {
+  const rgb = parseHexRgb(hex);
+  if (!rgb) return 1;
+  const toLin = (v: number) => {
+    const x = v / 255;
+    return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * toLin(rgb.r) + 0.7152 * toLin(rgb.g) + 0.0722 * toLin(rgb.b);
+}
+
+// 배경 hex 색에 대비되는 텍스트 색을 반환. WCAG 상대 휘도 기준으로 흰색/검정 중 선택.
+export function readableTextOn(bgHex: string): string {
+  return relativeLuminance(bgHex) > 0.5 ? "#1a1a1a" : "#ffffff";
+}
+
+// 국기 박스처럼 작은 영역의 배경에 쓸 톤. 상징색이 진할수록 알파를 낮춰
+// 살짝 연하게 보이도록 한다. 매핑이 없는 국가는 null을 돌려 호출 측에서
+// 테마 기본값(theme.flagBoxBg)으로 폴백한다.
+export function flagBoxBgFor(code: string | null | undefined): string | null {
+  if (!hasCountryColor(code)) return null;
+  const { bg } = colorForCountry(code);
+  const rgb = parseHexRgb(bg);
+  if (!rgb) return null;
+  const lum = relativeLuminance(bg);
+  // 진한 색일수록 더 큰 알파 감쇠. 밝은 파스텔/노랑 계열은 거의 그대로 둔다.
+  let alpha: number;
+  if (lum < 0.12) alpha = 0.22;
+  else if (lum < 0.3) alpha = 0.32;
+  else if (lum < 0.55) alpha = 0.5;
+  else alpha = 0.7;
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
 }

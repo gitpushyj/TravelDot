@@ -6,6 +6,7 @@ import type { RecentTrip } from "../../features/travel/visitRepository";
 import { getCurrentLocale } from "../../i18n";
 import { getCountryName } from "../../lib/countryName";
 import type { Theme } from "../../theme/theme";
+import { flagBoxBgFor } from "../../utils/countryColors";
 import { flagEmoji } from "../../utils/flag";
 import { makeStyles } from "./styles";
 
@@ -35,6 +36,7 @@ export default function RecentList({ theme, trips, onSelect }: Props) {
       renderItem={({ item, index }) => {
         const koName = getCountryName(item.countryCode, getCurrentLocale());
         const [y, m, d] = item.startDate.split("-");
+        const flagBg = flagBoxBgFor(item.countryCode);
         return (
           <Pressable
             onPress={() => onSelect(item)}
@@ -43,7 +45,12 @@ export default function RecentList({ theme, trips, onSelect }: Props) {
               pressed && { backgroundColor: theme.rowPressedBg },
             ]}
           >
-            <View style={styles.flagBox}>
+            <View
+              style={[
+                styles.flagBox,
+                flagBg ? { backgroundColor: flagBg } : null,
+              ]}
+            >
               <Text style={styles.flagText}>{flagEmoji(item.countryCode)}</Text>
             </View>
             <View style={styles.recentMain}>
