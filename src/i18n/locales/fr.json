@@ -441,7 +441,7 @@
     },
     "home": {
       "title": "Choisis ton pays d'origine",
-      "subtitle": "Le point de ton pays d'origine reste bleu, quel que soit le nombre de jours.\nLes autres pays foncent à mesure que tu y passes du temps."
+      "subtitle": "Le point de ton pays d'origine est affiché dans une couleur distinctive, quel que soit le nombre de jours.\nLes autres pays foncent à mesure que tu y passes du temps."
     },
     "sync": {
       "title": "Synchronisons tes voyages",

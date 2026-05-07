@@ -441,7 +441,7 @@
     },
     "home": {
       "title": "Scegli il paese di residenza",
-      "subtitle": "Il punto del paese di residenza resta blu, indipendentemente dai giorni.\nGli altri paesi diventano più scuri man mano che ci passi del tempo."
+      "subtitle": "Il punto del paese di residenza viene mostrato in un colore distintivo, indipendentemente dai giorni.\nGli altri paesi diventano più scuri man mano che ci passi del tempo."
     },
     "sync": {
       "title": "Sincronizziamo i tuoi viaggi",

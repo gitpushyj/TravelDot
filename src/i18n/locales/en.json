@@ -484,7 +484,7 @@
     },
     "home": {
       "title": "Choose your home country",
-      "subtitle": "Your home dot is shown in blue regardless of days.\nForeign countries get darker the more days you spent there."
+      "subtitle": "Your home dot is shown in a distinct color regardless of days.\nForeign countries get darker the more days you spent there."
     },
     "birth": {
       "title": "Tell us your date of birth",

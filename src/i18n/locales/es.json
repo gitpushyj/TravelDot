@@ -441,7 +441,7 @@
     },
     "home": {
       "title": "Elige tu país de origen",
-      "subtitle": "El punto de tu país de origen siempre aparece en azul, independientemente de los días.\nEl resto de países se oscurecen cuanto más tiempo pasas en ellos."
+      "subtitle": "El punto de tu país de origen siempre aparece en un color distintivo, independientemente de los días.\nEl resto de países se oscurecen cuanto más tiempo pasas en ellos."
     },
     "sync": {
       "title": "Vamos a sincronizar tus viajes",
