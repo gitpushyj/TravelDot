@@ -15,8 +15,8 @@ import { useVisitStore } from "./src/features/travel/visitStore";
 import { AppCtxProvider, type AppNavCtx } from "./src/navigation/AppCtx";
 import RootNavigator from "./src/navigation/RootNavigator";
 import type { YearMode } from "./src/navigation/types";
-import LoginScreen from "./src/screens/LoginScreen";
 import OnboardingFlow from "./src/screens/Onboarding";
+import LoginStep from "./src/screens/Onboarding/LoginStep";
 import {
   useSystemSchemeListener,
   useTheme,
@@ -130,13 +130,15 @@ export default function App() {
     );
   }
 
-  // 온보딩 완료 후 어떤 이유로든 로그아웃된 경우 LoginScreen만 노출.
+  // 온보딩 완료 후 어떤 이유로든 로그아웃된 경우 LoginStep만 단독 노출.
+  // OnboardingFlow를 거치지 않으므로 진행 바는 표시되지 않는다. 로그인 성공 후
+  // authUser가 채워지면 다음 렌더에서 메인 UI 분기로 자동 전환된다.
   if (!authUser) {
     return (
-      <GestureHandlerRootView style={styles.rootDark}>
-        <StatusBar style="light" />
+      <GestureHandlerRootView style={styles.root}>
+        <StatusBar style={theme.statusBar} />
         {alerts}
-        <LoginScreen />
+        <LoginStep onNext={() => {}} />
       </GestureHandlerRootView>
     );
   }
@@ -158,6 +160,5 @@ export default function App() {
 function makeStyles(theme: { homeBg: string }) {
   return StyleSheet.create({
     root: { flex: 1, backgroundColor: theme.homeBg },
-    rootDark: { flex: 1 },
   });
 }
