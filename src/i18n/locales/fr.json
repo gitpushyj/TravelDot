@@ -224,8 +224,11 @@
     "visitedDays": "{{days}} jours sur place",
     "isHome": "Pays d'origine",
     "statTitle": "Pays visités",
-    "nextMilestone": "Prochain palier",
-    "milestoneCountries": "{{count}} pays",
+    "milestoneFooter": {
+      "countries": "Encore {{count}} pays pour le prochain titre",
+      "days": "Encore {{count}} jours pour le prochain titre",
+      "completed": "Plus haut palier atteint 🎉"
+    },
     "recentTitle": "Voyages récents",
     "viewAll": "Tout voir →",
     "viewAllCountries": "Tous les pays",

@@ -244,8 +244,11 @@
     "visitedDays": "{{days}}일 방문",
     "isHome": "본국",
     "statTitle": "방문 국가",
-    "nextMilestone": "다음 마일스톤",
-    "milestoneCountries": "{{count}}개국",
+    "milestoneFooter": {
+      "countries": "다음 호칭 획득까지 {{count}}개국",
+      "days": "다음 호칭 획득까지 {{count}}일",
+      "completed": "최고 단계 달성 🎉"
+    },
     "recentTitle": "최근 방문",
     "viewAll": "전체보기 →",
     "viewAllCountries": "모든 나라 보기",

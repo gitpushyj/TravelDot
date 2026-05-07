@@ -36,13 +36,11 @@ import {
 } from "../../features/badges/badgeI18n";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "../../features/badges/countryNames";
 import { pickActiveBadge, useBadgeStore } from "../../features/badges/badgeStore";
-import {
-  getTierByCount,
-  TIER_CUTOFFS,
-} from "../../features/travel/tierTitles";
+import { getTierByCount } from "../../features/travel/tierTitles";
+import { evaluateMilestone } from "../../features/milestone/milestoneEvaluator";
+import { useMilestoneStore } from "../../features/milestone/milestoneStore";
 import { useVisitStore } from "../../features/travel/visitStore";
 import { getCurrentLocale } from "../../i18n";
-import { TOTAL_COUNTRIES } from "../../lib/countryLookup";
 import { useAppCtx } from "../../navigation/AppCtx";
 import type { RootStackParamList } from "../../navigation/types";
 import { useTheme } from "../../theme/themeStore";
@@ -77,6 +75,7 @@ export default function MainScreen({
 }: NativeStackScreenProps<RootStackParamList, "Main">) {
   const { t } = useTranslation();
   const { yearMode, setYearMode, activeCounts } = useAppCtx();
+  const visitCounts = useVisitStore((s) => s.visitCounts);
   const homeCountry = useVisitStore((s) => s.homeCountry);
   const recentTrips = useVisitStore((s) => s.recentTrips);
   const availableYears = useVisitStore((s) => s.availableYears);
@@ -225,11 +224,11 @@ export default function MainScreen({
     return { countries: codes.length, days };
   }, [activeCounts]);
 
-  const milestone = useMemo(() => {
-    const visited = totals.countries;
-    const next = TIER_CUTOFFS.find((m) => m > visited) ?? TOTAL_COUNTRIES;
-    return { next };
-  }, [totals.countries]);
+  const milestoneKind = useMilestoneStore((s) => s.kind);
+  const milestoneProgress = useMemo(
+    () => evaluateMilestone(milestoneKind, visitCounts),
+    [milestoneKind, visitCounts]
+  );
 
   const tier = useMemo(
     () => getTierByCount(totals.countries),
@@ -253,8 +252,6 @@ export default function MainScreen({
     setYearPickerOpen(true);
   };
 
-  const percent =
-    Math.round((totals.countries / milestone.next) * 1000) / 10;
 
   if (!homeCountry) return null;
 
@@ -394,7 +391,7 @@ export default function MainScreen({
             onPress={() => navigation.navigate("CountryDetail")}
           />
           <Pressable
-            onPress={() => navigation.navigate("Titles")}
+            onPress={() => navigation.navigate("Milestones")}
             style={({ pressed }) => [
               styles.statCard,
               pressed && styles.statCardPressed,
@@ -420,29 +417,35 @@ export default function MainScreen({
               </Text>
             </View>
             <View style={styles.statBigRow}>
-              <Text style={styles.statBigNum}>{totals.countries}</Text>
-              <Text style={styles.statBigDenom}> / {milestone.next}</Text>
-              <Text style={styles.statBigPercent}>  {percent}%</Text>
+              <Text style={styles.statBigNum}>{milestoneProgress.current}</Text>
+              <Text style={styles.statBigDenom}>
+                {milestoneProgress.next != null
+                  ? ` / ${milestoneProgress.next}`
+                  : ""}
+              </Text>
+              <Text style={styles.statBigPercent}>
+                {"  "}{milestoneProgress.percent}%
+              </Text>
             </View>
             <View style={styles.progressTrack}>
               <View
                 style={[
                   styles.progressFill,
-                  {
-                    width: `${Math.min(
-                      100,
-                      (totals.countries / milestone.next) * 100
-                    )}%`,
-                  },
+                  { width: `${milestoneProgress.percent}%` },
                 ]}
               />
             </View>
             <View style={styles.statFooter}>
               <Text style={styles.statFooterLabel}>
-                {t("home.nextMilestone")}{" "}
-                <Text style={styles.statFooterStrong}>
-                  {t("home.milestoneCountries", { count: milestone.next })}
-                </Text>
+                {milestoneProgress.reachedFinal
+                  ? t("home.milestoneFooter.completed")
+                  : milestoneProgress.unit === "days"
+                    ? t("home.milestoneFooter.days", {
+                        count: (milestoneProgress.next ?? 0) - milestoneProgress.current,
+                      })
+                    : t("home.milestoneFooter.countries", {
+                        count: (milestoneProgress.next ?? 0) - milestoneProgress.current,
+                      })}
               </Text>
             </View>
           </Pressable>

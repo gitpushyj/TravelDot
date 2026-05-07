@@ -244,8 +244,11 @@
     "visitedDays": "{{days}} days visited",
     "isHome": "Home",
     "statTitle": "Countries Visited",
-    "nextMilestone": "Next milestone",
-    "milestoneCountries": "{{count}} countries",
+    "milestoneFooter": {
+      "countries": "{{count}} more to next title",
+      "days": "{{count}} more days to next title",
+      "completed": "Top tier reached 🎉"
+    },
     "recentTitle": "Recent Trips",
     "viewAll": "View all →",
     "viewAllCountries": "All Countries",
