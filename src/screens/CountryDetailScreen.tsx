@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import CountryDotMap from "../components/CountryDotMap";
 import {
   countPhotosForCountry,
   countPhotosForTrip,
@@ -14,6 +15,7 @@ import { useVisitStore } from "../features/travel/visitStore";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
+import { colorForCountry } from "../utils/countryColors";
 import { flagEmoji } from "../utils/flag";
 
 import { makeStyles } from "./CountryDetailScreen/styles";
@@ -103,6 +105,7 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
 
   const flag = flagEmoji(selectedCountry.code);
   const hasTrips = (trips?.length ?? 0) > 0;
+  const countryColor = colorForCountry(selectedCountry.code);
 
   return (
     <View style={styles.root}>
@@ -151,6 +154,15 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        <View style={[styles.heroCard, { backgroundColor: countryColor.bg }]}>
+          <View style={styles.heroDots}>
+            <CountryDotMap
+              countryCode={selectedCountry.code}
+              color={countryColor.dot}
+            />
+          </View>
+        </View>
+
         <View style={styles.statsCard}>
           <StatCol
             value={trips?.length ?? 0}

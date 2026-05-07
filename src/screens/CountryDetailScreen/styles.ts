@@ -70,6 +70,16 @@ export function makeStyles(theme: Theme) {
       paddingTop: 8,
       paddingBottom: 60,
     },
+    heroCard: {
+      borderRadius: 24,
+      overflow: "hidden",
+      backgroundColor: theme.accent,
+      aspectRatio: 16 / 11,
+      marginBottom: 16,
+    },
+    heroDots: {
+      ...StyleSheet.absoluteFillObject,
+    },
     statsCard: {
       flexDirection: "row",
       backgroundColor: theme.cardBg,
