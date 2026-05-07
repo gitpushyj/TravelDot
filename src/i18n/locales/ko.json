@@ -144,7 +144,8 @@
     "autoActive": "사용 중",
     "autoSet": "자동으로",
     "noCountryHint": "한 국가에서 30일 이상 머무르면 단골 호칭이 잠금 해제됩니다.",
-    "noneToShow": "표시할 호칭이 없어요."
+    "noneToShow": "표시할 호칭이 없어요.",
+    "gotoMilestones": "마일스톤"
   },
   "milestones": {
     "heading": "목표 마일스톤",

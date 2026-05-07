@@ -12,7 +12,10 @@ export default function TitlesScreenNav({
   return (
     <>
       <StatusBar style={theme.statusBar} />
-      <TitlesScreen onClose={() => navigation.goBack()} />
+      <TitlesScreen
+        onClose={() => navigation.goBack()}
+        onOpenMilestones={() => navigation.navigate("Milestones")}
+      />
     </>
   );
 }

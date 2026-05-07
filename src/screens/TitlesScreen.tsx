@@ -20,9 +20,9 @@ import { useTheme } from "../theme/themeStore";
 import BadgeCard from "./TitlesScreen/BadgeCard";
 import { makeStyles } from "./TitlesScreen/styles";
 
-type Props = { onClose: () => void };
+type Props = { onClose: () => void; onOpenMilestones: () => void };
 
-export default function TitlesScreen({ onClose }: Props) {
+export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -90,7 +90,13 @@ export default function TitlesScreen({ onClose }: Props) {
           <Text style={styles.cancel}>{t("common.close")}</Text>
         </Pressable>
         <Text style={styles.title}>{t("titles.heading")}</Text>
-        <View style={styles.headerSide} />
+        <Pressable
+          onPress={onOpenMilestones}
+          hitSlop={8}
+          style={styles.headerSide}
+        >
+          <Text style={styles.quickLink}>{t("titles.gotoMilestones")} ›</Text>
+        </Pressable>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
