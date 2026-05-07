@@ -1,11 +1,25 @@
 import { StatusBar } from "expo-status-bar";
-import { useMemo, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Alert,
+  Dimensions,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
+import {
+  Gesture,
+  GestureDetector,
+  ScrollView,
+} from "react-native-gesture-handler";
 import Animated, {
+  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
   withTiming,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
@@ -36,6 +50,22 @@ import RecentList from "./RecentList";
 import { makeStyles, TOP_BAR_HEIGHT } from "./styles";
 
 const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
+
+// 지도 자연 비율(360:145)에 화면 폭을 맞춘 기본 높이.
+// 사용자가 지도 하단을 끌어내리면 이 기본 높이에 추가 높이(extra)를 더해 키운다.
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
+const MAP_DEFAULT_HEIGHT = Math.round((SCREEN_WIDTH * 145) / 360);
+// 화면이 지도 위주가 되어버리지 않도록 화면 높이의 절반 이내로 제한한다.
+const MAP_MAX_EXTRA = Math.max(
+  0,
+  Math.round(SCREEN_HEIGHT * 0.55) - MAP_DEFAULT_HEIGHT
+);
+
+// 지도 하단 드래그 핸들의 어트랜션 애니메이션은 앱 실행 중 한 번만 보여 준다.
+// 모듈 레벨 플래그라 화면 재진입에는 다시 재생되지 않지만, 앱이 종료/재시작되면
+// 다시 false로 초기화되어 새 세션에서 한 번 더 재생된다.
+let mapHandleHintShown = false;
 
 export default function MainScreen({
   navigation,
@@ -73,6 +103,90 @@ export default function MainScreen({
   });
   const topBarStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: topBarTranslateY.value }],
+  }));
+
+  // 지도 영역 높이 가변. 사용자는 하단 핸들을 잡고 아래로 끌어 키우거나
+  // 위로 다시 밀어 줄일 수 있다.
+  const mapExtraHeight = useSharedValue(0);
+  const mapExtraSaved = useSharedValue(0);
+  const mapResizeGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .onStart(() => {
+          mapExtraSaved.value = mapExtraHeight.value;
+          // 부모 ScrollView가 같이 스크롤되지 않도록 잠근다.
+          runOnJS(setMapInteracting)(true);
+        })
+        .onUpdate((e) => {
+          const next = mapExtraSaved.value + e.translationY;
+          mapExtraHeight.value = Math.max(0, Math.min(MAP_MAX_EXTRA, next));
+        })
+        .onEnd(() => {
+          mapExtraSaved.value = mapExtraHeight.value;
+        })
+        .onFinalize(() => {
+          runOnJS(setMapInteracting)(false);
+        }),
+    [mapExtraHeight, mapExtraSaved]
+  );
+  const mapAreaAnimStyle = useAnimatedStyle(() => ({
+    height: MAP_DEFAULT_HEIGHT + mapExtraHeight.value,
+  }));
+
+  // 지도 하단 핸들 어트랜션. 가로로 살짝 늘었다 줄고, 약간 아래로 튕기며,
+  // 동시에 투명도가 펄스해 "여기를 잡고 끌 수 있다"는 시선을 유도한다.
+  const hintScaleX = useSharedValue(1);
+  const hintOpacity = useSharedValue(1);
+  const hintTranslateY = useSharedValue(0);
+  useEffect(() => {
+    if (mapHandleHintShown) return;
+    if (!homeCountry) return;
+    mapHandleHintShown = true;
+    // 인트로(500ms 지연 + 3000ms 줌아웃 = 3500ms)가 끝나는 시점에 펄스가 시작되도록.
+    const startDelay = 3500;
+    // 한 사이클 670ms = (335ms 늘어남) + (335ms 되돌아옴).
+    const halfCycle = 335;
+    const cycles = 3;
+    hintScaleX.value = withDelay(
+      startDelay,
+      withRepeat(
+        withSequence(
+          withTiming(1.4, { duration: halfCycle }),
+          withTiming(1, { duration: halfCycle })
+        ),
+        cycles,
+        false
+      )
+    );
+    hintOpacity.value = withDelay(
+      startDelay,
+      withRepeat(
+        withSequence(
+          withTiming(0.4, { duration: halfCycle }),
+          withTiming(1, { duration: halfCycle })
+        ),
+        cycles,
+        false
+      )
+    );
+    hintTranslateY.value = withDelay(
+      startDelay,
+      withRepeat(
+        withSequence(
+          withTiming(5, { duration: halfCycle }),
+          withTiming(0, { duration: halfCycle })
+        ),
+        cycles,
+        false
+      )
+    );
+  }, [homeCountry, hintScaleX, hintOpacity, hintTranslateY]);
+  const hintBarStyle = useAnimatedStyle(() => ({
+    opacity: hintOpacity.value,
+    transform: [
+      { translateY: hintTranslateY.value },
+      { scaleX: hintScaleX.value },
+    ],
   }));
 
   const totals = useMemo(() => {
@@ -212,20 +326,28 @@ export default function MainScreen({
           <View style={styles.mapStatsDivider} />
 
           <View style={styles.mapWrap}>
-            <DotMap
-              visitCounts={activeCounts}
-              onInteractingChange={setMapInteracting}
-            />
-            <Pressable
-              onPress={() => navigation.navigate("MapZoom")}
-              hitSlop={8}
-              style={({ pressed }) => [
-                styles.mapFloatingBtn,
-                pressed && styles.mapFloatingBtnPressed,
-              ]}
-            >
-              <Text style={styles.mapFloatingBtnIcon}>⛶</Text>
-            </Pressable>
+            <Animated.View style={[styles.mapArea, mapAreaAnimStyle]}>
+              <DotMap
+                visitCounts={activeCounts}
+                onInteractingChange={setMapInteracting}
+                mapAreaStyle={styles.mapAreaInner}
+              />
+              <Pressable
+                onPress={() => navigation.navigate("MapZoom")}
+                hitSlop={8}
+                style={({ pressed }) => [
+                  styles.mapFloatingBtn,
+                  pressed && styles.mapFloatingBtnPressed,
+                ]}
+              >
+                <Text style={styles.mapFloatingBtnIcon}>⛶</Text>
+              </Pressable>
+            </Animated.View>
+            <GestureDetector gesture={mapResizeGesture}>
+              <View style={styles.mapResizeZone}>
+                <Animated.View style={[styles.mapResizeBar, hintBarStyle]} />
+              </View>
+            </GestureDetector>
           </View>
         </View>
 

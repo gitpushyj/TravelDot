@@ -10,18 +10,31 @@ export function clampJs(v: number, min: number, max: number) {
   return Math.max(min, Math.min(max, v));
 }
 
-// scale=1일 때 콘텐츠가 뷰포트와 정확히 맞도록 설계되어 있으므로,
-// 줌이 들어가면 tx∈[w*(1-s), 0], ty∈[h*(1-s), 0] 안에서만 움직여야 콘텐츠가 화면을 비우지 않는다.
-export function clampPanX(value: number, s: number, w: number) {
+// scale=1을 기준으로 콘텐츠 크기(contentW/H)와 뷰포트 크기(viewportW/H)가
+// 다를 수 있다. 콘텐츠가 뷰포트보다 작거나 같으면 가운데 정렬, 크면 끝이
+// 비우지 않도록 [viewport - s*content, 0] 범위로 제한한다.
+export function clampPanX(
+  value: number,
+  s: number,
+  viewportW: number,
+  contentW: number
+) {
   "worklet";
-  if (w <= 0) return 0;
-  const min = w * (1 - s);
-  return Math.min(0, Math.max(min, value));
+  if (viewportW <= 0 || contentW <= 0) return 0;
+  const total = s * contentW;
+  if (total <= viewportW) return (viewportW - total) / 2;
+  return Math.min(0, Math.max(viewportW - total, value));
 }
 
-export function clampPanY(value: number, s: number, h: number) {
+export function clampPanY(
+  value: number,
+  s: number,
+  viewportH: number,
+  contentH: number
+) {
   "worklet";
-  if (h <= 0) return 0;
-  const min = h * (1 - s);
-  return Math.min(0, Math.max(min, value));
+  if (viewportH <= 0 || contentH <= 0) return 0;
+  const total = s * contentH;
+  if (total <= viewportH) return (viewportH - total) / 2;
+  return Math.min(0, Math.max(viewportH - total, value));
 }

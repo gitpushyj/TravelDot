@@ -137,8 +137,35 @@ export function makeStyles(theme: Theme) {
       backgroundColor: theme.cardBorder,
     },
     mapWrap: {
-      paddingVertical: 12,
+      paddingTop: 12,
+      paddingBottom: 0,
       position: "relative",
+    },
+    // 지도 viewport 자체. height는 Reanimated로 조절된다.
+    mapArea: {
+      width: "100%",
+      position: "relative",
+    },
+    // DotMap 내부 mapArea가 자연 비율(360/145) 대신 부모(애니메이션 컨테이너)
+    // 크기를 그대로 쓰도록 override 한다.
+    mapAreaInner: {
+      flex: 1,
+      width: "100%",
+      aspectRatio: undefined,
+    },
+    // 지도 하단 가운데 드래그 핸들 영역. 시각적 인디케이터(작은 알약 모양)와
+    // 충분한 터치 슬랍을 함께 가진다.
+    mapResizeZone: {
+      paddingTop: 10,
+      paddingBottom: 12,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    mapResizeBar: {
+      width: 44,
+      height: 5,
+      borderRadius: 999,
+      backgroundColor: theme.handleColor,
     },
     mapFloatingBtn: {
       position: "absolute",

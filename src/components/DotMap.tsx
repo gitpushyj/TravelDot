@@ -61,6 +61,8 @@ export default function DotMap({
   parentRotated90 = false,
 }: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
+  const viewBoxW = 360;
+  const viewBoxH = maxLat - minLat;
   const [size, setSize] = useState({ width: 0, height: 0 });
   // 한 도트가 여러 나라에 걸쳐 있을 때만 사용하는 임시 선택지.
   const [pending, setPending] = useState<CountryRef[] | null>(null);
@@ -72,9 +74,15 @@ export default function DotMap({
   const theme = useTheme();
   const { t } = useTranslation();
 
-  const viewBoxW = 360;
-  const drawWidth = size.width;
-  const baseScale = drawWidth / viewBoxW || 1;
+  // viewport가 자연 비율(360:viewBoxH)보다 길어지면(예: 사용자가 홈 화면에서
+  // 지도 아래쪽을 끌어내려 높이를 키운 경우) 짧은 축 기준으로는 콘텐츠가
+  // 비어 보이므로, 더 큰 축 기준으로 cover 스케일을 잡아 콘텐츠가 양 축을
+  // 모두 채우도록 한다. 자연 비율에서는 두 값이 같아 동작이 동일하다.
+  const widthFit = size.width > 0 ? size.width / viewBoxW : 0;
+  const heightFit = size.height > 0 ? size.height / viewBoxH : 0;
+  const baseScale = Math.max(widthFit, heightFit) || 1;
+  const contentW = viewBoxW * baseScale;
+  const contentH = viewBoxH * baseScale;
 
   const dotPx = gridSize * FILL_RATIO * baseScale;
   const halfDotPx = dotPx / 2;
@@ -174,8 +182,8 @@ export default function DotMap({
           const dy = e.focalY - prevFocalY.value;
           const rawTx = e.focalX * (1 - r) + tx.value * r + dx;
           const rawTy = e.focalY * (1 - r) + ty.value * r + dy;
-          tx.value = clampPanX(rawTx, newScale, viewW);
-          ty.value = clampPanY(rawTy, newScale, viewH);
+          tx.value = clampPanX(rawTx, newScale, viewW, contentW);
+          ty.value = clampPanY(rawTy, newScale, viewH, contentH);
           scale.value = newScale;
           prevFocalX.value = e.focalX;
           prevFocalY.value = e.focalY;
@@ -191,6 +199,8 @@ export default function DotMap({
     [
       viewW,
       viewH,
+      contentW,
+      contentH,
       notifyInteracting,
       scale,
       tx,
@@ -224,8 +234,8 @@ export default function DotMap({
           // (sx, sy) → (sy, -sx) 매핑으로 회전을 풀어준다.
           const dx = parentRotated90 ? e.translationY : e.translationX;
           const dy = parentRotated90 ? -e.translationX : e.translationY;
-          tx.value = clampPanX(savedTx.value + dx, s, viewW);
-          ty.value = clampPanY(savedTy.value + dy, s, viewH);
+          tx.value = clampPanX(savedTx.value + dx, s, viewW, contentW);
+          ty.value = clampPanY(savedTy.value + dy, s, viewH, contentH);
         })
         .onEnd(() => {
           savedTx.value = tx.value;
@@ -237,6 +247,8 @@ export default function DotMap({
     [
       viewW,
       viewH,
+      contentW,
+      contentH,
       notifyInteracting,
       scale,
       tx,
@@ -312,8 +324,8 @@ export default function DotMap({
     const cy0 = (minCy + maxCy) / 2;
     const rawTargetTx = size.width / 2 - target * cx0;
     const rawTargetTy = size.height / 2 - target * cy0;
-    const targetTx = clampJs(rawTargetTx, size.width * (1 - target), 0);
-    const targetTy = clampJs(rawTargetTy, size.height * (1 - target), 0);
+    const targetTx = clampPanX(rawTargetTx, target, size.width, contentW);
+    const targetTy = clampPanY(rawTargetTy, target, size.height, contentH);
 
     introPlayed.current = true;
     scale.value = target;
@@ -325,23 +337,25 @@ export default function DotMap({
     // 종료 위치: 본국이 화면 중앙에 오도록 두되 콘텐츠가 viewport 밖으로
     // 나가지 않도록 clamp.
     const endScale = INTRO_END_SCALE;
-    const endTx = clampJs(
+    const endTx = clampPanX(
       size.width / 2 - endScale * cx0,
-      size.width * (1 - endScale),
-      0
+      endScale,
+      size.width,
+      contentW
     );
-    const endTy = clampJs(
+    const endTy = clampPanY(
       size.height / 2 - endScale * cy0,
-      size.height * (1 - endScale),
-      0
+      endScale,
+      size.height,
+      contentH
     );
 
     const easing = Easing.inOut(Easing.cubic);
-    scale.value = withDelay(500, withTiming(endScale, { duration: 4000, easing }));
-    tx.value = withDelay(500, withTiming(endTx, { duration: 4000, easing }));
+    scale.value = withDelay(500, withTiming(endScale, { duration: 3000, easing }));
+    tx.value = withDelay(500, withTiming(endTx, { duration: 3000, easing }));
     ty.value = withDelay(
       500,
-      withTiming(endTy, { duration: 4000, easing }, (finished) => {
+      withTiming(endTy, { duration: 3000, easing }, (finished) => {
         if (finished) {
           savedTx.value = endTx;
           savedTy.value = endTy;
@@ -361,6 +375,27 @@ export default function DotMap({
     savedTx,
     savedTy,
   ]);
+
+  // 부모가 viewport 높이를 변경하면(예: 홈 화면에서 지도 영역을 늘림) baseScale이
+  // 바뀌어 콘텐츠 크기가 달라진다. 정지 상태의 tx/ty가 새 범위를 벗어날 수 있어
+  // 다시 클램프한다. 단, 첫 onLayout 직후에는 인트로 effect가 막 큐잉한
+  // withTiming 애니메이션을 덮어써 취소하지 않도록 건너뛴다.
+  const lastClampedSize = useRef({ width: 0, height: 0 });
+  useEffect(() => {
+    const prev = lastClampedSize.current;
+    lastClampedSize.current = { width: size.width, height: size.height };
+    if (size.width === 0 || size.height === 0) return;
+    if (prev.width === 0 || prev.height === 0) return;
+    if (prev.width === size.width && prev.height === size.height) return;
+    if (contentW <= 0 || contentH <= 0) return;
+    const s = scale.value;
+    const cx = clampPanX(tx.value, s, size.width, contentW);
+    const cy = clampPanY(ty.value, s, size.height, contentH);
+    tx.value = cx;
+    ty.value = cy;
+    savedTx.value = cx;
+    savedTy.value = cy;
+  }, [size.width, size.height, contentW, contentH, scale, tx, ty, savedTx, savedTy]);
 
   const tap = useMemo(
     () =>
