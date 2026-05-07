@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Dimensions,
+  Image,
   Pressable,
   Text,
   View,
@@ -263,7 +264,11 @@ export default function MainScreen({
               pressed && styles.menuBtnPressed,
             ]}
           >
-            <Text style={styles.menuBtnIcon}>🌍</Text>
+            <Image
+              source={require("../../../assets/all_country_flag.png")}
+              style={styles.menuBtnImage}
+              resizeMode="contain"
+            />
           </Pressable>
           <Pressable
             onPress={() => navigation.navigate("Settings")}

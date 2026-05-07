@@ -59,6 +59,10 @@ export function makeStyles(theme: Theme) {
       fontSize: 24,
       fontWeight: "700",
     },
+    menuBtnImage: {
+      width: 32,
+      height: 32,
+    },
     mapStatsHeader: {
       flexDirection: "row",
       alignItems: "center",
