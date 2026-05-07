@@ -6,6 +6,7 @@ import type { TripWithPhotos } from "../../features/travel/visitRepository";
 import { getCurrentLocale } from "../../i18n";
 import { getCountryName } from "../../lib/countryName";
 import type { Theme } from "../../theme/theme";
+import { flagBoxBgFor } from "../../utils/countryColors";
 import { flagEmoji } from "../../utils/flag";
 
 import { makeStyles } from "./styles";
@@ -21,6 +22,7 @@ export default function TripRow({ theme, trip, onPress }: Props) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const koName = getCountryName(trip.countryCode, getCurrentLocale());
   const [y, m, d] = trip.startDate.split("-");
+  const flagBg = flagBoxBgFor(trip.countryCode);
   return (
     <Pressable
       onPress={onPress}
@@ -29,7 +31,9 @@ export default function TripRow({ theme, trip, onPress }: Props) {
         pressed && { backgroundColor: theme.rowPressedBg },
       ]}
     >
-      <View style={styles.flagBox}>
+      <View
+        style={[styles.flagBox, flagBg ? { backgroundColor: flagBg } : null]}
+      >
         <Text style={styles.flagText}>{flagEmoji(trip.countryCode)}</Text>
       </View>
       <View style={styles.rowMain}>
