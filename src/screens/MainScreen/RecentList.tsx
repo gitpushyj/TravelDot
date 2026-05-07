@@ -14,9 +14,15 @@ type Props = {
   theme: Theme;
   trips: RecentTrip[];
   onSelect: (trip: RecentTrip) => void;
+  onSelectCountry: (trip: RecentTrip) => void;
 };
 
-export default function RecentList({ theme, trips, onSelect }: Props) {
+export default function RecentList({
+  theme,
+  trips,
+  onSelect,
+  onSelectCountry,
+}: Props) {
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   if (trips.length === 0) {
@@ -45,14 +51,17 @@ export default function RecentList({ theme, trips, onSelect }: Props) {
               pressed && { backgroundColor: theme.rowPressedBg },
             ]}
           >
-            <View
-              style={[
+            <Pressable
+              onPress={() => onSelectCountry(item)}
+              hitSlop={6}
+              style={({ pressed }) => [
                 styles.flagBox,
                 flagBg ? { backgroundColor: flagBg } : null,
+                pressed && { opacity: 0.6 },
               ]}
             >
               <Text style={styles.flagText}>{flagEmoji(item.countryCode)}</Text>
-            </View>
+            </Pressable>
             <View style={styles.recentMain}>
               <View style={styles.recentTitleRow}>
                 <Text style={styles.recentName}>{koName}</Text>

@@ -41,6 +41,7 @@ import { useMilestoneStore } from "../../features/milestone/milestoneStore";
 import { useVisitStore } from "../../features/travel/visitStore";
 import { useScreenBottomInset } from "../../hooks/useScreenInsets";
 import { getCurrentLocale } from "../../i18n";
+import { getCountryName } from "../../lib/countryName";
 import { useAppCtx } from "../../navigation/AppCtx";
 import type { RootStackParamList } from "../../navigation/types";
 import { useTheme } from "../../theme/themeStore";
@@ -81,6 +82,7 @@ export default function MainScreen({
   const recentTrips = useVisitStore((s) => s.recentTrips);
   const availableYears = useVisitStore((s) => s.availableYears);
   const syncStatus = useVisitStore((s) => s.syncStatus);
+  const setSelectedCountry = useVisitStore((s) => s.setSelectedCountry);
   const activeBadgeId = useBadgeStore((s) => s.activeId);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -486,6 +488,13 @@ export default function MainScreen({
           theme={theme}
           trips={recentTrips}
           onSelect={(trip) => navigation.navigate("TripDetail", { trip })}
+          onSelectCountry={(trip) => {
+            setSelectedCountry({
+              code: trip.countryCode,
+              name: getCountryName(trip.countryCode, getCurrentLocale()),
+            });
+            navigation.navigate("CountryDetail");
+          }}
         />
       </AnimatedScrollView>
       <YearPickerModal

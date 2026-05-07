@@ -32,6 +32,7 @@ type Props = {
   trip: RecentTrip;
   onClose: () => void;
   onEdit: () => void;
+  onSelectCountry: () => void;
   onSelectPhoto: (args: {
     photos: ImageDetailPhoto[];
     initialIndex: number;
@@ -53,6 +54,7 @@ export default function TripDetailScreen({
   trip,
   onClose,
   onEdit,
+  onSelectCountry,
   onSelectPhoto,
 }: Props) {
   const { t } = useTranslation();
@@ -278,7 +280,14 @@ export default function TripDetailScreen({
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.heroCard, { backgroundColor: countryColor.bg }]}>
+        <Pressable
+          onPress={onSelectCountry}
+          style={({ pressed }) => [
+            styles.heroCard,
+            { backgroundColor: countryColor.bg },
+            pressed && { opacity: 0.85 },
+          ]}
+        >
           <View style={styles.heroDots}>
             <CountryDotMap
               countryCode={trip.countryCode}
@@ -297,7 +306,7 @@ export default function TripDetailScreen({
               <Text style={styles.heroBadgeUnit}>{t("tripDetail.photoUnit")}</Text>
             </View>
           </View>
-        </View>
+        </Pressable>
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t("tripDetail.sectionDates")}</Text>
