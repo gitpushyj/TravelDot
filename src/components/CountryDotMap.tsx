@@ -1,20 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Canvas, RoundedRect } from "@shopify/react-native-skia";
-import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
-import { point } from "@turf/helpers";
-import type { Feature, MultiPolygon, Polygon } from "geojson";
 
-import countriesData from "../../assets/data/countries-polygons.json";
+import countryDotsData from "../../assets/data/country-dots.json";
 
-type CountryFeature = Feature<Polygon | MultiPolygon, { code: string }>;
-
-const FEATURES = (
-  countriesData as { features: CountryFeature[] }
-).features;
+// scripts/generateCountryDots.mjs가 빌드 타임에 채워둔 사전 계산 도트.
+// 형식: { [code]: [lng, lat, lng, lat, ...] } (1° 격자 + far-outlier 제거 적용 완료)
+const COUNTRY_DOTS = countryDotsData as Record<string, number[]>;
 
 const FILL_RATIO = 0.7;
-// 사용자가 요청한 "해상도 1": 1도 격자.
+// scripts/generateCountryDots.mjs와 동기화. 좌표 변환만 사용한다.
 const GRID_SIZE = 1;
 
 type Props = {
@@ -24,64 +19,19 @@ type Props = {
 
 type DotPoint = { lat: number; lng: number };
 
-const CACHE = new Map<string, DotPoint[]>();
-
-function generateDots(countryCode: string): DotPoint[] {
-  const cached = CACHE.get(countryCode);
-  if (cached) return cached;
-  // 한 나라가 여러 feature(예: 미국 본토/알래스카/하와이/괌)로 분리되어 있을 수 있다.
-  const matched = FEATURES.filter((f) => f.properties.code === countryCode);
-  if (matched.length === 0) {
-    CACHE.set(countryCode, []);
-    return [];
+function loadDots(countryCode: string): DotPoint[] {
+  const flat = COUNTRY_DOTS[countryCode];
+  if (!flat || flat.length === 0) return [];
+  const dots: DotPoint[] = new Array(flat.length / 2);
+  for (let i = 0; i < dots.length; i++) {
+    dots[i] = { lng: flat[i * 2], lat: flat[i * 2 + 1] };
   }
-  let minLng = 180;
-  let maxLng = -180;
-  let minLat = 90;
-  let maxLat = -90;
-  const visit = (ring: number[][]) => {
-    for (const [x, y] of ring) {
-      if (x < minLng) minLng = x;
-      if (x > maxLng) maxLng = x;
-      if (y < minLat) minLat = y;
-      if (y > maxLat) maxLat = y;
-    }
-  };
-  for (const f of matched) {
-    const g = f.geometry;
-    if (g.type === "Polygon") {
-      for (const r of g.coordinates) visit(r);
-    } else {
-      for (const poly of g.coordinates) for (const r of poly) visit(r);
-    }
-  }
-  // 격자를 도(°) 단위로 정렬해 화면 정렬을 깔끔하게.
-  const startLat = Math.floor(minLat / GRID_SIZE) * GRID_SIZE;
-  const startLng = Math.floor(minLng / GRID_SIZE) * GRID_SIZE;
-  const dots: DotPoint[] = [];
-  for (let lat = startLat; lat <= maxLat; lat += GRID_SIZE) {
-    for (let lng = startLng; lng <= maxLng; lng += GRID_SIZE) {
-      const cellLat = lat + GRID_SIZE / 2;
-      const cellLng = lng + GRID_SIZE / 2;
-      const pt = point([cellLng, cellLat]);
-      for (const f of matched) {
-        if (booleanPointInPolygon(pt, f)) {
-          dots.push({ lat: cellLat, lng: cellLng });
-          break;
-        }
-      }
-    }
-  }
-  // 본토에서 동떨어진 영토(예: 미국 알래스카·하와이, 일본 오키나와 남단)가
-  // bbox를 과하게 키워 본토 도트가 너무 작아지는 걸 막는다.
-  const filtered = removeFarOutliers(dots);
-  CACHE.set(countryCode, filtered);
-  return filtered;
+  return dots;
 }
 
 export default function CountryDotMap({ countryCode, color }: Props) {
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const dots = useMemo(() => generateDots(countryCode), [countryCode]);
+  const dots = useMemo(() => loadDots(countryCode), [countryCode]);
 
   const layout = useMemo(() => {
     if (dots.length === 0 || size.width === 0 || size.height === 0) return null;
@@ -154,30 +104,6 @@ export default function CountryDotMap({ countryCode, color }: Props) {
       )}
     </View>
   );
-}
-
-function removeFarOutliers<T extends { lat: number; lng: number }>(
-  points: T[]
-): T[] {
-  if (points.length < 8) return points;
-  const lats = points.map((p) => p.lat).sort((a, b) => a - b);
-  const lngs = points.map((p) => p.lng).sort((a, b) => a - b);
-  const cLat = lats[Math.floor(lats.length / 2)];
-  const cLng = lngs[Math.floor(lngs.length / 2)];
-  const dists = points.map((p) => {
-    const dx = p.lng - cLng;
-    const dy = p.lat - cLat;
-    return Math.sqrt(dx * dx + dy * dy);
-  });
-  const sortedDists = [...dists].sort((a, b) => a - b);
-  const q1 = sortedDists[Math.floor(sortedDists.length * 0.25)];
-  const q3 = sortedDists[Math.floor(sortedDists.length * 0.75)];
-  const iqr = q3 - q1;
-  const upper = q3 + 1.5 * iqr;
-  const filtered = points.filter((_, i) => dists[i] <= upper);
-  return filtered.length >= Math.max(4, Math.floor(points.length * 0.5))
-    ? filtered
-    : points;
 }
 
 const styles = StyleSheet.create({
