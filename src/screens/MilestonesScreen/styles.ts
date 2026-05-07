@@ -79,11 +79,6 @@ export function makeStyles(theme: Theme) {
       fontSize: 15,
       fontWeight: "700",
     },
-    rowSub: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      marginTop: 2,
-    },
     rowProgress: {
       color: theme.textSecondary,
       fontSize: 13,

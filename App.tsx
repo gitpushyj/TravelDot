@@ -39,6 +39,7 @@ export default function App() {
   const onboardingCompleted = useOnboardingStore((s) => s.completed);
   const onboardingMarkCompleted = useOnboardingStore((s) => s.markCompleted);
   const milestoneHydrate = useMilestoneStore((s) => s.hydrate);
+  const milestoneHydrated = useMilestoneStore((s) => s.hydrated);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
@@ -95,6 +96,7 @@ export default function App() {
     !themeHydrated ||
     !authHydrated ||
     !onboardingHydrated ||
+    !milestoneHydrated ||
     !i18nReady
   ) {
     return <View style={styles.root} />;
