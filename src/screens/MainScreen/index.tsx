@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import * as Haptics from "expo-haptics";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
@@ -135,6 +136,9 @@ export default function MainScreen({
   const persistMapExtra = useCallback((value: number) => {
     saveMapExtraHeight(value).catch(() => {});
   }, []);
+  const triggerDragHaptic = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+  }, []);
   const mapResizeGesture = useMemo(
     () =>
       Gesture.Pan()
@@ -142,6 +146,7 @@ export default function MainScreen({
           mapExtraSaved.value = mapExtraHeight.value;
           // 부모 ScrollView가 같이 스크롤되지 않도록 잠근다.
           runOnJS(setMapInteracting)(true);
+          runOnJS(triggerDragHaptic)();
         })
         .onUpdate((e) => {
           const next = mapExtraSaved.value + e.translationY;
@@ -154,7 +159,7 @@ export default function MainScreen({
         .onFinalize(() => {
           runOnJS(setMapInteracting)(false);
         }),
-    [mapExtraHeight, mapExtraSaved, persistMapExtra]
+    [mapExtraHeight, mapExtraSaved, persistMapExtra, triggerDragHaptic]
   );
   const mapAreaAnimStyle = useAnimatedStyle(() => ({
     height: MAP_DEFAULT_HEIGHT + mapExtraHeight.value,
