@@ -1,11 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { BackHandler, View } from "react-native";
+import { Alert, BackHandler, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "../../features/auth/authStore";
 import { useOnboardingStore } from "../../features/onboarding/onboardingStore";
+import { useProfileStore } from "../../features/onboarding/profileStore";
+import { saveUserProfileToDb } from "../../features/onboarding/saveUserProfile";
 import { useVisitStore } from "../../features/travel/visitStore";
 import { useTheme } from "../../theme/themeStore";
 
+import BirthGenderStep from "./BirthGenderStep";
 import HomeCountryStep from "./HomeCountryStep";
 import LoginStep from "./LoginStep";
 import OnboardingProgress from "./OnboardingProgress";
@@ -14,14 +18,18 @@ import SuspectTripsStep from "./SuspectTripsStep";
 import SyncStep from "./SyncStep";
 import WelcomeStep from "./WelcomeStep";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 export default function OnboardingFlow() {
   const theme = useTheme();
+  const { t } = useTranslation();
   const styles = useMemo(() => makeOnboardingStyles(theme), [theme]);
 
   const authUser = useAuthStore((s) => s.user);
   const homeCountry = useVisitStore((s) => s.homeCountry);
+  const profile = useProfileStore((s) => s.profile);
+  const profileHydrated = useProfileStore((s) => s.hydrated);
+  const profileHydrate = useProfileStore((s) => s.hydrate);
   const markCompleted = useOnboardingStore((s) => s.markCompleted);
 
   // 초기 step 결정: 이미 완료된 단계는 자동 skip.
@@ -34,6 +42,11 @@ export default function OnboardingFlow() {
     return () => sub.remove();
   }, []);
 
+  // profile 저장은 로컬 캐시이므로 onboarding 진입 시 hydrate해 둔다.
+  useEffect(() => {
+    if (!profileHydrated) void profileHydrate();
+  }, [profileHydrated, profileHydrate]);
+
   // 외부 상태(예: 다른 디바이스에서 세션 복원, 잔존 homeCountry)를 보고
   // step을 앞당긴다. 뒤로 돌리지는 않는다.
   useEffect(() => {
@@ -41,9 +54,10 @@ export default function OnboardingFlow() {
       let next = prev;
       if (next < 3 && authUser) next = 3;
       if (next < 4 && homeCountry) next = 4;
+      if (next < 5 && profile) next = 5;
       return next;
     });
-  }, [authUser, homeCountry]);
+  }, [authUser, homeCountry, profile]);
 
   // step을 절대값으로 advance한다. step 컴포넌트의 onNext와 외부 상태 useEffect가
   // 동시에 발동해도 race 없이 정확한 step에 안착한다. 예: step 3에서 본국 선택 시
@@ -53,6 +67,19 @@ export default function OnboardingFlow() {
     setStep((s) => Math.max(s, Math.min(target, TOTAL_STEPS)));
 
   const finish = async () => {
+    // 온보딩 완료 시점에 사용자 프로필을 DB에 저장한다.
+    // 네트워크/RLS 오류 등으로 실패해도 온보딩 완료는 막지 않는다 — 다음 진입 시 재시도 가능.
+    try {
+      if (authUser && homeCountry && profile) {
+        await saveUserProfileToDb({
+          userId: authUser.id,
+          homeCountry,
+          profile,
+        });
+      }
+    } catch (e) {
+      Alert.alert(t("alerts.saveFailed"), String(e));
+    }
     await markCompleted();
   };
 
@@ -62,8 +89,9 @@ export default function OnboardingFlow() {
       {step === 1 && <WelcomeStep onNext={() => goTo(2)} />}
       {step === 2 && <LoginStep onNext={() => goTo(3)} />}
       {step === 3 && <HomeCountryStep onNext={() => goTo(4)} />}
-      {step === 4 && <SyncStep onNext={() => goTo(5)} />}
-      {step === 5 && <SuspectTripsStep onFinish={() => void finish()} />}
+      {step === 4 && <BirthGenderStep onNext={() => goTo(5)} />}
+      {step === 5 && <SyncStep onNext={() => goTo(6)} />}
+      {step === 6 && <SuspectTripsStep onFinish={() => void finish()} />}
     </View>
   );
 }
