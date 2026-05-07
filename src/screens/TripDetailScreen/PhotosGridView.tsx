@@ -4,7 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { GRID_COLS, type TripDetailStyles } from "./styles";
 
-export type GridPhoto = { key: string; uri: string; takenAt: number };
+export type GridPhoto = {
+  key: string;
+  uri: string;
+  takenAt: number;
+  date: string;
+};
 
 type Props = {
   photos: GridPhoto[];
@@ -13,6 +18,7 @@ type Props = {
   flag: string;
   styles: TripDetailStyles;
   onBack: () => void;
+  onSelectPhoto: (index: number) => void;
 };
 
 export default function PhotosGridView({
@@ -22,6 +28,7 @@ export default function PhotosGridView({
   flag,
   styles,
   onBack,
+  onSelectPhoto,
 }: Props) {
   const { t } = useTranslation();
   return (
@@ -66,10 +73,13 @@ export default function PhotosGridView({
           windowSize={5}
           initialNumToRender={24}
           maxToRenderPerBatch={24}
-          renderItem={({ item }) => (
-            <View style={styles.gridCell}>
+          renderItem={({ item, index }) => (
+            <Pressable
+              style={styles.gridCell}
+              onPress={() => onSelectPhoto(index)}
+            >
               <Image source={{ uri: item.uri }} style={styles.gridImage} />
-            </View>
+            </Pressable>
           )}
         />
       )}

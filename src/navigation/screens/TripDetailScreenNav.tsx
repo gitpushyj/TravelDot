@@ -19,6 +19,7 @@ export default function TripDetailScreenNav({
         onEdit={() =>
           navigation.navigate("EditTrip", { trip: route.params.trip })
         }
+        onSelectPhoto={(args) => navigation.navigate("ImageDetail", args)}
       />
     </>
   );

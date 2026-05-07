@@ -9,6 +9,7 @@ import ChangeHomeScreenNav from "./screens/ChangeHomeScreenNav";
 import CountryDetailScreenNav from "./screens/CountryDetailScreenNav";
 import EditTripScreenNav from "./screens/EditTripScreenNav";
 import HistoryScreenNav from "./screens/HistoryScreenNav";
+import ImageDetailScreenNav from "./screens/ImageDetailScreenNav";
 import LanguageScreenNav from "./screens/LanguageScreenNav";
 import MapZoomScreenNav from "./screens/MapZoomScreenNav";
 import ReviewSuspectScreenNav from "./screens/ReviewSuspectScreenNav";
@@ -45,6 +46,11 @@ export default function RootNavigator() {
         <Stack.Screen name="ReviewSuspect" component={ReviewSuspectScreenNav} />
         <Stack.Screen name="AllCountries" component={AllCountriesScreenNav} />
         <Stack.Screen name="Language" component={LanguageScreenNav} />
+        <Stack.Screen
+          name="ImageDetail"
+          component={ImageDetailScreenNav}
+          options={{ animation: "fade" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
