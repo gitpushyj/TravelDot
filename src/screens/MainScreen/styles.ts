@@ -2,6 +2,10 @@ import { StyleSheet } from "react-native";
 
 import type { Theme } from "../../theme/theme";
 
+// TopAppBar의 추정 높이. paddingTop 56 + 컨텐츠(아이콘/제목 ~32) + paddingBottom 8.
+// 스크롤 컨텐츠가 바 뒤에 가려지지 않도록 ScrollView paddingTop과 일치시킨다.
+export const TOP_BAR_HEIGHT = 96;
+
 export function makeStyles(theme: Theme) {
   return StyleSheet.create({
     root: {
@@ -15,27 +19,52 @@ export function makeStyles(theme: Theme) {
       flex: 1,
     },
     scrollContent: {
-      paddingTop: 56,
+      paddingTop: TOP_BAR_HEIGHT,
       paddingBottom: 40,
     },
-    headerRow: {
+    topAppBar: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 10,
       flexDirection: "row",
-      alignItems: "flex-start",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingTop: 56,
+      paddingBottom: 8,
+      paddingHorizontal: 20,
+      backgroundColor: theme.homeBg,
+    },
+    topAppBarTitle: {
+      color: theme.textPrimary,
+      fontSize: 20,
+      fontWeight: "800",
+      letterSpacing: 0.2,
+    },
+    menuBtn: {
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+    },
+    menuBtnPressed: {
+      opacity: 0.5,
+    },
+    menuBtnIcon: {
+      color: theme.textPrimary,
+      fontSize: 24,
+      fontWeight: "700",
+    },
+    mapStatsHeader: {
+      flexDirection: "row",
+      alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: 20,
-      paddingBottom: 12,
-    },
-    headerLeft: { flex: 1 },
-    periodLabel: {
-      color: theme.textSecondary,
-      fontSize: 13,
-      fontWeight: "600",
-      letterSpacing: 0.5,
+      paddingVertical: 12,
+      gap: 12,
     },
     headerStatRow: {
       flexDirection: "row",
       alignItems: "baseline",
-      marginTop: 2,
     },
     headerStatNum: {
       color: theme.textPrimary,
@@ -50,48 +79,6 @@ export function makeStyles(theme: Theme) {
     headerStatDot: {
       color: theme.textMuted,
       fontSize: 18,
-    },
-    iconBtn: {
-      width: 38,
-      height: 38,
-      borderRadius: 19,
-      backgroundColor: theme.cardBg,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    iconBtnPressed: { backgroundColor: theme.tabRowBg },
-    iconBtnLarge: {
-      width: 44,
-      height: 44,
-      borderRadius: 22,
-    },
-    headerRightSpacer: {
-      width: 44,
-      height: 44,
-    },
-    headerFloatingBtn: {
-      position: "absolute",
-      top: 56,
-      right: 20,
-      zIndex: 10,
-    },
-    iconBtnText: {
-      color: theme.textPrimary,
-      fontSize: 16,
-      fontWeight: "700",
-    },
-    iconBtnTextLarge: {
-      fontSize: 22,
-    },
-    tabRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingHorizontal: 20,
-      paddingVertical: 8,
-      gap: 12,
     },
     tabPills: {
       flexDirection: "row",
@@ -133,12 +120,19 @@ export function makeStyles(theme: Theme) {
       borderColor: theme.cardBorder,
     },
     syncText: { color: theme.accentSoftText, fontSize: 12, fontWeight: "600" },
-    mapWrap: {
-      marginTop: 8,
-      marginBottom: 16,
-      paddingHorizontal: 0,
-      paddingVertical: 12,
+    mapStatsCard: {
+      marginBottom: 24,
       backgroundColor: theme.cardBg,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: theme.cardBorder,
+    },
+    mapStatsDivider: {
+      height: 1,
+      backgroundColor: theme.cardBorder,
+    },
+    mapWrap: {
+      paddingVertical: 12,
       position: "relative",
     },
     mapFloatingBtn: {

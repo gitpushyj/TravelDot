@@ -2,6 +2,12 @@ import { StatusBar } from "expo-status-bar";
 import { useMemo, useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -25,7 +31,9 @@ import type { RootStackParamList } from "../../navigation/types";
 import { useTheme } from "../../theme/themeStore";
 import MiniCard from "./MiniCard";
 import RecentList from "./RecentList";
-import { makeStyles } from "./styles";
+import { makeStyles, TOP_BAR_HEIGHT } from "./styles";
+
+const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
 
 export default function MainScreen({
   navigation,
@@ -41,6 +49,28 @@ export default function MainScreen({
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
+
+  // TopAppBar hide-on-scroll: 위로 4px 이상 스크롤하면 숨기고, 아래로 4px 이상
+  // 스크롤하면 다시 보인다. 컨텐츠 최상단(<=0)에서는 항상 보이게 강제한다.
+  const topBarTranslateY = useSharedValue(0);
+  const lastScrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (e) => {
+      const y = e.contentOffset.y;
+      const dy = y - lastScrollY.value;
+      if (y <= 0) {
+        topBarTranslateY.value = withTiming(0, { duration: 320 });
+      } else if (dy > 4) {
+        topBarTranslateY.value = withTiming(-TOP_BAR_HEIGHT, { duration: 320 });
+      } else if (dy < -4) {
+        topBarTranslateY.value = withTiming(0, { duration: 320 });
+      }
+      lastScrollY.value = y;
+    },
+  });
+  const topBarStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: topBarTranslateY.value }],
+  }));
 
   const totals = useMemo(() => {
     const codes = Object.keys(activeCounts);
@@ -66,14 +96,6 @@ export default function MainScreen({
     [activeBadgeId, tier.id]
   );
 
-  const periodLabel = useMemo(() => {
-    if (yearMode.kind === "year") return String(yearMode.year);
-    if (availableYears.length === 0) return String(new Date().getFullYear());
-    const max = Math.max(...availableYears);
-    const min = Math.min(...availableYears);
-    return min === max ? String(max) : `${min}–${max}`;
-  }, [yearMode, availableYears]);
-
   const openYearPicker = () => {
     if (availableYears.length === 0) {
       Alert.alert(
@@ -93,15 +115,37 @@ export default function MainScreen({
   return (
     <View style={styles.root}>
       <StatusBar style={theme.statusBar} />
-      <ScrollView
+      <Animated.View style={[styles.topAppBar, topBarStyle]}>
+        <Text style={styles.topAppBarTitle}>VisitGrid</Text>
+        <Pressable
+          onPress={() => navigation.navigate("Settings")}
+          hitSlop={8}
+          style={({ pressed }) => [
+            styles.menuBtn,
+            pressed && styles.menuBtnPressed,
+          ]}
+        >
+          <Text style={styles.menuBtnIcon}>☰</Text>
+        </Pressable>
+      </Animated.View>
+      <AnimatedScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         scrollEnabled={!mapInteracting}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
       >
-        <View style={styles.headerRow}>
-          <View style={styles.headerLeft}>
-            <Text style={styles.periodLabel}>{periodLabel}</Text>
+        {syncStatus.running && (
+          <View style={styles.syncBar}>
+            <Text style={styles.syncText}>
+              {t("home.syncing", { processed: syncStatus.processed })}
+            </Text>
+          </View>
+        )}
+
+        <View style={styles.mapStatsCard}>
+          <View style={styles.mapStatsHeader}>
             <View style={styles.headerStatRow}>
               <Text style={styles.headerStatNum}>{totals.countries}</Text>
               <Text style={styles.headerStatUnit}>
@@ -112,72 +156,62 @@ export default function MainScreen({
               <Text style={styles.headerStatNum}>{totals.days}</Text>
               <Text style={styles.headerStatUnit}> {t("home.daysUnit")}</Text>
             </View>
-          </View>
-          <View style={styles.headerRightSpacer} />
-        </View>
-
-        <View style={styles.tabRow}>
-          <View style={styles.tabPills}>
-            <Pressable
-              onPress={() => setYearMode({ kind: "all" })}
-              style={[
-                styles.tab,
-                yearMode.kind === "all" && styles.tabActive,
-              ]}
-            >
-              <Text
+            <View style={styles.tabPills}>
+              <Pressable
+                onPress={() => setYearMode({ kind: "all" })}
                 style={[
-                  styles.tabText,
-                  yearMode.kind === "all" && styles.tabTextActive,
+                  styles.tab,
+                  yearMode.kind === "all" && styles.tabActive,
                 ]}
               >
-                {t("home.all")}
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={openYearPicker}
-              style={[
-                styles.tab,
-                yearMode.kind === "year" && styles.tabActive,
-              ]}
-            >
-              <Text
+                <Text
+                  style={[
+                    styles.tabText,
+                    yearMode.kind === "all" && styles.tabTextActive,
+                  ]}
+                >
+                  {t("home.all")}
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={openYearPicker}
                 style={[
-                  styles.tabText,
-                  yearMode.kind === "year" && styles.tabTextActive,
+                  styles.tab,
+                  yearMode.kind === "year" && styles.tabActive,
                 ]}
               >
-                {yearMode.kind === "year"
-                  ? t("home.yearPickerSelected", { year: yearMode.year })
-                  : t("home.yearPicker")}
-              </Text>
+                <Text
+                  style={[
+                    styles.tabText,
+                    yearMode.kind === "year" && styles.tabTextActive,
+                  ]}
+                >
+                  {yearMode.kind === "year"
+                    ? t("home.yearPickerSelected", { year: yearMode.year })
+                    : t("home.yearPicker")}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+
+          <View style={styles.mapStatsDivider} />
+
+          <View style={styles.mapWrap}>
+            <DotMap
+              visitCounts={activeCounts}
+              onInteractingChange={setMapInteracting}
+            />
+            <Pressable
+              onPress={() => navigation.navigate("MapZoom")}
+              hitSlop={8}
+              style={({ pressed }) => [
+                styles.mapFloatingBtn,
+                pressed && styles.mapFloatingBtnPressed,
+              ]}
+            >
+              <Text style={styles.mapFloatingBtnIcon}>⛶</Text>
             </Pressable>
           </View>
-        </View>
-
-        {syncStatus.running && (
-          <View style={styles.syncBar}>
-            <Text style={styles.syncText}>
-              {t("home.syncing", { processed: syncStatus.processed })}
-            </Text>
-          </View>
-        )}
-
-        <View style={styles.mapWrap}>
-          <DotMap
-            visitCounts={activeCounts}
-            onInteractingChange={setMapInteracting}
-          />
-          <Pressable
-            onPress={() => navigation.navigate("MapZoom")}
-            hitSlop={8}
-            style={({ pressed }) => [
-              styles.mapFloatingBtn,
-              pressed && styles.mapFloatingBtnPressed,
-            ]}
-          >
-            <Text style={styles.mapFloatingBtnIcon}>⛶</Text>
-          </Pressable>
         </View>
 
         <View style={styles.statsRow}>
@@ -276,19 +310,7 @@ export default function MainScreen({
           </Text>
           <Text style={styles.allCountriesChev}>›</Text>
         </Pressable>
-      </ScrollView>
-      <Pressable
-        onPress={() => navigation.navigate("Settings")}
-        hitSlop={8}
-        style={({ pressed }) => [
-          styles.iconBtn,
-          styles.iconBtnLarge,
-          styles.headerFloatingBtn,
-          pressed && styles.iconBtnPressed,
-        ]}
-      >
-        <Text style={[styles.iconBtnText, styles.iconBtnTextLarge]}>☰</Text>
-      </Pressable>
+      </AnimatedScrollView>
       <YearPickerModal
         visible={yearPickerOpen}
         initial={yearMode}
