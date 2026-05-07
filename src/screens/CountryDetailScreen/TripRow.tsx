@@ -33,7 +33,8 @@ export default function TripRow({
   const countryColor = colorForCountry(trip.countryCode);
 
   // iOS 편집 모드의 잔잔한 흔들림. 항목별로 위상 차이를 줘서 한꺼번에 같은
-  // 방향으로 흔들리지 않도록 한다.
+  // 방향으로 흔들리지 않도록 한다. 휴식 상태(0)에서 0deg가 되도록 입력을
+  // -1..1로 둬서 양방향 대칭 흔들림을 만든다.
   const wiggle = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     if (!editMode) {
@@ -45,7 +46,8 @@ export default function TripRow({
     for (let i = 0; i < trip.startDate.length; i += 1) {
       h = (h * 31 + trip.startDate.charCodeAt(i)) >>> 0;
     }
-    const phase = (h % 100) / 100;
+    // 항목별 시작 위상을 -1..1 범위에서 균등 분포시킨다.
+    const phase = ((h % 100) / 100) * 2 - 1;
     wiggle.setValue(phase);
     const loop = Animated.loop(
       Animated.sequence([
@@ -56,7 +58,7 @@ export default function TripRow({
           useNativeDriver: true,
         }),
         Animated.timing(wiggle, {
-          toValue: 0,
+          toValue: -1,
           duration: 140,
           easing: Easing.linear,
           useNativeDriver: true,
@@ -70,7 +72,7 @@ export default function TripRow({
   }, [editMode, wiggle, trip.startDate]);
 
   const rotate = wiggle.interpolate({
-    inputRange: [0, 0.5, 1],
+    inputRange: [-1, 0, 1],
     outputRange: ["-1.2deg", "0deg", "1.2deg"],
   });
 
