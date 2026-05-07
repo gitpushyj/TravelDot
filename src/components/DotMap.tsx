@@ -37,6 +37,10 @@ const MAX_SCALE = 10;
 // 인트로 줌아웃이 멈추는 최종 배율. 1이면 세계지도 전체가 보이는데
 // 도트가 너무 작아져서 약간 줌인된 상태에서 멈춘다 (세계의 약 3/4가 viewport에 들어옴).
 const INTRO_END_SCALE = 1.33;
+// 핀치 도중 한 프레임에 focal이 이만큼 점프하면 비정상으로 보고 무시한다.
+// Android의 ACTION_POINTER_UP에서 centroid가 남은 손가락으로 튀는 현상 차단용.
+// 일반 핀치 프레임에서는 focal이 한 두 픽셀씩만 움직이므로 24px이면 충분.
+const FOCAL_JUMP_GUARD_PX = 24;
 
 type Props = {
   visitCounts?: Record<string, number>;
@@ -168,7 +172,7 @@ export default function DotMap({
           runOnJS(notifyInteracting)(true);
         })
         .onChange((e) => {
-          // 손가락이 한 개 이하로 떨어지는 프레임은 무시한다.
+          // 손가락이 한 개 이하로 떨어지는 프레임은 무시한다 (iOS 케이스).
           // 두 손가락이 동시에 떨어지지 않기 때문에 한쪽이 먼저 떨어지는 순간
           // focal(centroid)이 남은 손가락 쪽으로 급격히 점프하며, 그 점프가
           // dx/dy로 환산되어 지도가 왼/오른쪽으로 튕기는 원인이 된다.
@@ -179,6 +183,16 @@ export default function DotMap({
             pinchPrimed.value = true;
             return;
           }
+          const dx = e.focalX - prevFocalX.value;
+          const dy = e.focalY - prevFocalY.value;
+          // Android 케이스: ACTION_POINTER_UP 프레임에서 ScaleGestureDetector가
+          // 떨어지는 손가락을 제외하고 focal을 재계산하지만 numberOfPointers는
+          // 여전히 2로 보고된다. 위 가드로는 못 막으므로 focal 점프 크기로 차단.
+          if (Math.abs(dx) > FOCAL_JUMP_GUARD_PX || Math.abs(dy) > FOCAL_JUMP_GUARD_PX) {
+            prevFocalX.value = e.focalX;
+            prevFocalY.value = e.focalY;
+            return;
+          }
           // 사진 앱 스타일 핀치 줌: scaleChange(증분)으로 현재 focal에서 줌하고,
           // focal 이동분(dx, dy)을 더해 손가락 중심 아래 world 포인트를 고정한다.
           const newScale = clamp(
@@ -187,8 +201,6 @@ export default function DotMap({
             MAX_SCALE
           );
           const r = newScale / scale.value;
-          const dx = e.focalX - prevFocalX.value;
-          const dy = e.focalY - prevFocalY.value;
           const rawTx = e.focalX * (1 - r) + tx.value * r + dx;
           const rawTy = e.focalY * (1 - r) + ty.value * r + dy;
           tx.value = clampPanX(rawTx, newScale, viewW, contentW);
