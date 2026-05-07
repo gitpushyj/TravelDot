@@ -1,19 +1,32 @@
 import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 import type { MilestoneProgress } from "../../features/milestone/milestoneTypes";
 import type { Theme } from "../../theme/theme";
 
 import { makeStyles } from "./styles";
 
+/**
+ * 활성 row 아래에 펼쳐 보여줄 다음 호칭 안내.
+ * - completed: 최고 단계 도달
+ * - next: 다음 컷오프까지의 안내 (호칭 이름은 굵게)
+ */
+export type ActiveDescription =
+  | { kind: "completed" }
+  | {
+      kind: "next";
+      count: number;
+      title: string;
+      unit: "countries" | "days";
+    };
+
 type Props = {
   theme: Theme;
   label: string;
   progress: MilestoneProgress;
   active: boolean;
-  /** 활성 row 아래에 펼쳐 보여줄 다음 호칭 안내. null이면 노출 안 함 */
-  activeDescription: string | null;
+  activeDescription: ActiveDescription | null;
   onPress: () => void;
 };
 
@@ -64,16 +77,37 @@ export default function MilestoneRow({
           {progressText}
         </Text>
       </View>
-      {active && activeDescription ? (
-        <Text
-          style={[
-            styles.rowDescription,
-            progress.reachedFinal && styles.rowDescriptionDone,
-          ]}
-        >
-          {activeDescription}
-        </Text>
-      ) : null}
+      {active && activeDescription
+        ? renderDescription(activeDescription, styles)
+        : null}
     </Pressable>
+  );
+}
+
+// 외부 Text 한 개 안에서 Trans 또는 단일 텍스트를 렌더한다.
+// numberOfLines를 지정하지 않으므로 언어가 길어지면 자연스럽게 두 줄 이상으로 wrap된다.
+function renderDescription(
+  desc: ActiveDescription,
+  styles: ReturnType<typeof makeStyles>
+) {
+  if (desc.kind === "completed") {
+    return (
+      <Text style={[styles.rowDescription, styles.rowDescriptionDone]}>
+        <Trans i18nKey="milestones.activeNext.completed" />
+      </Text>
+    );
+  }
+  const i18nKey =
+    desc.unit === "days"
+      ? "milestones.activeNext.days"
+      : "milestones.activeNext.countries";
+  return (
+    <Text style={styles.rowDescription}>
+      <Trans
+        i18nKey={i18nKey}
+        values={{ count: desc.count, title: desc.title }}
+        components={{ b: <Text style={styles.rowDescriptionBold} /> }}
+      />
+    </Text>
   );
 }
