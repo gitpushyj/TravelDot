@@ -15,7 +15,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.gitpush.visitgrid",
-      "appleTeamId": "27LS459HJ3"
+      "appleTeamId": "27LS459HJ3",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +25,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.gitpush.visitgrid"
+      "package": "com.gitpush.visitgrid",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,7 +39,19 @@
           "iosUrlScheme": "com.googleusercontent.apps.106650189331-45ce63ggrs90rtaosjcjjv8orjn95v22"
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static",
+            "buildReactNativeFromSource": true
+          }
+        }
+      ],
+      "./plugins/withPodfileModularHeaders"
     ]
   }
 }
