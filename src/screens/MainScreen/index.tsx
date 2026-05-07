@@ -117,16 +117,28 @@ export default function MainScreen({
       <StatusBar style={theme.statusBar} />
       <Animated.View style={[styles.topAppBar, topBarStyle]}>
         <Text style={styles.topAppBarTitle}>VisitGrid</Text>
-        <Pressable
-          onPress={() => navigation.navigate("Settings")}
-          hitSlop={8}
-          style={({ pressed }) => [
-            styles.menuBtn,
-            pressed && styles.menuBtnPressed,
-          ]}
-        >
-          <Text style={styles.menuBtnIcon}>☰</Text>
-        </Pressable>
+        <View style={styles.topAppBarActions}>
+          <Pressable
+            onPress={() => navigation.navigate("AllCountries")}
+            hitSlop={8}
+            style={({ pressed }) => [
+              styles.menuBtn,
+              pressed && styles.menuBtnPressed,
+            ]}
+          >
+            <Text style={styles.menuBtnIcon}>🌍</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.navigate("Settings")}
+            hitSlop={8}
+            style={({ pressed }) => [
+              styles.menuBtn,
+              pressed && styles.menuBtnPressed,
+            ]}
+          >
+            <Text style={styles.menuBtnIcon}>☰</Text>
+          </Pressable>
+        </View>
       </Animated.View>
       <AnimatedScrollView
         style={styles.scroll}
@@ -296,20 +308,6 @@ export default function MainScreen({
           trips={recentTrips}
           onSelect={(trip) => navigation.navigate("TripDetail", { trip })}
         />
-
-        <Pressable
-          onPress={() => navigation.navigate("AllCountries")}
-          style={({ pressed }) => [
-            styles.allCountriesBtn,
-            pressed && styles.allCountriesBtnPressed,
-          ]}
-        >
-          <Text style={styles.allCountriesIcon}>🌍</Text>
-          <Text style={styles.allCountriesText}>
-            {t("home.viewAllCountries")}
-          </Text>
-          <Text style={styles.allCountriesChev}>›</Text>
-        </Pressable>
       </AnimatedScrollView>
       <YearPickerModal
         visible={yearPickerOpen}

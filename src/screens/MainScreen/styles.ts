@@ -42,6 +42,11 @@ export function makeStyles(theme: Theme) {
       fontWeight: "800",
       letterSpacing: 0.2,
     },
+    topAppBarActions: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+    },
     menuBtn: {
       paddingHorizontal: 8,
       paddingVertical: 4,
@@ -398,37 +403,6 @@ export function makeStyles(theme: Theme) {
       color: theme.textSecondary,
       fontSize: 13,
       textAlign: "center",
-    },
-    allCountriesBtn: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 10,
-      marginHorizontal: 20,
-      marginTop: 20,
-      marginBottom: 32,
-      paddingVertical: 16,
-      paddingHorizontal: 18,
-      backgroundColor: theme.cardBg,
-      borderRadius: 14,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-    },
-    allCountriesBtnPressed: {
-      backgroundColor: theme.rowPressedBg,
-    },
-    allCountriesIcon: {
-      fontSize: 20,
-    },
-    allCountriesText: {
-      flex: 1,
-      color: theme.textPrimary,
-      fontSize: 15,
-      fontWeight: "700",
-    },
-    allCountriesChev: {
-      color: theme.textMuted,
-      fontSize: 22,
-      fontWeight: "400",
     },
   });
 }
