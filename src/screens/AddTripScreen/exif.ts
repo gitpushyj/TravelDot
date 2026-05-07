@@ -1,28 +1,4 @@
-// AddTripScreen 전용 EXIF 파서. GPS 좌표와 촬영 시각만 추출한다.
-
-export function exifNumber(v: unknown): number | null {
-  if (typeof v === "number" && Number.isFinite(v)) return v;
-  if (typeof v === "string" && v.trim() !== "") {
-    const n = Number(v);
-    return Number.isFinite(n) ? n : null;
-  }
-  return null;
-}
-
-export function exifLatLng(exif: Record<string, unknown> | undefined): {
-  lat: number;
-  lng: number;
-} | null {
-  if (!exif) return null;
-  let lat = exifNumber(exif.GPSLatitude);
-  let lng = exifNumber(exif.GPSLongitude);
-  if (lat == null || lng == null) return null;
-  const latRef = exif.GPSLatitudeRef;
-  const lngRef = exif.GPSLongitudeRef;
-  if (latRef === "S") lat = -Math.abs(lat);
-  if (lngRef === "W") lng = -Math.abs(lng);
-  return { lat, lng };
-}
+// AddTripScreen 전용 EXIF 파서.
 
 export function exifTakenAt(
   exif: Record<string, unknown> | undefined,
@@ -47,4 +23,12 @@ export function exifTakenAt(
     Number(ss)
   ).getTime();
   return Number.isFinite(ms) ? ms : fallback;
+}
+
+export function dayCount(start: string, end: string): number {
+  const [sy, sm, sd] = start.split("-").map(Number);
+  const [ey, em, ed] = end.split("-").map(Number);
+  const a = Date.UTC(sy, sm - 1, sd);
+  const b = Date.UTC(ey, em - 1, ed);
+  return Math.round((b - a) / 86400000) + 1;
 }

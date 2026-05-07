@@ -25,6 +25,7 @@ export {
 } from "./visit/counts";
 
 export {
+  createTrip,
   deleteTrip,
   loadAllTrips,
   loadRecentTripsByCountry,

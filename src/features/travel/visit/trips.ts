@@ -183,6 +183,27 @@ export async function deleteTrip(
   });
 }
 
+// 새로운 "여행"을 만든다 — 지정한 범위의 모든 날짜에 visit_days를 보장한다.
+// 사진/메모 없이도 "기간"만으로 여행이 기록되도록 하는 기본 진입점.
+export async function createTrip(
+  countryCode: string,
+  startDate: string,
+  endDate: string
+): Promise<void> {
+  if (startDate > endDate) {
+    throw new Error(i18n.t("errors.trip.startAfterEnd"));
+  }
+  const db = await getDb();
+  const now = Date.now();
+  await db.withTransactionAsync(async () => {
+    let cur = startDate;
+    while (cur <= endDate) {
+      await ensureVisitDay(countryCode, cur, now);
+      cur = addOneDay(cur);
+    }
+  });
+}
+
 // 한 "여행"의 시작·종료일을 새 범위로 갱신한다.
 // - 새 범위 안의 모든 날짜에 대해 visit_days를 보장(언삭제 + insert).
 // - 기존 범위 안이지만 새 범위 밖에 있는 visit_days/photos/notes는 soft-delete.
