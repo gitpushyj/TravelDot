@@ -38,9 +38,6 @@ export function makeStyles(theme: Theme) {
       paddingBottom: 40,
     },
     row: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 12,
       backgroundColor: theme.cardBg,
       borderRadius: 14,
       borderWidth: 1,
@@ -53,6 +50,28 @@ export function makeStyles(theme: Theme) {
       borderColor: theme.accent,
       borderWidth: 2,
       backgroundColor: theme.selectedRowBg,
+    },
+    rowTopLine: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
+    rowDescription: {
+      marginTop: 10,
+      paddingLeft: 34,
+      color: theme.textSecondary,
+      fontSize: 13,
+      lineHeight: 18,
+    },
+    rowDescriptionDone: {
+      color: theme.accent,
+      fontWeight: "600",
+    },
+    footnote: {
+      marginTop: 16,
+      color: theme.textMuted,
+      fontSize: 12,
+      lineHeight: 18,
     },
     radio: {
       width: 22,
