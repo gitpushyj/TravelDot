@@ -318,7 +318,8 @@
       "trips": "Trip Records",
       "title": "Title",
       "theme": "Theme",
-      "language": "Language"
+      "language": "Language",
+      "dev": "Developer"
     },
     "account": {
       "google": "Google Account",
@@ -361,6 +362,14 @@
     "language": {
       "label": "Language",
       "current": "Current: {{name}}"
+    },
+    "dev": {
+      "wipeLabel": "Erase all data",
+      "wipeSub": "Wipe local DB and settings, then sign out — for testing from scratch",
+      "wipeConfirmTitle": "Erase all data",
+      "wipeConfirmBody": "All trips, badges, home country, theme, and language preferences will be deleted and you'll be signed out. The app will return to the initial install state. Continue?",
+      "wipeConfirmAction": "Erase",
+      "wipeFailed": "Data wipe failed"
     }
   },
   "onboarding": {

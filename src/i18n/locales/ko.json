@@ -318,7 +318,8 @@
       "trips": "여행 기록",
       "title": "호칭",
       "theme": "테마",
-      "language": "언어"
+      "language": "언어",
+      "dev": "개발자"
     },
     "account": {
       "google": "Google 계정",
@@ -361,6 +362,14 @@
     "language": {
       "label": "언어",
       "current": "현재: {{name}}"
+    },
+    "dev": {
+      "wipeLabel": "모든 데이터 지우기",
+      "wipeSub": "로컬 DB와 설정을 모두 비우고 로그아웃 — 처음부터 다시 테스트할 때 사용",
+      "wipeConfirmTitle": "모든 데이터 지우기",
+      "wipeConfirmBody": "모든 여행 기록·뱃지·본국·테마·언어 설정이 삭제되고 로그아웃됩니다. 앱이 처음 설치한 상태로 돌아가요. 계속하시겠어요?",
+      "wipeConfirmAction": "지우기",
+      "wipeFailed": "데이터 삭제 실패"
     }
   },
   "onboarding": {

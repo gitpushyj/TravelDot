@@ -6,6 +6,7 @@ import { useAuthStore } from "../features/auth/authStore";
 import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
+import { wipeAllLocalData } from "../features/dev/wipeAllLocalData";
 import {
   runFullSync,
   runIncrementalSync,
@@ -99,6 +100,25 @@ export default function SettingsScreen({
     authUser?.email ??
     t("settings.account.google");
   const accountSub = authUser?.email ?? t("settings.account.googleSub");
+
+  const handleWipeAllData = () => {
+    Alert.alert(
+      t("settings.dev.wipeConfirmTitle"),
+      t("settings.dev.wipeConfirmBody"),
+      [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("settings.dev.wipeConfirmAction"),
+          style: "destructive",
+          onPress: () => {
+            wipeAllLocalData().catch((e) =>
+              Alert.alert(t("settings.dev.wipeFailed"), String(e))
+            );
+          },
+        },
+      ]
+    );
+  };
 
   const handleChangeHome = () => {
     Alert.alert(
@@ -276,6 +296,18 @@ export default function SettingsScreen({
               divider
             />
           )}
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          {t("settings.section.dev")}
+        </Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label={t("settings.dev.wipeLabel")}
+            sub={t("settings.dev.wipeSub")}
+            onPress={handleWipeAllData}
+          />
         </View>
       </ScrollView>
     </View>
