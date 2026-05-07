@@ -55,7 +55,12 @@ export default function CountryDotMap({ countryCode, color }: Props) {
     );
     const drawableW = Math.max(1, size.width - padding * 2);
     const drawableH = Math.max(1, size.height - padding * 2);
-    const scale = Math.min(drawableW / bboxW, drawableH / bboxH);
+    // 도트가 매우 적은 작은 나라는 bbox를 가득 채우면 도트가 너무 커 보이므로
+    // 도트 수에 따라 단계적으로 축소(zoom-out)한다.
+    const fewDotZoom =
+      dots.length <= 4 ? 0.3 + dots.length * 0.1 : 1;
+    const scale =
+      Math.min(drawableW / bboxW, drawableH / bboxH) * fewDotZoom;
     const drawnW = bboxW * scale;
     const drawnH = bboxH * scale;
     const offX = (size.width - drawnW) / 2;
