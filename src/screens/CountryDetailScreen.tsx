@@ -12,6 +12,7 @@ import {
   TripWithPhotos,
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
@@ -31,6 +32,7 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
   const refreshVisits = useVisitStore((s) => s.refreshVisits);
 
@@ -100,7 +102,7 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
   };
 
   if (!selectedCountry) {
-    return <View style={styles.root} />;
+    return <View style={[styles.root, { paddingBottom: bottomInset }]} />;
   }
 
   const flag = flagEmoji(selectedCountry.code);
@@ -108,7 +110,7 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
   const countryColor = colorForCountry(selectedCountry.code);
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable
           onPress={onClose}

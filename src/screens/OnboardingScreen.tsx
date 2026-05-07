@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import CountryPicker from "../components/CountryPicker";
 import { runFullSync } from "../features/photoSync/syncService";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import type { Theme } from "../theme/theme";
 import { useTheme } from "../theme/themeStore";
 
@@ -33,6 +34,7 @@ export default function OnboardingScreen({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
   const setHomeCountry = useVisitStore((s) => s.setHomeCountry);
   const changeHomeCountry = useVisitStore((s) => s.changeHomeCountry);
   const [submitting, setSubmitting] = useState(false);
@@ -74,7 +76,7 @@ export default function OnboardingScreen({
   const isChange = mode === "change";
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         {isChange && onClose && (
           <Pressable onPress={onClose} hitSlop={8} style={styles.closeBtn}>

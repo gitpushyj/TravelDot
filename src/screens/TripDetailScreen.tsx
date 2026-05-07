@@ -12,6 +12,7 @@ import {
   TripPhoto,
   VisitNote,
 } from "../features/travel/visitRepository";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
 import type { ImageDetailPhoto } from "../navigation/types";
@@ -57,6 +58,7 @@ export default function TripDetailScreen({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
 
   const [savedPhotos, setSavedPhotos] = useState<TripPhoto[] | null>(null);
   const [devicePhotos, setDevicePhotos] = useState<
@@ -243,7 +245,7 @@ export default function TripDetailScreen({
   }
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable
           onPress={onClose}

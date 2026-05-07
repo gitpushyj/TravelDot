@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 
 import countriesJson from "../../assets/data/countries.json";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
@@ -58,6 +59,7 @@ export default function AllCountriesScreen({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
   const { width: windowWidth } = useWindowDimensions();
   const cellWidth = useMemo(
     () =>
@@ -103,7 +105,7 @@ export default function AllCountriesScreen({
   );
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable
           onPress={onClose}

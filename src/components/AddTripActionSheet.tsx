@@ -17,6 +17,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
 
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { useTheme } from "../theme/themeStore";
 import type { Theme } from "../theme/theme";
 
@@ -39,6 +40,7 @@ export default function AddTripActionSheet({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
 
   const [mounted, setMounted] = useState(visible);
   const progress = useSharedValue(0);
@@ -92,7 +94,13 @@ export default function AddTripActionSheet({
           <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
         </Animated.View>
         <Animated.View
-          style={[styles.sheet, sheetStyle]}
+          style={[
+            styles.sheet,
+            sheetStyle,
+            // Android edge-to-edge에서 sheet가 navigation bar 위로 밀려 올라오도록
+            // 동적 inset 을 더한다. iOS 는 0 이라 기존 28dp 디자인 그대로.
+            { paddingBottom: (Platform.OS === "ios" ? 28 : 16) + bottomInset },
+          ]}
           onLayout={onSheetLayout}
         >
           <View style={styles.handleWrap}>

@@ -15,6 +15,7 @@ import { useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
 import { getTierByCount } from "../features/travel/tierTitles";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { useTheme } from "../theme/themeStore";
 
 import BadgeCard from "./TitlesScreen/BadgeCard";
@@ -26,6 +27,7 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
 
   const unlocked = useBadgeStore((s) => s.unlocked);
   const activeId = useBadgeStore((s) => s.activeId);
@@ -84,7 +86,7 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
   const isAutoActive = activeId == null;
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable onPress={onClose} hitSlop={8} style={styles.headerSide}>
           <Text style={styles.cancel}>{t("common.close")}</Text>

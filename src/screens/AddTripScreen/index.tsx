@@ -16,6 +16,7 @@ import {
   VisitPhotoInput,
 } from "../../features/travel/visitRepository";
 import { useVisitStore } from "../../features/travel/visitStore";
+import { useScreenBottomInset } from "../../hooks/useScreenInsets";
 import { useTheme } from "../../theme/themeStore";
 import { isValidDateKey, toLocalDateKey } from "../../utils/date";
 
@@ -33,6 +34,7 @@ export default function AddTripScreen({ onClose }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
   const refreshVisits = useVisitStore((s) => s.refreshVisits);
 
   const [step, setStep] = useState<0 | 1 | 2>(0);
@@ -159,7 +161,7 @@ export default function AddTripScreen({ onClose }: Props) {
 
   return (
     <KeyboardAvoidingView
-      style={styles.root}
+      style={[styles.root, { paddingBottom: bottomInset }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.header}>

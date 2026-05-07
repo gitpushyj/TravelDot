@@ -8,6 +8,7 @@ import {
   TripWithPhotos,
 } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { KO_NAME_BY_CODE } from "../lib/countryLookup";
 import type { Theme } from "../theme/theme";
 import { useTheme } from "../theme/themeStore";
@@ -25,6 +26,7 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
   // recentTrips가 바뀌면(여행 추가/삭제 등) 리스트를 다시 불러온다.
   const recentTrips = useVisitStore((s) => s.recentTrips);
   const [trips, setTrips] = useState<TripWithPhotos[] | null>(null);
@@ -83,7 +85,7 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
   }, [trips, sort]);
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable
           onPress={onClose}

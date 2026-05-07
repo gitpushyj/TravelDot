@@ -1,5 +1,7 @@
 import { Animated, Pressable, Text, View } from "react-native";
 
+import { useScreenBottomInset } from "../../hooks/useScreenInsets";
+
 import { styles } from "./styles";
 
 type Props = {
@@ -21,6 +23,7 @@ export default function Overlay({
   caption,
   onClose,
 }: Props) {
+  const bottomInset = useScreenBottomInset();
   return (
     <>
       <Animated.View
@@ -49,7 +52,10 @@ export default function Overlay({
 
       <Animated.View
         pointerEvents="none"
-        style={[styles.overlayCaption, { opacity }]}
+        style={[
+          styles.overlayCaption,
+          { opacity, paddingBottom: 36 + bottomInset },
+        ]}
       >
         <Text style={styles.captionText}>{caption}</Text>
       </Animated.View>

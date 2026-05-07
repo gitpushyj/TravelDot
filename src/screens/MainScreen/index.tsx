@@ -39,6 +39,7 @@ import { getTierByCount } from "../../features/travel/tierTitles";
 import { evaluateMilestone } from "../../features/milestone/milestoneEvaluator";
 import { useMilestoneStore } from "../../features/milestone/milestoneStore";
 import { useVisitStore } from "../../features/travel/visitStore";
+import { useScreenBottomInset } from "../../hooks/useScreenInsets";
 import { getCurrentLocale } from "../../i18n";
 import { useAppCtx } from "../../navigation/AppCtx";
 import type { RootStackParamList } from "../../navigation/types";
@@ -83,6 +84,7 @@ export default function MainScreen({
   const activeBadgeId = useBadgeStore((s) => s.activeId);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
   const [addSheetOpen, setAddSheetOpen] = useState(false);
@@ -272,7 +274,7 @@ export default function MainScreen({
   if (!homeCountry) return null;
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <StatusBar style={theme.statusBar} />
       <Animated.View style={[styles.topAppBar, topBarStyle]}>
         <Text style={styles.topAppBarTitle}>TravelDot</Text>

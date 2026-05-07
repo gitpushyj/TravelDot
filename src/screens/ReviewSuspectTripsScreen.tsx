@@ -7,6 +7,7 @@ import type { SuspectTrip } from "../features/photoSync/deviceVerification";
 import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
 import { loadPhotoUrisByIds } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
@@ -22,6 +23,7 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
   const suspectTrips = useVisitStore((s) => s.suspectTrips);
   const rejectSuspectTrip = useVisitStore((s) => s.rejectSuspectTrip);
   const acceptSuspectTrip = useVisitStore((s) => s.acceptSuspectTrip);
@@ -95,7 +97,7 @@ export default function ReviewSuspectTripsScreen({ onClose }: Props) {
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable onPress={onClose} hitSlop={8}>
           <Text style={styles.cancel}>{t("common.close")}</Text>

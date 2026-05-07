@@ -2,6 +2,8 @@ import React from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import { useScreenBottomInset } from "../../hooks/useScreenInsets";
+
 import { GRID_COLS, type TripDetailStyles } from "./styles";
 
 export type GridPhoto = {
@@ -31,8 +33,9 @@ export default function PhotosGridView({
   onSelectPhoto,
 }: Props) {
   const { t } = useTranslation();
+  const bottomInset = useScreenBottomInset();
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable
           onPress={onBack}

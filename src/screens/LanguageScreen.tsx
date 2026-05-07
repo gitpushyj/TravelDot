@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { useTheme } from "../theme/themeStore";
 import type { Theme } from "../theme/theme";
 import {
@@ -26,6 +27,7 @@ export default function LanguageScreen({ onClose }: Props) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
 
   const currentLocale = (
     (SUPPORTED_LOCALES as readonly string[]).includes(i18n.language)
@@ -41,7 +43,7 @@ export default function LanguageScreen({ onClose }: Props) {
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable onPress={onClose} hitSlop={8}>
           <Text style={styles.cancel}>{t("common.close")}</Text>

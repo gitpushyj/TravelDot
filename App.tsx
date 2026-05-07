@@ -1,6 +1,6 @@
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -13,6 +13,7 @@ import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrat
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
 import { useMilestoneStore } from "./src/features/milestone/milestoneStore";
 import { useVisitStore } from "./src/features/travel/visitStore";
+import { useScreenBottomInset } from "./src/hooks/useScreenInsets";
 import { AppCtxProvider, type AppNavCtx } from "./src/navigation/AppCtx";
 import RootNavigator from "./src/navigation/RootNavigator";
 import type { YearMode } from "./src/navigation/types";
@@ -140,9 +141,11 @@ export default function App() {
   if (!onboardingCompleted) {
     return (
       <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        {alerts}
-        <OnboardingFlow />
+        <SafeAreaProvider>
+          <StatusBar style={theme.statusBar} />
+          {alerts}
+          <OnboardingFlow />
+        </SafeAreaProvider>
       </GestureHandlerRootView>
     );
   }
@@ -153,9 +156,13 @@ export default function App() {
   if (!authUser) {
     return (
       <GestureHandlerRootView style={styles.root}>
-        <StatusBar style={theme.statusBar} />
-        {alerts}
-        <LoginStep onNext={() => {}} />
+        <SafeAreaProvider>
+          <StatusBar style={theme.statusBar} />
+          {alerts}
+          <LoginStandaloneContainer rootStyle={styles.root}>
+            <LoginStep onNext={() => {}} />
+          </LoginStandaloneContainer>
+        </SafeAreaProvider>
       </GestureHandlerRootView>
     );
   }
@@ -178,4 +185,17 @@ function makeStyles(theme: { homeBg: string }) {
   return StyleSheet.create({
     root: { flex: 1, backgroundColor: theme.homeBg },
   });
+}
+
+// LoginStep 단독 사용 시 Android navigation bar 영역을 회피하기 위한 wrapper.
+// SafeAreaProvider 안쪽에서 useSafeAreaInsets 를 호출하기 위해 분리해 둔다.
+function LoginStandaloneContainer({
+  rootStyle,
+  children,
+}: {
+  rootStyle: { flex: number; backgroundColor: string };
+  children: React.ReactNode;
+}) {
+  const bottomInset = useScreenBottomInset();
+  return <View style={[rootStyle, { paddingBottom: bottomInset }]}>{children}</View>;
 }

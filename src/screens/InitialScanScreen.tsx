@@ -14,6 +14,7 @@ import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
 import { runFullSync } from "../features/photoSync/syncService";
 import { loadPhotoUrisByIds } from "../features/travel/visitRepository";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { KO_NAME_BY_CODE } from "../lib/countryLookup";
 import { useTheme } from "../theme/themeStore";
 
@@ -27,6 +28,7 @@ type Props = { onDone: () => void };
 export default function InitialScanScreen({ onDone }: Props) {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
 
   const homeCountry = useVisitStore((s) => s.homeCountry);
   const syncStatus = useVisitStore((s) => s.syncStatus);
@@ -116,7 +118,7 @@ export default function InitialScanScreen({ onDone }: Props) {
 
   if (isScanning) {
     return (
-      <View style={styles.root}>
+      <View style={[styles.root, { paddingBottom: bottomInset }]}>
         <View style={styles.centerWrap}>
           <ActivityIndicator color={theme.accent} size="large" />
           <Text style={styles.loadingTitle}>사진을 살펴보는 중...</Text>
@@ -139,7 +141,7 @@ export default function InitialScanScreen({ onDone }: Props) {
   const denied = lastSync?.permission === "denied";
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Text style={styles.title}>
           {error

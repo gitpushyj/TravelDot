@@ -13,6 +13,7 @@ import {
   MilestoneProgress,
 } from "../features/milestone/milestoneTypes";
 import { useVisitStore } from "../features/travel/visitStore";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { getCurrentLocale } from "../i18n";
 import { useTheme } from "../theme/themeStore";
 
@@ -29,6 +30,7 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
 
   const kind = useMilestoneStore((s) => s.kind);
   const setKind = useMilestoneStore((s) => s.setKind);
@@ -54,7 +56,7 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
         <Pressable onPress={onClose} hitSlop={8} style={styles.headerSide}>
           <Text style={styles.cancel}>{t("common.close")}</Text>

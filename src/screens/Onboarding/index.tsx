@@ -7,6 +7,7 @@ import { useOnboardingStore } from "../../features/onboarding/onboardingStore";
 import { useProfileStore } from "../../features/onboarding/profileStore";
 import { saveUserProfileToDb } from "../../features/onboarding/saveUserProfile";
 import { useVisitStore } from "../../features/travel/visitStore";
+import { useScreenBottomInset } from "../../hooks/useScreenInsets";
 import { useTheme } from "../../theme/themeStore";
 
 import BirthGenderStep from "./BirthGenderStep";
@@ -23,6 +24,7 @@ export default function OnboardingFlow() {
   const theme = useTheme();
   const { t } = useTranslation();
   const styles = useMemo(() => makeOnboardingStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
 
   const authUser = useAuthStore((s) => s.user);
   const homeCountry = useVisitStore((s) => s.homeCountry);
@@ -83,7 +85,7 @@ export default function OnboardingFlow() {
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <OnboardingProgress current={step} total={TOTAL_STEPS} />
       {step === 1 && <LoginStep onNext={() => goTo(2)} />}
       {step === 2 && <HomeCountryStep onNext={() => goTo(3)} />}

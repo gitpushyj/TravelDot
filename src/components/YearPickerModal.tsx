@@ -27,6 +27,7 @@ import {
   loadYearSummaries,
   type YearSummary,
 } from "../features/travel/visitRepository";
+import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { useTheme } from "../theme/themeStore";
 import type { Theme } from "../theme/theme";
 
@@ -52,6 +53,7 @@ export default function YearPickerModal({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const bottomInset = useScreenBottomInset();
   const [summaries, setSummaries] = useState<YearSummary[] | null>(null);
 
   const [mounted, setMounted] = useState(visible);
@@ -181,7 +183,11 @@ export default function YearPickerModal({
           <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
         </Animated.View>
         <Animated.View
-          style={[styles.sheet, sheetStyle]}
+          style={[
+            styles.sheet,
+            sheetStyle,
+            { paddingBottom: (Platform.OS === "ios" ? 34 : 16) + bottomInset },
+          ]}
           onLayout={onSheetLayout}
         >
           {/* 핸들과 헤더 영역에서만 드래그를 받도록 묶는다. 리스트(ScrollView)는
