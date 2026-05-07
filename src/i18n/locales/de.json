@@ -378,9 +378,10 @@
   "onboarding": {
     "welcome": {
       "title": "Deine Reisen, erzählt von deinen Fotos",
-      "point1": "Wir lesen die GPS-Daten deiner Fotos und erkennen, wo du gewesen bist",
-      "point2": "Reisen entstehen automatisch — ganz ohne manuelle Eingabe",
-      "point3": "Deine Fotos verlassen das Handy nie",
+      "point1": "Aus den Fotodaten werden deine Reisen automatisch sortiert und gespeichert.",
+      "point2": "Am Ende der Reise färbst du die Karte mit nur einem Tipp ein.",
+      "point3": "Deine Fotos werden dabei nie an einen Server gesendet.",
+      "point4": "Meistere verschiedene Meilensteine und werde zum freien Reisenden!",
       "next": "Weiter"
     },
     "login": {

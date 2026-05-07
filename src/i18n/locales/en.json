@@ -421,9 +421,10 @@
   "onboarding": {
     "welcome": {
       "title": "Your trips, drawn from your photos",
-      "point1": "We read GPS data in your photos to find where you've been",
-      "point2": "Trips appear automatically — no manual input needed",
-      "point3": "Photos never leave your phone",
+      "point1": "Trips are automatically organized from your photo info.",
+      "point2": "When a trip ends, color in the map with a single tap.",
+      "point3": "Your photos are never sent to a server.",
+      "point4": "Take on milestones and grow into a free-spirited traveler!",
       "next": "Next"
     },
     "login": {

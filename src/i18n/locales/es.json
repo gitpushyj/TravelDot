@@ -378,9 +378,10 @@
   "onboarding": {
     "welcome": {
       "title": "Tus viajes, contados por tus fotos",
-      "point1": "Leemos los datos GPS de tus fotos para descubrir dónde has estado",
-      "point2": "Los viajes se organizan solos, sin tener que escribir nada",
-      "point3": "Tus fotos nunca salen del teléfono",
+      "point1": "Tus viajes se clasifican y registran automáticamente con la información de tus fotos.",
+      "point2": "Al terminar un viaje, colorea el mapa con un solo toque.",
+      "point3": "En este proceso, las fotos no se envían a ningún servidor.",
+      "point4": "¡Supera distintos hitos y conviértete en un viajero libre!",
       "next": "Siguiente"
     },
     "login": {
