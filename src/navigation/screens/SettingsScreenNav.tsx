@@ -16,6 +16,7 @@ export default function SettingsScreenNav({
         onClose={() => navigation.goBack()}
         onAddTrip={() => navigation.navigate("AddTrip")}
         onOpenTitles={() => navigation.navigate("Titles")}
+        onOpenMilestones={() => navigation.navigate("Milestones")}
         onChangeHome={() => navigation.navigate("ChangeHome")}
         onReviewSuspect={() => navigation.navigate("ReviewSuspect")}
         onOpenLanguage={() => navigation.navigate("Language")}

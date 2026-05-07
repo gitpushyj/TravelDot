@@ -339,6 +339,7 @@
       "home": "Home Country",
       "trips": "Trip Records",
       "title": "Title",
+      "milestone": "Goal Milestone",
       "theme": "Theme",
       "language": "Language",
       "dev": "Developer"
@@ -375,6 +376,11 @@
       "preview": "{{emoji}} {{title}}",
       "previewAuto": "{{emoji}} {{title}} · Auto",
       "none": "No title"
+    },
+    "milestone": {
+      "label": "Goal milestone",
+      "previewProgress": "Current: {{name}} ({{current}} / {{next}}{{unit}})",
+      "previewCompleted": "Current: {{name}} (done)"
     },
     "theme": {
       "system": "System",
