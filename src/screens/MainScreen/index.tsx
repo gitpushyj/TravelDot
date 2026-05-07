@@ -117,6 +117,13 @@ export default function MainScreen({
   // 위로 다시 밀어 줄일 수 있다. 마지막 사이즈는 영속화해 다음 실행에 복원한다.
   const mapExtraHeight = useSharedValue(0);
   const mapExtraSaved = useSharedValue(0);
+  // 드래그 중에만 animated 높이가 부모 정적 높이를 덮어쓰도록 하는 게이트.
+  const draggingActive = useSharedValue(false);
+  // 정착된 높이의 JS state 미러. 부모 정적 height에 직접 박아 React commit 시점에
+  // 부모가 올바른 높이로 layout되게 한다. shared value만 쓰면 worklet의 UI-스레드
+  // 적용 순서와 React commit 순서가 어긋나, 첫 onLayout이 짧은 기본 높이로
+  // 발화되고 인트로가 잘못된 viewport 기준으로 큐잉되는 race가 생긴다.
+  const [extraHeightSettled, setExtraHeightSettled] = useState(0);
   // 저장된 높이가 비동기로 들어오기 전에 DotMap이 마운트되어 onLayout 받으면
   // 인트로 애니메이션이 잘못된(짧은) 사이즈 기준으로 큐잉된다. 그래서 저장값
   // 적용이 끝난 뒤에야 DotMap을 렌더해 첫 onLayout이 올바른 사이즈로 들어오게 한다.
@@ -129,6 +136,7 @@ export default function MainScreen({
         const clamped = Math.max(0, Math.min(MAP_MAX_EXTRA, v));
         mapExtraHeight.value = clamped;
         mapExtraSaved.value = clamped;
+        setExtraHeightSettled(clamped);
       }
       setMapHeightHydrated(true);
     });
@@ -136,7 +144,8 @@ export default function MainScreen({
       cancelled = true;
     };
   }, [mapExtraHeight, mapExtraSaved]);
-  const persistMapExtra = useCallback((value: number) => {
+  const commitMapExtra = useCallback((value: number) => {
+    setExtraHeightSettled(value);
     saveMapExtraHeight(value).catch(() => {});
   }, []);
   const triggerDragHaptic = useCallback(() => {
@@ -150,6 +159,7 @@ export default function MainScreen({
         .activateAfterLongPress(100)
         .onStart(() => {
           mapExtraSaved.value = mapExtraHeight.value;
+          draggingActive.value = true;
           // 부모 ScrollView가 같이 스크롤되지 않도록 잠근다.
           runOnJS(setMapInteracting)(true);
           runOnJS(triggerDragHaptic)();
@@ -160,16 +170,31 @@ export default function MainScreen({
         })
         .onEnd(() => {
           mapExtraSaved.value = mapExtraHeight.value;
-          runOnJS(persistMapExtra)(mapExtraHeight.value);
+          runOnJS(commitMapExtra)(mapExtraHeight.value);
         })
         .onFinalize(() => {
+          // draggingActive는 여기서 끄지 않는다. setExtraHeightSettled의 React
+          // commit이 정적 높이를 새 값으로 반영한 직후에 useEffect로 끄면,
+          // animated→정적 전환 사이의 한 프레임 깜빡임이 사라진다. 또한 onEnd
+          // 없이 종료되는 cancel 경로에서는 draggingActive가 true로 남아 animated가
+          // 마지막 드래그 위치를 그대로 유지한다(원래 동작 보존).
           runOnJS(setMapInteracting)(false);
         }),
-    [mapExtraHeight, mapExtraSaved, persistMapExtra, triggerDragHaptic]
+    [mapExtraHeight, mapExtraSaved, draggingActive, commitMapExtra, triggerDragHaptic]
   );
-  const mapAreaAnimStyle = useAnimatedStyle(() => ({
-    height: MAP_DEFAULT_HEIGHT + mapExtraHeight.value,
-  }));
+  // setExtraHeightSettled가 commit된 직후(=정적 높이가 새 값으로 적용된 직후)에
+  // animated 게이트를 푼다. cancel로 commit 없이 끝난 경우엔 fire되지 않으므로
+  // animated가 계속 살아있어 드래그한 위치가 그대로 유지된다.
+  useEffect(() => {
+    draggingActive.value = false;
+  }, [extraHeightSettled, draggingActive]);
+  // 드래그 중에만 부모의 정적 height를 override한다. 그 외에는 정적 스타일이
+  // 그대로 적용되어, 첫 렌더에 worklet 적용 순서와 무관하게 부모가 정확한 높이로
+  // layout된다.
+  const mapAreaAnimStyle = useAnimatedStyle(() => {
+    if (!draggingActive.value) return {};
+    return { height: MAP_DEFAULT_HEIGHT + mapExtraHeight.value };
+  });
 
   // 지도 하단 핸들 어트랜션. 가로로 살짝 늘었다 줄고, 약간 아래로 튕기며,
   // 동시에 투명도가 펄스해 "여기를 잡고 끌 수 있다"는 시선을 유도한다.
@@ -393,7 +418,13 @@ export default function MainScreen({
           <View style={styles.mapStatsDivider} />
 
           <View style={styles.mapWrap}>
-            <Animated.View style={[styles.mapArea, mapAreaAnimStyle]}>
+            <Animated.View
+              style={[
+                styles.mapArea,
+                { height: MAP_DEFAULT_HEIGHT + extraHeightSettled },
+                mapAreaAnimStyle,
+              ]}
+            >
               {mapHeightHydrated ? (
                 <DotMap
                   visitCounts={activeCounts}
