@@ -56,7 +56,7 @@ export const LIGHT_THEME: Theme = {
   accentSoftBg: "#ffe5d3",
   accentSoftText: "#d96a3a",
   tabRowBg: "#f3efe6",
-  heatmap: ["#d8d6ca", "#aed4a3", "#7ab46f", "#449446", "#1e6a2c"],
+  heatmap: ["#d8d6ca", "#92c886", "#5fa252", "#2d7d34", "#155321"],
   homeColor: "#1d4ed8",
   legacyDarkBg: "#0b1220",
   flagBoxBg: "#fce6e0",
