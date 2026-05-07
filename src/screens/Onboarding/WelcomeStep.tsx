@@ -48,6 +48,7 @@ export default function WelcomeStep({ onNext }: Props) {
           <PointRow theme={theme} text={t("onboarding.welcome.point1")} />
           <PointRow theme={theme} text={t("onboarding.welcome.point2")} />
           <PointRow theme={theme} text={t("onboarding.welcome.point3")} />
+          <PointRow theme={theme} text={t("onboarding.welcome.point4")} />
         </View>
       </View>
       <View style={styles.footer}>
