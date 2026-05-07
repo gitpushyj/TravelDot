@@ -422,14 +422,6 @@
     }
   },
   "onboarding": {
-    "welcome": {
-      "title": "Deine Reisen, erzählt von deinen Fotos",
-      "point1": "Aus den Fotodaten werden deine Reisen automatisch sortiert und gespeichert.",
-      "point2": "Am Ende der Reise färbst du die Karte mit nur einem Tipp ein.",
-      "point3": "Deine Fotos werden dabei nie an einen Server gesendet.",
-      "point4": "Meistere verschiedene Meilensteine und werde zum freien Reisenden!",
-      "next": "Weiter"
-    },
     "login": {
       "title": "Mit TravelDot starten",
       "subtitle": "Melde dich an, damit deine Aufzeichnungen sicher auf diesem Gerät bleiben",

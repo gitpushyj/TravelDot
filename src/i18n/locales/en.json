@@ -210,22 +210,68 @@
     "allSection": "All countries"
   },
   "tiers": {
-    "T0": { "title": "Getting Ready", "description": "No footprints recorded yet" },
-    "T1": { "title": "Settler", "description": "First footprint at home" },
-    "T2": { "title": "First Step", "description": "First step across a border" },
-    "T3": { "title": "Stroller", "description": "Stretching beyond familiar streets" },
-    "T4": { "title": "Wayfarer", "description": "Travel is starting to feel natural" },
-    "T5": { "title": "Traveler", "description": "Above the global average" },
-    "T6": { "title": "Explorer", "description": "Unfamiliar places no longer feel scary" },
-    "T7": { "title": "Veteran", "description": "Travel handled like a craft" },
-    "T8": { "title": "Nomad", "description": "Movement comes more naturally than settling" },
-    "T9": { "title": "Globetrotter", "description": "At home anywhere on Earth" },
-    "T10": { "title": "World Collector", "description": "Collecting the world — top 1%" },
-    "MASTER": { "title": "Master", "description": "Travel itself, embodied" },
-    "GRANDMASTER": { "title": "Grandmaster", "description": "100 countries — into the TCC ranks" },
-    "LEGEND": { "title": "Legend", "description": "Footsteps that become a legend" },
-    "UN_MASTER": { "title": "UN Master", "description": "Every flag on Earth, collected" }
-  },"errors": {
+    "T0": {
+      "title": "Getting Ready",
+      "description": "No footprints recorded yet"
+    },
+    "T1": {
+      "title": "Settler",
+      "description": "First footprint at home"
+    },
+    "T2": {
+      "title": "First Step",
+      "description": "First step across a border"
+    },
+    "T3": {
+      "title": "Stroller",
+      "description": "Stretching beyond familiar streets"
+    },
+    "T4": {
+      "title": "Wayfarer",
+      "description": "Travel is starting to feel natural"
+    },
+    "T5": {
+      "title": "Traveler",
+      "description": "Above the global average"
+    },
+    "T6": {
+      "title": "Explorer",
+      "description": "Unfamiliar places no longer feel scary"
+    },
+    "T7": {
+      "title": "Veteran",
+      "description": "Travel handled like a craft"
+    },
+    "T8": {
+      "title": "Nomad",
+      "description": "Movement comes more naturally than settling"
+    },
+    "T9": {
+      "title": "Globetrotter",
+      "description": "At home anywhere on Earth"
+    },
+    "T10": {
+      "title": "World Collector",
+      "description": "Collecting the world — top 1%"
+    },
+    "MASTER": {
+      "title": "Master",
+      "description": "Travel itself, embodied"
+    },
+    "GRANDMASTER": {
+      "title": "Grandmaster",
+      "description": "100 countries — into the TCC ranks"
+    },
+    "LEGEND": {
+      "title": "Legend",
+      "description": "Footsteps that become a legend"
+    },
+    "UN_MASTER": {
+      "title": "UN Master",
+      "description": "Every flag on Earth, collected"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID is required for Google Sign-In.",
       "googleSignInCancelled": "Google sign-in was cancelled.",
@@ -419,14 +465,6 @@
     }
   },
   "onboarding": {
-    "welcome": {
-      "title": "Your trips, drawn from your photos",
-      "point1": "Trips are automatically organized from your photo info.",
-      "point2": "When a trip ends, color in the map with a single tap.",
-      "point3": "Your photos are never sent to a server.",
-      "point4": "Take on milestones and grow into a free-spirited traveler!",
-      "next": "Next"
-    },
     "login": {
       "title": "Let's get started",
       "subtitle": "Sign in to keep your records safe on this device",

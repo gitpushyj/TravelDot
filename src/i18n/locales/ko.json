@@ -210,22 +210,68 @@
     "allSection": "전체"
   },
   "tiers": {
-    "T0": { "title": "여행 준비 중", "description": "아직 기록된 발자취가 없는" },
-    "T1": { "title": "정착민", "description": "본국에 첫 발자취를 남긴 사람" },
-    "T2": { "title": "첫걸음", "description": "국경을 넘은 첫 발걸음" },
-    "T3": { "title": "산책자", "description": "거리에 얽매이지 않고 발걸음을 넓혀가는" },
-    "T4": { "title": "길손", "description": "여행이 슬슬 익숙해지는" },
-    "T5": { "title": "여행자", "description": "글로벌 평균을 넘어선 여행자" },
-    "T6": { "title": "탐험가", "description": "낯선 곳이 더 이상 두렵지 않은" },
-    "T7": { "title": "베테랑", "description": "여행을 업처럼 다루는" },
-    "T8": { "title": "노마드", "description": "정착보다 이동이 자연스러운" },
-    "T9": { "title": "세계인", "description": "지구 위 어디든 집처럼 느끼는" },
-    "T10": { "title": "월드 컬렉터", "description": "세계를 수집하는 사람 — 상위 1%" },
-    "MASTER": { "title": "마스터", "description": "여행 그 자체가 된 사람" },
-    "GRANDMASTER": { "title": "그랜드마스터", "description": "100개국의 발자취 — TCC 가입선" },
-    "LEGEND": { "title": "레전드", "description": "전설로 남는 발걸음" },
-    "UN_MASTER": { "title": "UN 마스터", "description": "지구 위 모든 국기를 모은 사람" }
-  },"errors": {
+    "T0": {
+      "title": "여행 준비 중",
+      "description": "아직 기록된 발자취가 없는"
+    },
+    "T1": {
+      "title": "정착민",
+      "description": "본국에 첫 발자취를 남긴 사람"
+    },
+    "T2": {
+      "title": "첫걸음",
+      "description": "국경을 넘은 첫 발걸음"
+    },
+    "T3": {
+      "title": "산책자",
+      "description": "거리에 얽매이지 않고 발걸음을 넓혀가는"
+    },
+    "T4": {
+      "title": "길손",
+      "description": "여행이 슬슬 익숙해지는"
+    },
+    "T5": {
+      "title": "여행자",
+      "description": "글로벌 평균을 넘어선 여행자"
+    },
+    "T6": {
+      "title": "탐험가",
+      "description": "낯선 곳이 더 이상 두렵지 않은"
+    },
+    "T7": {
+      "title": "베테랑",
+      "description": "여행을 업처럼 다루는"
+    },
+    "T8": {
+      "title": "노마드",
+      "description": "정착보다 이동이 자연스러운"
+    },
+    "T9": {
+      "title": "세계인",
+      "description": "지구 위 어디든 집처럼 느끼는"
+    },
+    "T10": {
+      "title": "월드 컬렉터",
+      "description": "세계를 수집하는 사람 — 상위 1%"
+    },
+    "MASTER": {
+      "title": "마스터",
+      "description": "여행 그 자체가 된 사람"
+    },
+    "GRANDMASTER": {
+      "title": "그랜드마스터",
+      "description": "100개국의 발자취 — TCC 가입선"
+    },
+    "LEGEND": {
+      "title": "레전드",
+      "description": "전설로 남는 발걸음"
+    },
+    "UN_MASTER": {
+      "title": "UN 마스터",
+      "description": "지구 위 모든 국기를 모은 사람"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "Google 로그인을 사용하려면 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID 환경 변수가 필요해요.",
       "googleSignInCancelled": "Google 로그인이 취소되었어요.",
@@ -419,14 +465,6 @@
     }
   },
   "onboarding": {
-    "welcome": {
-      "title": "사진으로 그리는 여행 기록",
-      "point1": "휴대폰 사진의 정보로 자동으로 일정이 분류되고 기록돼요.",
-      "point2": "여행이 끝나면 버튼 한 번으로 지도에 색칠이 돼요.",
-      "point3": "이 과정에서 사진을 서버로 전송하지 않아요.",
-      "point4": "여러 마일스톤에 도전하며 자유로운 여행가로 거듭나요!",
-      "next": "다음"
-    },
     "login": {
       "title": "TravelDot을 시작할게요",
       "subtitle": "기록을 기기에 안전하게 저장하기 위해 로그인해 주세요",

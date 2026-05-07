@@ -422,14 +422,6 @@
     }
   },
   "onboarding": {
-    "welcome": {
-      "title": "Tes voyages, racontés par tes photos",
-      "point1": "Tes voyages sont classés et enregistrés automatiquement à partir des infos de tes photos.",
-      "point2": "À la fin d'un voyage, colorie la carte d'un simple tap.",
-      "point3": "Tes photos ne sont jamais envoyées à un serveur.",
-      "point4": "Relève plusieurs défis et deviens un voyageur libre !",
-      "next": "Suivant"
-    },
     "login": {
       "title": "Bienvenue sur TravelDot",
       "subtitle": "Connecte-toi pour conserver tes enregistrements en sécurité sur cet appareil",
