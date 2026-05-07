@@ -8,6 +8,7 @@ import { initI18n } from "./src/i18n";
 import AppAlerts from "./src/components/AppAlerts";
 import { useAuthStore } from "./src/features/auth/authStore";
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
+import { useMilestoneStore } from "./src/features/milestone/milestoneStore";
 import { useVisitStore } from "./src/features/travel/visitStore";
 import { AppCtxProvider, type AppNavCtx } from "./src/navigation/AppCtx";
 import RootNavigator from "./src/navigation/RootNavigator";
@@ -37,6 +38,7 @@ export default function App() {
   const onboardingHydrated = useOnboardingStore((s) => s.hydrated);
   const onboardingCompleted = useOnboardingStore((s) => s.completed);
   const onboardingMarkCompleted = useOnboardingStore((s) => s.markCompleted);
+  const milestoneHydrate = useMilestoneStore((s) => s.hydrate);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
@@ -48,8 +50,9 @@ export default function App() {
     void themeHydrate();
     void authHydrate();
     void onboardingHydrate();
+    void milestoneHydrate();
     void initI18n().then(() => setI18nReady(true));
-  }, [hydrate, themeHydrate, authHydrate, onboardingHydrate]);
+  }, [hydrate, themeHydrate, authHydrate, onboardingHydrate, milestoneHydrate]);
 
   useEffect(() => {
     if (yearMode.kind === "year") {
