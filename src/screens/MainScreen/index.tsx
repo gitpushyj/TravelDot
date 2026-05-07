@@ -398,7 +398,9 @@ export default function MainScreen({
             ]}
           >
             <View style={styles.statHeaderRow}>
-              <Text style={styles.statTitle}>{t("home.statTitle")}</Text>
+              <Text style={styles.statTitle}>
+                {t(`milestones.option.${milestoneKind}`)}
+              </Text>
               <Text
                 style={[
                   styles.statTier,

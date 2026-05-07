@@ -249,7 +249,6 @@
     "homeBadge": "본국",
     "visitedDays": "{{days}}일 방문",
     "isHome": "본국",
-    "statTitle": "방문 국가",
     "milestoneFooter": {
       "countries": "다음 호칭 획득까지 {{count}}개국",
       "days": "다음 호칭 획득까지 {{count}}일",

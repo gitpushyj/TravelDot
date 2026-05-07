@@ -223,7 +223,6 @@
     "homeBadge": "本国",
     "visitedDays": "停留 {{days}} 天",
     "isHome": "本国",
-    "statTitle": "去过的国家",
     "milestoneFooter": {
       "countries": "距下一称号还有 {{count}} 国",
       "days": "距下一称号还有 {{count}} 天",

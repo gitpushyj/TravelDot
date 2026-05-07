@@ -223,7 +223,6 @@
     "homeBadge": "País de origen",
     "visitedDays": "{{days}} días de estancia",
     "isHome": "País de origen",
-    "statTitle": "Países visitados",
     "milestoneFooter": {
       "countries": "Faltan {{count}} países para el próximo título",
       "days": "Faltan {{count}} días para el próximo título",
