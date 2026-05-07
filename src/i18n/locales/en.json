@@ -293,6 +293,8 @@
         "OC": "Oceania",
         "AN": "Antarctica"
       },
+      "initiateTitle": "{{continent}} Traveler",
+      "initiateDescription": "Visited {{count}}+ countries in {{continent}}",
       "wandererTitle": "{{continent}} Wanderer",
       "conquerorTitle": "{{continent}} Conqueror",
       "wandererDescription": "Visited {{count}}+ countries in {{continent}}",

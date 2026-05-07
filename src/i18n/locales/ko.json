@@ -293,6 +293,8 @@
         "OC": "오세아니아",
         "AN": "남극"
       },
+      "initiateTitle": "{{continent}} 여행자",
+      "initiateDescription": "{{continent}}에서 {{count}}개국 이상 방문",
       "wandererTitle": "{{continent}} 탐방가",
       "conquerorTitle": "{{continent}} 정복자",
       "wandererDescription": "{{continent}}에서 {{count}}개국 이상 방문",
