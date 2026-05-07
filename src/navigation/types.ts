@@ -8,6 +8,7 @@ export type RootStackParamList = {
   Settings: undefined;
   ChangeHome: undefined;
   Titles: undefined;
+  Milestones: undefined;
   MapZoom: undefined;
   CountryDetail: undefined;
   TripDetail: { trip: RecentTrip };

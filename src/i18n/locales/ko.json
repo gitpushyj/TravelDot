@@ -146,6 +146,23 @@
     "noCountryHint": "한 국가에서 30일 이상 머무르면 단골 호칭이 잠금 해제됩니다.",
     "noneToShow": "표시할 호칭이 없어요."
   },
+  "milestones": {
+    "heading": "목표 마일스톤",
+    "gotoTitles": "호칭",
+    "option": {
+      "countries": "국가 수",
+      "days": "누적 일수",
+      "continent_AS": "아시아 전문가",
+      "continent_EU": "유럽 전문가",
+      "continent_SA": "남미 전문가",
+      "continent_AF": "아프리카 전문가",
+      "continent_NA": "북미 전문가"
+    },
+    "preview": {
+      "progress": "{{current}} / {{next}}{{unit}}",
+      "completed": "달성"
+    }
+  },
   "reviewSuspect": {
     "heading": "여행 확인하기",
     "introTitle": "다른 기기로 찍힌 사진만 있는 여행이에요",

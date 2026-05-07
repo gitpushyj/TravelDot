@@ -146,6 +146,23 @@
     "noCountryHint": "Stay 30+ days in one country to unlock its regular title.",
     "noneToShow": "No titles to show."
   },
+  "milestones": {
+    "heading": "Goal Milestone",
+    "gotoTitles": "Titles",
+    "option": {
+      "countries": "Country count",
+      "days": "Total days",
+      "continent_AS": "Asia expert",
+      "continent_EU": "Europe expert",
+      "continent_SA": "South America expert",
+      "continent_AF": "Africa expert",
+      "continent_NA": "North America expert"
+    },
+    "preview": {
+      "progress": "{{current}} / {{next}}{{unit}}",
+      "completed": "Done"
+    }
+  },
   "reviewSuspect": {
     "heading": "Review trips",
     "introTitle": "These trips only have photos from another device",

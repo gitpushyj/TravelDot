@@ -13,6 +13,7 @@ import LanguageScreenNav from "./screens/LanguageScreenNav";
 import MapZoomScreenNav from "./screens/MapZoomScreenNav";
 import ReviewSuspectScreenNav from "./screens/ReviewSuspectScreenNav";
 import SettingsScreenNav from "./screens/SettingsScreenNav";
+import MilestonesScreenNav from "./screens/MilestonesScreenNav";
 import TitlesScreenNav from "./screens/TitlesScreenNav";
 import TripDetailScreenNav from "./screens/TripDetailScreenNav";
 import { navigationRef } from "./navigationRef";
@@ -35,6 +36,7 @@ export default function RootNavigator() {
         <Stack.Screen name="Settings" component={SettingsScreenNav} />
         <Stack.Screen name="ChangeHome" component={ChangeHomeScreenNav} />
         <Stack.Screen name="Titles" component={TitlesScreenNav} />
+        <Stack.Screen name="Milestones" component={MilestonesScreenNav} />
         <Stack.Screen name="MapZoom" component={MapZoomScreenNav} />
         <Stack.Screen name="CountryDetail" component={CountryDetailScreenNav} />
         <Stack.Screen name="TripDetail" component={TripDetailScreenNav} />
