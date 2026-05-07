@@ -237,7 +237,19 @@ export default function MainScreen({
         </View>
 
         <View style={styles.recentHeader}>
-          <Text style={styles.sectionTitle}>{t("home.recentTitle")}</Text>
+          <View style={styles.recentHeaderLeft}>
+            <Text style={styles.sectionTitle}>{t("home.recentTitle")}</Text>
+            <Pressable
+              onPress={() => navigation.navigate("AddTrip")}
+              hitSlop={8}
+              style={({ pressed }) => [
+                styles.recentAddBtn,
+                pressed && styles.recentAddBtnPressed,
+              ]}
+            >
+              <Text style={styles.recentAddIcon}>+</Text>
+            </Pressable>
+          </View>
           <Pressable
             onPress={() => navigation.navigate("History")}
             hitSlop={8}

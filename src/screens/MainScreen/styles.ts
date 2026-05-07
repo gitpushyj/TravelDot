@@ -306,6 +306,31 @@ export function makeStyles(theme: Theme) {
       paddingHorizontal: 20,
       paddingBottom: 8,
     },
+    recentHeaderLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    recentAddBtn: {
+      width: 26,
+      height: 26,
+      borderRadius: 13,
+      backgroundColor: theme.cardBg,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    recentAddBtnPressed: {
+      backgroundColor: theme.tabRowBg,
+    },
+    recentAddIcon: {
+      color: theme.textPrimary,
+      fontSize: 18,
+      fontWeight: "700",
+      lineHeight: 20,
+      marginTop: -2,
+    },
     sectionTitle: {
       color: theme.textPrimary,
       fontSize: 17,
