@@ -114,13 +114,20 @@ export default function MainScreen({
   // 위로 다시 밀어 줄일 수 있다. 마지막 사이즈는 영속화해 다음 실행에 복원한다.
   const mapExtraHeight = useSharedValue(0);
   const mapExtraSaved = useSharedValue(0);
+  // 저장된 높이가 비동기로 들어오기 전에 DotMap이 마운트되어 onLayout 받으면
+  // 인트로 애니메이션이 잘못된(짧은) 사이즈 기준으로 큐잉된다. 그래서 저장값
+  // 적용이 끝난 뒤에야 DotMap을 렌더해 첫 onLayout이 올바른 사이즈로 들어오게 한다.
+  const [mapHeightHydrated, setMapHeightHydrated] = useState(false);
   useEffect(() => {
     let cancelled = false;
     loadMapExtraHeight().then((v) => {
-      if (cancelled || v == null) return;
-      const clamped = Math.max(0, Math.min(MAP_MAX_EXTRA, v));
-      mapExtraHeight.value = clamped;
-      mapExtraSaved.value = clamped;
+      if (cancelled) return;
+      if (v != null) {
+        const clamped = Math.max(0, Math.min(MAP_MAX_EXTRA, v));
+        mapExtraHeight.value = clamped;
+        mapExtraSaved.value = clamped;
+      }
+      setMapHeightHydrated(true);
     });
     return () => {
       cancelled = true;
@@ -162,6 +169,7 @@ export default function MainScreen({
   useEffect(() => {
     if (mapHandleHintShown) return;
     if (!homeCountry) return;
+    if (!mapHeightHydrated) return;
     mapHandleHintShown = true;
     // 인트로(500ms 지연 + 3000ms 줌아웃 = 3500ms)가 끝나는 시점에 펄스가 시작되도록.
     const startDelay = 3500;
@@ -201,7 +209,7 @@ export default function MainScreen({
         false
       )
     );
-  }, [homeCountry, hintScaleX, hintOpacity, hintTranslateY]);
+  }, [homeCountry, mapHeightHydrated, hintScaleX, hintOpacity, hintTranslateY]);
   const hintBarStyle = useAnimatedStyle(() => ({
     opacity: hintOpacity.value,
     transform: [
@@ -352,11 +360,13 @@ export default function MainScreen({
 
           <View style={styles.mapWrap}>
             <Animated.View style={[styles.mapArea, mapAreaAnimStyle]}>
-              <DotMap
-                visitCounts={activeCounts}
-                onInteractingChange={setMapInteracting}
-                mapAreaStyle={styles.mapAreaInner}
-              />
+              {mapHeightHydrated ? (
+                <DotMap
+                  visitCounts={activeCounts}
+                  onInteractingChange={setMapInteracting}
+                  mapAreaStyle={styles.mapAreaInner}
+                />
+              ) : null}
               <Pressable
                 onPress={() => navigation.navigate("MapZoom")}
                 hitSlop={8}
