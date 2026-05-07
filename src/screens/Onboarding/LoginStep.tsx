@@ -87,13 +87,14 @@ export default function LoginStep({ onNext }: Props) {
 
 const styles = StyleSheet.create({
   scroll: { flex: 1 },
-  // flexGrow:1 + spacer(flex:1)로 기능 카드를 화면 하단에 고정.
-  // 콘텐츠가 짧으면 spacer가 늘어나 카드를 바닥으로 밀고, 길면 spacer가 0이 되어 자연 스크롤.
+  // flexGrow:1 + spacer(flex:1)로 기능 카드를 화면 하단 영역에 고정.
+  // paddingBottom 48로 바닥과 거리를 두고, spacer maxHeight로 중간 빈 공간이
+  // 너무 커지지 않도록 제한. 콘텐츠가 길면 spacer가 0이 되어 자연 스크롤.
   content: {
     flexGrow: 1,
     paddingHorizontal: 20,
     paddingTop: 16,
-    paddingBottom: 24,
+    paddingBottom: 48,
   },
   buttons: {
     marginTop: 28,
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
   spacer: {
     flex: 1,
     minHeight: 24,
+    maxHeight: 80,
   },
   divider: {
     marginBottom: 20,
