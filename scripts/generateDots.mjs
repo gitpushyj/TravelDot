@@ -326,7 +326,99 @@ if (countries) {
   }
 }
 
-fs.mkdirSync(outDir, { recursive: true });
+// ---- Pass 3: 본토에서 멀리 떨어진 단일 고립 도트 정리 ----
+// 영국령 포클랜드/버뮤다나 프랑스령 케르겔렌처럼 본국과 시각적으로 동떨어진
+// 점 하나짜리 해외영토는 지도를 지저분하게 만든다. 한 나라에 도트가 충분히
+// 많고(4개 이상), 본토 클러스터가 형성되어 있을 때(3개 이상)에 한해, 본토
+// 도트로부터 모든 방향으로 멀리(>=15°) 떨어진 단일 고립 점만 골라 제거한다.
+// 단일점이 곧 그 나라인 작은 섬나라는 자동으로 보존된다(도트 수 < 4 조건).
+//
+// KEEP_ISOLATED: 한국 사용자에게 친숙한 여행지/큰 섬은 위 규칙에도 불구하고 유지한다.
+const ORPHAN_NEIGHBOR_DEG = gridSize * 3;
+const ORPHAN_FAR_DEG = 15;
+const KEEP_ISOLATED = [
+  { lat: 19.55, lng: -155.85, label: "Hawaii (US)" },
+  { lat: 17.25, lng: -65.55, label: "Puerto Rico (US)" },
+  { lat: -17.25, lng: -148.35, label: "French Polynesia / Tahiti (FR)" },
+];
+const KEEP_TOL = 1.5;
+
+function isWhitelistedIsolated(d) {
+  return KEEP_ISOLATED.some(
+    (k) => Math.abs(d.lat - k.lat) <= KEEP_TOL && Math.abs(d.lng - k.lng) <= KEEP_TOL
+  );
+}
+
+function clusterDots(list) {
+  const visited = new Set();
+  const groups = [];
+  for (let i = 0; i < list.length; i++) {
+    if (visited.has(i)) continue;
+    const stack = [i];
+    const grp = [];
+    while (stack.length) {
+      const k = stack.pop();
+      if (visited.has(k)) continue;
+      visited.add(k);
+      grp.push(list[k]);
+      for (let j = 0; j < list.length; j++) {
+        if (visited.has(j)) continue;
+        const a = list[k];
+        const b = list[j];
+        if (
+          Math.abs(a.lat - b.lat) <= ORPHAN_NEIGHBOR_DEG &&
+          Math.abs(a.lng - b.lng) <= ORPHAN_NEIGHBOR_DEG
+        ) {
+          stack.push(j);
+        }
+      }
+    }
+    groups.push(grp);
+  }
+  groups.sort((a, b) => b.length - a.length);
+  return groups;
+}
+
+const byCountry = new Map();
+for (const d of dots) {
+  if (!d.country) continue;
+  if (!byCountry.has(d.country)) byCountry.set(d.country, []);
+  byCountry.get(d.country).push(d);
+}
+
+const removeIds = new Set();
+const removedDots = [];
+const keptIsolated = [];
+for (const [code, list] of byCountry) {
+  if (list.length < 4) continue;
+  const grps = clusterDots(list);
+  const main = grps[0];
+  if (main.length < 3) continue;
+  for (const g of grps.slice(1)) {
+    if (g.length !== 1) continue;
+    const d = g[0];
+    let minDist = Infinity;
+    for (const m of main) {
+      const dd = Math.sqrt((d.lat - m.lat) ** 2 + (d.lng - m.lng) ** 2);
+      if (dd < minDist) minDist = dd;
+    }
+    if (minDist < ORPHAN_FAR_DEG) continue;
+    if (isWhitelistedIsolated(d)) {
+      keptIsolated.push({ code, id: d.id, lat: d.lat, lng: d.lng });
+      continue;
+    }
+    removeIds.add(d.id);
+    removedDots.push({ code, id: d.id, lat: d.lat, lng: d.lng });
+  }
+}
+const filteredDots = dots.filter((d) => !removeIds.has(d.id));
+const removedCount = dots.length - filteredDots.length;
+dots.length = 0;
+for (const d of filteredDots) dots.push(d);
+
+const finalGridCount = dots.filter((d) => d.kind === "grid").length;
+const finalAnchorCount = dots.filter((d) => d.kind === "anchor").length;
+
 fs.writeFileSync(
   outPath,
   JSON.stringify(
@@ -335,8 +427,8 @@ fs.writeFileSync(
       minLat,
       maxLat,
       count: dots.length,
-      gridCount,
-      anchorCount,
+      gridCount: finalGridCount,
+      anchorCount: finalAnchorCount,
       dots,
     },
     null,
@@ -346,9 +438,19 @@ fs.writeFileSync(
 
 const multiCountry = dots.filter((d) => d.countries && d.countries.length > 1);
 console.log(`gridSize=${gridSize}°, lat=[${minLat}, ${maxLat}]`);
-console.log(`  grid dots:    ${gridCount}`);
-console.log(`  anchor dots:  ${anchorCount}`);
+console.log(`  grid dots:    ${finalGridCount} (initial ${gridCount})`);
+console.log(`  anchor dots:  ${finalAnchorCount} (initial ${anchorCount})`);
 console.log(`  total:        ${dots.length}`);
+console.log(`  removed isolated overseas: ${removedCount}`);
+for (const r of removedDots) {
+  console.log(`    - ${r.code} ${r.id} (${r.lat.toFixed(2)}, ${r.lng.toFixed(2)})`);
+}
+if (keptIsolated.length) {
+  console.log(`  kept (whitelist): ${keptIsolated.length}`);
+  for (const k of keptIsolated) {
+    console.log(`    + ${k.code} ${k.id} (${k.lat.toFixed(2)}, ${k.lng.toFixed(2)})`);
+  }
+}
 console.log(
   `  multi-country: ${multiCountry.length} (${(
     (multiCountry.length / dots.length) *
