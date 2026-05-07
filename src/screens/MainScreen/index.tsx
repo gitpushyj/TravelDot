@@ -47,7 +47,7 @@ export default function MainScreen({
   const milestone = useMemo(() => {
     const visited = totals.countries;
     const next = TIER_CUTOFFS.find((m) => m > visited) ?? TOTAL_COUNTRIES;
-    return { next, remaining: Math.max(0, next - visited) };
+    return { next };
   }, [totals.countries]);
 
   const tier = useMemo(
@@ -81,7 +81,7 @@ export default function MainScreen({
   };
 
   const percent =
-    Math.round((totals.countries / TOTAL_COUNTRIES) * 1000) / 10;
+    Math.round((totals.countries / milestone.next) * 1000) / 10;
 
   if (!homeCountry) return null;
 
@@ -204,7 +204,7 @@ export default function MainScreen({
             </View>
             <View style={styles.statBigRow}>
               <Text style={styles.statBigNum}>{totals.countries}</Text>
-              <Text style={styles.statBigDenom}> / {TOTAL_COUNTRIES}</Text>
+              <Text style={styles.statBigDenom}> / {milestone.next}</Text>
               <Text style={styles.statBigPercent}>  {percent}%</Text>
             </View>
             <View style={styles.progressTrack}>
@@ -214,7 +214,7 @@ export default function MainScreen({
                   {
                     width: `${Math.min(
                       100,
-                      (totals.countries / TOTAL_COUNTRIES) * 100
+                      (totals.countries / milestone.next) * 100
                     )}%`,
                   },
                 ]}
@@ -226,9 +226,6 @@ export default function MainScreen({
                 <Text style={styles.statFooterStrong}>
                   {t("home.milestoneCountries", { count: milestone.next })}
                 </Text>
-              </Text>
-              <Text style={styles.statFooterAccent}>
-                {t("home.milestoneRemaining", { count: milestone.remaining })}
               </Text>
             </View>
           </View>

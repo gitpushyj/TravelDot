@@ -19,7 +19,6 @@
     "statTitle": "방문 국가",
     "nextMilestone": "다음 마일스톤",
     "milestoneCountries": "{{count}}개국",
-    "milestoneRemaining": "{{count}} 남음",
     "recentTitle": "최근 방문",
     "viewAll": "전체보기 →",
     "viewAllCountries": "모든 나라 보기",
