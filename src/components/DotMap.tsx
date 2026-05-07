@@ -116,6 +116,7 @@ export default function DotMap({
           x: (d.lng + 180) * baseScale - halfDotPx,
           y: (maxLat - d.lat) * baseScale - halfDotPx,
           countries,
+          isHome,
           fill: isHome
             ? homeFill
             : colorForVisitWith(theme, { count, isHomeCountry: false }),
@@ -484,7 +485,9 @@ export default function DotMap({
                     height={dotPx}
                     r={radius}
                     color={
-                      highlightedIds?.has(d.id) ? theme.highlightDot : d.fill
+                      highlightedIds?.has(d.id) && !d.isHome
+                        ? theme.highlightDot
+                        : d.fill
                     }
                   />
                 ))}

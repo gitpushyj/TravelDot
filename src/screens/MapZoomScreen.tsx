@@ -39,6 +39,7 @@ const EDGE_INSET_RATIO = 0.97;
 export default function MapZoomScreen({ visitCounts, onClose }: Props) {
   const { width, height } = useWindowDimensions();
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
+  const homeCountry = useVisitStore((s) => s.homeCountry);
   const theme = useTheme();
 
   const longEdge = Math.max(width, height);
@@ -47,10 +48,13 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
   // 국가를 선택할 때마다 이름을 토스트로 띄우고 3초 뒤에 자동으로 숨긴다.
   // 같은 국가를 다시 탭해도 setSelectedCountry가 새 객체를 만들어 useEffect가
   // 재실행되므로 타이머가 리셋된다.
+  // 본국은 고유 색상으로 항상 식별 가능하고, 여백 탭으로도 자동 선택되므로
+  // 토스트 노이즈를 줄이기 위해 본국이 선택된 경우에는 띄우지 않는다.
   const [toastName, setToastName] = useState<string | null>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (!selectedCountry) return;
+    if (selectedCountry.code === homeCountry?.code) return;
     setToastName(getCountryName(selectedCountry.code, getCurrentLocale()));
     if (hideTimer.current) clearTimeout(hideTimer.current);
     hideTimer.current = setTimeout(() => {
@@ -63,7 +67,7 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
         hideTimer.current = null;
       }
     };
-  }, [selectedCountry]);
+  }, [selectedCountry, homeCountry?.code]);
 
   // 회전 컨테이너 안에서 자연 비율로 contain 피팅한 뒤 중앙 정렬한다.
   // 단순히 longEdge × shortEdge로 채우면 비율이 어긋나 가장자리 도트가 잘려 보인다.
