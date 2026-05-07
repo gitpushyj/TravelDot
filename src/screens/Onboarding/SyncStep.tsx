@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { ensurePermission } from "../../features/photoSync/photoLibrary";
@@ -8,6 +15,9 @@ import { useVisitStore } from "../../features/travel/visitStore";
 import { useTheme } from "../../theme/themeStore";
 
 import { makeOnboardingStyles } from "./styles";
+import SyncFeatureRows from "./SyncFeatureRows";
+import SyncHero from "./SyncHero";
+import SyncPermissionNotice from "./SyncPermissionNotice";
 
 type Phase = "idle" | "syncing" | "denied";
 
@@ -101,22 +111,33 @@ export default function SyncStep({ onNext }: Props) {
     );
   }
 
-  // idle
+  // idle — 새 디자인
   return (
     <>
-      <View style={styles.body}>
-        <Text style={styles.title}>{t("onboarding.sync.title")}</Text>
-        <Text style={styles.subtitle}>{t("onboarding.sync.body")}</Text>
-        <View style={styles.hintBox}>
-          <Text style={styles.hintBoxText}>
-            {t("onboarding.sync.fullAccessHint")}
-          </Text>
+      <ScrollView
+        style={localStyles.scroll}
+        contentContainerStyle={localStyles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <SyncHero
+          theme={theme}
+          title={t("onboarding.sync.title")}
+          subtitle={t("onboarding.sync.body")}
+        />
+
+        <View style={localStyles.notice}>
+          <SyncPermissionNotice
+            theme={theme}
+            title={t("onboarding.sync.fullAccessHint")}
+            body={t("onboarding.sync.cloudOnlyNote")}
+          />
         </View>
-        <Text style={styles.inlineNote}>
-          {t("onboarding.sync.cloudOnlyNote")}
-        </Text>
-      </View>
-      <View style={styles.footer}>
+
+        <View style={localStyles.cards}>
+          <SyncFeatureRows theme={theme} />
+        </View>
+      </ScrollView>
+      <View style={localStyles.cta}>
         <Pressable
           onPress={startSync}
           style={({ pressed }) => [
@@ -130,3 +151,23 @@ export default function SyncStep({ onNext }: Props) {
     </>
   );
 }
+
+const localStyles = StyleSheet.create({
+  scroll: { flex: 1 },
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 12,
+  },
+  notice: {
+    marginTop: 20,
+  },
+  cards: {
+    marginTop: 18,
+  },
+  cta: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 24,
+  },
+});
