@@ -9,6 +9,11 @@ import {
   Text,
   View,
 } from "react-native";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import Animated, {
   Easing,
   runOnJS,
@@ -52,10 +57,14 @@ export default function YearPickerModal({
   const [mounted, setMounted] = useState(visible);
   const progress = useSharedValue(0);
   const sheetHeight = useSharedValue(1000);
+  // 사용자가 시트를 아래로 끌어내릴 때의 추가 오프셋. 0 이상으로만 누적된다.
+  const dragOffset = useSharedValue(0);
 
   useEffect(() => {
     if (visible) {
       setMounted(true);
+      // 다시 열릴 때 이전 드래그 잔여값이 남아 있지 않도록 초기화.
+      dragOffset.value = 0;
       progress.value = withTiming(1, {
         duration: OPEN_DURATION,
         easing: Easing.out(Easing.cubic),
@@ -69,20 +78,51 @@ export default function YearPickerModal({
         },
       );
     }
-  }, [visible, mounted, progress]);
+  }, [visible, mounted, progress, dragOffset]);
 
-  const backdropStyle = useAnimatedStyle(() => ({
-    opacity: progress.value,
-  }));
+  const backdropStyle = useAnimatedStyle(() => {
+    const h = sheetHeight.value;
+    const dragRatio = h > 0 ? Math.min(1, dragOffset.value / h) : 0;
+    return {
+      opacity: progress.value * (1 - dragRatio),
+    };
+  });
 
   const sheetStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: (1 - progress.value) * sheetHeight.value }],
+    transform: [
+      { translateY: (1 - progress.value) * sheetHeight.value + dragOffset.value },
+    ],
   }));
 
   const onSheetLayout = (e: LayoutChangeEvent) => {
     const h = e.nativeEvent.layout.height;
     if (h > 0) sheetHeight.value = h;
   };
+
+  // 핸들/헤더 영역에서 시트를 아래로 끌어 닫는 제스처. 25% 이상 끌었거나
+  // 아래 방향 속도가 충분하면 닫고, 아니면 원위치로 복귀한다.
+  const dismissPanGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .onUpdate((e) => {
+          dragOffset.value = Math.max(0, e.translationY);
+        })
+        .onEnd((e) => {
+          const h = sheetHeight.value;
+          const shouldDismiss =
+            (h > 0 && dragOffset.value > h * 0.25) || e.velocityY > 800;
+          if (shouldDismiss) {
+            // 현재 드래그된 위치에서 끊김 없이 close 애니메이션이 이어지도록
+            // progress를 즉시 같은 시각 위치로 맞춘 뒤 dragOffset을 0으로 리셋한다.
+            progress.value = h > 0 ? Math.max(0, 1 - dragOffset.value / h) : 0;
+            dragOffset.value = 0;
+            runOnJS(onCancel)();
+          } else {
+            dragOffset.value = withTiming(0, { duration: 200 });
+          }
+        }),
+    [dragOffset, sheetHeight, progress, onCancel],
+  );
 
   useEffect(() => {
     if (!visible) return;
@@ -136,7 +176,7 @@ export default function YearPickerModal({
       onRequestClose={onCancel}
       statusBarTranslucent
     >
-      <View style={styles.root}>
+      <GestureHandlerRootView style={styles.root}>
         <Animated.View style={[styles.backdrop, backdropStyle]}>
           <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
         </Animated.View>
@@ -144,16 +184,22 @@ export default function YearPickerModal({
           style={[styles.sheet, sheetStyle]}
           onLayout={onSheetLayout}
         >
-          <View style={styles.handleWrap}>
-            <View style={styles.handle} />
-          </View>
-          <View style={styles.headerRow}>
-            <Pressable hitSlop={8} onPress={onCancel}>
-              <Text style={styles.cancelText}>{t("common.cancel")}</Text>
-            </Pressable>
-            <Text style={styles.titleText}>{t("yearPicker.title")}</Text>
-            <View style={styles.headerSpacer} />
-          </View>
+          {/* 핸들과 헤더 영역에서만 드래그를 받도록 묶는다. 리스트(ScrollView)는
+              자체 스크롤이 우선되어야 하므로 제스처 영역에서 제외한다. */}
+          <GestureDetector gesture={dismissPanGesture}>
+            <View>
+              <View style={styles.handleWrap}>
+                <View style={styles.handle} />
+              </View>
+              <View style={styles.headerRow}>
+                <Pressable hitSlop={8} onPress={onCancel}>
+                  <Text style={styles.cancelText}>{t("common.cancel")}</Text>
+                </Pressable>
+                <Text style={styles.titleText}>{t("yearPicker.title")}</Text>
+                <View style={styles.headerSpacer} />
+              </View>
+            </View>
+          </GestureDetector>
 
           <ScrollView
             style={styles.list}
@@ -201,7 +247,7 @@ export default function YearPickerModal({
             })}
           </ScrollView>
         </Animated.View>
-      </View>
+      </GestureHandlerRootView>
     </Modal>
   );
 }
