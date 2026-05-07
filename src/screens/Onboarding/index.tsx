@@ -45,7 +45,12 @@ export default function OnboardingFlow() {
     });
   }, [authUser, homeCountry]);
 
-  const goNext = () => setStep((s) => Math.min(s + 1, TOTAL_STEPS));
+  // step을 절대값으로 advance한다. step 컴포넌트의 onNext와 외부 상태 useEffect가
+  // 동시에 발동해도 race 없이 정확한 step에 안착한다. 예: step 3에서 본국 선택 시
+  // HomeCountryStep이 onNext(=goTo(4))를 부르고 OnboardingFlow useEffect도
+  // homeCountry 변화를 보고 setStep(4)를 시도하는데, 둘 다 4로 수렴해 5로 튀지 않는다.
+  const goTo = (target: number) =>
+    setStep((s) => Math.max(s, Math.min(target, TOTAL_STEPS)));
 
   const finish = async () => {
     await markCompleted();
@@ -54,10 +59,10 @@ export default function OnboardingFlow() {
   return (
     <View style={styles.root}>
       <OnboardingProgress current={step} total={TOTAL_STEPS} />
-      {step === 1 && <WelcomeStep onNext={goNext} />}
-      {step === 2 && <LoginStep onNext={goNext} />}
-      {step === 3 && <HomeCountryStep onNext={goNext} />}
-      {step === 4 && <SyncStep onNext={goNext} />}
+      {step === 1 && <WelcomeStep onNext={() => goTo(2)} />}
+      {step === 2 && <LoginStep onNext={() => goTo(3)} />}
+      {step === 3 && <HomeCountryStep onNext={() => goTo(4)} />}
+      {step === 4 && <SyncStep onNext={() => goTo(5)} />}
       {step === 5 && <SuspectTripsStep onFinish={() => void finish()} />}
     </View>
   );

@@ -9,6 +9,8 @@ import {
 } from "react-native";
 
 import countries from "../../assets/data/countries.json";
+import type { Theme } from "../theme/theme";
+import { useTheme } from "../theme/themeStore";
 
 type Entry = { code: string; name: string; nameKo: string };
 
@@ -18,6 +20,8 @@ type Props = {
 };
 
 export default function CountryPicker({ onSelect, selectedCode }: Props) {
+  const theme = useTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   const [q, setQ] = useState("");
 
   const data = useMemo(() => {
@@ -38,7 +42,7 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
         value={q}
         onChangeText={setQ}
         placeholder="국가 검색 (한글/영문/코드)"
-        placeholderTextColor="#5b6680"
+        placeholderTextColor={theme.textMuted}
         autoCapitalize="none"
         autoCorrect={false}
         style={styles.input}
@@ -72,37 +76,39 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1 },
-  input: {
-    backgroundColor: "#1c2942",
-    color: "#e8eefc",
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    fontSize: 15,
-    marginBottom: 12,
-  },
-  row: {
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    borderRadius: 8,
-  },
-  rowSelected: {
-    backgroundColor: "#1c2942",
-  },
-  rowPressed: {
-    backgroundColor: "#22304d",
-  },
-  rowKo: {
-    color: "#e8eefc",
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  rowMeta: {
-    color: "#7d8aa6",
-    fontSize: 12,
-    marginTop: 2,
-  },
-  sep: { height: 1, backgroundColor: "#152037" },
-});
+function makeStyles(theme: Theme) {
+  return StyleSheet.create({
+    root: { flex: 1 },
+    input: {
+      backgroundColor: theme.tabRowBg,
+      color: theme.textPrimary,
+      borderRadius: 10,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
+      fontSize: 15,
+      marginBottom: 12,
+    },
+    row: {
+      paddingVertical: 12,
+      paddingHorizontal: 14,
+      borderRadius: 8,
+    },
+    rowSelected: {
+      backgroundColor: theme.selectedRowBg,
+    },
+    rowPressed: {
+      backgroundColor: theme.rowPressedBg,
+    },
+    rowKo: {
+      color: theme.textPrimary,
+      fontSize: 15,
+      fontWeight: "600",
+    },
+    rowMeta: {
+      color: theme.textSecondary,
+      fontSize: 12,
+      marginTop: 2,
+    },
+    sep: { height: StyleSheet.hairlineWidth, backgroundColor: theme.cardBorder },
+  });
+}
