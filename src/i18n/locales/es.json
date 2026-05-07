@@ -184,22 +184,68 @@
     "searchPlaceholder": "Buscar país"
   },
   "tiers": {
-    "T0": { "title": "Preparando el viaje", "description": "Aún sin pasos registrados" },
-    "T1": { "title": "Asentado", "description": "Primera huella en tu país de origen" },
-    "T2": { "title": "Primer paso", "description": "El primer paso al otro lado de la frontera" },
-    "T3": { "title": "Paseante", "description": "Empiezas a alejarte de las calles conocidas" },
-    "T4": { "title": "Caminante", "description": "Viajar empieza a sentirse natural" },
-    "T5": { "title": "Viajero", "description": "Por encima de la media mundial" },
-    "T6": { "title": "Explorador", "description": "Lo desconocido ya no asusta" },
-    "T7": { "title": "Veterano", "description": "Manejas el viaje como un oficio" },
-    "T8": { "title": "Nómada", "description": "Moverse sale más natural que asentarse" },
-    "T9": { "title": "Trotamundos", "description": "En casa en cualquier rincón del planeta" },
-    "T10": { "title": "Colector del mundo", "description": "Coleccionas el mundo — top 1%" },
-    "MASTER": { "title": "Maestro", "description": "Eres el viaje mismo" },
-    "GRANDMASTER": { "title": "Gran Maestro", "description": "100 países — la línea para entrar al TCC" },
-    "LEGEND": { "title": "Leyenda", "description": "Pasos que se vuelven leyenda" },
-    "UN_MASTER": { "title": "Maestro de la ONU", "description": "Has reunido todas las banderas del planeta" }
-  },"errors": {
+    "T0": {
+      "title": "Preparando el viaje",
+      "description": "Aún sin pasos registrados"
+    },
+    "T1": {
+      "title": "Asentado",
+      "description": "Primera huella en tu país de origen"
+    },
+    "T2": {
+      "title": "Primer paso",
+      "description": "El primer paso al otro lado de la frontera"
+    },
+    "T3": {
+      "title": "Paseante",
+      "description": "Empiezas a alejarte de las calles conocidas"
+    },
+    "T4": {
+      "title": "Caminante",
+      "description": "Viajar empieza a sentirse natural"
+    },
+    "T5": {
+      "title": "Viajero",
+      "description": "Por encima de la media mundial"
+    },
+    "T6": {
+      "title": "Explorador",
+      "description": "Lo desconocido ya no asusta"
+    },
+    "T7": {
+      "title": "Veterano",
+      "description": "Manejas el viaje como un oficio"
+    },
+    "T8": {
+      "title": "Nómada",
+      "description": "Moverse sale más natural que asentarse"
+    },
+    "T9": {
+      "title": "Trotamundos",
+      "description": "En casa en cualquier rincón del planeta"
+    },
+    "T10": {
+      "title": "Colector del mundo",
+      "description": "Coleccionas el mundo — top 1%"
+    },
+    "MASTER": {
+      "title": "Maestro",
+      "description": "Eres el viaje mismo"
+    },
+    "GRANDMASTER": {
+      "title": "Gran Maestro",
+      "description": "100 países — la línea para entrar al TCC"
+    },
+    "LEGEND": {
+      "title": "Leyenda",
+      "description": "Pasos que se vuelven leyenda"
+    },
+    "UN_MASTER": {
+      "title": "Maestro de la ONU",
+      "description": "Has reunido todas las banderas del planeta"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "Para usar Google Sign-In necesitas la variable EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.",
       "googleSignInCancelled": "Se canceló el inicio de sesión con Google.",
@@ -386,7 +432,20 @@
     },
     "login": {
       "title": "Empecemos con TravelDot",
-      "subtitle": "Inicia sesión para guardar tus registros con seguridad en este dispositivo"
+      "subtitle": "Inicia sesión para guardar tus registros con seguridad en este dispositivo",
+      "dividerOr": "O",
+      "feature1": {
+        "title": "Registro desde fotos",
+        "desc": "Viajes ordenados por lugar y hora"
+      },
+      "feature2": {
+        "title": "Mapa con un toque",
+        "desc": "Termina el viaje, pinta el mapa"
+      },
+      "feature3": {
+        "title": "Solo en el dispositivo",
+        "desc": "Tus fotos no salen del móvil"
+      }
     },
     "home": {
       "title": "Elige tu país de origen",

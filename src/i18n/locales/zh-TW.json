@@ -184,22 +184,68 @@
     "searchPlaceholder": "搜尋國家"
   },
   "tiers": {
-    "T0": { "title": "準備出發", "description": "還沒有任何足跡" },
-    "T1": { "title": "定居者", "description": "在母國留下第一道足跡" },
-    "T2": { "title": "第一步", "description": "跨越國境的第一步" },
-    "T3": { "title": "漫步者", "description": "腳步開始走出熟悉的街道" },
-    "T4": { "title": "旅途新手", "description": "旅行漸漸變得熟悉" },
-    "T5": { "title": "旅行者", "description": "已超過全球平均水準" },
-    "T6": { "title": "探險者", "description": "陌生的地方已不再令人害怕" },
-    "T7": { "title": "老手", "description": "把旅行當作一門技藝" },
-    "T8": { "title": "遊牧者", "description": "比定居更習慣於移動" },
-    "T9": { "title": "世界公民", "description": "把地球的任何角落都當作家" },
-    "T10": { "title": "世界收藏家", "description": "收藏世界的人 — 全球前 1%" },
-    "MASTER": { "title": "大師", "description": "成為旅行本身的人" },
-    "GRANDMASTER": { "title": "宗師", "description": "100 國的足跡 — TCC 入會門檻" },
-    "LEGEND": { "title": "傳奇", "description": "留下足以成為傳說的足跡" },
-    "UN_MASTER": { "title": "UN 大師", "description": "集齊地球上所有國旗的人" }
-  },"errors": {
+    "T0": {
+      "title": "準備出發",
+      "description": "還沒有任何足跡"
+    },
+    "T1": {
+      "title": "定居者",
+      "description": "在母國留下第一道足跡"
+    },
+    "T2": {
+      "title": "第一步",
+      "description": "跨越國境的第一步"
+    },
+    "T3": {
+      "title": "漫步者",
+      "description": "腳步開始走出熟悉的街道"
+    },
+    "T4": {
+      "title": "旅途新手",
+      "description": "旅行漸漸變得熟悉"
+    },
+    "T5": {
+      "title": "旅行者",
+      "description": "已超過全球平均水準"
+    },
+    "T6": {
+      "title": "探險者",
+      "description": "陌生的地方已不再令人害怕"
+    },
+    "T7": {
+      "title": "老手",
+      "description": "把旅行當作一門技藝"
+    },
+    "T8": {
+      "title": "遊牧者",
+      "description": "比定居更習慣於移動"
+    },
+    "T9": {
+      "title": "世界公民",
+      "description": "把地球的任何角落都當作家"
+    },
+    "T10": {
+      "title": "世界收藏家",
+      "description": "收藏世界的人 — 全球前 1%"
+    },
+    "MASTER": {
+      "title": "大師",
+      "description": "成為旅行本身的人"
+    },
+    "GRANDMASTER": {
+      "title": "宗師",
+      "description": "100 國的足跡 — TCC 入會門檻"
+    },
+    "LEGEND": {
+      "title": "傳奇",
+      "description": "留下足以成為傳說的足跡"
+    },
+    "UN_MASTER": {
+      "title": "UN 大師",
+      "description": "集齊地球上所有國旗的人"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "使用 Google 登入需要環境變數 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID。",
       "googleSignInCancelled": "已取消 Google 登入。",
@@ -386,7 +432,20 @@
     },
     "login": {
       "title": "開始使用 TravelDot",
-      "subtitle": "請登入,以便將紀錄安全地保存在這台裝置上"
+      "subtitle": "請登入,以便將紀錄安全地保存在這台裝置上",
+      "dividerOr": "或",
+      "feature1": {
+        "title": "照片自動記錄",
+        "desc": "依位置與時間自動分類行程"
+      },
+      "feature2": {
+        "title": "一鍵塗色地圖",
+        "desc": "旅程結束,一鍵完成"
+      },
+      "feature3": {
+        "title": "僅保存在本機",
+        "desc": "照片不會上傳到伺服器"
+      }
     },
     "home": {
       "title": "請選擇母國",

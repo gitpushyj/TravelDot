@@ -184,22 +184,68 @@
     "searchPlaceholder": "Cerca paese"
   },
   "tiers": {
-    "T0": { "title": "In partenza", "description": "Nessuna traccia registrata ancora" },
-    "T1": { "title": "Stanziale", "description": "Prima impronta nel paese di residenza" },
-    "T2": { "title": "Primo passo", "description": "Primo passo oltre il confine" },
-    "T3": { "title": "Passeggiatore", "description": "Esci dai vicoli familiari" },
-    "T4": { "title": "Viandante", "description": "Il viaggio inizia a sembrare naturale" },
-    "T5": { "title": "Viaggiatore", "description": "Sopra la media mondiale" },
-    "T6": { "title": "Esploratore", "description": "I luoghi sconosciuti non spaventano più" },
-    "T7": { "title": "Veterano", "description": "Viaggi come si pratica un mestiere" },
-    "T8": { "title": "Nomade", "description": "Muoversi ti viene più naturale che fermarti" },
-    "T9": { "title": "Cittadino del mondo", "description": "A casa in qualunque angolo del pianeta" },
-    "T10": { "title": "Collezionista del mondo", "description": "Collezioni il mondo — top 1%" },
-    "MASTER": { "title": "Maestro", "description": "Il viaggio in persona" },
-    "GRANDMASTER": { "title": "Gran Maestro", "description": "100 paesi — soglia del TCC" },
-    "LEGEND": { "title": "Leggenda", "description": "Passi che diventano leggenda" },
-    "UN_MASTER": { "title": "Maestro ONU", "description": "Hai raccolto tutte le bandiere del pianeta" }
-  },"errors": {
+    "T0": {
+      "title": "In partenza",
+      "description": "Nessuna traccia registrata ancora"
+    },
+    "T1": {
+      "title": "Stanziale",
+      "description": "Prima impronta nel paese di residenza"
+    },
+    "T2": {
+      "title": "Primo passo",
+      "description": "Primo passo oltre il confine"
+    },
+    "T3": {
+      "title": "Passeggiatore",
+      "description": "Esci dai vicoli familiari"
+    },
+    "T4": {
+      "title": "Viandante",
+      "description": "Il viaggio inizia a sembrare naturale"
+    },
+    "T5": {
+      "title": "Viaggiatore",
+      "description": "Sopra la media mondiale"
+    },
+    "T6": {
+      "title": "Esploratore",
+      "description": "I luoghi sconosciuti non spaventano più"
+    },
+    "T7": {
+      "title": "Veterano",
+      "description": "Viaggi come si pratica un mestiere"
+    },
+    "T8": {
+      "title": "Nomade",
+      "description": "Muoversi ti viene più naturale che fermarti"
+    },
+    "T9": {
+      "title": "Cittadino del mondo",
+      "description": "A casa in qualunque angolo del pianeta"
+    },
+    "T10": {
+      "title": "Collezionista del mondo",
+      "description": "Collezioni il mondo — top 1%"
+    },
+    "MASTER": {
+      "title": "Maestro",
+      "description": "Il viaggio in persona"
+    },
+    "GRANDMASTER": {
+      "title": "Gran Maestro",
+      "description": "100 paesi — soglia del TCC"
+    },
+    "LEGEND": {
+      "title": "Leggenda",
+      "description": "Passi che diventano leggenda"
+    },
+    "UN_MASTER": {
+      "title": "Maestro ONU",
+      "description": "Hai raccolto tutte le bandiere del pianeta"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "Per Google Sign-In serve la variabile EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.",
       "googleSignInCancelled": "Accesso con Google annullato.",
@@ -386,7 +432,20 @@
     },
     "login": {
       "title": "Iniziamo con TravelDot",
-      "subtitle": "Accedi per conservare i tuoi dati al sicuro su questo dispositivo"
+      "subtitle": "Accedi per conservare i tuoi dati al sicuro su questo dispositivo",
+      "dividerOr": "O",
+      "feature1": {
+        "title": "Registrazione automatica",
+        "desc": "Viaggi classificati per luogo e tempo"
+      },
+      "feature2": {
+        "title": "Mappa con un tap",
+        "desc": "Viaggio finito, mappa pronta"
+      },
+      "feature3": {
+        "title": "Solo sul dispositivo",
+        "desc": "Le foto restano sul tuo telefono"
+      }
     },
     "home": {
       "title": "Scegli il paese di residenza",

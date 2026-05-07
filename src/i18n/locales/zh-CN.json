@@ -184,22 +184,68 @@
     "searchPlaceholder": "搜索国家"
   },
   "tiers": {
-    "T0": { "title": "准备出发", "description": "还没有任何足迹" },
-    "T1": { "title": "定居者", "description": "在本国留下第一道足迹" },
-    "T2": { "title": "第一步", "description": "跨越国境的第一步" },
-    "T3": { "title": "漫步者", "description": "脚步开始走出熟悉的街道" },
-    "T4": { "title": "旅途新手", "description": "旅行渐渐变得熟悉" },
-    "T5": { "title": "旅行者", "description": "已超过全球平均水平" },
-    "T6": { "title": "探险者", "description": "陌生的地方已不再令人害怕" },
-    "T7": { "title": "老手", "description": "把旅行当作一门手艺" },
-    "T8": { "title": "游牧者", "description": "比定居更习惯于移动" },
-    "T9": { "title": "世界公民", "description": "把地球的任何角落都当成家" },
-    "T10": { "title": "世界收藏家", "description": "收藏世界的人 — 全球前 1%" },
-    "MASTER": { "title": "宗师", "description": "成为旅行本身的人" },
-    "GRANDMASTER": { "title": "大宗师", "description": "100 国的足迹 — TCC 入会门槛" },
-    "LEGEND": { "title": "传奇", "description": "留下足以成为传说的足迹" },
-    "UN_MASTER": { "title": "UN 宗师", "description": "集齐地球上所有国旗的人" }
-  },"errors": {
+    "T0": {
+      "title": "准备出发",
+      "description": "还没有任何足迹"
+    },
+    "T1": {
+      "title": "定居者",
+      "description": "在本国留下第一道足迹"
+    },
+    "T2": {
+      "title": "第一步",
+      "description": "跨越国境的第一步"
+    },
+    "T3": {
+      "title": "漫步者",
+      "description": "脚步开始走出熟悉的街道"
+    },
+    "T4": {
+      "title": "旅途新手",
+      "description": "旅行渐渐变得熟悉"
+    },
+    "T5": {
+      "title": "旅行者",
+      "description": "已超过全球平均水平"
+    },
+    "T6": {
+      "title": "探险者",
+      "description": "陌生的地方已不再令人害怕"
+    },
+    "T7": {
+      "title": "老手",
+      "description": "把旅行当作一门手艺"
+    },
+    "T8": {
+      "title": "游牧者",
+      "description": "比定居更习惯于移动"
+    },
+    "T9": {
+      "title": "世界公民",
+      "description": "把地球的任何角落都当成家"
+    },
+    "T10": {
+      "title": "世界收藏家",
+      "description": "收藏世界的人 — 全球前 1%"
+    },
+    "MASTER": {
+      "title": "宗师",
+      "description": "成为旅行本身的人"
+    },
+    "GRANDMASTER": {
+      "title": "大宗师",
+      "description": "100 国的足迹 — TCC 入会门槛"
+    },
+    "LEGEND": {
+      "title": "传奇",
+      "description": "留下足以成为传说的足迹"
+    },
+    "UN_MASTER": {
+      "title": "UN 宗师",
+      "description": "集齐地球上所有国旗的人"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "使用 Google 登录需要环境变量 EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID。",
       "googleSignInCancelled": "已取消 Google 登录。",
@@ -386,7 +432,20 @@
     },
     "login": {
       "title": "开始使用 TravelDot",
-      "subtitle": "请登录,以便将记录安全地保存在此设备上"
+      "subtitle": "请登录,以便将记录安全地保存在此设备上",
+      "dividerOr": "或",
+      "feature1": {
+        "title": "照片自动记录",
+        "desc": "按位置和时间自动分类行程"
+      },
+      "feature2": {
+        "title": "一键涂色地图",
+        "desc": "旅程结束,一键完成"
+      },
+      "feature3": {
+        "title": "仅保存在本机",
+        "desc": "照片不会上传到服务器"
+      }
     },
     "home": {
       "title": "请选择本国",

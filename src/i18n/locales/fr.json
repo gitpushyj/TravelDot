@@ -184,22 +184,68 @@
     "searchPlaceholder": "Rechercher un pays"
   },
   "tiers": {
-    "T0": { "title": "Préparation au voyage", "description": "Aucune trace enregistrée pour l'instant" },
-    "T1": { "title": "Sédentaire", "description": "Premières traces dans ton pays d'origine" },
-    "T2": { "title": "Premier pas", "description": "Premier pas au-delà de la frontière" },
-    "T3": { "title": "Promeneur", "description": "Tu sors des rues familières" },
-    "T4": { "title": "Coureur de chemins", "description": "Le voyage devient peu à peu familier" },
-    "T5": { "title": "Voyageur", "description": "Au-dessus de la moyenne mondiale" },
-    "T6": { "title": "Explorateur", "description": "Les lieux inconnus ne font plus peur" },
-    "T7": { "title": "Vétéran", "description": "Voyager comme un métier" },
-    "T8": { "title": "Nomade", "description": "Bouger te vient plus naturellement que t'installer" },
-    "T9": { "title": "Globe-trotter", "description": "Chez toi partout sur la planète" },
-    "T10": { "title": "Collectionneur du monde", "description": "Tu collectionnes le monde — top 1%" },
-    "MASTER": { "title": "Maître", "description": "Le voyage incarné" },
-    "GRANDMASTER": { "title": "Grand maître", "description": "100 pays — la barre d'entrée du TCC" },
-    "LEGEND": { "title": "Légende", "description": "Des pas qui deviennent légende" },
-    "UN_MASTER": { "title": "Maître de l'ONU", "description": "Tu as réuni tous les drapeaux de la planète" }
-  },"errors": {
+    "T0": {
+      "title": "Préparation au voyage",
+      "description": "Aucune trace enregistrée pour l'instant"
+    },
+    "T1": {
+      "title": "Sédentaire",
+      "description": "Premières traces dans ton pays d'origine"
+    },
+    "T2": {
+      "title": "Premier pas",
+      "description": "Premier pas au-delà de la frontière"
+    },
+    "T3": {
+      "title": "Promeneur",
+      "description": "Tu sors des rues familières"
+    },
+    "T4": {
+      "title": "Coureur de chemins",
+      "description": "Le voyage devient peu à peu familier"
+    },
+    "T5": {
+      "title": "Voyageur",
+      "description": "Au-dessus de la moyenne mondiale"
+    },
+    "T6": {
+      "title": "Explorateur",
+      "description": "Les lieux inconnus ne font plus peur"
+    },
+    "T7": {
+      "title": "Vétéran",
+      "description": "Voyager comme un métier"
+    },
+    "T8": {
+      "title": "Nomade",
+      "description": "Bouger te vient plus naturellement que t'installer"
+    },
+    "T9": {
+      "title": "Globe-trotter",
+      "description": "Chez toi partout sur la planète"
+    },
+    "T10": {
+      "title": "Collectionneur du monde",
+      "description": "Tu collectionnes le monde — top 1%"
+    },
+    "MASTER": {
+      "title": "Maître",
+      "description": "Le voyage incarné"
+    },
+    "GRANDMASTER": {
+      "title": "Grand maître",
+      "description": "100 pays — la barre d'entrée du TCC"
+    },
+    "LEGEND": {
+      "title": "Légende",
+      "description": "Des pas qui deviennent légende"
+    },
+    "UN_MASTER": {
+      "title": "Maître de l'ONU",
+      "description": "Tu as réuni tous les drapeaux de la planète"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "Google Sign-In nécessite la variable EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.",
       "googleSignInCancelled": "La connexion Google a été annulée.",
@@ -386,7 +432,20 @@
     },
     "login": {
       "title": "Bienvenue sur TravelDot",
-      "subtitle": "Connecte-toi pour conserver tes enregistrements en sécurité sur cet appareil"
+      "subtitle": "Connecte-toi pour conserver tes enregistrements en sécurité sur cet appareil",
+      "dividerOr": "OU",
+      "feature1": {
+        "title": "Détection automatique",
+        "desc": "Voyages classés par lieu et date"
+      },
+      "feature2": {
+        "title": "Carte en un tap",
+        "desc": "Voyage fini, carte coloriée"
+      },
+      "feature3": {
+        "title": "Stocké en local",
+        "desc": "Tes photos restent sur ton appareil"
+      }
     },
     "home": {
       "title": "Choisis ton pays d'origine",

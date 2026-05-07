@@ -184,22 +184,68 @@
     "searchPlaceholder": "Land suchen"
   },
   "tiers": {
-    "T0": { "title": "Bereit zum Aufbruch", "description": "Noch keine Spuren gesetzt" },
-    "T1": { "title": "Sesshaft", "description": "Erste Spur im Heimatland" },
-    "T2": { "title": "Erster Schritt", "description": "Erster Schritt über die Grenze" },
-    "T3": { "title": "Spaziergänger", "description": "Geht über vertraute Straßen hinaus" },
-    "T4": { "title": "Wegbereiter", "description": "Reisen wird allmählich vertraut" },
-    "T5": { "title": "Reisender", "description": "Über dem globalen Durchschnitt" },
-    "T6": { "title": "Entdecker", "description": "Fremde Orte schrecken nicht mehr" },
-    "T7": { "title": "Veteran", "description": "Reisen wie ein Handwerk" },
-    "T8": { "title": "Nomade", "description": "Bewegung ist natürlicher als Sesshaftigkeit" },
-    "T9": { "title": "Weltbürger", "description": "Überall auf der Welt zu Hause" },
-    "T10": { "title": "Weltsammler", "description": "Sammelt die Welt — Top 1%" },
-    "MASTER": { "title": "Meister", "description": "Das Reisen selbst, in Person" },
-    "GRANDMASTER": { "title": "Großmeister", "description": "100 Länder — Eintritt in den TCC" },
-    "LEGEND": { "title": "Legende", "description": "Spuren, die zur Legende werden" },
-    "UN_MASTER": { "title": "UN-Meister", "description": "Jede Flagge der Erde gesammelt" }
-  },"errors": {
+    "T0": {
+      "title": "Bereit zum Aufbruch",
+      "description": "Noch keine Spuren gesetzt"
+    },
+    "T1": {
+      "title": "Sesshaft",
+      "description": "Erste Spur im Heimatland"
+    },
+    "T2": {
+      "title": "Erster Schritt",
+      "description": "Erster Schritt über die Grenze"
+    },
+    "T3": {
+      "title": "Spaziergänger",
+      "description": "Geht über vertraute Straßen hinaus"
+    },
+    "T4": {
+      "title": "Wegbereiter",
+      "description": "Reisen wird allmählich vertraut"
+    },
+    "T5": {
+      "title": "Reisender",
+      "description": "Über dem globalen Durchschnitt"
+    },
+    "T6": {
+      "title": "Entdecker",
+      "description": "Fremde Orte schrecken nicht mehr"
+    },
+    "T7": {
+      "title": "Veteran",
+      "description": "Reisen wie ein Handwerk"
+    },
+    "T8": {
+      "title": "Nomade",
+      "description": "Bewegung ist natürlicher als Sesshaftigkeit"
+    },
+    "T9": {
+      "title": "Weltbürger",
+      "description": "Überall auf der Welt zu Hause"
+    },
+    "T10": {
+      "title": "Weltsammler",
+      "description": "Sammelt die Welt — Top 1%"
+    },
+    "MASTER": {
+      "title": "Meister",
+      "description": "Das Reisen selbst, in Person"
+    },
+    "GRANDMASTER": {
+      "title": "Großmeister",
+      "description": "100 Länder — Eintritt in den TCC"
+    },
+    "LEGEND": {
+      "title": "Legende",
+      "description": "Spuren, die zur Legende werden"
+    },
+    "UN_MASTER": {
+      "title": "UN-Meister",
+      "description": "Jede Flagge der Erde gesammelt"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "Für Google Sign-In wird die Variable EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID benötigt.",
       "googleSignInCancelled": "Die Google-Anmeldung wurde abgebrochen.",
@@ -386,7 +432,20 @@
     },
     "login": {
       "title": "Mit TravelDot starten",
-      "subtitle": "Melde dich an, damit deine Aufzeichnungen sicher auf diesem Gerät bleiben"
+      "subtitle": "Melde dich an, damit deine Aufzeichnungen sicher auf diesem Gerät bleiben",
+      "dividerOr": "ODER",
+      "feature1": {
+        "title": "Automatisch aus Fotos",
+        "desc": "Reisen nach Ort und Zeit sortiert"
+      },
+      "feature2": {
+        "title": "Karte mit einem Tap",
+        "desc": "Reise fertig, Karte fertig"
+      },
+      "feature3": {
+        "title": "Nur auf dem Gerät",
+        "desc": "Fotos verlassen dein Gerät nicht"
+      }
     },
     "home": {
       "title": "Wähle dein Heimatland",

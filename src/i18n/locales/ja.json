@@ -184,22 +184,68 @@
     "searchPlaceholder": "国を検索"
   },
   "tiers": {
-    "T0": { "title": "旅の準備中", "description": "まだ記録された足跡がない" },
-    "T1": { "title": "定住者", "description": "母国に最初の足跡を残した人" },
-    "T2": { "title": "最初の一歩", "description": "国境を越えた最初の一歩" },
-    "T3": { "title": "散策者", "description": "近場を超えて足を伸ばし始めた" },
-    "T4": { "title": "旅人見習い", "description": "旅が少しずつ身についてきた" },
-    "T5": { "title": "旅人", "description": "世界平均を超える旅好き" },
-    "T6": { "title": "探検家", "description": "見知らぬ場所がもう怖くない" },
-    "T7": { "title": "ベテラン", "description": "旅をひとつの仕事のように扱う" },
-    "T8": { "title": "ノマド", "description": "定住より移動が自然な人" },
-    "T9": { "title": "世界市民", "description": "地球上のどこでも我が家のよう" },
-    "T10": { "title": "ワールドコレクター", "description": "世界を集める人 — 上位1%" },
-    "MASTER": { "title": "マスター", "description": "旅そのものを体現する人" },
-    "GRANDMASTER": { "title": "グランドマスター", "description": "100カ国の足跡 — TCC入会ライン" },
-    "LEGEND": { "title": "レジェンド", "description": "伝説として語り継がれる足跡" },
-    "UN_MASTER": { "title": "UNマスター", "description": "地球上すべての国旗を集めた人" }
-  },"errors": {
+    "T0": {
+      "title": "旅の準備中",
+      "description": "まだ記録された足跡がない"
+    },
+    "T1": {
+      "title": "定住者",
+      "description": "母国に最初の足跡を残した人"
+    },
+    "T2": {
+      "title": "最初の一歩",
+      "description": "国境を越えた最初の一歩"
+    },
+    "T3": {
+      "title": "散策者",
+      "description": "近場を超えて足を伸ばし始めた"
+    },
+    "T4": {
+      "title": "旅人見習い",
+      "description": "旅が少しずつ身についてきた"
+    },
+    "T5": {
+      "title": "旅人",
+      "description": "世界平均を超える旅好き"
+    },
+    "T6": {
+      "title": "探検家",
+      "description": "見知らぬ場所がもう怖くない"
+    },
+    "T7": {
+      "title": "ベテラン",
+      "description": "旅をひとつの仕事のように扱う"
+    },
+    "T8": {
+      "title": "ノマド",
+      "description": "定住より移動が自然な人"
+    },
+    "T9": {
+      "title": "世界市民",
+      "description": "地球上のどこでも我が家のよう"
+    },
+    "T10": {
+      "title": "ワールドコレクター",
+      "description": "世界を集める人 — 上位1%"
+    },
+    "MASTER": {
+      "title": "マスター",
+      "description": "旅そのものを体現する人"
+    },
+    "GRANDMASTER": {
+      "title": "グランドマスター",
+      "description": "100カ国の足跡 — TCC入会ライン"
+    },
+    "LEGEND": {
+      "title": "レジェンド",
+      "description": "伝説として語り継がれる足跡"
+    },
+    "UN_MASTER": {
+      "title": "UNマスター",
+      "description": "地球上すべての国旗を集めた人"
+    }
+  },
+  "errors": {
     "auth": {
       "missingClientId": "Googleログインを使うには EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID 環境変数が必要です。",
       "googleSignInCancelled": "Googleログインがキャンセルされました。",
@@ -386,7 +432,20 @@
     },
     "login": {
       "title": "TravelDotをはじめましょう",
-      "subtitle": "記録をこの端末に安全に保存するため、ログインしてください"
+      "subtitle": "記録をこの端末に安全に保存するため、ログインしてください",
+      "dividerOr": "または",
+      "feature1": {
+        "title": "写真から自動記録",
+        "desc": "場所と時間で旅程を自動分類します"
+      },
+      "feature2": {
+        "title": "ワンタップで地図塗り",
+        "desc": "旅行が終われば、ボタン1つでOK"
+      },
+      "feature3": {
+        "title": "端末にのみ保存",
+        "desc": "写真はサーバーに送られません"
+      }
     },
     "home": {
       "title": "母国を選んでください",
