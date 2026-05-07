@@ -27,6 +27,11 @@ export function makeStyles(theme: Theme) {
       fontSize: 15,
       fontWeight: "600",
     },
+    quickLink: {
+      color: theme.accent,
+      fontSize: 14,
+      fontWeight: "600",
+    },
     content: {
       paddingHorizontal: 20,
       paddingTop: 8,

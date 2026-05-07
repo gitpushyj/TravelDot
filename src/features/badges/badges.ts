@@ -102,9 +102,13 @@ function dayBadge(t: { threshold: number; titleKo: string; titleEn: string; rank
   };
 }
 
-function continentBadge(continent: ContinentId, kind: "wanderer" | "conqueror"): BadgeDefinition {
+function continentBadge(
+  continent: ContinentId,
+  kind: "initiate" | "wanderer" | "conqueror"
+): BadgeDefinition {
   const def = continentDefinition(continent);
   if (continent === "AN") {
+    // 남극: 입문 단계 미적용 — 기존 pioneer 호칭 그대로 emit.
     return {
       id: `continent_AN_pioneer`,
       category: "continent",
@@ -113,6 +117,17 @@ function continentBadge(continent: ContinentId, kind: "wanderer" | "conqueror"):
       description: "지구 최남단까지 발자취를 남긴 사람",
       emoji: "🐧",
       rank: 30,
+    };
+  }
+  if (kind === "initiate") {
+    return {
+      id: `continent_${continent}_initiate`,
+      category: "continent",
+      titleKo: `${def.nameKo} 여행자`,
+      titleEn: `${def.nameEn} Traveler`,
+      description: `${def.nameKo}에서 ${def.initiate}개국 이상 방문`,
+      emoji: emojiForContinent(continent),
+      rank: 18,
     };
   }
   if (kind === "wanderer") {
@@ -216,7 +231,7 @@ export function evaluateBadges(
       if (n >= 1) out.push(continentBadge("AN", "conqueror"));
       continue;
     }
-    // 두 단계를 모두 도달하면 둘 다 unlocked. 사용자가 둘 중 하나를 선택해 표시.
+    if (n >= cont.initiate) out.push(continentBadge(cont.id, "initiate"));
     if (n >= cont.wanderer) out.push(continentBadge(cont.id, "wanderer"));
     if (n >= cont.conqueror) out.push(continentBadge(cont.id, "conqueror"));
   }
@@ -264,9 +279,12 @@ export function badgeFromId(
   if (id.startsWith("continent_")) {
     const rest = id.slice(10);
     if (rest === "AN_pioneer") return continentBadge("AN", "conqueror");
-    const m = rest.match(/^([A-Z]{2})_(wanderer|conqueror)$/);
+    const m = rest.match(/^([A-Z]{2})_(initiate|wanderer|conqueror)$/);
     if (!m) return null;
-    return continentBadge(m[1] as ContinentId, m[2] as "wanderer" | "conqueror");
+    return continentBadge(
+      m[1] as ContinentId,
+      m[2] as "initiate" | "wanderer" | "conqueror"
+    );
   }
   if (id.startsWith("country_")) {
     const m = id.match(/^country_([A-Z]{2})_d(\d+)$/);
@@ -299,6 +317,7 @@ export function getStaticBadgeCatalog(): BadgeDefinition[] {
     if (cont.id === "AN") {
       out.push(continentBadge("AN", "conqueror"));
     } else {
+      out.push(continentBadge(cont.id, "initiate"));
       out.push(continentBadge(cont.id, "wanderer"));
       out.push(continentBadge(cont.id, "conqueror"));
     }

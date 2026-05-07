@@ -65,15 +65,18 @@ export function localizedBadgeTitle(
     });
   }
   const continentMatch = badge.id.match(
-    /^continent_([A-Z]{2})_(wanderer|conqueror)$/
+    /^continent_([A-Z]{2})_(initiate|wanderer|conqueror)$/
   );
   if (continentMatch) {
     const continentId = continentMatch[1] as ContinentId;
     const continent = localizedContinentName(continentId, t);
+    const stage = continentMatch[2] as "initiate" | "wanderer" | "conqueror";
     const key =
-      continentMatch[2] === "wanderer"
-        ? "badges.continent.wandererTitle"
-        : "badges.continent.conquerorTitle";
+      stage === "initiate"
+        ? "badges.continent.initiateTitle"
+        : stage === "wanderer"
+          ? "badges.continent.wandererTitle"
+          : "badges.continent.conquerorTitle";
     return t(key, { continent, defaultValue: badge.titleKo });
   }
   const countryMatch = badge.id.match(/^country_([A-Z]{2})_d(\d+)$/);
@@ -124,18 +127,25 @@ export function localizedBadgeDescription(
     });
   }
   const continentMatch = badge.id.match(
-    /^continent_([A-Z]{2})_(wanderer|conqueror)$/
+    /^continent_([A-Z]{2})_(initiate|wanderer|conqueror)$/
   );
   if (continentMatch) {
     const continentId = continentMatch[1] as ContinentId;
     const continent = localizedContinentName(continentId, t);
     const def = CONTINENTS.find((c) => c.id === continentId);
+    const stage = continentMatch[2] as "initiate" | "wanderer" | "conqueror";
     const count =
-      continentMatch[2] === "wanderer" ? def?.wanderer : def?.conqueror;
+      stage === "initiate"
+        ? def?.initiate
+        : stage === "wanderer"
+          ? def?.wanderer
+          : def?.conqueror;
     const key =
-      continentMatch[2] === "wanderer"
-        ? "badges.continent.wandererDescription"
-        : "badges.continent.conquerorDescription";
+      stage === "initiate"
+        ? "badges.continent.initiateDescription"
+        : stage === "wanderer"
+          ? "badges.continent.wandererDescription"
+          : "badges.continent.conquerorDescription";
     return t(key, {
       continent,
       count: count ?? 0,

@@ -1,0 +1,49 @@
+// src/features/milestone/milestoneTypes.ts
+// 사용자가 홈 화면에서 추적할 "목표 마일스톤" 도메인 타입.
+// 종류는 7개 — 국가 수 / 누적 일수 / 5개 대륙 전문가.
+// 호칭(Badge) 시스템과 독립적으로 진행률만 다룬다.
+
+export type ContinentMilestoneId =
+  | "continent_AS"
+  | "continent_EU"
+  | "continent_SA"
+  | "continent_AF"
+  | "continent_NA";
+
+export type MilestoneKind = "countries" | "days" | ContinentMilestoneId;
+
+export const ALL_MILESTONE_KINDS: readonly MilestoneKind[] = [
+  "countries",
+  "days",
+  "continent_AS",
+  "continent_EU",
+  "continent_SA",
+  "continent_AF",
+  "continent_NA",
+];
+
+export const DEFAULT_MILESTONE_KIND: MilestoneKind = "countries";
+
+/** UI에서 진행률·다음 단계를 그리기 위한 평가 결과 */
+export type MilestoneProgress = {
+  kind: MilestoneKind;
+  /** 현재 값 (방문 국가 수 / 누적 일수 / 해당 대륙 방문 국가 수) */
+  current: number;
+  /** 다음 단계 컷오프. 최종 단계 도달 시 null */
+  next: number | null;
+  /** 다음 단계에서 부여될 호칭의 BadgeId. 최종 단계면 null */
+  nextTitleBadgeId: string | null;
+  /** 진행률 0~100. 최종 단계는 100 고정 */
+  percent: number;
+  /** true면 최종 단계 도달 — UI는 "최고 단계 달성" 표시 */
+  reachedFinal: boolean;
+  /** 푸터 라벨 단위 분기용 */
+  unit: "countries" | "days";
+};
+
+export function isMilestoneKind(value: unknown): value is MilestoneKind {
+  return (
+    typeof value === "string" &&
+    (ALL_MILESTONE_KINDS as readonly string[]).includes(value)
+  );
+}

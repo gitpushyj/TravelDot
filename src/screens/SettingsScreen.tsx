@@ -7,6 +7,8 @@ import { deleteAccount } from "../features/auth/deleteAccount";
 import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
+import { evaluateMilestone } from "../features/milestone/milestoneEvaluator";
+import { useMilestoneStore } from "../features/milestone/milestoneStore";
 import {
   runFullSync,
   runIncrementalSync,
@@ -29,6 +31,7 @@ type Props = {
   onClose: () => void;
   onAddTrip: () => void;
   onOpenTitles: () => void;
+  onOpenMilestones: () => void;
   onChangeHome: () => void;
   onReviewSuspect: () => void;
   onOpenLanguage: () => void;
@@ -40,6 +43,7 @@ export default function SettingsScreen({
   onClose,
   onAddTrip,
   onOpenTitles,
+  onOpenMilestones,
   onChangeHome,
   onReviewSuspect,
   onOpenLanguage,
@@ -153,6 +157,25 @@ export default function SettingsScreen({
         })
     : t("settings.title.none");
 
+  const milestoneKind = useMilestoneStore((s) => s.kind);
+  const milestoneProgress = useMemo(
+    () => evaluateMilestone(milestoneKind, visitCounts),
+    [milestoneKind, visitCounts]
+  );
+  const milestoneSub = milestoneProgress.reachedFinal
+    ? t("settings.milestone.previewCompleted", {
+        name: t(`milestones.option.${milestoneKind}`),
+      })
+    : t("settings.milestone.previewProgress", {
+        name: t(`milestones.option.${milestoneKind}`),
+        current: milestoneProgress.current,
+        next: milestoneProgress.next,
+        unit:
+          milestoneProgress.unit === "days"
+            ? t("home.daysUnit")
+            : t("home.countriesUnit"),
+      });
+
   const currentLocale = (
     (SUPPORTED_LOCALES as readonly string[]).includes(i18n.language)
       ? i18n.language
@@ -206,6 +229,18 @@ export default function SettingsScreen({
             label={t("settings.title.label")}
             sub={titleSub}
             onPress={onOpenTitles}
+          />
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          {t("settings.section.milestone")}
+        </Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label={t("settings.milestone.label")}
+            sub={milestoneSub}
+            onPress={onOpenMilestones}
           />
         </View>
 

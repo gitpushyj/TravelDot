@@ -144,7 +144,25 @@
     "autoActive": "사용 중",
     "autoSet": "자동으로",
     "noCountryHint": "한 국가에서 30일 이상 머무르면 단골 호칭이 잠금 해제됩니다.",
-    "noneToShow": "표시할 호칭이 없어요."
+    "noneToShow": "표시할 호칭이 없어요.",
+    "gotoMilestones": "마일스톤"
+  },
+  "milestones": {
+    "heading": "목표 마일스톤",
+    "gotoTitles": "호칭",
+    "option": {
+      "countries": "국가 수",
+      "days": "누적 일수",
+      "continent_AS": "아시아 전문가",
+      "continent_EU": "유럽 전문가",
+      "continent_SA": "남미 전문가",
+      "continent_AF": "아프리카 전문가",
+      "continent_NA": "북미 전문가"
+    },
+    "preview": {
+      "progress": "{{current}} / {{next}}{{unit}}",
+      "completed": "달성"
+    }
   },
   "reviewSuspect": {
     "heading": "여행 확인하기",
@@ -228,8 +246,11 @@
     "visitedDays": "{{days}}일 방문",
     "isHome": "본국",
     "statTitle": "방문 국가",
-    "nextMilestone": "다음 마일스톤",
-    "milestoneCountries": "{{count}}개국",
+    "milestoneFooter": {
+      "countries": "다음 호칭 획득까지 {{count}}개국",
+      "days": "다음 호칭 획득까지 {{count}}일",
+      "completed": "최고 단계 달성 🎉"
+    },
     "recentTitle": "최근 방문",
     "viewAll": "전체보기 →",
     "viewAllCountries": "모든 나라 보기",
@@ -295,6 +316,8 @@
         "OC": "오세아니아",
         "AN": "남극"
       },
+      "initiateTitle": "{{continent}} 여행자",
+      "initiateDescription": "{{continent}}에서 {{count}}개국 이상 방문",
       "wandererTitle": "{{continent}} 탐방가",
       "conquerorTitle": "{{continent}} 정복자",
       "wandererDescription": "{{continent}}에서 {{count}}개국 이상 방문",
@@ -321,6 +344,7 @@
       "home": "본국",
       "trips": "여행 기록",
       "title": "호칭",
+      "milestone": "목표 마일스톤",
       "theme": "테마",
       "language": "언어",
       "dev": "개발자"
@@ -362,6 +386,11 @@
       "preview": "{{emoji}} {{title}}",
       "previewAuto": "{{emoji}} {{title}} · 자동",
       "none": "호칭 없음"
+    },
+    "milestone": {
+      "label": "목표 마일스톤",
+      "previewProgress": "현재: {{name}} ({{current}} / {{next}}{{unit}})",
+      "previewCompleted": "현재: {{name}} (달성)"
     },
     "theme": {
       "system": "시스템",
