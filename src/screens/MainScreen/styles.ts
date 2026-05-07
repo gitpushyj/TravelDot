@@ -245,16 +245,16 @@ export function makeStyles(theme: Theme) {
     statBigRow: {
       flexDirection: "row",
       alignItems: "baseline",
-      marginTop: 4,
+      marginTop: 6,
     },
     statBigNum: {
       color: theme.textPrimary,
-      fontSize: 30,
-      fontWeight: "800",
+      fontSize: 16,
+      fontWeight: "700",
     },
     statBigDenom: {
       color: theme.textMuted,
-      fontSize: 14,
+      fontSize: 13,
       fontWeight: "600",
     },
     statBigPercent: {
@@ -263,15 +263,15 @@ export function makeStyles(theme: Theme) {
       fontWeight: "700",
     },
     progressTrack: {
-      height: 6,
-      borderRadius: 3,
+      height: 10,
+      borderRadius: 5,
       backgroundColor: theme.tabRowBg,
       overflow: "hidden",
       marginTop: 8,
     },
     progressFill: {
       height: "100%",
-      borderRadius: 3,
+      borderRadius: 5,
       backgroundColor: theme.accent,
     },
     statFooter: {
