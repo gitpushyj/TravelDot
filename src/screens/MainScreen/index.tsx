@@ -144,14 +144,14 @@ export default function MainScreen({
     mapHandleHintShown = true;
     // 인트로(500ms 지연 + 3000ms 줌아웃 = 3500ms)가 끝나는 시점에 펄스가 시작되도록.
     const startDelay = 3500;
-    // 한 사이클 670ms = (335ms 늘어남) + (335ms 되돌아옴).
-    const halfCycle = 335;
+    // 3회 반복 총 시간 1600ms 이내(266 * 2 * 3 = 1596ms).
+    const halfCycle = 266;
     const cycles = 3;
     hintScaleX.value = withDelay(
       startDelay,
       withRepeat(
         withSequence(
-          withTiming(1.4, { duration: halfCycle }),
+          withTiming(1.3, { duration: halfCycle }),
           withTiming(1, { duration: halfCycle })
         ),
         cycles,
@@ -173,7 +173,7 @@ export default function MainScreen({
       startDelay,
       withRepeat(
         withSequence(
-          withTiming(5, { duration: halfCycle }),
+          withTiming(4, { duration: halfCycle }),
           withTiming(0, { duration: halfCycle })
         ),
         cycles,
