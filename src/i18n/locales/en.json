@@ -148,7 +148,7 @@
     "gotoMilestones": "Milestones"
   },
   "milestones": {
-    "heading": "Goal Milestone",
+    "heading": "Featured Milestone",
     "gotoTitles": "Titles",
     "option": {
       "countries": "Country count",
@@ -162,7 +162,13 @@
     "preview": {
       "progress": "{{current}} / {{next}}{{unit}}",
       "completed": "Done"
-    }
+    },
+    "activeNext": {
+      "countries": "Visit {{count}} countries to earn the {{title}} title",
+      "days": "Travel for {{count}} days to earn the {{title}} title",
+      "completed": "Top tier reached — all titles unlocked"
+    },
+    "footnote": "All milestones unlock automatically when their conditions are met. The selected milestone is shown as your featured one on the home screen."
   },
   "reviewSuspect": {
     "heading": "Review trips",
@@ -342,7 +348,7 @@
       "home": "Home Country",
       "trips": "Trip Records",
       "title": "Title",
-      "milestone": "Goal Milestone",
+      "milestone": "Featured Milestone",
       "theme": "Theme",
       "language": "Language",
       "dev": "Developer"
@@ -381,7 +387,7 @@
       "none": "No title"
     },
     "milestone": {
-      "label": "Goal milestone",
+      "label": "Featured milestone",
       "previewProgress": "Current: {{name}} ({{current}} / {{next}}{{unit}})",
       "previewCompleted": "Current: {{name}} (done)"
     },

@@ -148,7 +148,7 @@
     "gotoMilestones": "마일스톤"
   },
   "milestones": {
-    "heading": "목표 마일스톤",
+    "heading": "대표 마일스톤",
     "gotoTitles": "호칭",
     "option": {
       "countries": "국가 수",
@@ -162,7 +162,13 @@
     "preview": {
       "progress": "{{current}} / {{next}}{{unit}}",
       "completed": "달성"
-    }
+    },
+    "activeNext": {
+      "countries": "{{count}}개국을 여행하면 {{title}} 호칭을 얻습니다",
+      "days": "{{count}}일을 여행하면 {{title}} 호칭을 얻습니다",
+      "completed": "최고 단계 달성! 모든 호칭을 얻었어요"
+    },
+    "footnote": "모든 목표 마일스톤은 조건이 충족되면 자동으로 달성됩니다. 선택한 마일스톤은 홈 화면에 보일 대표 마일스톤이 됩니다."
   },
   "reviewSuspect": {
     "heading": "여행 확인하기",
@@ -342,7 +348,7 @@
       "home": "본국",
       "trips": "여행 기록",
       "title": "호칭",
-      "milestone": "목표 마일스톤",
+      "milestone": "대표 마일스톤",
       "theme": "테마",
       "language": "언어",
       "dev": "개발자"
@@ -381,7 +387,7 @@
       "none": "호칭 없음"
     },
     "milestone": {
-      "label": "목표 마일스톤",
+      "label": "대표 마일스톤",
       "previewProgress": "현재: {{name}} ({{current}} / {{next}}{{unit}})",
       "previewCompleted": "현재: {{name}} (달성)"
     },

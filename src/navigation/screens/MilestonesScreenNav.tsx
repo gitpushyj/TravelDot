@@ -14,7 +14,8 @@ export default function MilestonesScreenNav({
       <StatusBar style={theme.statusBar} />
       <MilestonesScreen
         onClose={() => navigation.goBack()}
-        onOpenTitles={() => navigation.navigate("Titles")}
+        // 마일스톤 ↔ 호칭 사이는 백스택을 쌓지 않고 항상 단일 슬롯에서 교체.
+        onOpenTitles={() => navigation.replace("Titles")}
       />
     </>
   );

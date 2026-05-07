@@ -12,6 +12,8 @@ type Props = {
   label: string;
   progress: MilestoneProgress;
   active: boolean;
+  /** 활성 row 아래에 펼쳐 보여줄 다음 호칭 안내. null이면 노출 안 함 */
+  activeDescription: string | null;
   onPress: () => void;
 };
 
@@ -20,6 +22,7 @@ export default function MilestoneRow({
   label,
   progress,
   active,
+  activeDescription,
   onPress,
 }: Props) {
   const { t } = useTranslation();
@@ -45,20 +48,32 @@ export default function MilestoneRow({
         pressed && !active && { opacity: 0.85 },
       ]}
     >
-      <View style={[styles.radio, active && styles.radioActive]}>
-        {active ? <View style={styles.radioDot} /> : null}
+      <View style={styles.rowTopLine}>
+        <View style={[styles.radio, active && styles.radioActive]}>
+          {active ? <View style={styles.radioDot} /> : null}
+        </View>
+        <View style={styles.rowMain}>
+          <Text style={styles.rowLabel}>{label}</Text>
+        </View>
+        <Text
+          style={[
+            styles.rowProgress,
+            progress.reachedFinal && styles.rowProgressDone,
+          ]}
+        >
+          {progressText}
+        </Text>
       </View>
-      <View style={styles.rowMain}>
-        <Text style={styles.rowLabel}>{label}</Text>
-      </View>
-      <Text
-        style={[
-          styles.rowProgress,
-          progress.reachedFinal && styles.rowProgressDone,
-        ]}
-      >
-        {progressText}
-      </Text>
+      {active && activeDescription ? (
+        <Text
+          style={[
+            styles.rowDescription,
+            progress.reachedFinal && styles.rowDescriptionDone,
+          ]}
+        >
+          {activeDescription}
+        </Text>
+      ) : null}
     </Pressable>
   );
 }
