@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -14,6 +14,7 @@ import {
 } from "../features/travel/visitRepository";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
+import type { ImageDetailPhoto } from "../navigation/types";
 import { useTheme } from "../theme/themeStore";
 import { colorForCountry } from "../utils/countryColors";
 import { flagEmoji } from "../utils/flag";
@@ -30,6 +31,12 @@ type Props = {
   trip: RecentTrip;
   onClose: () => void;
   onEdit: () => void;
+  onSelectPhoto: (args: {
+    photos: ImageDetailPhoto[];
+    initialIndex: number;
+    title: string;
+    flag: string;
+  }) => void;
 };
 
 type DisplayPhoto = {
@@ -41,7 +48,12 @@ type DisplayPhoto = {
 
 const PREVIEW_PHOTO_COUNT = 5;
 
-export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
+export default function TripDetailScreen({
+  trip,
+  onClose,
+  onEdit,
+  onSelectPhoto,
+}: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -155,7 +167,12 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
   // 그리드 뷰: DB 저장 사진을 앞쪽에 두고, 디바이스 사진은 그 뒤에 takenAt DESC로
   // 이어 붙인다. 같은 자산은 asset id로 중복 제거.
   const allPhotos = useMemo(() => {
-    const result: { key: string; uri: string; takenAt: number }[] = [];
+    const result: {
+      key: string;
+      uri: string;
+      takenAt: number;
+      date: string;
+    }[] = [];
     const seenIds = new Set<string>();
     if (savedPhotos) {
       for (const p of savedPhotos) {
@@ -164,6 +181,7 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
           key: `db:${p.id}`,
           uri: p.localUri,
           takenAt: p.takenAt,
+          date: p.date,
         });
         seenIds.add(p.id);
       }
@@ -171,12 +189,39 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
     if (devicePhotos) {
       for (const p of devicePhotos) {
         if (seenIds.has(p.id)) continue;
-        result.push({ key: `dev:${p.id}`, uri: p.uri, takenAt: p.takenAt });
+        result.push({
+          key: `dev:${p.id}`,
+          uri: p.uri,
+          takenAt: p.takenAt,
+          date: p.date,
+        });
         seenIds.add(p.id);
       }
     }
     return result;
   }, [savedPhotos, devicePhotos]);
+
+  const openImageDetail = useCallback(
+    (initialIndex: number) => {
+      if (allPhotos.length === 0) return;
+      const photos: ImageDetailPhoto[] = allPhotos.map((p) => ({
+        key: p.key,
+        uri: p.uri,
+        date: p.date,
+      }));
+      const safeIndex = Math.max(
+        0,
+        Math.min(initialIndex, photos.length - 1)
+      );
+      onSelectPhoto({
+        photos,
+        initialIndex: safeIndex,
+        title: koName,
+        flag,
+      });
+    },
+    [allPhotos, koName, flag, onSelectPhoto]
+  );
 
   // hero 배지·"전체보기 (N)" 모두 grid에 실제로 표시되는 사진 수와 동일해야
   // 일관된다. 디바이스 스캔이 아직 진행 중일 땐 null로 두고 "—"로 표시.
@@ -192,6 +237,7 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
         flag={flag}
         styles={styles}
         onBack={() => setView("detail")}
+        onSelectPhoto={openImageDetail}
       />
     );
   }
@@ -284,7 +330,11 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
             contentContainerStyle={styles.photoRow}
           >
             {previewPhotos.map((p, idx) => (
-              <View key={p.key} style={styles.photoCard}>
+              <Pressable
+                key={p.key}
+                onPress={() => openImageDetail(idx)}
+                style={styles.photoCard}
+              >
                 <Image source={{ uri: p.uri }} style={styles.photoImage} />
                 <View style={styles.photoIndex}>
                   <Text style={styles.photoIndexText}>
@@ -296,7 +346,7 @@ export default function TripDetailScreen({ trip, onClose, onEdit }: Props) {
                     {formatDateShortDot(p.date)}
                   </Text>
                 </View>
-              </View>
+              </Pressable>
             ))}
           </ScrollView>
         )}
