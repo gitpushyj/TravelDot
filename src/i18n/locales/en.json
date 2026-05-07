@@ -438,6 +438,7 @@
     "birth": {
       "title": "Tell us your date of birth",
       "subtitle": "We use it to refine your travel stats and recommendations.",
+      "cardLabel": "Date of birth",
       "year": "Year",
       "month": "Month",
       "day": "Day",

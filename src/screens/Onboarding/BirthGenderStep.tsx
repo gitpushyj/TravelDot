@@ -6,14 +6,17 @@ import {
   View,
 } from "react-native";
 import { useTranslation } from "react-i18next";
+import Svg, { Circle, Path, Rect } from "react-native-svg";
 
-import WheelPicker, { WheelItem } from "../../components/WheelPicker";
+import { WheelItem } from "../../components/WheelPicker";
 import {
   Gender,
   useProfileStore,
 } from "../../features/onboarding/profileStore";
 import { useTheme } from "../../theme/themeStore";
 
+import BirthDateCard from "./BirthDateCard";
+import GenderCard from "./GenderCard";
 import { makeOnboardingStyles } from "./styles";
 
 type Props = { onNext: () => void };
@@ -26,8 +29,6 @@ const MAX_YEAR = CURRENT_YEAR - 14;
 const DEFAULT_YEAR = 1990;
 const DEFAULT_MONTH = 1;
 const DEFAULT_DAY = 1;
-
-const GENDERS: Gender[] = ["male", "female", "other", "prefer_not_to_say"];
 
 function pad2(n: number): string {
   return n < 10 ? `0${n}` : `${n}`;
@@ -106,68 +107,32 @@ export default function BirthGenderStep({ onNext }: Props) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.bodyHeader}>
-        <Text style={styles.title}>{t("onboarding.birth.title")}</Text>
-        <Text style={styles.subtitle}>{t("onboarding.birth.subtitle")}</Text>
-      </View>
+      <View style={local.body}>
+        <View style={local.header}>
+          <CalendarBadge color={theme.accent} bgColor={theme.accentSoftBg} />
+          <Text style={[styles.title, { marginTop: 16 }]}>
+            {t("onboarding.birth.title")}
+          </Text>
+          <Text style={styles.subtitle}>{t("onboarding.birth.subtitle")}</Text>
+        </View>
 
-      <View style={local.pickerRow}>
-        <View style={local.column}>
-          <Text style={local.columnLabel}>{t("onboarding.birth.year")}</Text>
-          <WheelPicker
-            items={yearItems}
-            selectedValue={String(year)}
-            onChange={(v) => setYear(Number(v))}
+        <View style={local.cards}>
+          <BirthDateCard
+            year={year}
+            month={month}
+            day={day}
+            yearItems={yearItems}
+            monthItems={monthItems}
+            dayItems={dayItems}
+            onYearChange={setYear}
+            onMonthChange={setMonth}
+            onDayChange={setDay}
           />
-        </View>
-        <View style={local.column}>
-          <Text style={local.columnLabel}>{t("onboarding.birth.month")}</Text>
-          <WheelPicker
-            items={monthItems}
-            selectedValue={String(month)}
-            onChange={(v) => setMonth(Number(v))}
-          />
-        </View>
-        <View style={local.column}>
-          <Text style={local.columnLabel}>{t("onboarding.birth.day")}</Text>
-          <WheelPicker
-            items={dayItems}
-            selectedValue={String(day)}
-            onChange={(v) => setDay(Number(v))}
-          />
+          <GenderCard value={gender} onChange={setGender} />
         </View>
       </View>
 
-      <View style={local.genderWrap}>
-        <Text style={local.sectionLabel}>{t("onboarding.gender.title")}</Text>
-        <View style={local.genderRow}>
-          {GENDERS.map((g) => {
-            const selected = gender === g;
-            return (
-              <Pressable
-                key={g}
-                onPress={() => setGender(g)}
-                style={({ pressed }) => [
-                  local.genderBtn,
-                  selected && local.genderBtnSelected,
-                  pressed && !selected && local.genderBtnPressed,
-                ]}
-              >
-                <Text
-                  style={[
-                    local.genderBtnText,
-                    selected && local.genderBtnTextSelected,
-                  ]}
-                >
-                  {t(`onboarding.gender.options.${g}`)}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </View>
-
-      <View style={[styles.footer, { marginTop: "auto" }]}>
+      <View style={styles.footer}>
         <Pressable
           onPress={onSubmit}
           disabled={!canSubmit}
@@ -186,67 +151,68 @@ export default function BirthGenderStep({ onNext }: Props) {
   );
 }
 
-function makeLocalStyles(theme: ReturnType<typeof useTheme>) {
+function CalendarBadge({
+  color,
+  bgColor,
+}: {
+  color: string;
+  bgColor: string;
+}) {
+  return (
+    <View
+      style={{
+        width: 48,
+        height: 48,
+        borderRadius: 14,
+        backgroundColor: bgColor,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Svg width={26} height={26} viewBox="0 0 24 24">
+        <Rect
+          x={3}
+          y={5}
+          width={18}
+          height={16}
+          rx={3}
+          stroke={color}
+          strokeWidth={1.8}
+          fill="none"
+        />
+        <Path
+          d="M3 9h18"
+          stroke={color}
+          strokeWidth={1.8}
+          strokeLinecap="round"
+        />
+        <Path
+          d="M8 3v4M16 3v4"
+          stroke={color}
+          strokeWidth={1.8}
+          strokeLinecap="round"
+        />
+        <Circle cx={8} cy={14} r={1.2} fill={color} />
+        <Circle cx={12} cy={14} r={1.2} fill={color} />
+        <Circle cx={16} cy={14} r={1.2} fill={color} />
+      </Svg>
+    </View>
+  );
+}
+
+function makeLocalStyles(_theme: ReturnType<typeof useTheme>) {
   return StyleSheet.create({
-    pickerRow: {
-      flexDirection: "row",
-      paddingHorizontal: 20,
-      paddingTop: 20,
-      gap: 12,
-    },
-    column: {
+    body: {
       flex: 1,
-    },
-    columnLabel: {
-      color: theme.textMuted,
-      fontSize: 12,
-      fontWeight: "700",
-      textAlign: "center",
-      marginBottom: 6,
-      textTransform: "uppercase",
-      letterSpacing: 0.5,
-    },
-    genderWrap: {
       paddingHorizontal: 20,
-      paddingTop: 24,
+      paddingTop: 8,
     },
-    sectionLabel: {
-      color: theme.textPrimary,
-      fontSize: 15,
-      fontWeight: "700",
-      marginBottom: 10,
+    header: {
+      paddingTop: 8,
+      paddingBottom: 20,
     },
-    genderRow: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      gap: 8,
-    },
-    genderBtn: {
-      flexGrow: 1,
-      flexBasis: "47%",
-      paddingVertical: 12,
-      paddingHorizontal: 14,
-      borderRadius: 12,
-      backgroundColor: theme.optionBtnBg,
-      borderWidth: 1,
-      borderColor: theme.optionBtnBorder,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    genderBtnPressed: {
-      backgroundColor: theme.optionBtnPressedBg,
-    },
-    genderBtnSelected: {
-      backgroundColor: theme.accentSoftBg,
-      borderColor: theme.accent,
-    },
-    genderBtnText: {
-      color: theme.textSecondary,
-      fontSize: 14,
-      fontWeight: "700",
-    },
-    genderBtnTextSelected: {
-      color: theme.accentSoftText,
+    cards: {
+      gap: 16,
     },
   });
 }

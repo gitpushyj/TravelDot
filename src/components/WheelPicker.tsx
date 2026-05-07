@@ -110,8 +110,8 @@ function makeStyles(theme: ReturnType<typeof useTheme>) {
       right: 0,
       top: ITEM_HEIGHT * PADDING_ITEMS,
       height: ITEM_HEIGHT,
-      backgroundColor: theme.selectedRowBg,
-      borderRadius: 10,
+      backgroundColor: theme.accentSoftBg,
+      borderRadius: 12,
     },
     item: {
       height: ITEM_HEIGHT,
@@ -119,13 +119,13 @@ function makeStyles(theme: ReturnType<typeof useTheme>) {
       justifyContent: "center",
     },
     itemText: {
-      fontSize: 18,
-      color: theme.textSecondary,
+      fontSize: 17,
+      color: theme.textMuted,
       fontWeight: "600",
     },
     itemTextSelected: {
-      color: theme.textPrimary,
-      fontSize: 20,
+      color: theme.accent,
+      fontSize: 22,
       fontWeight: "800",
     },
   });
