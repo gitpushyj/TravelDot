@@ -225,7 +225,6 @@
     "homeBadge": "母国",
     "visitedDays": "{{days}}日間滞在",
     "isHome": "母国",
-    "statTitle": "訪問国",
     "milestoneFooter": {
       "countries": "次の称号まであと{{count}}カ国",
       "days": "次の称号まであと{{count}}日",

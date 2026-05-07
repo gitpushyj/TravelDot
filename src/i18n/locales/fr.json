@@ -225,7 +225,6 @@
     "homeBadge": "Pays d'origine",
     "visitedDays": "{{days}} jours sur place",
     "isHome": "Pays d'origine",
-    "statTitle": "Pays visités",
     "milestoneFooter": {
       "countries": "Encore {{count}} pays pour le prochain titre",
       "days": "Encore {{count}} jours pour le prochain titre",

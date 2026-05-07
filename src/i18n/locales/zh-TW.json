@@ -225,7 +225,6 @@
     "homeBadge": "母國",
     "visitedDays": "停留 {{days}} 天",
     "isHome": "母國",
-    "statTitle": "造訪國家",
     "milestoneFooter": {
       "countries": "距下一稱號還有 {{count}} 國",
       "days": "距下一稱號還有 {{count}} 天",

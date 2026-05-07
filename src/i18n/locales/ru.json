@@ -225,7 +225,6 @@
     "homeBadge": "Родная страна",
     "visitedDays": "{{days}} дн. в стране",
     "isHome": "Родная страна",
-    "statTitle": "Посещённые страны",
     "milestoneFooter": {
       "countries": "До следующего звания {{count}} стран",
       "days": "До следующего звания {{count}} дней",

@@ -225,7 +225,6 @@
     "homeBadge": "Heimatland",
     "visitedDays": "{{days}} Tage besucht",
     "isHome": "Heimatland",
-    "statTitle": "Besuchte Länder",
     "milestoneFooter": {
       "countries": "Noch {{count}} Länder bis zum nächsten Titel",
       "days": "Noch {{count}} Tage bis zum nächsten Titel",
