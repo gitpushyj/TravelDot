@@ -70,7 +70,7 @@ export default function AllCountriesScreen({
   const visitCounts = useVisitStore((s) => s.visitCounts);
   const homeCode = useVisitStore((s) => s.homeCountry?.code ?? null);
   const [filter, setFilter] = useState<FilterKey>("all");
-  const [sort, setSort] = useState<SortKey>("name");
+  const [sort, setSort] = useState<SortKey>("popular");
 
   const isVisited = useMemo(() => {
     return (code: string) =>
