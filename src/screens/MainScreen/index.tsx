@@ -142,6 +142,9 @@ export default function MainScreen({
   const mapResizeGesture = useMemo(
     () =>
       Gesture.Pan()
+        // 손잡이를 약 0.1초 눌러야 pan이 활성화된다. 이 활성화 순간에 햅틱이
+        // 울려 "지금부터 드래그 가능"이라는 신호를 준다.
+        .activateAfterLongPress(100)
         .onStart(() => {
           mapExtraSaved.value = mapExtraHeight.value;
           // 부모 ScrollView가 같이 스크롤되지 않도록 잠근다.
