@@ -425,7 +425,6 @@
     "login": {
       "title": "Iniziamo con TravelDot",
       "subtitle": "Accedi per conservare i tuoi dati al sicuro su questo dispositivo",
-      "dividerOr": "O",
       "feature1": {
         "title": "Registrazione automatica",
         "desc": "Viaggi classificati per luogo e tempo"
@@ -437,7 +436,8 @@
       "feature3": {
         "title": "Solo sul dispositivo",
         "desc": "Le foto restano sul tuo telefono"
-      }
+      },
+      "featuresLabel": "Funzionalità"
     },
     "home": {
       "title": "Scegli il paese di residenza",

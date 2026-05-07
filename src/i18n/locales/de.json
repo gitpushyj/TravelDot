@@ -425,7 +425,6 @@
     "login": {
       "title": "Mit TravelDot starten",
       "subtitle": "Melde dich an, damit deine Aufzeichnungen sicher auf diesem Gerät bleiben",
-      "dividerOr": "ODER",
       "feature1": {
         "title": "Automatisch aus Fotos",
         "desc": "Reisen nach Ort und Zeit sortiert"
@@ -437,7 +436,8 @@
       "feature3": {
         "title": "Nur auf dem Gerät",
         "desc": "Fotos verlassen dein Gerät nicht"
-      }
+      },
+      "featuresLabel": "Funktionen"
     },
     "home": {
       "title": "Wähle dein Heimatland",

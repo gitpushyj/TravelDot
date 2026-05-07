@@ -74,8 +74,10 @@ export default function LoginStep({ onNext }: Props) {
         )}
       </View>
 
+      <View style={styles.spacer} />
+
       <View style={styles.divider}>
-        <LoginDivider theme={theme} label={t("onboarding.login.dividerOr")} />
+        <LoginDivider theme={theme} label={t("onboarding.login.featuresLabel")} />
       </View>
 
       <LoginFeatureCards theme={theme} />
@@ -85,17 +87,23 @@ export default function LoginStep({ onNext }: Props) {
 
 const styles = StyleSheet.create({
   scroll: { flex: 1 },
+  // flexGrow:1 + spacer(flex:1)로 기능 카드를 화면 하단에 고정.
+  // 콘텐츠가 짧으면 spacer가 늘어나 카드를 바닥으로 밀고, 길면 spacer가 0이 되어 자연 스크롤.
   content: {
+    flexGrow: 1,
     paddingHorizontal: 20,
     paddingTop: 16,
-    paddingBottom: 36,
+    paddingBottom: 24,
   },
   buttons: {
     marginTop: 28,
     gap: 12,
   },
+  spacer: {
+    flex: 1,
+    minHeight: 24,
+  },
   divider: {
-    marginTop: 24,
     marginBottom: 20,
   },
 });

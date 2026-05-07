@@ -468,7 +468,6 @@
     "login": {
       "title": "Let's get started",
       "subtitle": "Sign in to keep your records safe on this device",
-      "dividerOr": "OR",
       "feature1": {
         "title": "Auto record from photos",
         "desc": "We classify trips by location and time"
@@ -480,7 +479,8 @@
       "feature3": {
         "title": "Stays on device",
         "desc": "Photos never leave your phone"
-      }
+      },
+      "featuresLabel": "Features"
     },
     "home": {
       "title": "Choose your home country",

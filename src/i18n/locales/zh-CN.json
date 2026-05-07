@@ -425,7 +425,6 @@
     "login": {
       "title": "开始使用 TravelDot",
       "subtitle": "请登录,以便将记录安全地保存在此设备上",
-      "dividerOr": "或",
       "feature1": {
         "title": "照片自动记录",
         "desc": "按位置和时间自动分类行程"
@@ -437,7 +436,8 @@
       "feature3": {
         "title": "仅保存在本机",
         "desc": "照片不会上传到服务器"
-      }
+      },
+      "featuresLabel": "主要功能"
     },
     "home": {
       "title": "请选择本国",

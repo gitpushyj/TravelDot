@@ -425,7 +425,6 @@
     "login": {
       "title": "TravelDotをはじめましょう",
       "subtitle": "記録をこの端末に安全に保存するため、ログインしてください",
-      "dividerOr": "または",
       "feature1": {
         "title": "写真から自動記録",
         "desc": "場所と時間で旅程を自動分類します"
@@ -437,7 +436,8 @@
       "feature3": {
         "title": "端末にのみ保存",
         "desc": "写真はサーバーに送られません"
-      }
+      },
+      "featuresLabel": "主な機能"
     },
     "home": {
       "title": "母国を選んでください",

@@ -425,7 +425,6 @@
     "login": {
       "title": "Bienvenue sur TravelDot",
       "subtitle": "Connecte-toi pour conserver tes enregistrements en sécurité sur cet appareil",
-      "dividerOr": "OU",
       "feature1": {
         "title": "Détection automatique",
         "desc": "Voyages classés par lieu et date"
@@ -437,7 +436,8 @@
       "feature3": {
         "title": "Stocké en local",
         "desc": "Tes photos restent sur ton appareil"
-      }
+      },
+      "featuresLabel": "Fonctionnalités"
     },
     "home": {
       "title": "Choisis ton pays d'origine",
