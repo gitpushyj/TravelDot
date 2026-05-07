@@ -18,12 +18,12 @@ import { SuspectTrip } from "../photoSync/deviceVerification";
 import {
   HomeCountry,
   loadHomeCountry,
-  loadHomeCountryChanged,
-  markHomeCountryChanged,
   saveHomeCountry,
 } from "./homeCountryStorage";
+import { useAuthStore } from "../auth/authStore";
 import { useBadgeStore } from "../badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../badges/countryNames";
+import { markHomeCountryChangedInDb } from "../onboarding/saveUserProfile";
 
 const HOME_AUTO_CLEANUP_FLAG = "visitgrid:migration:autoHomeCleanup_v1";
 
@@ -78,6 +78,8 @@ type State = {
   hydrate: () => Promise<void>;
   setHomeCountry: (c: HomeCountry) => Promise<void>;
   changeHomeCountry: (c: HomeCountry) => Promise<void>;
+  /** DB 프로필 동기화 결과로 원격에서 받은 1회 변경 사용 여부를 반영한다. */
+  setHomeChanged: (changed: boolean) => void;
   refreshVisits: () => Promise<void>;
   /** 현재 visitCounts + DB 통계로부터 뱃지를 재평가한다 */
   evaluateBadges: () => Promise<void>;
@@ -128,16 +130,16 @@ export const useVisitStore = create<State>((set, get) => ({
         }
       }
     }
-    const [counts, trips, years, homeChanged] = await Promise.all([
+    const [counts, trips, years] = await Promise.all([
       loadVisitCounts(),
       loadRecentTripsByCountry(),
       loadAvailableYears(),
-      loadHomeCountryChanged(),
     ]);
+    // homeChanged는 더 이상 로컬에 저장하지 않는다. App.tsx의 DB-fetch 효과가
+    // authUser 가용 시 setHomeChanged로 권위값을 채운다.
     set({
       ready: true,
       homeCountry: home,
-      homeChanged,
       visitCounts: counts,
       recentTrips: trips,
       availableYears: years,
@@ -179,9 +181,14 @@ export const useVisitStore = create<State>((set, get) => ({
   // 일회용 "본국 바꾸기": 모든 방문 기록을 비우고 새 본국으로 다시 시작한다.
   // 호출 측에서 이어서 runFullSync로 재스캔을 트리거한다.
   changeHomeCountry: async (c) => {
+    // DB가 1회 변경 권리의 권위 출처. 실패 시 throw해 로컬 상태 변경을 차단하고
+    // 사용자가 의도치 않게 권리를 소진하지 않도록 한다. authUser가 없는 경우도
+    // 동일하게 차단 — 로그인 없이 본국을 바꿀 수 없다.
+    const userId = useAuthStore.getState().user?.id;
+    if (!userId) throw new Error("authentication required to change home country");
+    await markHomeCountryChangedInDb(userId, c.code);
     await wipeAllVisits();
     await saveHomeCountry(c);
-    await markHomeCountryChanged();
     // 새 본국에 대해서는 자동 누적분이 처음부터 없으므로 cleanup 플래그를 done으로 유지.
     await AsyncStorage.setItem(HOME_AUTO_CLEANUP_FLAG, "done");
     set({
@@ -197,6 +204,7 @@ export const useVisitStore = create<State>((set, get) => ({
     });
     await get().evaluateBadges();
   },
+  setHomeChanged: (changed) => set({ homeChanged: changed }),
   setSelectedCountry: (c) => set({ selectedCountry: c }),
   refreshVisits: async () => {
     const [counts, trips, years] = await Promise.all([

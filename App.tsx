@@ -7,6 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { initI18n } from "./src/i18n";
 import AppAlerts from "./src/components/AppAlerts";
 import { useAuthStore } from "./src/features/auth/authStore";
+import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrateUserProfileFromDb";
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
 import { useMilestoneStore } from "./src/features/milestone/milestoneStore";
 import { useVisitStore } from "./src/features/travel/visitStore";
@@ -43,6 +44,9 @@ export default function App() {
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
+  // 로그인 직후 DB의 사용자 프로필을 로컬 store로 동기화한다.
+  // 재설치 후 재로그인 시 본국/생년월일/성별 단계를 자동으로 건너뛰는 핵심 동기화 지점.
+  useHydrateUserProfileFromDb();
 
   const [yearMode, setYearMode] = useState<YearMode>({ kind: "all" });
 
