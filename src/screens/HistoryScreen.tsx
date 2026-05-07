@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import { Pressable, SectionList, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -52,16 +52,24 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
     return { countries: codes.size, visits: trips.length, days };
   }, [trips]);
 
-  const sorted = useMemo(() => {
+  const sections = useMemo(() => {
     if (!trips) return [];
     const arr = [...trips];
     switch (sort) {
-      case "recent":
+      case "recent": {
         arr.sort((a, b) => (a.startDate < b.startDate ? 1 : -1));
-        break;
+        const groups = new Map<string, TripWithPhotos[]>();
+        for (const trip of arr) {
+          const year = trip.startDate.slice(0, 4);
+          const list = groups.get(year);
+          if (list) list.push(trip);
+          else groups.set(year, [trip]);
+        }
+        return Array.from(groups, ([year, data]) => ({ year, data }));
+      }
       case "days":
         arr.sort((a, b) => b.days - a.days || (a.startDate < b.startDate ? 1 : -1));
-        break;
+        return [{ year: "", data: arr }];
       case "az":
         arr.sort((a, b) => {
           const ak = KO_NAME_BY_CODE[a.countryCode] ?? a.countryCode;
@@ -70,9 +78,8 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
           if (c !== 0) return c;
           return a.startDate < b.startDate ? 1 : -1;
         });
-        break;
+        return [{ year: "", data: arr }];
     }
-    return arr;
   }, [trips, sort]);
 
   return (
@@ -92,10 +99,11 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
         <View style={styles.iconBtnPlaceholder} />
       </View>
 
-      <FlatList
-        data={sorted}
+      <SectionList
+        sections={sections}
         keyExtractor={(t) => `${t.countryCode}-${t.startDate}-${t.endDate}`}
         contentContainerStyle={styles.listContent}
+        stickySectionHeadersEnabled={false}
         ItemSeparatorComponent={() => <View style={styles.rowSep} />}
         ListHeaderComponent={
           <>
@@ -131,6 +139,15 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
               <Text style={styles.emptyText}>{t("history.empty")}</Text>
             </View>
           )
+        }
+        renderSectionHeader={({ section }) =>
+          section.year ? (
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionHeaderText}>
+                {t("history.yearHeader", { year: section.year })}
+              </Text>
+            </View>
+          ) : null
         }
         renderItem={({ item }) => (
           <TripRow

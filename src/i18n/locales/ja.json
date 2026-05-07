@@ -39,7 +39,8 @@
     "tripDuration": "{{days}}日間の旅",
     "sortRecent": "新しい順",
     "sortDays": "滞在日数順",
-    "sortAz": "A-Z"
+    "sortAz": "A-Z",
+    "yearHeader": "{{year}}年"
   },
   "allCountries": {
     "heading": "すべての国",

@@ -103,6 +103,18 @@ export function makeStyles(theme: Theme) {
       color: theme.textPrimary,
     },
     rowSep: { height: 1, backgroundColor: theme.cardBorder, marginLeft: 20 },
+    sectionHeader: {
+      paddingHorizontal: 20,
+      paddingTop: 18,
+      paddingBottom: 6,
+      backgroundColor: theme.homeBg,
+    },
+    sectionHeaderText: {
+      color: theme.textSecondary,
+      fontSize: 13,
+      fontWeight: "800",
+      letterSpacing: 0.2,
+    },
     row: {
       flexDirection: "row",
       alignItems: "center",

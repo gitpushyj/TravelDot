@@ -39,7 +39,8 @@
     "tripDuration": "{{days}}일 여행",
     "sortRecent": "최근순",
     "sortDays": "체류일순",
-    "sortAz": "A-Z"
+    "sortAz": "A-Z",
+    "yearHeader": "{{year}}년"
   },
   "allCountries": {
     "heading": "모든 나라",

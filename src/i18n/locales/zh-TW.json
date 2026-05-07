@@ -39,7 +39,8 @@
     "tripDuration": "{{days}}天行程",
     "sortRecent": "最新",
     "sortDays": "天數",
-    "sortAz": "A-Z"
+    "sortAz": "A-Z",
+    "yearHeader": "{{year}}年"
   },
   "allCountries": {
     "heading": "所有國家",

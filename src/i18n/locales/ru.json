@@ -39,7 +39,8 @@
     "tripDuration": "поездка на {{days}} дн.",
     "sortRecent": "Свежее",
     "sortDays": "Дольше",
-    "sortAz": "А–Я"
+    "sortAz": "А–Я",
+    "yearHeader": "{{year}}"
   },
   "allCountries": {
     "heading": "Все страны",

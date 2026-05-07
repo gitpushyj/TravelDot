@@ -39,7 +39,8 @@
     "tripDuration": "voyage de {{days}} jours",
     "sortRecent": "Récents",
     "sortDays": "Plus longs",
-    "sortAz": "A–Z"
+    "sortAz": "A–Z",
+    "yearHeader": "{{year}}"
   },
   "allCountries": {
     "heading": "Tous les pays",
