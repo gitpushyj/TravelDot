@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -42,6 +43,11 @@ export default function LoginScreen() {
     <View style={styles.root}>
       <View style={styles.center}>
         <Text style={styles.brand}>VisitGrid</Text>
+        <Image
+          source={require("../../assets/login_image.png")}
+          style={styles.heroImage}
+          resizeMode="contain"
+        />
       </View>
 
       <View style={styles.bottom}>
@@ -109,6 +115,11 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: "800",
     letterSpacing: 0.5,
+  },
+  heroImage: {
+    width: "100%",
+    maxWidth: 420,
+    aspectRatio: 1536 / 1024,
   },
   bottom: {
     gap: 14,
