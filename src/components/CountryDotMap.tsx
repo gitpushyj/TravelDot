@@ -78,15 +78,15 @@ export default function CountryDotMap({ countryCode, color }: Props) {
       {layout && (
         <Canvas style={{ width: size.width, height: size.height }}>
           {dots.map((p, i) => {
+            // p.lng/lat은 1° 셀의 중심. bbox 좌측 가장자리 = minLng - GRID_SIZE/2.
+            // 따라서 셀 중심까지의 bbox-local 오프셋은 (p.lng - minLng) + GRID_SIZE/2.
             const x =
-              (p.lng - layout.minLng - GRID_SIZE / 2) * layout.scale +
-              layout.offX +
-              (GRID_SIZE / 2) * layout.scale -
+              (p.lng - layout.minLng + GRID_SIZE / 2) * layout.scale +
+              layout.offX -
               layout.dotPx / 2;
             const y =
-              (layout.maxLat - p.lat - GRID_SIZE / 2) * layout.scale +
-              layout.offY +
-              (GRID_SIZE / 2) * layout.scale -
+              (layout.maxLat - p.lat + GRID_SIZE / 2) * layout.scale +
+              layout.offY -
               layout.dotPx / 2;
             return (
               <RoundedRect
