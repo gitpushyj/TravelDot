@@ -318,8 +318,10 @@
     "heading": "Impostazioni",
     "section": {
       "account": "Account",
+      "appSettings": "Impostazioni app",
+      "features": "Funzioni",
       "home": "Paese di residenza",
-      "trips": "Storico viaggi",
+      "trips": "Viaggi",
       "title": "Titolo",
       "theme": "Tema",
       "language": "Lingua"
@@ -342,6 +344,7 @@
       "current": "Paese di residenza attuale",
       "notSet": "Non impostato",
       "change": "Cambia paese di residenza",
+      "changeWithName": "Cambia paese di residenza ({{name}})",
       "changeSub": "Cancella tutti i registri e riesegue la scansione delle foto · Solo una volta",
       "changeConfirmTitle": "Cambia paese di residenza",
       "changeConfirmBody": "Tutti i dati di viaggio registrati verranno eliminati e le foto del dispositivo saranno scansionate di nuovo, come la prima volta che hai scelto il tuo paese di residenza.\n\nQuesta funzione può essere usata una sola volta nell'app. Continuare?"

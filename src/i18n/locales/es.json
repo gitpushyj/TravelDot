@@ -318,8 +318,10 @@
     "heading": "Ajustes",
     "section": {
       "account": "Cuenta",
+      "appSettings": "Ajustes de la app",
+      "features": "Funciones",
       "home": "País de origen",
-      "trips": "Registros de viajes",
+      "trips": "Viajes",
       "title": "Título",
       "theme": "Tema",
       "language": "Idioma"
@@ -342,6 +344,7 @@
       "current": "País de origen actual",
       "notSet": "Sin definir",
       "change": "Cambiar país de origen",
+      "changeWithName": "Cambiar país de origen ({{name}})",
       "changeSub": "Borra todos los registros y vuelve a escanear las fotos · Solo una vez",
       "changeConfirmTitle": "Cambiar país de origen",
       "changeConfirmBody": "Se eliminarán todos los datos de viaje registrados y se volverán a escanear las fotos del dispositivo, igual que la primera vez que elegiste tu país de origen.\n\nEsta función solo puede usarse una vez en la app. ¿Quieres continuar?"

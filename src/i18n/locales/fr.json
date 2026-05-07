@@ -318,8 +318,10 @@
     "heading": "Réglages",
     "section": {
       "account": "Compte",
+      "appSettings": "Paramètres de l'app",
+      "features": "Fonctionnalités",
       "home": "Pays d'origine",
-      "trips": "Historique des voyages",
+      "trips": "Voyages",
       "title": "Titre",
       "theme": "Thème",
       "language": "Langue"
@@ -342,6 +344,7 @@
       "current": "Pays d'origine actuel",
       "notSet": "Non défini",
       "change": "Changer de pays d'origine",
+      "changeWithName": "Changer de pays d'origine ({{name}})",
       "changeSub": "Efface tous les enregistrements et relance l'analyse des photos · Une seule fois",
       "changeConfirmTitle": "Changer de pays d'origine",
       "changeConfirmBody": "Toutes les données de voyage enregistrées seront supprimées et les photos de l'appareil seront analysées à nouveau, comme lors du choix initial de ton pays d'origine.\n\nCette action ne peut être effectuée qu'une seule fois dans l'app. Continuer ?"

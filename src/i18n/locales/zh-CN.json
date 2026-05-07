@@ -318,8 +318,10 @@
     "heading": "设置",
     "section": {
       "account": "账户",
+      "appSettings": "应用设置",
+      "features": "功能",
       "home": "本国",
-      "trips": "旅行记录",
+      "trips": "旅行",
       "title": "称号",
       "theme": "主题",
       "language": "语言"
@@ -342,6 +344,7 @@
       "current": "当前本国",
       "notSet": "未设置",
       "change": "更改本国",
+      "changeWithName": "更改本国 ({{name}})",
       "changeSub": "将清空所有记录并重新扫描照片 · 仅限一次",
       "changeConfirmTitle": "更改本国",
       "changeConfirmBody": "所有已记录的旅行数据将被删除,并像首次设置本国时一样重新扫描设备中的照片。\n\n此功能在本应用中仅可使用一次。是否继续?"

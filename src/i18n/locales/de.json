@@ -318,8 +318,10 @@
     "heading": "Einstellungen",
     "section": {
       "account": "Konto",
+      "appSettings": "App-Einstellungen",
+      "features": "Funktionen",
       "home": "Heimatland",
-      "trips": "Reiseverlauf",
+      "trips": "Reisen",
       "title": "Titel",
       "theme": "Design",
       "language": "Sprache"
@@ -342,6 +344,7 @@
       "current": "Aktuelles Heimatland",
       "notSet": "Nicht festgelegt",
       "change": "Heimatland ändern",
+      "changeWithName": "Heimatland ändern ({{name}})",
       "changeSub": "Löscht alle Aufzeichnungen und scannt Fotos erneut · Nur einmal möglich",
       "changeConfirmTitle": "Heimatland ändern",
       "changeConfirmBody": "Alle erfassten Reisedaten werden gelöscht und die Fotos auf dem Gerät erneut gescannt — wie bei der ersten Auswahl deines Heimatlands.\n\nDiese Funktion kann pro App nur einmal verwendet werden. Fortfahren?"

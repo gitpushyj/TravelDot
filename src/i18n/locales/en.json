@@ -346,8 +346,10 @@
     "heading": "Settings",
     "section": {
       "account": "Account",
+      "appSettings": "App Settings",
+      "features": "Features",
       "home": "Home Country",
-      "trips": "Trip Records",
+      "trips": "Trips",
       "title": "Title",
       "milestone": "Featured Milestone",
       "theme": "Theme",
@@ -372,6 +374,7 @@
       "current": "Current home country",
       "notSet": "Not set",
       "change": "Change home country",
+      "changeWithName": "Change home country ({{name}})",
       "changeSub": "Erases all records and rescans your photos · One-time only",
       "changeConfirmTitle": "Change home country",
       "changeConfirmBody": "All your travel records will be deleted and your photos will be rescanned, just like the first time you set your home country.\n\nThis can only be done once. Continue?"
