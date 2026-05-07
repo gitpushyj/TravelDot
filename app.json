@@ -45,6 +45,25 @@
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "TravelDot needs access to your photo library so you can attach photos to the trips you record.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "TravelDot reads dates and location metadata from your photos to automatically detect the countries you've visited. Your photos stay on your device and are never uploaded.",
+          "savePhotosPermission": false,
+          "isAccessMediaLocationEnabled": true,
+          "granularPermissions": [
+            "photo"
+          ]
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "ios": {
@@ -53,7 +72,13 @@
           }
         }
       ],
-      "./plugins/withPodfileModularHeaders"
+      "./plugins/withPodfileModularHeaders",
+      [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "TravelDot uses this identifier to measure how features are used so we can improve the app experience."
+        }
+      ]
     ]
   }
 }

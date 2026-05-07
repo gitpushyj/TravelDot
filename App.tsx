@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { initI18n } from "./src/i18n";
+import { requestTrackingPermissionIfNeeded } from "./src/lib/tracking";
 import AppAlerts from "./src/components/AppAlerts";
 import { useAuthStore } from "./src/features/auth/authStore";
 import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrateUserProfileFromDb";
@@ -58,6 +59,13 @@ export default function App() {
     void milestoneHydrate();
     void initI18n().then(() => setI18nReady(true));
   }, [hydrate, themeHydrate, authHydrate, onboardingHydrate, milestoneHydrate]);
+
+  // iOS App Tracking Transparency 프롬프트. 첫 렌더 직전(hydrate 완료) 1회만
+  // 호출한다. Android에서는 no-op.
+  useEffect(() => {
+    if (!i18nReady) return;
+    void requestTrackingPermissionIfNeeded();
+  }, [i18nReady]);
 
   useEffect(() => {
     if (yearMode.kind === "year") {
