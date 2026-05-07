@@ -150,7 +150,60 @@ export default function SettingsScreen({
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionLabel}>{t("settings.section.account")}</Text>
+        <Text style={styles.sectionLabel}>{t("settings.section.theme")}</Text>
+        <View style={styles.segment}>
+          {themeOptions.map((opt) => {
+            const selected = mode === opt.mode;
+            return (
+              <Pressable
+                key={opt.mode}
+                onPress={() => void setMode(opt.mode)}
+                style={({ pressed }) => [
+                  styles.segmentItem,
+                  selected && styles.segmentItemActive,
+                  pressed && !selected && { opacity: 0.7 },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.segmentText,
+                    selected && styles.segmentTextActive,
+                  ]}
+                >
+                  {opt.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          {t("settings.section.title")}
+        </Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label={t("settings.title.label")}
+            sub={titleSub}
+            onPress={onOpenTitles}
+          />
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          {t("settings.section.language")}
+        </Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label={t("settings.language.label")}
+            sub={LOCALE_LABELS[currentLocale]}
+            onPress={onOpenLanguage}
+          />
+        </View>
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          {t("settings.section.account")}
+        </Text>
         <View style={styles.card}>
           <ActionRow
             theme={theme}
@@ -223,59 +276,6 @@ export default function SettingsScreen({
               divider
             />
           )}
-        </View>
-
-        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("settings.section.title")}
-        </Text>
-        <View style={styles.card}>
-          <ActionRow
-            theme={theme}
-            label={t("settings.title.label")}
-            sub={titleSub}
-            onPress={onOpenTitles}
-          />
-        </View>
-
-        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("settings.section.language")}
-        </Text>
-        <View style={styles.card}>
-          <ActionRow
-            theme={theme}
-            label={t("settings.language.label")}
-            sub={LOCALE_LABELS[currentLocale]}
-            onPress={onOpenLanguage}
-          />
-        </View>
-
-        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("settings.section.theme")}
-        </Text>
-        <View style={styles.segment}>
-          {themeOptions.map((opt) => {
-            const selected = mode === opt.mode;
-            return (
-              <Pressable
-                key={opt.mode}
-                onPress={() => void setMode(opt.mode)}
-                style={({ pressed }) => [
-                  styles.segmentItem,
-                  selected && styles.segmentItemActive,
-                  pressed && !selected && { opacity: 0.7 },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.segmentText,
-                    selected && styles.segmentTextActive,
-                  ]}
-                >
-                  {opt.label}
-                </Text>
-              </Pressable>
-            );
-          })}
         </View>
       </ScrollView>
     </View>
