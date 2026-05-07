@@ -7,7 +7,7 @@ import { useTheme } from "../../theme/themeStore";
 
 import { GenderIcon } from "./genderIcons";
 
-const GENDERS: Gender[] = ["male", "female", "other", "prefer_not_to_say"];
+const GENDERS: Gender[] = ["male", "female"];
 
 type Props = {
   value: Gender | null;

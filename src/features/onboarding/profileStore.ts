@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 const STORAGE_KEY = "visitgrid:userProfile_v1";
 
-export type Gender = "male" | "female" | "other" | "prefer_not_to_say";
+export type Gender = "male" | "female";
 
 export type UserProfile = {
   birthYear: number;

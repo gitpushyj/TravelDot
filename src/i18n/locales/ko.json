@@ -499,9 +499,7 @@
       "title": "성별",
       "options": {
         "male": "남성",
-        "female": "여성",
-        "other": "기타",
-        "prefer_not_to_say": "응답 안 함"
+        "female": "여성"
       }
     },
     "sync": {
