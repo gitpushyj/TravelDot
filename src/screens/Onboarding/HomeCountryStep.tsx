@@ -46,7 +46,7 @@ export default function HomeCountryStep({ onNext }: Props) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={[styles.body, { paddingBottom: 0 }]}>
+      <View style={styles.bodyHeader}>
         <Text style={styles.title}>{t("onboarding.home.title")}</Text>
         <Text style={styles.subtitle}>{t("onboarding.home.subtitle")}</Text>
       </View>

@@ -29,6 +29,10 @@ export function makeOnboardingStyles(theme: Theme) {
       paddingHorizontal: 20,
       paddingTop: 24,
     },
+    bodyHeader: {
+      paddingHorizontal: 20,
+      paddingTop: 24,
+    },
     title: {
       color: theme.textPrimary,
       fontSize: 24,

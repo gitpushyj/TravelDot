@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -60,8 +60,14 @@ export default function App() {
   }, [yearMode, ensureYearCounts]);
 
   // 기존 사용자(이미 로그인 + 본국 설정 완료)는 자동으로 온보딩 완료 처리.
+  // hydrate 직후 한 번만 평가해야 한다. 그렇지 않으면 신규 사용자가 온보딩
+  // step 3에서 본국을 선택하는 순간 homeCountry 변화로 effect가 재발동해
+  // 남은 step 4·5를 건너뛰고 바로 메인으로 빠진다.
+  const autoCompleteEvaluatedRef = useRef(false);
   useEffect(() => {
+    if (autoCompleteEvaluatedRef.current) return;
     if (!ready || !authHydrated || !onboardingHydrated) return;
+    autoCompleteEvaluatedRef.current = true;
     if (onboardingCompleted) return;
     if (authUser && homeCountry) {
       void onboardingMarkCompleted();
