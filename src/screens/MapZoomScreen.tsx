@@ -12,6 +12,8 @@ import {
 
 import DotMap from "../components/DotMap";
 import { useVisitStore } from "../features/travel/visitStore";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 
 const TOAST_DURATION_MS = 3000;
@@ -49,7 +51,7 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (!selectedCountry) return;
-    setToastName(selectedCountry.name);
+    setToastName(getCountryName(selectedCountry.code, getCurrentLocale()));
     if (hideTimer.current) clearTimeout(hideTimer.current);
     hideTimer.current = setTimeout(() => {
       setToastName(null);

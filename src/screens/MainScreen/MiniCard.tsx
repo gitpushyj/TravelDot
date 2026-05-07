@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import CountryShape from "../../components/CountryShape";
 import { useVisitStore } from "../../features/travel/visitStore";
+import { getCurrentLocale } from "../../i18n";
+import { getCountryName } from "../../lib/countryName";
 import type { Theme } from "../../theme/theme";
 import { colorForCountry, readableTextOn } from "../../utils/countryColors";
 import { makeStyles } from "./styles";
@@ -20,7 +22,7 @@ export default function MiniCard({ theme, homeCode, visitCounts, onPress }: Prop
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
   const code = selectedCountry?.code ?? homeCode;
-  const name = selectedCountry?.name ?? "";
+  const name = getCountryName(code, getCurrentLocale());
   const isHome = code === homeCode;
   const visitDays = visitCounts[code] ?? 0;
   const countryColor = colorForCountry(code);

@@ -21,6 +21,8 @@ import {
 
 import dotData from "../../assets/data/dots.json";
 import { useVisitStore } from "../features/travel/visitStore";
+import { getCurrentLocale } from "../i18n";
+import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 import { colorForVisitWith } from "../theme/theme";
 import type { CountryRef, DotData } from "../types";
@@ -486,7 +488,7 @@ export default function DotMap({
                 }}
               >
                 <Text style={[styles.optionText, { color: theme.textPrimary }]}>
-                  {c.name}
+                  {getCountryName(c.code, getCurrentLocale())}
                 </Text>
               </Pressable>
             ))}
