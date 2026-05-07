@@ -332,7 +332,12 @@
       "signOutSub": "이 기기에서 로그아웃합니다",
       "signOutConfirmTitle": "로그아웃",
       "signOutConfirmBody": "로그아웃하시겠어요?",
-      "signOutFailed": "로그아웃 실패"
+      "signOutFailed": "로그아웃 실패",
+      "deleteLink": "계정 삭제",
+      "deleteConfirmTitle": "계정 삭제",
+      "deleteConfirmBody": "계정과 모든 여행 기록이 영구 삭제됩니다. 이 작업은 되돌릴 수 없어요. 계속하시겠어요?",
+      "deleteAction": "삭제",
+      "deleteFailed": "계정 삭제 실패"
     },
     "home": {
       "current": "현재 본국",

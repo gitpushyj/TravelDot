@@ -329,7 +329,12 @@
       "signOutSub": "从此设备退出登录",
       "signOutConfirmTitle": "退出登录",
       "signOutConfirmBody": "确定要退出登录吗?",
-      "signOutFailed": "退出登录失败"
+      "signOutFailed": "退出登录失败",
+      "deleteLink": "删除账户",
+      "deleteConfirmTitle": "删除账户",
+      "deleteConfirmBody": "您的账户和所有旅行记录将被永久删除，此操作无法撤销。是否继续？",
+      "deleteAction": "删除",
+      "deleteFailed": "账户删除失败"
     },
     "home": {
       "current": "当前本国",

@@ -329,7 +329,12 @@
       "signOutSub": "Cerrar sesión en este dispositivo",
       "signOutConfirmTitle": "Cerrar sesión",
       "signOutConfirmBody": "¿Quieres cerrar la sesión?",
-      "signOutFailed": "Error al cerrar sesión"
+      "signOutFailed": "Error al cerrar sesión",
+      "deleteLink": "Eliminar cuenta",
+      "deleteConfirmTitle": "Eliminar cuenta",
+      "deleteConfirmBody": "Tu cuenta y todos los registros de viajes se eliminarán permanentemente. Esta acción no se puede deshacer. ¿Continuar?",
+      "deleteAction": "Eliminar",
+      "deleteFailed": "Error al eliminar la cuenta"
     },
     "home": {
       "current": "País de origen actual",

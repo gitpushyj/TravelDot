@@ -329,7 +329,12 @@
       "signOutSub": "Auf diesem Gerät abmelden",
       "signOutConfirmTitle": "Abmelden",
       "signOutConfirmBody": "Möchtest du dich abmelden?",
-      "signOutFailed": "Abmelden fehlgeschlagen"
+      "signOutFailed": "Abmelden fehlgeschlagen",
+      "deleteLink": "Konto löschen",
+      "deleteConfirmTitle": "Konto löschen",
+      "deleteConfirmBody": "Dein Konto und alle Reisedaten werden dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden. Fortfahren?",
+      "deleteAction": "Löschen",
+      "deleteFailed": "Kontolöschung fehlgeschlagen"
     },
     "home": {
       "current": "Aktuelles Heimatland",

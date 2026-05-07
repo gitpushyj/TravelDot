@@ -329,7 +329,12 @@
       "signOutSub": "Se déconnecter de cet appareil",
       "signOutConfirmTitle": "Se déconnecter",
       "signOutConfirmBody": "Veux-tu te déconnecter ?",
-      "signOutFailed": "Échec de la déconnexion"
+      "signOutFailed": "Échec de la déconnexion",
+      "deleteLink": "Supprimer le compte",
+      "deleteConfirmTitle": "Supprimer le compte",
+      "deleteConfirmBody": "Votre compte et tous vos enregistrements de voyage seront définitivement supprimés. Cette action est irréversible. Continuer ?",
+      "deleteAction": "Supprimer",
+      "deleteFailed": "Échec de la suppression du compte"
     },
     "home": {
       "current": "Pays d'origine actuel",

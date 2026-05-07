@@ -329,7 +329,12 @@
       "signOutSub": "この端末からログアウトします",
       "signOutConfirmTitle": "ログアウト",
       "signOutConfirmBody": "ログアウトしますか？",
-      "signOutFailed": "ログアウトに失敗しました"
+      "signOutFailed": "ログアウトに失敗しました",
+      "deleteLink": "アカウント削除",
+      "deleteConfirmTitle": "アカウント削除",
+      "deleteConfirmBody": "アカウントとすべての旅行記録が完全に削除されます。この操作は取り消せません。続行しますか？",
+      "deleteAction": "削除",
+      "deleteFailed": "アカウントの削除に失敗しました"
     },
     "home": {
       "current": "現在の母国",

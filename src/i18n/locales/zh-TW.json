@@ -329,7 +329,12 @@
       "signOutSub": "從此裝置登出",
       "signOutConfirmTitle": "登出",
       "signOutConfirmBody": "確定要登出嗎?",
-      "signOutFailed": "登出失敗"
+      "signOutFailed": "登出失敗",
+      "deleteLink": "刪除帳戶",
+      "deleteConfirmTitle": "刪除帳戶",
+      "deleteConfirmBody": "您的帳戶與所有旅行記錄將被永久刪除，此操作無法復原。是否繼續？",
+      "deleteAction": "刪除",
+      "deleteFailed": "帳戶刪除失敗"
     },
     "home": {
       "current": "目前的母國",

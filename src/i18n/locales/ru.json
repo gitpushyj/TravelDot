@@ -329,7 +329,12 @@
       "signOutSub": "Выйти из аккаунта на этом устройстве",
       "signOutConfirmTitle": "Выйти",
       "signOutConfirmBody": "Выйти из аккаунта?",
-      "signOutFailed": "Не удалось выйти"
+      "signOutFailed": "Не удалось выйти",
+      "deleteLink": "Удалить аккаунт",
+      "deleteConfirmTitle": "Удалить аккаунт",
+      "deleteConfirmBody": "Ваш аккаунт и все записи о поездках будут безвозвратно удалены. Это действие нельзя отменить. Продолжить?",
+      "deleteAction": "Удалить",
+      "deleteFailed": "Не удалось удалить аккаунт"
     },
     "home": {
       "current": "Текущая родная страна",

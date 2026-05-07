@@ -329,7 +329,12 @@
       "signOutSub": "Esci da questo dispositivo",
       "signOutConfirmTitle": "Esci",
       "signOutConfirmBody": "Vuoi uscire?",
-      "signOutFailed": "Uscita non riuscita"
+      "signOutFailed": "Uscita non riuscita",
+      "deleteLink": "Elimina account",
+      "deleteConfirmTitle": "Elimina account",
+      "deleteConfirmBody": "Il tuo account e tutti i registri di viaggio verranno eliminati definitivamente. Questa azione non può essere annullata. Continuare?",
+      "deleteAction": "Elimina",
+      "deleteFailed": "Eliminazione account non riuscita"
     },
     "home": {
       "current": "Paese di residenza attuale",

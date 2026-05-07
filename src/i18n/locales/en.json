@@ -332,7 +332,12 @@
       "signOutSub": "Sign out from this device",
       "signOutConfirmTitle": "Sign out",
       "signOutConfirmBody": "Sign out of your account?",
-      "signOutFailed": "Sign-out failed"
+      "signOutFailed": "Sign-out failed",
+      "deleteLink": "Delete account",
+      "deleteConfirmTitle": "Delete account",
+      "deleteConfirmBody": "Your account and all travel records will be permanently deleted. This cannot be undone. Continue?",
+      "deleteAction": "Delete",
+      "deleteFailed": "Account deletion failed"
     },
     "home": {
       "current": "Current home country",

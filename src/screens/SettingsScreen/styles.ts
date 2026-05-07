@@ -108,5 +108,15 @@ export function makeStyles(theme: Theme) {
       fontSize: 22,
       fontWeight: "400",
     },
+    deleteAccountWrap: {
+      alignItems: "center",
+      marginTop: 32,
+      paddingVertical: 12,
+    },
+    deleteAccountText: {
+      color: theme.textMuted,
+      fontSize: 12,
+      textDecorationLine: "underline",
+    },
   });
 }
