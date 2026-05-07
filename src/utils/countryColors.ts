@@ -161,6 +161,28 @@ export function hasCountryColor(code: string | null | undefined): boolean {
   return code.toUpperCase() in COUNTRY_COLORS;
 }
 
+// 본국 도트에 쓸 상징색을 결정한다. bg가 초록 계열이면 잔디 히트맵과 섞여
+// 보이지 않으니 보조색 dot을 쓰고, dot도 초록이면 폴백(테마 homeColor)으로 돌아간다.
+export function homeDotColor(
+  code: string | null | undefined,
+  fallback: string
+): string {
+  if (!hasCountryColor(code)) return fallback;
+  const { bg, dot } = colorForCountry(code);
+  if (isGreenish(bg)) {
+    return isGreenish(dot) ? fallback : dot;
+  }
+  return bg;
+}
+
+function isGreenish(color: string): boolean {
+  const rgb = parseHexRgb(color);
+  if (!rgb) return false;
+  const { r, g, b } = rgb;
+  // 녹색 채널이 우세하고, 가장 약한 다른 채널과 충분히 차이나야 함.
+  return g > r && g > b && g - Math.min(r, b) > 30;
+}
+
 function parseHexRgb(hex: string): { r: number; g: number; b: number } | null {
   const cleaned = hex.replace("#", "");
   if (cleaned.length !== 3 && cleaned.length !== 6) return null;

@@ -25,6 +25,7 @@ import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 import { colorForVisitWith } from "../theme/theme";
+import { homeDotColor } from "../utils/countryColors";
 import type { CountryRef, DotData } from "../types";
 
 import { clamp, clampJs, clampPanX, clampPanY } from "./DotMap/clamps";
@@ -91,6 +92,10 @@ export default function DotMap({
   const radius = dotPx * 0.25;
 
   const homeCode = homeCountry?.code;
+  const homeFill = useMemo(
+    () => homeDotColor(homeCode, theme.homeColor),
+    [homeCode, theme.homeColor]
+  );
   const positioned = useMemo(
     () =>
       dots.map((d) => {
@@ -107,10 +112,12 @@ export default function DotMap({
           x: (d.lng + 180) * baseScale - halfDotPx,
           y: (maxLat - d.lat) * baseScale - halfDotPx,
           countries,
-          fill: colorForVisitWith(theme, { count, isHomeCountry: isHome }),
+          fill: isHome
+            ? homeFill
+            : colorForVisitWith(theme, { count, isHomeCountry: false }),
         };
       }),
-    [dots, baseScale, halfDotPx, maxLat, visitCounts, homeCode, theme]
+    [dots, baseScale, halfDotPx, maxLat, visitCounts, homeCode, theme, homeFill]
   );
 
   const highlightedIds = useMemo(() => {
@@ -279,7 +286,17 @@ export default function DotMap({
           bestDist = dist;
         }
       }
-      if (!bestCountries || bestCountries.length === 0) return;
+      if (!bestCountries || bestCountries.length === 0) {
+        // 도트가 없는 여백을 탭하면 본국을 선택지로 돌려준다.
+        if (homeCountry) {
+          setPending(null);
+          setSelectedCountry({
+            code: homeCountry.code,
+            name: homeCountry.name,
+          });
+        }
+        return;
+      }
       if (bestCountries.length === 1 || autoPickFirst) {
         const c = bestCountries[0];
         setPending(null);
@@ -288,7 +305,15 @@ export default function DotMap({
         setPending(bestCountries);
       }
     },
-    [positioned, halfDotPx, baseScale, gridSize, setSelectedCountry, autoPickFirst]
+    [
+      positioned,
+      halfDotPx,
+      baseScale,
+      gridSize,
+      setSelectedCountry,
+      autoPickFirst,
+      homeCountry,
+    ]
   );
 
   // 첫 진입 시 본국을 2초 보여준 뒤 4초에 걸쳐 세계지도로 줌아웃하는 인트로 애니메이션.
