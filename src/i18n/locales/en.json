@@ -429,7 +429,20 @@
     },
     "login": {
       "title": "Let's get started",
-      "subtitle": "Sign in to keep your records safe on this device"
+      "subtitle": "Sign in to keep your records safe on this device",
+      "dividerOr": "OR",
+      "feature1": {
+        "title": "Auto record from photos",
+        "desc": "We classify trips by location and time"
+      },
+      "feature2": {
+        "title": "One-tap map coloring",
+        "desc": "Finish a trip, paint the map in one tap"
+      },
+      "feature3": {
+        "title": "Stays on device",
+        "desc": "Photos never leave your phone"
+      }
     },
     "home": {
       "title": "Choose your home country",
