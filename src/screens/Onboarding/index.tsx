@@ -16,9 +16,8 @@ import OnboardingProgress from "./OnboardingProgress";
 import { makeOnboardingStyles } from "./styles";
 import SuspectTripsStep from "./SuspectTripsStep";
 import SyncStep from "./SyncStep";
-import WelcomeStep from "./WelcomeStep";
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 5;
 
 export default function OnboardingFlow() {
   const theme = useTheme();
@@ -33,7 +32,7 @@ export default function OnboardingFlow() {
   const markCompleted = useOnboardingStore((s) => s.markCompleted);
 
   // 초기 step 결정: 이미 완료된 단계는 자동 skip.
-  // welcome(1)은 항상 보여주는 게 자연스러우므로 welcome은 skip 대상에서 제외한다.
+  // step 1(LoginStep)은 환영+로그인 통합 화면. 로그인이 이미 돼 있으면 effect가 step=2로 당긴다.
   const [step, setStep] = useState<number>(1);
 
   // 시스템 back 차단 (Android). 편도 플로우.
@@ -52,17 +51,17 @@ export default function OnboardingFlow() {
   useEffect(() => {
     setStep((prev) => {
       let next = prev;
-      if (next < 3 && authUser) next = 3;
-      if (next < 4 && homeCountry) next = 4;
-      if (next < 5 && profile) next = 5;
+      if (next < 2 && authUser) next = 2;
+      if (next < 3 && homeCountry) next = 3;
+      if (next < 4 && profile) next = 4;
       return next;
     });
   }, [authUser, homeCountry, profile]);
 
   // step을 절대값으로 advance한다. step 컴포넌트의 onNext와 외부 상태 useEffect가
-  // 동시에 발동해도 race 없이 정확한 step에 안착한다. 예: step 3에서 본국 선택 시
-  // HomeCountryStep이 onNext(=goTo(4))를 부르고 OnboardingFlow useEffect도
-  // homeCountry 변화를 보고 setStep(4)를 시도하는데, 둘 다 4로 수렴해 5로 튀지 않는다.
+  // 동시에 발동해도 race 없이 정확한 step에 안착한다. 예: step 2에서 본국 선택 시
+  // HomeCountryStep이 onNext(=goTo(3))를 부르고 OnboardingFlow useEffect도
+  // homeCountry 변화를 보고 setStep(3)를 시도하는데, 둘 다 3으로 수렴해 4로 튀지 않는다.
   const goTo = (target: number) =>
     setStep((s) => Math.max(s, Math.min(target, TOTAL_STEPS)));
 
@@ -86,12 +85,11 @@ export default function OnboardingFlow() {
   return (
     <View style={styles.root}>
       <OnboardingProgress current={step} total={TOTAL_STEPS} />
-      {step === 1 && <WelcomeStep onNext={() => goTo(2)} />}
-      {step === 2 && <LoginStep onNext={() => goTo(3)} />}
-      {step === 3 && <HomeCountryStep onNext={() => goTo(4)} />}
-      {step === 4 && <BirthGenderStep onNext={() => goTo(5)} />}
-      {step === 5 && <SyncStep onNext={() => goTo(6)} />}
-      {step === 6 && <SuspectTripsStep onFinish={() => void finish()} />}
+      {step === 1 && <LoginStep onNext={() => goTo(2)} />}
+      {step === 2 && <HomeCountryStep onNext={() => goTo(3)} />}
+      {step === 3 && <BirthGenderStep onNext={() => goTo(4)} />}
+      {step === 4 && <SyncStep onNext={() => goTo(5)} />}
+      {step === 5 && <SuspectTripsStep onFinish={() => void finish()} />}
     </View>
   );
 }
