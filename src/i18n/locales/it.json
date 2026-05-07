@@ -356,6 +356,7 @@
       "title": "Sincronizziamo i tuoi viaggi",
       "body": "Esamineremo le tue foto e creeremo automaticamente i registri di viaggio.",
       "fullAccessHint": "Per un riconoscimento accurato, scegli \"Consenti l'accesso a tutte le foto\".",
+      "cloudOnlyNote": "Vengono analizzate solo le foto salvate su questo dispositivo. Le foto presenti solo nel cloud (ad es. Google Foto) e rimosse dal dispositivo non possono essere importate.",
       "button": "Avvia sincronizzazione",
       "scanning": "Sto esaminando {{processed}} foto…",
       "preparing": "Preparazione dell'analisi delle foto…",

@@ -103,5 +103,11 @@ export function makeOnboardingStyles(theme: Theme) {
       textAlign: "center",
       marginTop: 12,
     },
+    inlineNote: {
+      color: theme.textMuted,
+      fontSize: 12,
+      lineHeight: 17,
+      marginTop: 12,
+    },
   });
 }

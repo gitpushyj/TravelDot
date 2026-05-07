@@ -108,6 +108,9 @@ export default function SyncStep({ onNext }: Props) {
             {t("onboarding.sync.fullAccessHint")}
           </Text>
         </View>
+        <Text style={styles.inlineNote}>
+          {t("onboarding.sync.cloudOnlyNote")}
+        </Text>
       </View>
       <View style={styles.footer}>
         <Pressable

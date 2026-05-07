@@ -356,6 +356,7 @@
       "title": "Synchronisons tes voyages",
       "body": "Nous parcourons tes photos et créons tes enregistrements de voyage automatiquement.",
       "fullAccessHint": "Pour une détection plus complète, choisis « Autoriser l'accès à toutes les photos ».",
+      "cloudOnlyNote": "Seules les photos enregistrées sur cet appareil sont analysées. Les photos qui n'existent que dans le cloud (par ex. Google Photos) et ont été supprimées de l'appareil ne peuvent pas être importées.",
       "button": "Lancer la synchronisation",
       "scanning": "Analyse de {{processed}} photos…",
       "preparing": "Préparation de l'analyse de tes photos…",
