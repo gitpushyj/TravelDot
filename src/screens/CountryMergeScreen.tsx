@@ -47,44 +47,49 @@ export default function CountryMergeScreen({ countryCode, onClose }: Props) {
   const [trips, setTrips] = useState<TripWithPhotos[] | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
+  // 병합 화면에선 시간 흐름대로 ASC(오래된 게 위)로 보여준다 — 여러 짧은 여행을
+  // 시작 → 끝 순서로 합치는 그림이 자연스럽기 때문.
+  // loadTripsForCountry는 DESC로 주므로 reverse해서 ASC로 만든다.
   const reload = async () => {
     const raw = await loadTripsForCountry(countryCode);
+    const asc = [...raw].reverse();
     const counts = await Promise.all(
-      raw.map((tr) =>
+      asc.map((tr) =>
         countPhotosForTrip(tr.countryCode, tr.startDate, tr.endDate)
       )
     );
-    setTrips(raw.map((tr, i) => ({ ...tr, photos: counts[i] })));
+    setTrips(asc.map((tr, i) => ({ ...tr, photos: counts[i] })));
   };
 
   useEffect(() => {
     let cancelled = false;
     void (async () => {
       const raw = await loadTripsForCountry(countryCode);
+      const asc = [...raw].reverse();
       const counts = await Promise.all(
-        raw.map((tr) =>
+        asc.map((tr) =>
           countPhotosForTrip(tr.countryCode, tr.startDate, tr.endDate)
         )
       );
       if (cancelled) return;
-      setTrips(raw.map((tr, i) => ({ ...tr, photos: counts[i] })));
+      setTrips(asc.map((tr, i) => ({ ...tr, photos: counts[i] })));
     })();
     return () => {
       cancelled = true;
     };
   }, [countryCode]);
 
-  // loadTripsForCountry는 startDate DESC. 위 trip이 더 늦은 trip, 아래가 더 이른 trip.
-  // gap은 (아래 trip의 endDate)와 (위 trip의 startDate) 사이로 계산.
+  // ASC 정렬이라 i가 이른 trip(위), i+1이 늦은 trip(아래).
+  // gap은 (위 trip의 endDate)와 (아래 trip의 startDate) 사이.
   const items: ListItem[] = useMemo(() => {
     if (!trips) return [];
     const out: ListItem[] = [];
     for (let i = 0; i < trips.length; i += 1) {
       out.push({ kind: "trip", trip: trips[i] });
       if (i < trips.length - 1) {
-        const upper = trips[i];
-        const lower = trips[i + 1];
-        const gap = gapBetween(lower.endDate, upper.startDate);
+        const earlier = trips[i];
+        const later = trips[i + 1];
+        const gap = gapBetween(earlier.endDate, later.startDate);
         if (gap > ADJACENT_THRESHOLD) {
           out.push({ kind: "gap", days: gap, key: `gap-${i}` });
         }
