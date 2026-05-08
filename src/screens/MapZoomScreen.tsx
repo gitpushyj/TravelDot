@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  Animated,
   Platform,
   Pressable,
   StatusBar as RNStatusBar,
@@ -17,6 +18,10 @@ import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
 
 const TOAST_DURATION_MS = 3000;
+// 닫기 버튼은 진입 직후와 사용자가 지도를 만진 직후에만 잠깐 보였다가 사라진다.
+// 노출 유지 3초, 페이드아웃 220ms.
+const CLOSE_VISIBLE_MS = 3000;
+const CLOSE_FADE_MS = 220;
 
 // 가로 화면에서 노치/다이내믹 아일랜드는 시각적 좌측에 위치한다.
 // X 버튼이 그 라인과 겹치지 않게 statusbar 높이만큼 안쪽으로 들여둔다.
@@ -52,6 +57,38 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
   // 토스트 노이즈를 줄이기 위해 본국이 선택된 경우에는 띄우지 않는다.
   const [toastName, setToastName] = useState<string | null>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // 닫기 버튼 자동 숨김. opacity는 native driver로 애니메이트하고,
+  // 0이 된 뒤에는 pointerEvents="none"으로 만들어 터치를 막는다.
+  const closeOpacity = useRef(new Animated.Value(1)).current;
+  const [closeInteractive, setCloseInteractive] = useState(true);
+  const closeHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showCloseTemporarily = useCallback(() => {
+    closeOpacity.setValue(1);
+    setCloseInteractive(true);
+    if (closeHideTimer.current) clearTimeout(closeHideTimer.current);
+    closeHideTimer.current = setTimeout(() => {
+      Animated.timing(closeOpacity, {
+        toValue: 0,
+        duration: CLOSE_FADE_MS,
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) setCloseInteractive(false);
+      });
+    }, CLOSE_VISIBLE_MS);
+  }, [closeOpacity]);
+
+  useEffect(() => {
+    showCloseTemporarily();
+    return () => {
+      if (closeHideTimer.current) {
+        clearTimeout(closeHideTimer.current);
+        closeHideTimer.current = null;
+      }
+    };
+  }, [showCloseTemporarily]);
+
   useEffect(() => {
     if (!selectedCountry) return;
     if (selectedCountry.code === homeCountry?.code) return;
@@ -88,6 +125,7 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
     >
       <StatusBar hidden />
       <View
+        onTouchStart={showCloseTemporarily}
         style={[
           styles.rotated,
           {
@@ -118,19 +156,24 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
             mapAreaStyle={{ width: mapW, height: mapH }}
           />
         </View>
-        <Pressable
-          onPress={onClose}
-          hitSlop={12}
-          style={({ pressed }) => [
-            styles.closeBtn,
-            { backgroundColor: theme.cardBg },
-            pressed && styles.closeBtnPressed,
-          ]}
+        <Animated.View
+          pointerEvents={closeInteractive ? "auto" : "none"}
+          style={[styles.closeBtnWrap, { opacity: closeOpacity }]}
         >
-          <Text style={[styles.closeIcon, { color: theme.textPrimary }]}>
-            ✕
-          </Text>
-        </Pressable>
+          <Pressable
+            onPress={onClose}
+            hitSlop={12}
+            style={({ pressed }) => [
+              styles.closeBtn,
+              { backgroundColor: theme.cardBg },
+              pressed && styles.closeBtnPressed,
+            ]}
+          >
+            <Text style={[styles.closeIcon, { color: theme.textPrimary }]}>
+              ✕
+            </Text>
+          </Pressable>
+        </Animated.View>
         {toastName && (
           <View pointerEvents="none" style={styles.bottomOverlay}>
             <View style={styles.namePill}>
@@ -158,10 +201,12 @@ const styles = StyleSheet.create({
   },
   // 회전 컨테이너의 로컬 프레임은 가로 시각 프레임과 일치한다(부모 90° CW 회전).
   // 시각적 좌측에 노치가 있으므로 left에 statusbar 높이만큼 인셋을 더해 겹침을 피한다.
-  closeBtn: {
+  closeBtnWrap: {
     position: "absolute",
     top: 20,
     left: NOTCH_INSET,
+  },
+  closeBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
