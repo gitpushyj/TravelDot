@@ -1,4 +1,36 @@
 {
+  "aiChat": {
+    "title": "AI",
+    "headerClear": "Clear chat",
+    "composerPlaceholder": "Ask your travel buddy",
+    "composerCounter": "{{n}}/500",
+    "send": "Send",
+    "thinking": "Thinking…",
+    "empty": {
+      "heading": "Ask your travel buddy",
+      "subheading": "I'll answer using your travel data"
+    },
+    "exampleNextDestination": "Where should I go next?",
+    "exampleSafety": "Where's safe to travel right now?",
+    "examplePattern": "What's my travel vibe?",
+    "error": {
+      "generic": "Something went off. Try again?",
+      "network": "Network looks shaky. Try again?",
+      "invalidInput": "Mind checking that message?",
+      "imageLoadFailed": "Couldn't load image",
+      "rateLimited": {
+        "free": "You've used today's free quota ({{limit}}). Upgrade to chat more.",
+        "premium": "You've used today's quota ({{limit}}). Resets at midnight KST.",
+        "power": "You've used today's quota ({{limit}}). Resets at midnight KST."
+      }
+    },
+    "confirmClear": {
+      "title": "Clear chat",
+      "body": "Wipe everything we've said so far?",
+      "confirm": "Clear",
+      "cancel": "Cancel"
+    }
+  },
   "common": {
     "ok": "OK",
     "cancel": "Abbrechen",
