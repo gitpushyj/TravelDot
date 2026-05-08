@@ -37,11 +37,15 @@ export default function OnboardingFlow() {
   // step 1(LoginStep)은 환영+로그인 통합 화면. 로그인이 이미 돼 있으면 effect가 step=2로 당긴다.
   const [step, setStep] = useState<number>(1);
 
-  // 시스템 back 차단 (Android). 편도 플로우.
+  // 시스템 back: step 1(LoginStep)에서는 Android 기본 동작(앱 종료)을 허용한다.
+  // step 2 이상은 사용자가 이미 입력한 진행 데이터를 보호하기 위해 차단한다(편도 플로우).
   useEffect(() => {
-    const sub = BackHandler.addEventListener("hardwareBackPress", () => true);
+    const sub = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => step > 1,
+    );
     return () => sub.remove();
-  }, []);
+  }, [step]);
 
   // profile 저장은 로컬 캐시이므로 onboarding 진입 시 hydrate해 둔다.
   useEffect(() => {
