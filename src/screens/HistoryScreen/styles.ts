@@ -152,12 +152,6 @@ export function makeStyles(theme: Theme) {
       fontSize: 12,
       marginTop: 2,
     },
-    rowDate: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      fontWeight: "600",
-      marginRight: 4,
-    },
     chev: {
       color: theme.textMuted,
       fontSize: 22,

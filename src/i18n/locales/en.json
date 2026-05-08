@@ -9,7 +9,8 @@
     "back": "Back",
     "continue": "Continue",
     "remove": "Remove",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "daysSuffix": "({{count}} days)"
   },
   "alerts": {
     "saveFailed": "Save failed",
@@ -36,7 +37,6 @@
     "statVisitsUnit": "trips",
     "statDaysUnit": "days total",
     "empty": "No trips recorded yet.",
-    "tripDuration": "{{days}}-day trip",
     "sortRecent": "Recent",
     "sortDays": "Longest",
     "sortAz": "A–Z",
@@ -134,8 +134,6 @@
     "empty": "No trips recorded for this country yet.",
     "tripPhotos": "{{count}} photos",
     "tripRecent": "Latest",
-    "tripDayOnly": "1 day (same-day)",
-    "tripDuration": "{{days}}-day trip",
     "deleteAction": "Delete",
     "mergeButton": "Merge ▸"
   },

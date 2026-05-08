@@ -9,7 +9,8 @@
     "back": "Назад",
     "continue": "Продолжить",
     "remove": "Удалить",
-    "loading": "Загрузка…"
+    "loading": "Загрузка…",
+    "daysSuffix": "({{count}} days)"
   },
   "alerts": {
     "saveFailed": "Не удалось сохранить",
@@ -36,7 +37,6 @@
     "statVisitsUnit": "поездок",
     "statDaysUnit": "дн. всего",
     "empty": "Поездок пока не записано.",
-    "tripDuration": "поездка на {{days}} дн.",
     "sortRecent": "Свежее",
     "sortDays": "Дольше",
     "sortAz": "А–Я",
@@ -134,8 +134,6 @@
     "empty": "Поездок в эту страну ещё не записано.",
     "tripPhotos": "{{count}} фото",
     "tripRecent": "Свежее",
-    "tripDayOnly": "1 день (на день)",
-    "tripDuration": "поездка на {{days}} дн.",
     "deleteAction": "Удалить",
     "mergeButton": "Merge ▸"
   },

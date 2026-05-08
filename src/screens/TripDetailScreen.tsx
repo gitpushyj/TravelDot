@@ -19,10 +19,10 @@ import type { ImageDetailPhoto } from "../navigation/types";
 import { useTheme } from "../theme/themeStore";
 import { colorForCountry } from "../utils/countryColors";
 import { flagEmoji } from "../utils/flag";
+import { formatTripDateRange } from "../utils/tripFormat";
 
 import {
   formatDateLong,
-  formatDateShort,
   formatDateShortDot,
 } from "./TripDetailScreen/format";
 import PhotosGridView from "./TripDetailScreen/PhotosGridView";
@@ -311,7 +311,8 @@ export default function TripDetailScreen({
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>{t("tripDetail.sectionDates")}</Text>
           <Text style={styles.sectionDate}>
-            {formatDateLong(trip.startDate)} — {formatDateShort(trip.endDate)}
+            {formatTripDateRange(trip.startDate, trip.endDate)}{" "}
+            {t("common.daysSuffix", { count: trip.days })}
           </Text>
         </View>
 

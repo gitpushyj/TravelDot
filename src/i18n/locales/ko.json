@@ -9,7 +9,8 @@
     "back": "뒤로",
     "continue": "계속",
     "remove": "제거",
-    "loading": "불러오는 중…"
+    "loading": "불러오는 중…",
+    "daysSuffix": "({{count}}일)"
   },
   "alerts": {
     "saveFailed": "저장 실패",
@@ -36,7 +37,6 @@
     "statVisitsUnit": "회 여행",
     "statDaysUnit": "일 누적",
     "empty": "아직 기록된 여행이 없어요.",
-    "tripDuration": "{{days}}일 여행",
     "sortRecent": "최근순",
     "sortDays": "체류일순",
     "sortAz": "A-Z",
@@ -134,8 +134,6 @@
     "empty": "아직 이 나라의 여행 기록이 없어요.",
     "tripPhotos": "{{count}}장",
     "tripRecent": "최근",
-    "tripDayOnly": "1일 (당일)",
-    "tripDuration": "{{days}}일 여행",
     "deleteAction": "삭제",
     "mergeButton": "병합 ▸"
   },

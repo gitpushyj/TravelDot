@@ -7,9 +7,9 @@ import { useTranslation } from "react-i18next";
 import type { TripWithPhotos } from "../../features/travel/visitRepository";
 import type { Theme } from "../../theme/theme";
 import { colorForCountry } from "../../utils/countryColors";
+import { formatTripDateRange } from "../../utils/tripFormat";
 
 import { makeStyles } from "./styles";
-import { formatMD } from "./utils";
 
 type Props = {
   theme: Theme;
@@ -97,7 +97,8 @@ export default function TripRow({
       <View style={styles.tripBody}>
         <View style={styles.tripTitleRow}>
           <Text style={styles.tripDate}>
-            {formatMD(trip.startDate)} — {formatMD(trip.endDate)}
+            {formatTripDateRange(trip.startDate, trip.endDate)}{" "}
+            {t("common.daysSuffix", { count: trip.days })}
           </Text>
           {showRecent && (
             <View style={styles.recentBadge}>
@@ -107,11 +108,6 @@ export default function TripRow({
             </View>
           )}
         </View>
-        <Text style={styles.tripSub}>
-          {trip.days === 1
-            ? t("countryDetail.tripDayOnly")
-            : t("countryDetail.tripDuration", { days: trip.days })}
-        </Text>
       </View>
       {!editMode && <Text style={styles.chev}>›</Text>}
     </Pressable>

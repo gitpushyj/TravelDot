@@ -235,11 +235,6 @@ export function makeStyles(theme: Theme) {
       fontSize: 10,
       fontWeight: "800",
     },
-    tripSub: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      fontWeight: "600",
-    },
     chev: {
       color: theme.textMuted,
       fontSize: 22,

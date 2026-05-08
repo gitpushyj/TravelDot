@@ -9,7 +9,8 @@
     "back": "Zurück",
     "continue": "Fortfahren",
     "remove": "Entfernen",
-    "loading": "Wird geladen …"
+    "loading": "Wird geladen …",
+    "daysSuffix": "({{count}} days)"
   },
   "alerts": {
     "saveFailed": "Speichern fehlgeschlagen",
@@ -36,7 +37,6 @@
     "statVisitsUnit": "Reisen",
     "statDaysUnit": "Tage gesamt",
     "empty": "Noch keine Reisen erfasst.",
-    "tripDuration": "{{days}}-tägige Reise",
     "sortRecent": "Neueste",
     "sortDays": "Längste",
     "sortAz": "A–Z",
@@ -134,8 +134,6 @@
     "empty": "Für dieses Land sind noch keine Reisen erfasst.",
     "tripPhotos": "{{count}} Fotos",
     "tripRecent": "Aktuell",
-    "tripDayOnly": "1 Tag (Tagestrip)",
-    "tripDuration": "{{days}}-tägige Reise",
     "deleteAction": "Löschen",
     "mergeButton": "Merge ▸"
   },
