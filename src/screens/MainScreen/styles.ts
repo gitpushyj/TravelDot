@@ -157,7 +157,6 @@ export function makeStyles(theme: Theme) {
     },
     syncText: { color: theme.accentSoftText, fontSize: 12, fontWeight: "600" },
     mapStatsCard: {
-      marginBottom: 24,
       backgroundColor: theme.cardBg,
       borderTopWidth: 1,
       borderBottomWidth: 1,
@@ -203,9 +202,10 @@ export function makeStyles(theme: Theme) {
       justifyContent: "flex-end",
       alignItems: "center",
       gap: 8,
-      paddingHorizontal: 16,
-      paddingTop: 4,
+      paddingHorizontal: 20,
+      paddingTop: 12,
       paddingBottom: 12,
+      marginBottom: 12,
     },
     mapActionBtn: {
       width: 32,
