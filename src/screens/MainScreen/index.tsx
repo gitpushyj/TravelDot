@@ -35,6 +35,8 @@ import { localizedBadgeTitle } from "../../features/badges/badgeI18n";
 import { badgeFromId } from "../../features/badges/badges";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "../../features/badges/countryNames";
 import { pickActiveBadge, useBadgeStore } from "../../features/badges/badgeStore";
+import ShareMapModal from "../../features/share/ShareMapModal";
+import { formatShareYearLabel } from "../../features/share/yearLabel";
 import { getTierByCount } from "../../features/travel/tierTitles";
 import { evaluateMilestone } from "../../features/milestone/milestoneEvaluator";
 import { useMilestoneStore } from "../../features/milestone/milestoneStore";
@@ -45,6 +47,7 @@ import { getCountryName } from "../../lib/countryName";
 import { useAppCtx } from "../../navigation/AppCtx";
 import type { RootStackParamList } from "../../navigation/types";
 import { useTheme } from "../../theme/themeStore";
+import MapActions from "./MapActions";
 import MiniCard from "./MiniCard";
 import { MilestoneFooterText } from "./MilestoneFooterText";
 import RecentList from "./RecentList";
@@ -90,6 +93,7 @@ export default function MainScreen({
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [mapInteracting, setMapInteracting] = useState(false);
   const [addSheetOpen, setAddSheetOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   // TopAppBar hide-on-scroll: 위로 4px 이상 스크롤하면 숨기고, 아래로 4px 이상
   // 스크롤하면 다시 보인다. 컨텐츠 최상단(<=0)에서는 항상 보이게 강제한다.
@@ -277,6 +281,18 @@ export default function MainScreen({
     [activeBadgeId, tier.id]
   );
 
+  const shareYearLabel = useMemo(
+    () => formatShareYearLabel(yearMode, availableYears),
+    [yearMode, availableYears]
+  );
+  const shareBadgeTitle = useMemo(
+    () =>
+      activeBadge
+        ? localizedBadgeTitle(activeBadge, t, getCurrentLocale())
+        : null,
+    [activeBadge, t]
+  );
+
   // 다음 목표 호칭 라벨 (예: "아시아 전문가")
   const nextTitleLabel = useMemo(() => {
     const id = milestoneProgress.nextTitleBadgeId;
@@ -432,16 +448,6 @@ export default function MainScreen({
                   mapAreaStyle={styles.mapAreaInner}
                 />
               ) : null}
-              <Pressable
-                onPress={() => navigation.navigate("MapZoom")}
-                hitSlop={8}
-                style={({ pressed }) => [
-                  styles.mapFloatingBtn,
-                  pressed && styles.mapFloatingBtnPressed,
-                ]}
-              >
-                <Text style={styles.mapFloatingBtnIcon}>⛶</Text>
-              </Pressable>
             </Animated.View>
             <GestureDetector gesture={mapResizeGesture}>
               <View style={styles.mapResizeZone}>
@@ -449,6 +455,13 @@ export default function MainScreen({
               </View>
             </GestureDetector>
           </View>
+          <MapActions
+            styles={styles}
+            onShare={() => setShareModalOpen(true)}
+            onZoom={() => navigation.navigate("MapZoom")}
+            shareA11yLabel={t("home.shareBtnA11y")}
+            zoomA11yLabel={t("home.zoomBtnA11y")}
+          />
         </View>
 
         <View style={styles.statsRow}>
@@ -550,6 +563,17 @@ export default function MainScreen({
             Alert.alert(t("scan.scanFailed"), String(e))
           );
         }}
+      />
+      <ShareMapModal
+        visible={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        theme={theme}
+        visitCounts={activeCounts}
+        badgeEmoji={activeBadge?.emoji ?? null}
+        badgeTitle={shareBadgeTitle}
+        countries={totals.countries}
+        days={totals.days}
+        yearLabel={shareYearLabel}
       />
     </View>
   );

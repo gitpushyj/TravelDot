@@ -311,7 +311,23 @@
     "yearPickerEmptyTitle": "Select Year",
     "yearPickerEmptyBody": "No trips have been recorded yet.",
     "countriesUnit": "countries",
-    "daysUnit": "days"
+    "daysUnit": "days",
+    "shareBtnA11y": "Share map",
+    "zoomBtnA11y": "Open fullscreen map"
+  },
+  "share": {
+    "previewTitle": "Share Map",
+    "dialogTitle": "Share my travel map",
+    "confirm": "Share",
+    "save": "Save",
+    "cancel": "Close",
+    "savedToast": "Saved to Photos",
+    "captureFailed": "Failed to create image. Please try again.",
+    "saveFailed": "Couldn't save to Photos.",
+    "notAvailableTitle": "Sharing unavailable",
+    "notAvailableBody": "Sharing is not available on this device.",
+    "permissionDeniedTitle": "Photo Library Access Needed",
+    "permissionDeniedBody": "Allow photo library access in Settings to save the image."
   },
   "scan": {
     "completedTitle": "Photo scan complete",
