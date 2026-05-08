@@ -125,7 +125,6 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
     >
       <StatusBar hidden />
       <View
-        onTouchStart={showCloseTemporarily}
         style={[
           styles.rotated,
           {
@@ -154,6 +153,7 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
             playIntro={false}
             parentRotated90
             mapAreaStyle={{ width: mapW, height: mapH }}
+            onUserInteract={showCloseTemporarily}
           />
         </View>
         <Animated.View

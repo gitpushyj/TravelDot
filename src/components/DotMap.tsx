@@ -47,6 +47,10 @@ type Props = {
   enableZoom?: boolean;
   // 핀치/팬이 시작·종료될 때 호출. 부모 ScrollView 스크롤을 일시 잠그는 데 사용.
   onInteractingChange?: (interacting: boolean) => void;
+  // 탭/팬/핀치 어느 것이든 사용자 손가락이 지도 위에 올라온 순간 1회 호출.
+  // RNGH GestureDetector가 네이티브에서 터치를 잡아버려 부모 onTouchStart가
+  // 안 들어오므로, 외부에서 "지도 만짐"을 감지해야 할 때 사용한다.
+  onUserInteract?: () => void;
   // 기본 width:100% + aspectRatio 360/145 대신 직접 사이즈를 지정하고 싶을 때.
   mapAreaStyle?: StyleProp<ViewStyle>;
   // 한 도트가 여러 나라에 걸쳐 있을 때 선택 UI 없이 첫 국가를 자동 선택.
@@ -62,6 +66,7 @@ export default function DotMap({
   visitCounts: visitCountsProp,
   enableZoom = true,
   onInteractingChange,
+  onUserInteract,
   mapAreaStyle,
   autoPickFirst = false,
   playIntro = true,
@@ -155,6 +160,15 @@ export default function DotMap({
     [onInteractingChange]
   );
 
+  // 제스처 useMemo가 매번 재생성되지 않도록 콜백은 ref로 안정화한다.
+  const userInteractRef = useRef(onUserInteract);
+  useEffect(() => {
+    userInteractRef.current = onUserInteract;
+  }, [onUserInteract]);
+  const fireUserInteract = useCallback(() => {
+    userInteractRef.current?.();
+  }, []);
+
   const viewW = size.width;
   const viewH = size.height;
 
@@ -164,6 +178,9 @@ export default function DotMap({
   const pinch = useMemo(
     () =>
       Gesture.Pinch()
+        .onBegin(() => {
+          runOnJS(fireUserInteract)();
+        })
         .onStart(() => {
           cancelAnimation(scale);
           cancelAnimation(tx);
@@ -224,6 +241,7 @@ export default function DotMap({
       contentW,
       contentH,
       notifyInteracting,
+      fireUserInteract,
       scale,
       tx,
       ty,
@@ -240,6 +258,9 @@ export default function DotMap({
     () =>
       Gesture.Pan()
         .maxPointers(1)
+        .onBegin(() => {
+          runOnJS(fireUserInteract)();
+        })
         .onStart(() => {
           cancelAnimation(scale);
           cancelAnimation(tx);
@@ -272,6 +293,7 @@ export default function DotMap({
       contentW,
       contentH,
       notifyInteracting,
+      fireUserInteract,
       scale,
       tx,
       ty,
@@ -441,12 +463,15 @@ export default function DotMap({
     () =>
       Gesture.Tap()
         .maxDistance(8)
+        .onBegin(() => {
+          runOnJS(fireUserInteract)();
+        })
         .onEnd((e) => {
           const wx = (e.x - tx.value) / scale.value;
           const wy = (e.y - ty.value) / scale.value;
           runOnJS(onTap)(wx, wy);
         }),
-    [onTap, scale, tx, ty]
+    [onTap, fireUserInteract, scale, tx, ty]
   );
 
   const composed = useMemo(
