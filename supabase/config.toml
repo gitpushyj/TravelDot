@@ -1,0 +1,3 @@
+# supabase CLI가 프로젝트 루트로 인식하기 위한 최소 설정.
+# 실제 원격 프로젝트 ref는 supabase link 시 .branches에 저장된다.
+project_id = "visitgrid"
