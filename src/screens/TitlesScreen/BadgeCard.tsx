@@ -7,9 +7,11 @@ import {
   localizedBadgeTitle,
 } from "../../features/badges/badgeI18n";
 import type { BadgeDefinition } from "../../features/badges/badges";
+import { tierVisualFromBadgeId } from "../../features/travel/tierVisuals";
 import { getCurrentLocale } from "../../i18n";
 import type { Theme } from "../../theme/theme";
 
+import TierBadgeIcon from "./TierBadgeIcon";
 import { makeStyles } from "./styles";
 
 type Props = {
@@ -30,6 +32,7 @@ export default function BadgeCard({
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const locale = getCurrentLocale();
+  const tierVisual = badge.isTier ? tierVisualFromBadgeId(badge.id) : null;
   return (
     <Pressable
       onPress={onPress}
@@ -41,9 +44,15 @@ export default function BadgeCard({
         pressed && !locked && { opacity: 0.75 },
       ]}
     >
-      <Text style={[styles.cardEmoji, locked && styles.cardEmojiLocked]}>
-        {locked ? "🔒" : badge.emoji}
-      </Text>
+      {tierVisual ? (
+        <View style={styles.cardIconWrap}>
+          <TierBadgeIcon visual={tierVisual} size={40} locked={locked} />
+        </View>
+      ) : (
+        <Text style={[styles.cardEmoji, locked && styles.cardEmojiLocked]}>
+          {locked ? "🔒" : badge.emoji}
+        </Text>
+      )}
       <Text
         style={[styles.cardTitle, locked && styles.cardTitleLocked]}
         numberOfLines={2}

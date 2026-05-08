@@ -128,6 +128,9 @@ export function makeStyles(theme: Theme) {
       fontSize: 24,
       marginBottom: 2,
     },
+    cardIconWrap: {
+      marginBottom: 6,
+    },
     cardEmojiLocked: {
       opacity: 0.6,
     },

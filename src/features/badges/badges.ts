@@ -8,6 +8,7 @@ import {
   continentOf,
 } from "./continents";
 import { getTierByCount, TierDefinition, TIERS } from "../travel/tierTitles";
+import { TIER_VISUALS } from "../travel/tierVisuals";
 import { flagEmoji } from "../../utils/flag";
 
 export type BadgeCategory =
@@ -69,22 +70,13 @@ const FOREIGN_TIERS: { threshold: number; titleKo: string; titleEn: string; rank
 function tierBadge(tier: TierDefinition): BadgeDefinition {
   // 명예 등급은 더 높은 rank
   const rank = tier.prestige ? 100 + tier.prestige : 50 + Number(tier.id.replace("T", "")) || 50;
-  const emoji = tier.prestige === 4
-    ? "🌐"
-    : tier.prestige === 3
-      ? "💎"
-      : tier.prestige === 2
-        ? "🏆"
-        : tier.prestige === 1
-          ? "⭐️"
-          : "🎖️";
   return {
     id: `tier_${tier.id}`,
     category: "tier",
     titleKo: tier.titleKo,
     titleEn: tier.titleEn,
     description: tier.description,
-    emoji,
+    emoji: TIER_VISUALS[tier.id].emoji,
     rank,
     isTier: true,
   };
