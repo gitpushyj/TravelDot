@@ -85,7 +85,17 @@ export default function HistoryScreen({
     };
   }, [recentTrips]);
 
-  const hintSet = useMemo(() => computeMergeHints(trips ?? []), [trips]);
+  // Hint는 같은 국가의 인접한 두 trip이 4~7일 떨어진 케이스를 가리킨다.
+  // recent 정렬에서만 같은 국가 trip이 화면상 위아래로 붙어있어 "위아래가
+  // 동일한 여행인가요?"라는 안내가 자연스럽다. days(체류일순)/az(이름순)에서는
+  // 화면상 위치가 안 맞으므로 hint를 보여주지 않는다.
+  const hintSet = useMemo(
+    () =>
+      sort === "recent"
+        ? computeMergeHints(trips ?? [])
+        : new Set<string>(),
+    [trips, sort]
+  );
 
   const totals = useMemo(() => {
     if (!trips) return { countries: 0, visits: 0, days: 0 };

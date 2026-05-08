@@ -41,7 +41,7 @@
     "sortDays": "체류일순",
     "sortAz": "A-Z",
     "yearHeader": "{{year}}년",
-    "mergeHint": "동일한 여행인가요? 병합하러 가기 ▸"
+    "mergeHint": "위아래가 동일한 여행인가요? 병합하러 가기 ▸"
   },
   "allCountries": {
     "heading": "모든 나라",

@@ -41,7 +41,7 @@
     "sortDays": "Дольше",
     "sortAz": "А–Я",
     "yearHeader": "{{year}}",
-    "mergeHint": "Same trip? Tap to merge ▸"
+    "mergeHint": "Same trip as the one above/below? Tap to merge ▸"
   },
   "allCountries": {
     "heading": "Все страны",

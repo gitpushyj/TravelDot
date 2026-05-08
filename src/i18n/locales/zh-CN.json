@@ -41,7 +41,7 @@
     "sortDays": "天数",
     "sortAz": "A-Z",
     "yearHeader": "{{year}}年",
-    "mergeHint": "Same trip? Tap to merge ▸"
+    "mergeHint": "Same trip as the one above/below? Tap to merge ▸"
   },
   "allCountries": {
     "heading": "所有国家",

@@ -41,7 +41,7 @@
     "sortDays": "Más larga",
     "sortAz": "A–Z",
     "yearHeader": "{{year}}",
-    "mergeHint": "Same trip? Tap to merge ▸"
+    "mergeHint": "Same trip as the one above/below? Tap to merge ▸"
   },
   "allCountries": {
     "heading": "Todos los países",
