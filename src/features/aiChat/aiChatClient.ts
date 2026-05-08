@@ -22,12 +22,18 @@ export type SendResult = {
   assistant: { text: string; imageUrls: string[] } | null;
 };
 
+// Edge Function이 허용하는 메시지 개수 = 최근 10 + 신규 1 = 11.
+// 클라 store는 UX를 위해 누적되므로(사용자가 스크롤해서 과거 대화 볼 수 있게)
+// 여기서 보낼 때만 sliding window를 적용한다.
+const HISTORY_CAP = 10;
+
 function toWire(messages: ChatMessage[], newUserText: string): WireMessage[] {
   // 에러 어시스턴트 버블(text="" + error key)이나 빈 텍스트 메시지는 LLM 컨텍스트에서 제외.
   // Edge Function의 length === 0 검증에 걸리지 않게 + LLM이 빈 턴을 학습하지 않게.
-  const arr: WireMessage[] = messages
+  const recent = messages
     .filter((m) => !m.error && m.text.trim().length > 0)
-    .map((m) => ({ role: m.role, text: m.text }));
+    .slice(-HISTORY_CAP);
+  const arr: WireMessage[] = recent.map((m) => ({ role: m.role, text: m.text }));
   arr.push({ role: "user", text: newUserText });
   return arr;
 }
