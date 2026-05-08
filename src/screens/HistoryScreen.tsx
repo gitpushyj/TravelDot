@@ -33,33 +33,6 @@ function tripKey(trip: TripWithPhotos): string {
   return `${trip.countryCode}|${trip.startDate}|${trip.endDate}`;
 }
 
-function computeMergeHints(trips: TripWithPhotos[]): Set<string> {
-  const hints = new Set<string>();
-  const byCountry = new Map<string, TripWithPhotos[]>();
-  for (const tr of trips) {
-    const list = byCountry.get(tr.countryCode) ?? [];
-    list.push(tr);
-    byCountry.set(tr.countryCode, list);
-  }
-  for (const list of byCountry.values()) {
-    for (let i = 0; i < list.length; i += 1) {
-      for (let j = i + 1; j < list.length; j += 1) {
-        const a = list[i];
-        const b = list[j];
-        const gap =
-          a.endDate < b.startDate
-            ? diffInDays(a.endDate, b.startDate)
-            : diffInDays(b.endDate, a.startDate);
-        if (gap >= HINT_MIN && gap <= HINT_MAX) {
-          hints.add(tripKey(a));
-          hints.add(tripKey(b));
-        }
-      }
-    }
-  }
-  return hints;
-}
-
 export default function HistoryScreen({
   onClose,
   onSelectTrip,
@@ -84,18 +57,6 @@ export default function HistoryScreen({
       cancelled = true;
     };
   }, [recentTrips]);
-
-  // Hint는 같은 국가의 인접한 두 trip이 4~7일 떨어진 케이스를 가리킨다.
-  // recent 정렬에서만 같은 국가 trip이 화면상 위아래로 붙어있어 "위아래가
-  // 동일한 여행인가요?"라는 안내가 자연스럽다. days(체류일순)/az(이름순)에서는
-  // 화면상 위치가 안 맞으므로 hint를 보여주지 않는다.
-  const hintSet = useMemo(
-    () =>
-      sort === "recent"
-        ? computeMergeHints(trips ?? [])
-        : new Set<string>(),
-    [trips, sort]
-  );
 
   const totals = useMemo(() => {
     if (!trips) return { countries: 0, visits: 0, days: 0 };
@@ -137,6 +98,29 @@ export default function HistoryScreen({
         return [{ year: "", data: arr }];
     }
   }, [trips, sort]);
+
+  // Hint는 화면상 *바로 인접한* 두 같은-국가 trip 사이(gap 4~7)에만 보여야
+  // 하므로, sections로 그룹·정렬이 끝난 결과에서 인접 페어를 검사하고 페어의
+  // 위쪽(=화면 위) trip 아래에만 mark한다. 이래야 hint가 두 trip "사이"에
+  // 위치하고, 페어의 마지막 trip 아래에 어색하게 떠있는 상황도 사라진다.
+  // recent 정렬에서만 의미 있다 (다른 정렬은 같은 국가 trip이 인접 보장 안 됨).
+  const hintSet = useMemo(() => {
+    if (sort !== "recent") return new Set<string>();
+    const hints = new Set<string>();
+    for (const section of sections) {
+      const list = section.data;
+      for (let i = 0; i < list.length - 1; i += 1) {
+        const a = list[i];
+        const b = list[i + 1];
+        if (a.countryCode !== b.countryCode) continue;
+        const gap = diffInDays(b.endDate, a.startDate);
+        if (gap >= HINT_MIN && gap <= HINT_MAX) {
+          hints.add(tripKey(a));
+        }
+      }
+    }
+    return hints;
+  }, [sections, sort]);
 
   return (
     <View style={[styles.root, { paddingBottom: bottomInset }]}>
