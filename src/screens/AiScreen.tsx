@@ -83,12 +83,16 @@ export default function AiScreen() {
       </View>
 
       <View style={styles.body}>
-        {messages.length === 0 ? (
+        {messages.length === 0 && !isSending ? (
           <AiChatEmptyState
             onPickExample={(text) => composerRef.current?.setText(text)}
           />
         ) : (
-          <AiChatList messages={messages} onImagePress={onImagePress} />
+          <AiChatList
+            messages={messages}
+            isThinking={isSending}
+            onImagePress={onImagePress}
+          />
         )}
       </View>
 

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import Markdown from "react-native-markdown-display";
 
 import type { ChatMessage } from "../../features/aiChat/types";
 import { useTheme } from "../../theme/themeStore";
@@ -14,9 +15,11 @@ export default function AiChatBubble({ message, onImagePress }: Props) {
   const theme = useTheme();
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
+  const markdownStyles = useMemo(() => makeMarkdownStyles(theme), [theme]);
 
   const isUser = message.role === "user";
-  const text = message.error ? t(message.error) : message.text;
+  const fallbackText = message.error ? t(message.error) : message.text;
+  const useMarkdown = !isUser && !message.error && message.text.length > 0;
 
   return (
     <View style={[styles.row, isUser ? styles.rowUser : styles.rowAssistant]}>
@@ -27,9 +30,11 @@ export default function AiChatBubble({ message, onImagePress }: Props) {
           message.error ? styles.bubbleError : null,
         ]}
       >
-        {text ? (
+        {useMarkdown ? (
+          <Markdown style={markdownStyles}>{message.text}</Markdown>
+        ) : fallbackText ? (
           <Text style={[styles.text, isUser ? styles.textUser : styles.textAssistant]}>
-            {text}
+            {fallbackText}
           </Text>
         ) : null}
         {message.imageUrls && message.imageUrls.length > 0 ? (
@@ -91,4 +96,48 @@ function makeStyles(theme: ReturnType<typeof useTheme>) {
     },
     image: { width: "100%", height: "100%" },
   });
+}
+
+// 마크다운 element 별 색/사이즈를 테마와 묶어서 정의.
+// react-native-markdown-display의 style prop은 RN StyleSheet 객체와 호환.
+function makeMarkdownStyles(theme: ReturnType<typeof useTheme>) {
+  return {
+    body: { color: theme.textPrimary, fontSize: 15, lineHeight: 22 },
+    paragraph: { marginTop: 0, marginBottom: 6 },
+    heading1: { fontSize: 18, fontWeight: "700" as const, marginTop: 4, marginBottom: 4 },
+    heading2: { fontSize: 17, fontWeight: "700" as const, marginTop: 4, marginBottom: 4 },
+    heading3: { fontSize: 16, fontWeight: "600" as const, marginTop: 4, marginBottom: 4 },
+    strong: { fontWeight: "700" as const },
+    em: { fontStyle: "italic" as const },
+    bullet_list: { marginVertical: 2 },
+    ordered_list: { marginVertical: 2 },
+    list_item: { marginBottom: 2 },
+    code_inline: {
+      fontFamily: "Courier",
+      backgroundColor: theme.cardBorder,
+      paddingHorizontal: 4,
+      borderRadius: 4,
+    },
+    fence: {
+      fontFamily: "Courier",
+      backgroundColor: theme.cardBorder,
+      padding: 8,
+      borderRadius: 8,
+    },
+    code_block: {
+      fontFamily: "Courier",
+      backgroundColor: theme.cardBorder,
+      padding: 8,
+      borderRadius: 8,
+    },
+    link: { color: theme.accent, textDecorationLine: "underline" as const },
+    blockquote: {
+      borderLeftWidth: 3,
+      borderLeftColor: theme.cardBorder,
+      paddingLeft: 8,
+      marginVertical: 4,
+      opacity: 0.85,
+    },
+    hr: { backgroundColor: theme.cardBorder, height: 1, marginVertical: 6 },
+  };
 }
