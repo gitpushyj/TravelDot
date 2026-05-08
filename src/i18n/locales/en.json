@@ -330,15 +330,11 @@
     "previewTitle": "Share Map",
     "dialogTitle": "Share my travel map",
     "confirm": "Share",
-    "save": "Save",
     "cancel": "Close",
-    "savedToast": "Saved to Photos",
+    "zoomHint": "Pinch and drag the map to frame it",
     "captureFailed": "Failed to create image. Please try again.",
-    "saveFailed": "Couldn't save to Photos.",
     "notAvailableTitle": "Sharing unavailable",
-    "notAvailableBody": "Sharing is not available on this device.",
-    "permissionDeniedTitle": "Photo Library Access Needed",
-    "permissionDeniedBody": "Allow photo library access in Settings to save the image."
+    "notAvailableBody": "Sharing is not available on this device."
   },
   "scan": {
     "completedTitle": "Photo scan complete",
