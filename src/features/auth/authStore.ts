@@ -1,6 +1,7 @@
 import type { Session, User } from "@supabase/supabase-js";
 import { create } from "zustand";
 
+import { clearMessages as clearAiChatMessages } from "../aiChat/aiChatStorage";
 import { supabase } from "../../lib/supabase";
 import { AppleSignInCancelled, signInWithApple } from "./appleSignIn";
 import {
@@ -86,6 +87,14 @@ export const useAuthStore = create<State>((set) => ({
   },
 
   signOut: async () => {
+    const userId = useAuthStore.getState().user?.id;
+    if (userId) {
+      try {
+        await clearAiChatMessages(userId);
+      } catch {
+        // 메모리 정리 실패는 로그아웃 자체를 막지 않는다.
+      }
+    }
     await signOutFromGoogle();
     await supabase.auth.signOut();
   },
