@@ -100,7 +100,9 @@ create policy ai_chat_usage_select_self
 ```text
 You are VisitGrid's personal travel companion for this user.
 Reply in the user's app language: <lang>.
-Be friendly, concise, and grounded in the user's own travel history.
+Talk to the user like a close friend (casual, warm, second-person).
+Match the casual register of their app language.
+Be concise and grounded in the user's own travel history.
 Use the web_search tool ONLY when the question depends on time-sensitive,
 real-world facts (current safety/geopolitics, visa rules, weather windows,
 prices). Do NOT search for general advice the user already implies.
@@ -118,17 +120,23 @@ USER COUNTRY STATS  (top 30 by visit count)
 |------|--------|-------------|------------|------------|
 | ...  | ...    | ...         | ...        | ...        |
 
-RECENT TRIPS  (latest 5)
-- 2024-08-12 ~ 2024-08-19  JP — "오사카 다코야키 투어"
+TRIPS  (all, up to 200, newest first; memo truncated to 50 chars)
+- 2024-08-19 ~ 2024-08-19  JP  "오사카 다코야키 투어 — 첫째 날부터 비가 와…"
+- 2024-07-03 ~ 2024-07-05  TH
 - ...
 ```
 
 **조립 절차**
 
-1. service_role client로 본인 user의 `trips` 최근 200건 조회 (`deleted_at is null`, `updated_at desc`).
+1. service_role client로 본인 user의 `trips` 최근 200건 조회 (`deleted_at is null`, `start_date desc`).
 2. 같은 200건을 country_code 기준 group → `(visits, first_visit=min(start_date), last_visit=max(start_date), total_days=Σ(end-start+1))` 계산 → 방문 횟수 desc 상위 30개를 `USER COUNTRY STATS`에 채운다.
-3. 같은 200건 중 `start_date desc` 상위 5건을 `RECENT TRIPS`에 채운다. `body`(메모)가 `null`이거나 빈 문자열이면 메모 부분을 생략하고 날짜·국가만 표시한다.
+3. 같은 200건 전체를 `start_date desc` 정렬해 `TRIPS` 섹션에 한 줄씩 채운다.
+   - 형식: `- {start_date} ~ {end_date}  {country_code}  "{memo50}"`
+   - `memo50`은 `body`의 앞 50자만 사용. 50자 초과 시 끝에 `…` (U+2026) 한 글자 추가.
+   - `body`가 `null`이거나 trim 후 빈 문자열이면 메모 부분(공백 두 칸 + 따옴표 블록) 자체를 생략한다.
 4. 200건 미만이면 있는 만큼만 채운다. 0건이면 "USER has no trips yet." 한 줄로 대체한다.
+
+> 메모 truncate는 글자(JS code unit) 기준이 아닌 **Array.from(body)의 codepoint 단위**로 자른다(이모지·결합 문자 안전).
 
 ## 5. UI
 
@@ -157,9 +165,15 @@ AiScreen (root)
 
 ### 5.3 예시 질문 칩 (i18n 키)
 
-- `aiChat.exampleNextDestination` — "내 여행 기록 기반으로 다음 여행지 추천해줘"
-- `aiChat.exampleSafety` — "이번에 가려는 나라 지금 안전한가?"
-- `aiChat.examplePattern` — "내 여행 패턴 분석해줘"
+말투는 **친구에게 대화하듯**한 톤으로 통일(반말/캐주얼). 각 언어로 자연스러운 친구체로 번역한다.
+
+| i18n 키 | 한국어 (ko) | 영어 (en) |
+|---------|-------------|-----------|
+| `aiChat.exampleNextDestination` | 다음 여행지는 어디가 좋을까? | Where should I go next? |
+| `aiChat.exampleSafety` | 요즘 안전한 여행지 어디야? | Where's safe to travel right now? |
+| `aiChat.examplePattern` | 내 여행 스타일 어떤 거 같아? | What's my travel vibe? |
+
+system prompt에도 톤 가이드 한 줄을 추가한다: "Talk to the user like a close friend (casual, warm, second-person). Match the casual register of their app language."
 
 ### 5.4 이미지 inline 렌더 규칙
 
