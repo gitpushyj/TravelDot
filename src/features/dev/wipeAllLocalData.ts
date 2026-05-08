@@ -4,7 +4,7 @@ import { useAuthStore } from "../auth/authStore";
 import { useBadgeStore } from "../badges/badgeStore";
 import { useOnboardingStore } from "../onboarding/onboardingStore";
 import { useProfileStore } from "../onboarding/profileStore";
-import { wipeAllVisits } from "../travel/visit/maintenance";
+import { wipeAllVisits } from "../travel/visitRepository";
 import { useVisitStore } from "../travel/visitStore";
 import { useThemeStore } from "../../theme/themeStore";
 

@@ -12,6 +12,7 @@ import { useAuthStore } from "./src/features/auth/authStore";
 import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrateUserProfileFromDb";
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
 import { useMilestoneStore } from "./src/features/milestone/milestoneStore";
+import { useSyncStore } from "./src/features/travelSync/syncStore";
 import { useVisitStore } from "./src/features/travel/visitStore";
 import { useScreenBottomInset } from "./src/hooks/useScreenInsets";
 import { AppCtxProvider, type AppNavCtx } from "./src/navigation/AppCtx";
@@ -50,6 +51,8 @@ export default function App() {
   const onboardingMarkCompleted = useOnboardingStore((s) => s.markCompleted);
   const milestoneHydrate = useMilestoneStore((s) => s.hydrate);
   const milestoneHydrated = useMilestoneStore((s) => s.hydrated);
+  const syncHydrate = useSyncStore((s) => s.hydrate);
+  const syncHydrated = useSyncStore((s) => s.hydrated);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
@@ -65,8 +68,24 @@ export default function App() {
     void authHydrate();
     void onboardingHydrate();
     void milestoneHydrate();
+    void syncHydrate();
     void initI18n().then(() => setI18nReady(true));
-  }, [hydrate, themeHydrate, authHydrate, onboardingHydrate, milestoneHydrate]);
+  }, [
+    hydrate,
+    themeHydrate,
+    authHydrate,
+    onboardingHydrate,
+    milestoneHydrate,
+    syncHydrate,
+  ]);
+
+  // 로그인되어 있고 sync store도 hydrate된 시점에 트립 동기화를 시작한다.
+  // push는 모든 tier에서, pull은 premium 이상에서. 결과는 백그라운드라 await하지 않는다.
+  useEffect(() => {
+    if (!authUser) return;
+    if (!syncHydrated) return;
+    void useSyncStore.getState().runFullSync();
+  }, [authUser, syncHydrated]);
 
   // iOS App Tracking Transparency 프롬프트. 첫 렌더 직전(hydrate 완료) 1회만
   // 호출한다. Android에서는 no-op.

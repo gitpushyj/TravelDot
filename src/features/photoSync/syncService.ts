@@ -1,5 +1,4 @@
 import { toLocalDateKey } from "../../utils/date";
-import { getDb } from "../travel/db";
 import {
   addPhotos,
   bridgeNearbyVisitDays,
@@ -19,15 +18,11 @@ async function runSync(sinceDate: string | null): Promise<void> {
   const store = useVisitStore.getState();
   const homeCode = store.homeCountry?.code ?? null;
 
-  // 첫 스캔 여부를 사진 추가 *전에* 평가한다 — 사진 추가 후에는 visit_days가
-  // 채워져 더 이상 "첫 스캔"이 아니게 되기 때문. 이후 incremental sync나
+  // 첫 스캔 여부를 사진 추가 *전에* 평가한다 — 사진 추가 후에는 트립이
+  // 만들어져 더 이상 "첫 스캔"이 아니게 되기 때문. 이후 incremental sync나
   // Settings의 전체 재스캔에서는 사용자의 수동 분리/병합 결정을 보존하기 위해
   // 자동 병합을 실행하지 않는다.
-  const dbHandle = await getDb();
-  const existing = await dbHandle.getFirstAsync<{ x: number }>(
-    `SELECT 1 AS x FROM visit_days WHERE deleted_at IS NULL LIMIT 1`
-  );
-  const isFirstScan = existing == null;
+  const isFirstScan = (await loadLatestVisitDate()) == null;
 
   const permission = await ensurePermission();
   if (permission === "denied") {

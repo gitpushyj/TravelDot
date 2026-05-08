@@ -17,8 +17,16 @@ export function diffInDays(a: string, b: string): number {
 }
 
 export function addOneDay(date: string): string {
+  return shiftDate(date, 1);
+}
+
+export function subOneDay(date: string): string {
+  return shiftDate(date, -1);
+}
+
+function shiftDate(date: string, days: number): string {
   const [y, m, d] = date.split("-").map(Number);
-  const dt = new Date(Date.UTC(y, m - 1, d + 1));
+  const dt = new Date(Date.UTC(y, m - 1, d + days));
   const yy = dt.getUTCFullYear();
   const mm = String(dt.getUTCMonth() + 1).padStart(2, "0");
   const dd = String(dt.getUTCDate()).padStart(2, "0");

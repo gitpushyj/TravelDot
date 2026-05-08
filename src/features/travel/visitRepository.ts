@@ -1,61 +1,67 @@
-// 방문 기록 저장소의 진입점. 도메인별 실제 구현은 ./visit/ 아래에 분리되어 있다.
-// (counts, trips, photos, notes, maintenance) 호출 측은 항상 이 barrel을 통해 import한다.
+// 방문 기록 저장소의 진입점. 새 trip 모델 (traveldot_v1.db) 기반.
+// 호출 측은 항상 이 barrel을 통해 import한다.
+// 일부 함수(createTrip/deleteTrip/updateTripDates/bridgeNearbyVisitDays/mergeTrips/upsertNote/deleteNote 등)는
+// 기존 visit_days 시대의 시그니처를 유지하기 위해 trip/* 모듈에서 호환 wrapper를 노출한다.
+
 export {
   PHOTO_LIMIT_PER_DAY,
-  type RecentTrip,
-  type TripPhoto,
-  type TripWithPhotos,
-  type VisitNote,
-  type VisitPhotoForReview,
   type VisitPhotoInput,
-  type YearSummary,
-} from "./visit/types";
+  type TripPhoto,
+  type VisitPhotoForReview,
+  addPhotos,
+  loadPhotosForTrip,
+  loadAllPhotosForReview,
+  loadPhotoUrisByIds,
+  markPhotosUserReviewed,
+  softDeletePhotosByIds,
+  updatePhotoDevices,
+} from "./trip/tripPhotos";
+
+export {
+  type VisitNote,
+  listNotes,
+  loadLatestNoteForTrip,
+  upsertNote,
+  deleteNote,
+} from "./trip/tripNotes";
 
 export {
   countPhotosForCountry,
   countPhotosForDay,
   countPhotosForTrip,
-  loadAvailableYears,
   loadForeignPhotoCount,
+} from "./trip/tripPhotoCounts";
+
+export {
+  type YearSummary,
+  loadAvailableYears,
   loadLatestVisitDate,
   loadTotalVisitDays,
   loadVisitCounts,
   loadVisitCountsByYear,
   loadYearSummaries,
-} from "./visit/counts";
+} from "./trip/tripCounts";
 
 export {
-  createTrip,
-  deleteTrip,
+  type RecentTrip,
+  type TripWithPhotos,
   loadAllTrips,
   loadRecentTripsByCountry,
   loadTripsForCountry,
+} from "./trip/tripList";
+
+export {
+  createTrip,
   updateTripDates,
-} from "./visit/trips";
-
-export {
-  addPhotos,
-  loadAllPhotosForReview,
-  loadPhotoUrisByIds,
-  loadPhotosForTrip,
-  markPhotosUserReviewed,
-  softDeletePhotosByIds,
-  updatePhotoDevices,
-} from "./visit/photos";
-
-export {
-  deleteNote,
-  listNotes,
-  loadLatestNoteForTrip,
-  upsertNote,
-} from "./visit/notes";
-
-export {
-  removeAutoVisitsForCountry,
-  wipeAllVisits,
-} from "./visit/maintenance";
+  deleteTrip,
+} from "./trip/tripWriters";
 
 export {
   bridgeNearbyVisitDays,
   mergeTrips,
-} from "./visit/merge";
+} from "./trip/tripMerge";
+
+export {
+  removeAutoVisitsForCountry,
+  wipeAllVisits,
+} from "./trip/tripMaintenance";
