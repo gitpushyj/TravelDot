@@ -84,8 +84,9 @@ export async function* iteratePhotos(
       const loc = locations[i];
       yield {
         id: asset.id,
-        // ph:// URI로도 Image 컴포넌트가 정상 로드한다. localUri 해석을
-        // 생략해 getAssetInfoAsync 호출을 0으로 줄인다.
+        // 스캔 단계에서는 ph:// URI를 그대로 흘려 getAssetInfoAsync 비용을
+        // 0으로 줄인다. ph://는 RN Image 로더가 케이스(iCloud 미다운로드 자산
+        // 등)에 따라 실패하므로 표시 시점에 resolveDisplayUris로 해석해야 한다.
         uri: asset.uri,
         lat: toFiniteNumber(loc?.lat),
         lng: toFiniteNumber(loc?.lng),
