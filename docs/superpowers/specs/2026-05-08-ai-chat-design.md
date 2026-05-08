@@ -291,7 +291,9 @@ function todayKst(): string {
 
 ## 9. i18n
 
-신규 키 (`src/i18n/locales/{ko,en}.json`):
+신규 키는 현재 지원 중인 **10개 언어 파일 모두**에 추가한다(`ko, en, ja, zh-CN, zh-TW, es, de, fr, it, ru`). ko/en은 이번 PR에서 친구체로 정확히 작성하고, 나머지 8개 언어는 일관된 키 존재를 위해 영어값으로 동일하게 채워둔다(향후 native 검토로 친구체로 다듬는다). AI 응답 자체의 친구체는 system prompt 톤 가이드로 모든 언어에서 자동 적용된다.
+
+키:
 
 ```
 aiChat.title
@@ -357,15 +359,9 @@ AI 응답 자체는 system prompt에 사용자 앱 언어를 명시해 모델이
 - "OPENAI_API_KEY 등록 여부 확인"
 - "ai-chat Edge Function 배포 여부"
 
-## 12. 분석 추적 (`src/lib/tracking.ts`)
+## 12. 분석 추적
 
-- `ai_chat_open` — AI 탭 진입
-- `ai_chat_send` — 사용자 메시지 전송
-- `ai_chat_response_ok` — 어시스턴트 응답 성공
-- `ai_chat_response_error` — 응답 실패 (params: errorKind)
-- `ai_chat_rate_limited` — 한도 초과 (params: tier)
-- `ai_chat_clear` — 대화 비우기
-- `ai_chat_image_open` — 인라인 이미지 풀스크린
+이번 범위 **밖**. 코드베이스에 일반 `logEvent` 헬퍼가 아직 없고(`@react-native-firebase/analytics`는 의존성에만 존재) 단일 기능을 위해 헬퍼를 새로 만드는 것은 YAGNI 위배. analytics 헬퍼가 도입되는 시점에 다음 이벤트를 추가한다: `ai_chat_open`, `ai_chat_send`, `ai_chat_response_ok`, `ai_chat_response_error(errorKind)`, `ai_chat_rate_limited(tier)`, `ai_chat_clear`, `ai_chat_image_open`.
 
 ## 13. 향후(v2)
 
