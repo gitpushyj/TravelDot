@@ -311,7 +311,23 @@
     "yearPickerEmptyTitle": "연도 선택",
     "yearPickerEmptyBody": "아직 기록된 여행이 없습니다.",
     "countriesUnit": "개국",
-    "daysUnit": "일"
+    "daysUnit": "일",
+    "shareBtnA11y": "지도 공유하기",
+    "zoomBtnA11y": "지도 전체화면 보기"
+  },
+  "share": {
+    "previewTitle": "지도 공유",
+    "dialogTitle": "내 여행 지도 공유하기",
+    "confirm": "공유",
+    "save": "저장",
+    "cancel": "닫기",
+    "savedToast": "사진에 저장됨",
+    "captureFailed": "이미지 생성 실패. 다시 시도해주세요.",
+    "saveFailed": "사진 저장에 실패했어요.",
+    "notAvailableTitle": "공유 불가",
+    "notAvailableBody": "이 기기에서는 공유 기능을 사용할 수 없어요.",
+    "permissionDeniedTitle": "사진 접근 권한 필요",
+    "permissionDeniedBody": "사진 라이브러리에 저장하려면 권한이 필요해요. 설정에서 권한을 허용해주세요."
   },
   "scan": {
     "completedTitle": "사진 확인이 끝났어요",

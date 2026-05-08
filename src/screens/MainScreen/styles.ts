@@ -198,10 +198,16 @@ export function makeStyles(theme: Theme) {
       borderRadius: 999,
       backgroundColor: theme.handleColor,
     },
-    mapFloatingBtn: {
-      position: "absolute",
-      left: 12,
-      top: 12,
+    mapActions: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      gap: 8,
+      paddingHorizontal: 16,
+      paddingTop: 4,
+      paddingBottom: 12,
+    },
+    mapActionBtn: {
       width: 32,
       height: 32,
       borderRadius: 16,
@@ -216,10 +222,10 @@ export function makeStyles(theme: Theme) {
       shadowRadius: 6,
       elevation: 3,
     },
-    mapFloatingBtnPressed: {
+    mapActionBtnPressed: {
       backgroundColor: theme.tabRowBg,
     },
-    mapFloatingBtnIcon: {
+    mapActionIcon: {
       color: theme.textPrimary,
       fontSize: 14,
       fontWeight: "700",
