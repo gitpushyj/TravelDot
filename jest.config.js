@@ -9,11 +9,13 @@ module.exports = {
     '/ios/',
     '/android/',
     '/.claude/',
+    '/supabase/',
   ],
   modulePathIgnorePatterns: [
     '<rootDir>/.claude/',
     '<rootDir>/ios/',
     '<rootDir>/android/',
+    '<rootDir>/supabase/',
   ],
   watchPathIgnorePatterns: ['<rootDir>/.claude/'],
   haste: {
