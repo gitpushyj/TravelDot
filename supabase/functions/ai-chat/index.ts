@@ -107,35 +107,38 @@ Deno.serve(async (req) => {
   const user = userRes.user;
 
   // 2) Body 검증
+  // 비즈니스 응답(rate_limited / invalid_input)은 status 200 + body의 `error` 필드로 보낸다.
+  // supabase-js v2의 invoke는 4xx/5xx 응답을 error 객체로 감싸면서 body 접근을 까다롭게 만들어
+  // 클라 분기가 어긋나는 케이스가 있다. 진짜 시스템 에러(401/502/500)만 비-200으로 남긴다.
   let body: IncomingBody;
   try {
     body = await req.json();
   } catch {
-    return json({ error: "invalid_input", reason: "bad_json" }, 400);
+    return json({ error: "invalid_input", reason: "bad_json" });
   }
   const messages = Array.isArray(body?.messages) ? body.messages : [];
   // max = 가장 큰 tier(power=30) sliding window + 신규 1 = 31.
   if (messages.length < 1 || messages.length > 31) {
-    return json({ error: "invalid_input", reason: "messages_count" }, 400);
+    return json({ error: "invalid_input", reason: "messages_count" });
   }
   for (const m of messages) {
     if (m.role !== "user" && m.role !== "assistant") {
-      return json({ error: "invalid_input", reason: "role" }, 400);
+      return json({ error: "invalid_input", reason: "role" });
     }
     if (typeof m.text !== "string" || m.text.length === 0) {
-      return json({ error: "invalid_input", reason: "text_empty" }, 400);
+      return json({ error: "invalid_input", reason: "text_empty" });
     }
     // user 입력만 500자 제한 (UX). assistant text는 모델 출력이라 길 수 있어
     // 8000자 안전망만 둔다.
     if (m.role === "user" && m.text.length > 500) {
-      return json({ error: "invalid_input", reason: "text_too_long" }, 400);
+      return json({ error: "invalid_input", reason: "text_too_long" });
     }
     if (m.role === "assistant" && m.text.length > 8000) {
-      return json({ error: "invalid_input", reason: "text_too_long" }, 400);
+      return json({ error: "invalid_input", reason: "text_too_long" });
     }
   }
   if (messages[messages.length - 1].role !== "user") {
-    return json({ error: "invalid_input", reason: "last_role" }, 400);
+    return json({ error: "invalid_input", reason: "last_role" });
   }
 
   // 3) 사용자 행 조회 (service_role): tier(한도용) + 프로필(나이/성별)
@@ -166,7 +169,8 @@ Deno.serve(async (req) => {
   const usedToday = (usageRow?.count as number | undefined) ?? 0;
 
   if (usedToday >= limit) {
-    return json({ error: "rate_limited", tier, limit }, 429);
+    // 비즈니스 응답: status 200 + body로 분류 (위 invalid_input과 동일한 이유).
+    return json({ error: "rate_limited", tier, limit });
   }
 
   // 5) trips 200건

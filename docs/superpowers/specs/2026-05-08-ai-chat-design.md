@@ -246,12 +246,17 @@ Content-Type: application/json
 }
 ```
 
-**에러 응답**
+**비즈니스 응답 (status 200, body로 분류)**
+- 일일 한도 초과 → `{ error: "rate_limited", tier, limit }`
+- 입력 검증 실패 → `{ error: "invalid_input", reason }`
+- 정상 → `{ assistant: { text }, usage: { tier, usedToday, limit } }`
+
+비즈니스 분기를 status 200으로 통일한 이유: supabase-js v2의 `functions.invoke`가 4xx/5xx 응답을 error 객체로 감싸면서 body 접근을 까다롭게 만들어, 클라가 rate_limited를 generic 에러로 오분류하는 회귀가 있었다. 정상·한도 초과·입력 오류는 모두 비즈니스 응답이므로 body로만 분기한다.
+
+**시스템 에러 응답 (비-200)**
 - `401` — JWT 없음/유효하지 않음 → 클라에서 로그인 화면 안내.
-- `429` — 일일 한도 초과 → 응답 body `{ error: "rate_limited", tier, limit }`.
-- `400` — 입력 검증 실패(메시지 길이/개수). body `{ error: "invalid_input", reason }`.
-- `502` — 모델 호출 실패. body `{ error: "upstream_error" }`. 원본 OpenAI 에러는 마스킹.
-- `500` — 그 외. body `{ error: "internal" }`.
+- `502` — 모델 호출 실패 → 원본 OpenAI 에러는 마스킹, body `{ error: "upstream_error" }`.
+- `500` — 그 외 서버 자체 문제 → body `{ error: "internal" }`.
 
 ### 6.3 처리 흐름
 
