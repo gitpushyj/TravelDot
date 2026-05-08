@@ -14,8 +14,12 @@ export type Theme = {
   textMuted: string;
   // 강조색 (오렌지 톤)
   accent: string;
+  accentOn: string; // accent 위에 얹는 글씨/아이콘 색
   accentSoftBg: string;
   accentSoftText: string;
+  // 위험/한도 톤 (AI 채팅 한도 초과 배너 등)
+  dangerBg: string;
+  dangerOn: string;
   // 탭/필 배경
   tabRowBg: string;
   // 잔디(히트맵) 5단계 + 본국 색
@@ -53,8 +57,11 @@ export const LIGHT_THEME: Theme = {
   textSecondary: "#8a8779",
   textMuted: "#b8b5aa",
   accent: "#ff6b35",
+  accentOn: "#ffffff",
   accentSoftBg: "#ffe5d3",
   accentSoftText: "#d96a3a",
+  dangerBg: "#fee2e2",
+  dangerOn: "#991b1b",
   tabRowBg: "#f3efe6",
   heatmap: ["#d8d6ca", "#92c886", "#5fa252", "#2d7d34", "#155321"],
   homeColor: "#1d4ed8",
@@ -83,8 +90,11 @@ export const DARK_THEME: Theme = {
   textSecondary: "#a8aab1",
   textMuted: "#6b6e76",
   accent: "#ff7a3d",
+  accentOn: "#ffffff",
   accentSoftBg: "rgba(255,122,61,0.16)",
   accentSoftText: "#ff9a66",
+  dangerBg: "rgba(220,38,38,0.18)",
+  dangerOn: "#fecaca",
   tabRowBg: "rgba(255,255,255,0.06)",
   heatmap: ["#2e3038", "#0e4429", "#006d32", "#26a641", "#39d353"],
   homeColor: "#3b82f6",
