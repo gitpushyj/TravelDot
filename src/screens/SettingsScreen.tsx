@@ -66,12 +66,16 @@ export default function SettingsScreen({
   const authUser = useAuthStore((s) => s.user);
   const authSignOut = useAuthStore((s) => s.signOut);
 
-  const isPremium = useEntitlementStore((s) => s.isPremium);
-  const setPremium = useEntitlementStore((s) => s.setPremium);
+  const isAllMilestoneVisible = useEntitlementStore(
+    (s) => s.isAllMilestoneVisible
+  );
+  const setAllMilestoneVisible = useEntitlementStore(
+    (s) => s.setAllMilestoneVisible
+  );
   const evaluateBadges = useVisitStore((s) => s.evaluateBadges);
 
-  const onTogglePremium = async (next: boolean) => {
-    await setPremium(next);
+  const onToggleAllMilestoneVisible = async (next: boolean) => {
+    await setAllMilestoneVisible(next);
     await evaluateBadges();
   };
 
@@ -343,13 +347,16 @@ export default function SettingsScreen({
               <View style={styles.row}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.rowLabel}>
-                    {t("settings.devPremium.title")}
+                    {t("settings.devAllMilestonesVisible.title")}
                   </Text>
                   <Text style={styles.rowSub}>
-                    {t("settings.devPremium.subtitle")}
+                    {t("settings.devAllMilestonesVisible.subtitle")}
                   </Text>
                 </View>
-                <Switch value={isPremium} onValueChange={onTogglePremium} />
+                <Switch
+                  value={isAllMilestoneVisible}
+                  onValueChange={onToggleAllMilestoneVisible}
+                />
               </View>
             </View>
           </>

@@ -92,6 +92,17 @@ export default function App() {
     void useSyncStore.getState().runFullSync();
   }, [authUser, syncHydrated]);
 
+  // user.id 변화 시 entitlement(isAllMilestoneVisible)를 서버 tier로 자동 동기화.
+  // 로그아웃 시(user === null)에는 false로 리셋한다. 수동 dev 토글은 이 effect
+  // 외에서만 살아 있으므로 override 의도가 살아남는다.
+  useEffect(() => {
+    if (authUser?.id) {
+      void useEntitlementStore.getState().syncFromUserId(authUser.id);
+    } else {
+      void useEntitlementStore.getState().setAllMilestoneVisible(false);
+    }
+  }, [authUser?.id]);
+
   // iOS App Tracking Transparency 프롬프트. 첫 렌더 직전(hydrate 완료) 1회만
   // 호출한다. Android에서는 no-op.
   useEffect(() => {

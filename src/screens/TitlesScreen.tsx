@@ -35,7 +35,9 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
   const activeId = useBadgeStore((s) => s.activeId);
   const setActive = useBadgeStore((s) => s.setActive);
   const visitCounts = useVisitStore((s) => s.visitCounts);
-  const isPremium = useEntitlementStore((s) => s.isPremium);
+  const isAllMilestoneVisible = useEntitlementStore(
+    (s) => s.isAllMilestoneVisible
+  );
 
   const currentTierBadgeId = useMemo(() => {
     const tier = getTierByCount(Object.keys(visitCounts).length);
@@ -137,7 +139,7 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
 
         {sections.map((section) => {
           const isPremiumCat = section.category.startsWith("premium_");
-          const showLocked = isPremiumCat && !isPremium;
+          const showLocked = isPremiumCat && !isAllMilestoneVisible;
           const unlockedCount = section.items.filter((b) =>
             unlockedSet.has(b.id)
           ).length;

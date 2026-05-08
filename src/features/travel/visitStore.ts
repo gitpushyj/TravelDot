@@ -237,7 +237,7 @@ export const useVisitStore = create<State>((set, get) => ({
     // 갈라질 수 있으니 DB 값을 권위 자료로 한 번 더 확인한다.
     const dbDays = await loadTotalVisitDays();
     let premiumBadges: BadgeDefinition[] = [];
-    if (useEntitlementStore.getState().isPremium) {
+    if (useEntitlementStore.getState().isAllMilestoneVisible) {
       const profile = useProfileStore.getState().profile;
       const ctx = await buildPremiumContext({
         profile,

@@ -598,9 +598,9 @@
       "wipeConfirmAction": "지우기",
       "wipeFailed": "데이터 삭제 실패"
     },
-    "devPremium": {
-      "title": "[DEV] Premium 토글",
-      "subtitle": "결제 시스템 없이 Premium UI 검증용"
+    "devAllMilestonesVisible": {
+      "title": "[DEV] 전체 마일스톤 표시 토글",
+      "subtitle": "tier 0이면 자동 false. 수동 override용"
     }
   },
   "onboarding": {

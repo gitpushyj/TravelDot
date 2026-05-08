@@ -598,9 +598,9 @@
       "wipeConfirmAction": "Erase",
       "wipeFailed": "Data wipe failed"
     },
-    "devPremium": {
-      "title": "[DEV] Premium toggle",
-      "subtitle": "Verify Premium UX without IAP"
+    "devAllMilestonesVisible": {
+      "title": "[DEV] Show all milestones toggle",
+      "subtitle": "Auto-false at tier 0. Manual override"
     }
   },
   "onboarding": {

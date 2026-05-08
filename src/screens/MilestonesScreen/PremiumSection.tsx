@@ -16,12 +16,14 @@ type Props = {
 
 export default function PremiumSection({ theme: _theme, styles, onPressUpsell }: Props) {
   const { t } = useTranslation();
-  const isPremium = useEntitlementStore((s) => s.isPremium);
+  const isAllMilestoneVisible = useEntitlementStore(
+    (s) => s.isAllMilestoneVisible
+  );
 
   return (
     <View style={styles.premiumSection}>
       <View style={styles.premiumHeader}>
-        {isPremium ? null : <Text style={styles.premiumLock}>🔒</Text>}
+        {isAllMilestoneVisible ? null : <Text style={styles.premiumLock}>🔒</Text>}
         <Text style={styles.premiumTitle}>
           {t("milestones.premium.sectionTitle")} ({ALL_PREMIUM_MILESTONE_KINDS.length})
         </Text>
@@ -39,10 +41,10 @@ export default function PremiumSection({ theme: _theme, styles, onPressUpsell }:
               {t(`milestones.premium.items.${id}.description`)}
             </Text>
           </View>
-          {isPremium ? null : <Text style={styles.premiumCardLock}>🔒</Text>}
+          {isAllMilestoneVisible ? null : <Text style={styles.premiumCardLock}>🔒</Text>}
         </View>
       ))}
-      {isPremium ? null : (
+      {isAllMilestoneVisible ? null : (
         <Pressable onPress={onPressUpsell} style={styles.premiumCta}>
           <Text style={styles.premiumCtaText}>
             {t("milestones.premium.ctaUnlock")} →

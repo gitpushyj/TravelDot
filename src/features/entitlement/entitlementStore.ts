@@ -1,23 +1,38 @@
 import { create } from "zustand";
 
-import { loadIsPremium, saveIsPremium } from "./entitlementStorage";
+import { fetchUserTier } from "../auth/userTier";
+import {
+  loadIsAllMilestoneVisible,
+  saveIsAllMilestoneVisible,
+} from "./entitlementStorage";
 
 type State = {
-  isPremium: boolean;
+  isAllMilestoneVisible: boolean;
   hydrated: boolean;
   hydrate: () => Promise<void>;
-  setPremium: (value: boolean) => Promise<void>;
+  setAllMilestoneVisible: (value: boolean) => Promise<void>;
+  syncFromUserId: (userId: string) => Promise<void>;
 };
 
 export const useEntitlementStore = create<State>((set) => ({
-  isPremium: false,
+  isAllMilestoneVisible: false,
   hydrated: false,
   hydrate: async () => {
-    const v = await loadIsPremium();
-    set({ isPremium: v, hydrated: true });
+    const v = await loadIsAllMilestoneVisible();
+    set({ isAllMilestoneVisible: v, hydrated: true });
   },
-  setPremium: async (value) => {
-    set({ isPremium: value });
-    await saveIsPremium(value);
+  setAllMilestoneVisible: async (value) => {
+    set({ isAllMilestoneVisible: value });
+    await saveIsAllMilestoneVisible(value);
+  },
+  syncFromUserId: async (userId) => {
+    try {
+      const tier = await fetchUserTier(userId);
+      const next = tier !== "free";
+      set({ isAllMilestoneVisible: next });
+      await saveIsAllMilestoneVisible(next);
+    } catch {
+      // 네트워크/DB 실패 시 현재 값을 유지한다.
+    }
   },
 }));
