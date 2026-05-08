@@ -23,7 +23,11 @@ export type SendResult = {
 };
 
 function toWire(messages: ChatMessage[], newUserText: string): WireMessage[] {
-  const arr: WireMessage[] = messages.map((m) => ({ role: m.role, text: m.text }));
+  // 에러 어시스턴트 버블(text="" + error key)이나 빈 텍스트 메시지는 LLM 컨텍스트에서 제외.
+  // Edge Function의 length === 0 검증에 걸리지 않게 + LLM이 빈 턴을 학습하지 않게.
+  const arr: WireMessage[] = messages
+    .filter((m) => !m.error && m.text.trim().length > 0)
+    .map((m) => ({ role: m.role, text: m.text }));
   arr.push({ role: "user", text: newUserText });
   return arr;
 }
