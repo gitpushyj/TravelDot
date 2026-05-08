@@ -4,6 +4,38 @@
     "ai": "AI",
     "settings": "설정"
   },
+  "aiChat": {
+    "title": "AI",
+    "headerClear": "대화 비우기",
+    "composerPlaceholder": "여행 친구에게 물어보세요",
+    "composerCounter": "{{n}}/500",
+    "send": "보내기",
+    "thinking": "타이핑 중…",
+    "empty": {
+      "heading": "여행 친구에게 물어봐",
+      "subheading": "네 여행 데이터로 답해줄게"
+    },
+    "exampleNextDestination": "다음 여행지는 어디가 좋을까?",
+    "exampleSafety": "요즘 안전한 여행지 어디야?",
+    "examplePattern": "내 여행 스타일 어떤 거 같아?",
+    "error": {
+      "generic": "잠깐 문제가 생겼어. 다시 시도해줘.",
+      "network": "네트워크가 불안정해. 다시 시도해줘.",
+      "invalidInput": "메시지를 다시 확인해줘.",
+      "imageLoadFailed": "이미지를 불러올 수 없어요",
+      "rateLimited": {
+        "free": "오늘 무료 한도({{limit}}회)를 다 썼어. 등급을 올리면 더 많이 쓸 수 있어.",
+        "premium": "오늘 한도({{limit}}회)를 다 썼어. 내일 자정(KST)에 다시 채워져.",
+        "power": "오늘 한도({{limit}}회)를 다 썼어. 내일 자정(KST)에 다시 채워져."
+      }
+    },
+    "confirmClear": {
+      "title": "대화 비우기",
+      "body": "지금까지 대화를 모두 지울까?",
+      "confirm": "지우기",
+      "cancel": "취소"
+    }
+  },
   "common": {
     "ok": "확인",
     "cancel": "취소",
