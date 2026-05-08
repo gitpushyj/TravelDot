@@ -48,3 +48,6 @@ modules/*/android/.cxx/
 
 # Claude Code 임시 작업 공간 (격리된 worktree)
 .claude/worktrees/
+
+# Supabase CLI가 link/deploy 중 만드는 로컬 캐시 (project-ref 등 머신 로컬 정보)
+supabase/.temp/
