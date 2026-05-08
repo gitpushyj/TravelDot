@@ -19,6 +19,18 @@ export async function wipeAllVisits(): Promise<void> {
   notifyTripsChanged();
 }
 
+// 계정 삭제 시 사용. 서버 데이터는 Edge Function이 이미 hard delete했고
+// 다음 sync 전파가 필요 없으므로 trips도 물리 삭제한다. soft-delete된 행을
+// 남기면 다음 계정의 첫 push에 tombstone이 누설된다.
+export async function purgeAllVisits(): Promise<void> {
+  const db = await getTripDb();
+  await db.withTransactionAsync(async () => {
+    await db.runAsync(`DELETE FROM visit_photos`);
+    await db.runAsync(`DELETE FROM trips`);
+  });
+  notifyTripsChanged();
+}
+
 // 본국이 자동 동기화에서 제외된 정책에 따라, 이미 들어간 자동 사진을 정리한다.
 // 사용자가 직접 추가한 manual 사진이 남아있는 (country, date)는 보존하고,
 // 트립은 "그 기간 안에 살아있는 사진/노트가 하나도 없으면" soft-delete한다.
