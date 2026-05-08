@@ -123,3 +123,17 @@ Deno.test("buildSystemPrompt - friend tone + genuine help instruction present", 
   assertStringIncludes(out, "genuinely helpful");
   assertStringIncludes(out, "Always ground every answer");
 });
+
+Deno.test("buildSystemPrompt - app context (VisitGrid map metaphor) included", () => {
+  const out = buildSystemPrompt({
+    lang: "en",
+    age: null,
+    gender: null,
+    homeCountry: null,
+    stats: [],
+    trips: [],
+  });
+  assertStringIncludes(out, "ABOUT VISITGRID");
+  assertStringIncludes(out, "dot-map");
+  assertStringIncludes(out, "metaphor");
+});
