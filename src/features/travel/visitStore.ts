@@ -23,6 +23,11 @@ import {
 import { useAuthStore } from "../auth/authStore";
 import { useBadgeStore } from "../badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../badges/countryNames";
+import type { BadgeDefinition } from "../badges/badges";
+import { useEntitlementStore } from "../entitlement/entitlementStore";
+import { useProfileStore } from "../onboarding/profileStore";
+import { buildPremiumContext } from "../milestone/premium/buildContext";
+import { evaluatePremiumBadges } from "../milestone/premium/evaluatePremium";
 import { markHomeCountryChangedInDb } from "../onboarding/saveUserProfile";
 
 const HOME_AUTO_CLEANUP_FLAG = "visitgrid:migration:autoHomeCleanup_v1";
@@ -231,6 +236,17 @@ export const useVisitStore = create<State>((set, get) => ({
     // visit_days 전체 행 수 = totalDays(visitCounts 합)와 같지만, 향후 일자 중복 제거 정책이
     // 갈라질 수 있으니 DB 값을 권위 자료로 한 번 더 확인한다.
     const dbDays = await loadTotalVisitDays();
+    let premiumBadges: BadgeDefinition[] = [];
+    if (useEntitlementStore.getState().isPremium) {
+      const profile = useProfileStore.getState().profile;
+      const ctx = await buildPremiumContext({
+        profile,
+        homeCountryCode: homeCountry.code,
+        visitedCountryCodes: Object.keys(visitCounts),
+        now: Date.now(),
+      });
+      premiumBadges = evaluatePremiumBadges(ctx);
+    }
     await useBadgeStore.getState().evaluate(
       {
         visitedCountriesCount: Object.keys(visitCounts).length,
@@ -238,7 +254,8 @@ export const useVisitStore = create<State>((set, get) => ({
         daysByCountry: visitCounts,
         foreignPhotoCount,
       },
-      COUNTRY_NAME_KO_BY_CODE
+      COUNTRY_NAME_KO_BY_CODE,
+      premiumBadges
     );
   },
   ensureYearCounts: async (year) => {

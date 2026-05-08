@@ -9,6 +9,7 @@ import { initI18n } from "./src/i18n";
 import { requestTrackingPermissionIfNeeded } from "./src/lib/tracking";
 import AppAlerts from "./src/components/AppAlerts";
 import { useAuthStore } from "./src/features/auth/authStore";
+import { useEntitlementStore } from "./src/features/entitlement/entitlementStore";
 import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrateUserProfileFromDb";
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
 import { useMilestoneStore } from "./src/features/milestone/milestoneStore";
@@ -53,6 +54,8 @@ export default function App() {
   const milestoneHydrated = useMilestoneStore((s) => s.hydrated);
   const syncHydrate = useSyncStore((s) => s.hydrate);
   const syncHydrated = useSyncStore((s) => s.hydrated);
+  const entitlementHydrate = useEntitlementStore((s) => s.hydrate);
+  const entitlementHydrated = useEntitlementStore((s) => s.hydrated);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
@@ -69,6 +72,7 @@ export default function App() {
     void onboardingHydrate();
     void milestoneHydrate();
     void syncHydrate();
+    void entitlementHydrate();
     void initI18n().then(() => setI18nReady(true));
   }, [
     hydrate,
@@ -77,6 +81,7 @@ export default function App() {
     onboardingHydrate,
     milestoneHydrate,
     syncHydrate,
+    entitlementHydrate,
   ]);
 
   // 로그인되어 있고 sync store도 hydrate된 시점에 트립 동기화를 시작한다.
@@ -136,6 +141,7 @@ export default function App() {
     authHydrated &&
     onboardingHydrated &&
     milestoneHydrated &&
+    entitlementHydrated &&
     i18nReady;
 
   // 모든 store hydrate + i18n 초기화가 끝나면 네이티브 스플래시를 내린다.

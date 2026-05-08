@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "../features/auth/authStore";
@@ -7,6 +7,7 @@ import { deleteAccount } from "../features/auth/deleteAccount";
 import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
+import { useEntitlementStore } from "../features/entitlement/entitlementStore";
 import { evaluateMilestone } from "../features/milestone/milestoneEvaluator";
 import { useMilestoneStore } from "../features/milestone/milestoneStore";
 import {
@@ -64,6 +65,15 @@ export default function SettingsScreen({
 
   const authUser = useAuthStore((s) => s.user);
   const authSignOut = useAuthStore((s) => s.signOut);
+
+  const isPremium = useEntitlementStore((s) => s.isPremium);
+  const setPremium = useEntitlementStore((s) => s.setPremium);
+  const evaluateBadges = useVisitStore((s) => s.evaluateBadges);
+
+  const onTogglePremium = async (next: boolean) => {
+    await setPremium(next);
+    await evaluateBadges();
+  };
 
   const themeOptions: { mode: ThemeMode; label: string }[] = useMemo(
     () =>
@@ -323,6 +333,27 @@ export default function SettingsScreen({
             />
           )}
         </View>
+
+        {__DEV__ && (
+          <>
+            <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+              {t("settings.section.dev")}
+            </Text>
+            <View style={styles.card}>
+              <View style={styles.row}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.rowLabel}>
+                    {t("settings.devPremium.title")}
+                  </Text>
+                  <Text style={styles.rowSub}>
+                    {t("settings.devPremium.subtitle")}
+                  </Text>
+                </View>
+                <Switch value={isPremium} onValueChange={onTogglePremium} />
+              </View>
+            </View>
+          </>
+        )}
 
         <View style={styles.deleteAccountWrap}>
           <Pressable onPress={handleDeleteAccount} hitSlop={8}>

@@ -13,12 +13,14 @@ import {
 } from "../features/badges/badges";
 import { useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
+import { useEntitlementStore } from "../features/entitlement/entitlementStore";
 import { getTierByCount } from "../features/travel/tierTitles";
 import { useVisitStore } from "../features/travel/visitStore";
 import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { useTheme } from "../theme/themeStore";
 
 import BadgeCard from "./TitlesScreen/BadgeCard";
+import PremiumCategorySection from "./TitlesScreen/PremiumCategorySection";
 import { makeStyles } from "./TitlesScreen/styles";
 
 type Props = { onClose: () => void; onOpenMilestones: () => void };
@@ -33,6 +35,7 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
   const activeId = useBadgeStore((s) => s.activeId);
   const setActive = useBadgeStore((s) => s.setActive);
   const visitCounts = useVisitStore((s) => s.visitCounts);
+  const isPremium = useEntitlementStore((s) => s.isPremium);
 
   const currentTierBadgeId = useMemo(() => {
     const tier = getTierByCount(Object.keys(visitCounts).length);
@@ -63,6 +66,11 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
       continent: [],
       country: [],
       foreign: [],
+      premium_age: [],
+      premium_time: [],
+      premium_culture: [],
+      premium_share: [],
+      premium_special: [],
     };
     for (const b of all) groups[b.category].push(b);
 
@@ -128,18 +136,33 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
         </View>
 
         {sections.map((section) => {
+          const isPremiumCat = section.category.startsWith("premium_");
+          const showLocked = isPremiumCat && !isPremium;
           const unlockedCount = section.items.filter((b) =>
             unlockedSet.has(b.id)
           ).length;
+          const lockedSlotCount = showLocked
+            ? Number(
+                t(`titles.premium.slotCounts.${section.category}`, {
+                  defaultValue: "1",
+                })
+              ) || 1
+            : section.items.length;
           return (
             <View key={section.category} style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionLabel}>{section.label}</Text>
                 <Text style={styles.sectionCount}>
-                  {unlockedCount} / {section.items.length}
+                  {unlockedCount} / {lockedSlotCount}
                 </Text>
               </View>
-              {section.items.length === 0 ? (
+              {showLocked ? (
+                <PremiumCategorySection
+                  category={section.category}
+                  theme={theme}
+                  styles={styles}
+                />
+              ) : section.items.length === 0 ? (
                 <Text style={styles.emptyText}>
                   {section.category === "country"
                     ? t("titles.noCountryHint")

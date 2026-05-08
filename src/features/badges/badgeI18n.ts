@@ -93,6 +93,16 @@ export function localizedBadgeTitle(
       defaultValue: badge.titleKo,
     });
   }
+  if (badge.id.startsWith("premium_four_seasons_")) {
+    const code = badge.id.slice("premium_four_seasons_".length);
+    const country = getCountryName(code, locale) ?? code;
+    return t("badges.premium.fourSeasonsTemplate.title", { country });
+  }
+  if (badge.id.startsWith("premium_")) {
+    return t(`badges.premium.${badge.id}.title`, {
+      defaultValue: badge.titleKo,
+    });
+  }
   return badge.titleKo;
 }
 
@@ -160,6 +170,16 @@ export function localizedBadgeDescription(
     return t("badges.country.description", {
       country,
       threshold,
+      defaultValue: badge.description,
+    });
+  }
+  if (badge.id.startsWith("premium_four_seasons_")) {
+    const code = badge.id.slice("premium_four_seasons_".length);
+    const country = getCountryName(code, locale) ?? code;
+    return t("badges.premium.fourSeasonsTemplate.description", { country });
+  }
+  if (badge.id.startsWith("premium_")) {
+    return t(`badges.premium.${badge.id}.description`, {
       defaultValue: badge.description,
     });
   }

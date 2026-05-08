@@ -5,6 +5,7 @@ import { CONTINENTS, ContinentId, continentOf } from "../badges/continents";
 import { TIER_CUTOFFS, TIERS } from "../travel/tierTitles";
 import {
   ContinentMilestoneId,
+  isPremiumMilestoneKind,
   MilestoneKind,
   MilestoneProgress,
 } from "./milestoneTypes";
@@ -86,6 +87,10 @@ export function evaluateMilestone(
       next == null ? null : `days_${next}`,
       "days"
     );
+  }
+  // 프리미엄 마일스톤은 별도 평가기에서 처리 — 여기서는 미구현 상태를 반환
+  if (isPremiumMilestoneKind(kind)) {
+    return buildProgress(kind, 0, null, null, "countries");
   }
   // 대륙 마일스톤
   const continentId = CONTINENT_KIND_TO_ID[kind];

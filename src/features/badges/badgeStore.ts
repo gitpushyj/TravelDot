@@ -30,7 +30,8 @@ type State = {
   /** 뱃지를 재평가하고, 새 뱃지가 있으면 알림 큐에 적재한다 */
   evaluate: (
     stats: BadgeStats,
-    countryNameByCode: Record<string, string>
+    countryNameByCode: Record<string, string>,
+    premium?: BadgeDefinition[]
   ) => Promise<BadgeDefinition[]>;
   setActive: (id: BadgeId | null) => Promise<void>;
   /** 알림 큐에서 앞에서부터 N개 제거 (기본 1) */
@@ -54,8 +55,8 @@ export const useBadgeStore = create<State>((set, get) => ({
     });
   },
 
-  evaluate: async (stats, countryNameByCode) => {
-    const evaluated = evaluateBadges(stats, countryNameByCode);
+  evaluate: async (stats, countryNameByCode, premium = []) => {
+    const evaluated = evaluateBadges(stats, countryNameByCode, premium);
     const evalIds = evaluated.map((b) => b.id);
     const evalSet = new Set(evalIds);
 

@@ -9,6 +9,10 @@ import {
 } from "./continents";
 import { getTierByCount, TierDefinition, TIERS } from "../travel/tierTitles";
 import { TIER_VISUALS } from "../travel/tierVisuals";
+import {
+  PREMIUM_BADGE_DEFS_BY_ID,
+  premiumFourSeasonsBadge,
+} from "../milestone/premium/premiumBadgeCatalog";
 import { flagEmoji } from "../../utils/flag";
 
 export type BadgeCategory =
@@ -16,7 +20,12 @@ export type BadgeCategory =
   | "days" // 누적 여행 일수
   | "continent" // 대륙 탐방가/정복자
   | "country" // 국가 단골(동적, 코드별)
-  | "foreign"; // 해외 사진 누적
+  | "foreign" // 해외 사진 누적
+  | "premium_age"
+  | "premium_time"
+  | "premium_culture"
+  | "premium_share"
+  | "premium_special";
 
 export type BadgeId = string;
 
@@ -193,7 +202,8 @@ function foreignBadge(t: { threshold: number; titleKo: string; titleEn: string; 
  */
 export function evaluateBadges(
   stats: BadgeStats,
-  countryNameByCode: Record<string, string>
+  countryNameByCode: Record<string, string>,
+  premium: BadgeDefinition[] = []
 ): BadgeDefinition[] {
   const out: BadgeDefinition[] = [];
 
@@ -240,6 +250,8 @@ export function evaluateBadges(
   for (const t of FOREIGN_TIERS) {
     if (stats.foreignPhotoCount >= t.threshold) out.push(foreignBadge(t));
   }
+
+  out.push(...premium);
 
   return out;
 }
@@ -288,6 +300,13 @@ export function badgeFromId(
     const koName = countryNameByCode[code] ?? code;
     return countryBadge(code, koName, t);
   }
+  if (id.startsWith("premium_four_seasons_")) {
+    const code = id.slice("premium_four_seasons_".length);
+    return premiumFourSeasonsBadge(code);
+  }
+  if (id.startsWith("premium_")) {
+    return PREMIUM_BADGE_DEFS_BY_ID[id] ?? null;
+  }
   return null;
 }
 
@@ -315,6 +334,9 @@ export function getStaticBadgeCatalog(): BadgeDefinition[] {
     }
   }
   for (const t of FOREIGN_TIERS) out.push(foreignBadge(t));
+  // 정적 premium 카탈로그 — dynamic four_seasons는 국가별로 다이내믹하게
+  // 생성되므로 정적 리스트엔 포함하지 않는다.
+  for (const def of Object.values(PREMIUM_BADGE_DEFS_BY_ID)) out.push(def);
   return out;
 }
 
@@ -325,6 +347,11 @@ export const CATEGORY_LABEL: Record<BadgeCategory, string> = {
   continent: "대륙",
   country: "국가 단골",
   foreign: "해외 사진",
+  premium_age: "Premium · 나이 도전",
+  premium_time: "Premium · 시간 컬렉션",
+  premium_culture: "Premium · 문화·시각",
+  premium_share: "Premium · 점유율",
+  premium_special: "Premium · 특수",
 };
 
 /** 호칭 상세 화면에서 카테고리 노출 순서 */
@@ -334,6 +361,11 @@ export const CATEGORY_ORDER: readonly BadgeCategory[] = [
   "continent",
   "country",
   "foreign",
+  "premium_age",
+  "premium_time",
+  "premium_culture",
+  "premium_share",
+  "premium_special",
 ];
 
 /**

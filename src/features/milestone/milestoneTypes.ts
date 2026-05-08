@@ -10,7 +10,23 @@ export type ContinentMilestoneId =
   | "continent_AF"
   | "continent_NA";
 
-export type MilestoneKind = "countries" | "days" | ContinentMilestoneId;
+export type PremiumMilestoneId =
+  | "premium_n_before_n"
+  | "premium_decade_stamps"
+  | "premium_age_match"
+  | "premium_four_seasons"
+  | "premium_calendar"
+  | "premium_flag_palette"
+  | "premium_un_linguist"
+  | "premium_humanity"
+  | "premium_earth_area"
+  | "premium_round_the_clock";
+
+export type MilestoneKind =
+  | "countries"
+  | "days"
+  | ContinentMilestoneId
+  | PremiumMilestoneId;
 
 export const ALL_MILESTONE_KINDS: readonly MilestoneKind[] = [
   "countries",
@@ -21,6 +37,26 @@ export const ALL_MILESTONE_KINDS: readonly MilestoneKind[] = [
   "continent_AF",
   "continent_NA",
 ];
+
+export const ALL_PREMIUM_MILESTONE_KINDS: readonly PremiumMilestoneId[] = [
+  "premium_n_before_n",
+  "premium_decade_stamps",
+  "premium_age_match",
+  "premium_four_seasons",
+  "premium_calendar",
+  "premium_flag_palette",
+  "premium_un_linguist",
+  "premium_humanity",
+  "premium_earth_area",
+  "premium_round_the_clock",
+];
+
+export function isPremiumMilestoneKind(v: unknown): v is PremiumMilestoneId {
+  return (
+    typeof v === "string" &&
+    (ALL_PREMIUM_MILESTONE_KINDS as readonly string[]).includes(v)
+  );
+}
 
 export const DEFAULT_MILESTONE_KIND: MilestoneKind = "countries";
 
@@ -44,6 +80,7 @@ export type MilestoneProgress = {
 export function isMilestoneKind(value: unknown): value is MilestoneKind {
   return (
     typeof value === "string" &&
-    (ALL_MILESTONE_KINDS as readonly string[]).includes(value)
+    ((ALL_MILESTONE_KINDS as readonly string[]).includes(value) ||
+      (ALL_PREMIUM_MILESTONE_KINDS as readonly string[]).includes(value))
   );
 }

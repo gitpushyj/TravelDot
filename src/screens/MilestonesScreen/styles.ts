@@ -110,5 +110,58 @@ export function makeStyles(theme: Theme) {
     rowProgressDone: {
       color: theme.accent,
     },
+    premiumSection: {
+      marginTop: 24,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+      borderRadius: 12,
+      padding: 12,
+      gap: 8,
+      backgroundColor: theme.cardBg,
+    },
+    premiumHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 4,
+    },
+    premiumLock: { fontSize: 16 },
+    premiumTitle: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: theme.textPrimary,
+    },
+    premiumCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      paddingVertical: 8,
+      paddingHorizontal: 4,
+      opacity: 0.85,
+    },
+    premiumIcon: { fontSize: 22 },
+    premiumTextCol: { flex: 1 },
+    premiumName: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: theme.textPrimary,
+    },
+    premiumDescription: {
+      fontSize: 12,
+      color: theme.textMuted,
+      marginTop: 2,
+    },
+    premiumCardLock: { fontSize: 14, opacity: 0.6 },
+    premiumCta: {
+      marginTop: 8,
+      paddingVertical: 10,
+      alignItems: "center",
+      backgroundColor: theme.accent,
+      borderRadius: 8,
+    },
+    premiumCtaText: {
+      color: "#FFFFFF",
+      fontWeight: "600",
+    },
   });
 }

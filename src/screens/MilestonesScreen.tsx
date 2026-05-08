@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { badgeFromId } from "../features/badges/badges";
@@ -19,6 +19,7 @@ import { useTheme } from "../theme/themeStore";
 
 import MilestoneRow from "./MilestonesScreen/MilestoneRow";
 import type { ActiveDescription } from "./MilestonesScreen/MilestoneRow";
+import PremiumSection from "./MilestonesScreen/PremiumSection";
 import { makeStyles } from "./MilestonesScreen/styles";
 
 type Props = {
@@ -36,19 +37,17 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
   const setKind = useMilestoneStore((s) => s.setKind);
   const visitCounts = useVisitStore((s) => s.visitCounts);
 
-  const rows = useMemo(
-    () =>
-      ALL_MILESTONE_KINDS.map((k) => {
-        const progress = evaluateMilestone(k, visitCounts);
-        return {
-          kind: k,
-          label: t(`milestones.option.${k}`),
-          progress,
-          activeDescription: buildActiveDescription(progress, t),
-        };
-      }),
-    [t, visitCounts]
-  );
+  const rows = useMemo(() => {
+    return ALL_MILESTONE_KINDS.map((k) => {
+      const progress = evaluateMilestone(k, visitCounts);
+      return {
+        kind: k,
+        label: t(`milestones.option.${k}`),
+        progress,
+        activeDescription: buildActiveDescription(progress, t),
+      };
+    });
+  }, [t, visitCounts]);
 
   const handlePick = (k: MilestoneKind) => {
     if (k === kind) return;
@@ -79,6 +78,13 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
             onPress={() => handlePick(row.kind)}
           />
         ))}
+        <PremiumSection
+          theme={theme}
+          styles={styles}
+          onPressUpsell={() => {
+            Alert.alert(t("milestones.premium.ctaUnlock"));
+          }}
+        />
         <Text style={styles.footnote}>{t("milestones.footnote")}</Text>
       </ScrollView>
     </View>

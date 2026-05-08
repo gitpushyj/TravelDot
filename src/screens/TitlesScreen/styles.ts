@@ -175,5 +175,21 @@ export function makeStyles(theme: Theme) {
       paddingVertical: 8,
       lineHeight: 17,
     },
+    premiumCatSection: { paddingVertical: 4 },
+    premiumLockedRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      borderBottomWidth: 1,
+      borderColor: theme.cardBorder,
+    },
+    premiumLockedIcon: { fontSize: 18, opacity: 0.5 },
+    premiumLockedText: {
+      fontSize: 14,
+      color: theme.textMuted,
+      letterSpacing: 2,
+    },
   });
 }
