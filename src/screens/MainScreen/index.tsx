@@ -369,7 +369,7 @@ export default function MainScreen({
             <View style={styles.headerLeft}>
               {activeBadge ? (
                 <Pressable
-                  onPress={() => navigation.navigate("Milestones")}
+                  onPress={() => navigation.navigate("Titles")}
                   hitSlop={6}
                   style={({ pressed }) => [
                     styles.headerBadgeChip,
