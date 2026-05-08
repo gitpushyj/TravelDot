@@ -104,14 +104,14 @@ function makeStyles(palette: SharePalette) {
       width: SHARE_CARD_WIDTH,
       height: SHARE_CARD_HEIGHT,
       backgroundColor: palette.bg,
-      paddingTop: 140,
+      paddingTop: 220,
       paddingBottom: 80,
       paddingHorizontal: HORIZONTAL_PADDING,
       alignItems: "center",
     },
     titleSection: {
       alignItems: "center",
-      marginBottom: 80,
+      marginBottom: 140,
     },
     badgeChip: {
       backgroundColor: palette.badgeBg,
