@@ -341,16 +341,6 @@ export default function MainScreen({ navigation }: Props) {
               resizeMode="contain"
             />
           </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("Settings")}
-            hitSlop={8}
-            style={({ pressed }) => [
-              styles.menuBtn,
-              pressed && styles.menuBtnPressed,
-            ]}
-          >
-            <Text style={styles.menuBtnIcon}>☰</Text>
-          </Pressable>
         </View>
       </Animated.View>
       <AnimatedScrollView

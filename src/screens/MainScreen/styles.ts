@@ -54,11 +54,6 @@ export function makeStyles(theme: Theme) {
     menuBtnPressed: {
       opacity: 0.5,
     },
-    menuBtnIcon: {
-      color: theme.textPrimary,
-      fontSize: 24,
-      fontWeight: "700",
-    },
     menuBtnImage: {
       width: 32,
       height: 32,
