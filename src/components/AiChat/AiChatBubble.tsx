@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Markdown from "react-native-markdown-display";
 
+import { formatResetAtText } from "../../features/aiChat/quotaResetAt";
 import type { ChatMessage } from "../../features/aiChat/types";
 import { useTheme } from "../../theme/themeStore";
 
@@ -13,12 +14,15 @@ type Props = {
 
 export default function AiChatBubble({ message, onImagePress }: Props) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const markdownStyles = useMemo(() => makeMarkdownStyles(theme), [theme]);
 
   const isUser = message.role === "user";
-  const fallbackText = message.error ? t(message.error) : message.text;
+  // rateLimited 메시지는 {{resetAt}} 변수가 필요. 다른 에러 메시지는 변수 없으면 그냥 무시된다.
+  const fallbackText = message.error
+    ? t(message.error, { resetAt: formatResetAtText(t, i18n.language) })
+    : message.text;
   const useMarkdown = !isUser && !message.error && message.text.length > 0;
 
   return (

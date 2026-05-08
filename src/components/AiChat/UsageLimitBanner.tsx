@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
+import { formatResetAtText } from "../../features/aiChat/quotaResetAt";
 import type { TierName } from "../../features/aiChat/types";
 import { useTheme } from "../../theme/themeStore";
 
@@ -12,12 +13,15 @@ type Props = {
 
 export default function UsageLimitBanner({ tier, limit }: Props) {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   return (
     <View style={styles.root}>
       <Text style={styles.text}>
-        {t(`aiChat.error.rateLimited.${tier}`, { limit })}
+        {t(`aiChat.error.rateLimited.${tier}`, {
+          limit,
+          resetAt: formatResetAtText(t, i18n.language),
+        })}
       </Text>
     </View>
   );
