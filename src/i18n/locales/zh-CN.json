@@ -40,7 +40,8 @@
     "sortRecent": "最新",
     "sortDays": "天数",
     "sortAz": "A-Z",
-    "yearHeader": "{{year}}年"
+    "yearHeader": "{{year}}年",
+    "mergeHint": "Same trip? Tap to merge ▸"
   },
   "allCountries": {
     "heading": "所有国家",
@@ -135,7 +136,8 @@
     "tripRecent": "最近",
     "tripDayOnly": "1 天(当日)",
     "tripDuration": "{{days}} 天行程",
-    "deleteAction": "删除"
+    "deleteAction": "删除",
+    "mergeButton": "Merge ▸"
   },
   "titles": {
     "heading": "称号",
@@ -476,5 +478,14 @@
       "acceptAll": "剩下的都是我的旅行",
       "goHome": "前往主页"
     }
+  },
+  "merge": {
+    "title": "Merge {{country}} trips",
+    "subtitle": "Select trips to merge",
+    "gapLabel": "{{days}}-day gap",
+    "selectedCount": "{{count}} selected",
+    "actionMerge": "Merge",
+    "confirmGapTitle": "Really one trip?",
+    "confirmGapBody": "There is up to a {{days}}-day gap between selected trips. Merge them into one trip anyway?"
   }
 }

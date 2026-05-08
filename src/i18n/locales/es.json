@@ -40,7 +40,8 @@
     "sortRecent": "Recientes",
     "sortDays": "Más larga",
     "sortAz": "A–Z",
-    "yearHeader": "{{year}}"
+    "yearHeader": "{{year}}",
+    "mergeHint": "Same trip? Tap to merge ▸"
   },
   "allCountries": {
     "heading": "Todos los países",
@@ -135,7 +136,8 @@
     "tripRecent": "Reciente",
     "tripDayOnly": "1 día (mismo día)",
     "tripDuration": "viaje de {{days}} días",
-    "deleteAction": "Eliminar"
+    "deleteAction": "Eliminar",
+    "mergeButton": "Merge ▸"
   },
   "titles": {
     "heading": "Título",
@@ -476,5 +478,14 @@
       "acceptAll": "Los restantes son míos",
       "goHome": "Ir al inicio"
     }
+  },
+  "merge": {
+    "title": "Merge {{country}} trips",
+    "subtitle": "Select trips to merge",
+    "gapLabel": "{{days}}-day gap",
+    "selectedCount": "{{count}} selected",
+    "actionMerge": "Merge",
+    "confirmGapTitle": "Really one trip?",
+    "confirmGapBody": "There is up to a {{days}}-day gap between selected trips. Merge them into one trip anyway?"
   }
 }

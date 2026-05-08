@@ -7,6 +7,7 @@ import AddTripScreenNav from "./screens/AddTripScreenNav";
 import AllCountriesScreenNav from "./screens/AllCountriesScreenNav";
 import ChangeHomeScreenNav from "./screens/ChangeHomeScreenNav";
 import CountryDetailScreenNav from "./screens/CountryDetailScreenNav";
+import CountryMergeScreenNav from "./screens/CountryMergeScreenNav";
 import EditTripScreenNav from "./screens/EditTripScreenNav";
 import HistoryScreenNav from "./screens/HistoryScreenNav";
 import ImageDetailScreenNav from "./screens/ImageDetailScreenNav";
@@ -40,6 +41,7 @@ export default function RootNavigator() {
         <Stack.Screen name="Milestones" component={MilestonesScreenNav} />
         <Stack.Screen name="MapZoom" component={MapZoomScreenNav} />
         <Stack.Screen name="CountryDetail" component={CountryDetailScreenNav} />
+        <Stack.Screen name="CountryMerge" component={CountryMergeScreenNav} />
         <Stack.Screen name="TripDetail" component={TripDetailScreenNav} />
         <Stack.Screen name="EditTrip" component={EditTripScreenNav} />
         <Stack.Screen name="History" component={HistoryScreenNav} />

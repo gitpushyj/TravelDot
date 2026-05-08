@@ -40,7 +40,8 @@
     "sortRecent": "新しい順",
     "sortDays": "滞在日数順",
     "sortAz": "A-Z",
-    "yearHeader": "{{year}}年"
+    "yearHeader": "{{year}}年",
+    "mergeHint": "Same trip? Tap to merge ▸"
   },
   "allCountries": {
     "heading": "すべての国",
@@ -135,7 +136,8 @@
     "tripRecent": "最新",
     "tripDayOnly": "1日（日帰り）",
     "tripDuration": "{{days}}日間の旅",
-    "deleteAction": "削除"
+    "deleteAction": "削除",
+    "mergeButton": "Merge ▸"
   },
   "titles": {
     "heading": "称号",
@@ -476,5 +478,14 @@
       "acceptAll": "残りはすべて自分の旅",
       "goHome": "ホームへ"
     }
+  },
+  "merge": {
+    "title": "Merge {{country}} trips",
+    "subtitle": "Select trips to merge",
+    "gapLabel": "{{days}}-day gap",
+    "selectedCount": "{{count}} selected",
+    "actionMerge": "Merge",
+    "confirmGapTitle": "Really one trip?",
+    "confirmGapBody": "There is up to a {{days}}-day gap between selected trips. Merge them into one trip anyway?"
   }
 }

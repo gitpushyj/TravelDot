@@ -1,0 +1,125 @@
+import { StyleSheet } from "react-native";
+
+import type { Theme } from "../../theme/theme";
+
+export function makeStyles(theme: Theme) {
+  return StyleSheet.create({
+    root: {
+      flex: 1,
+      backgroundColor: theme.homeBg,
+      paddingTop: 56,
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+    },
+    headerTitle: {
+      flex: 1,
+      textAlign: "center",
+      fontSize: 17,
+      fontWeight: "600",
+      color: theme.textPrimary,
+    },
+    iconBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.cardBg,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    iconBtnText: { fontSize: 22, color: theme.textPrimary },
+    iconBtnPlaceholder: { width: 40, height: 40 },
+    subtitle: {
+      paddingHorizontal: 20,
+      paddingTop: 8,
+      paddingBottom: 12,
+      fontSize: 13,
+      color: theme.textSecondary,
+    },
+    listContent: { paddingHorizontal: 20, paddingBottom: 100 },
+    rowSep: { height: 8 },
+    nonAdjacentSpacer: { height: 16 },
+    gapDivider: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: 4,
+    },
+    gapLine: {
+      flex: 1,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: theme.cardBorder,
+      borderStyle: "dashed",
+    },
+    gapLabel: {
+      paddingHorizontal: 8,
+      fontSize: 12,
+      color: theme.textSecondary,
+    },
+    bottomBar: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      paddingHorizontal: 20,
+      paddingTop: 12,
+      paddingBottom: 24,
+      backgroundColor: theme.homeBg,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: theme.cardBorder,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    selectedCount: { fontSize: 14, color: theme.textPrimary },
+    mergeBtn: {
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderRadius: 999,
+      backgroundColor: theme.accent,
+    },
+    mergeBtnDisabled: { opacity: 0.4 },
+    mergeBtnText: { color: "#ffffff", fontSize: 15, fontWeight: "600" },
+    emptyWrap: { paddingTop: 60, alignItems: "center" },
+    emptyText: { color: theme.textSecondary, fontSize: 14 },
+
+    // Trip check row
+    checkRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: 12,
+      paddingHorizontal: 14,
+      borderRadius: 12,
+      backgroundColor: theme.cardBg,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+    },
+    checkRowSelected: {
+      backgroundColor: theme.selectedRowBg,
+      borderColor: theme.accent,
+    },
+    checkbox: {
+      width: 22,
+      height: 22,
+      borderRadius: 11,
+      borderWidth: 2,
+      borderColor: theme.cardBorder,
+      marginRight: 12,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    checkboxOn: {
+      backgroundColor: theme.accent,
+      borderColor: theme.accent,
+    },
+    checkboxMark: { color: "#ffffff", fontSize: 14, fontWeight: "700" },
+    rowMain: { flex: 1 },
+    rowDate: { fontSize: 15, fontWeight: "600", color: theme.textPrimary },
+    rowSub: { marginTop: 2, fontSize: 12, color: theme.textSecondary },
+  });
+}

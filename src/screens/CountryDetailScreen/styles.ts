@@ -131,6 +131,20 @@ export function makeStyles(theme: Theme) {
       fontSize: 12,
       fontWeight: "700",
     },
+    sectionHeaderRight: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
+    mergeBtn: {
+      paddingHorizontal: 4,
+      paddingVertical: 2,
+    },
+    mergeBtnText: {
+      color: theme.accent,
+      fontSize: 13,
+      fontWeight: "600",
+    },
     emptyWrap: {
       paddingVertical: 36,
       alignItems: "center",

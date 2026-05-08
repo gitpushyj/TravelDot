@@ -40,7 +40,8 @@
     "sortRecent": "Свежее",
     "sortDays": "Дольше",
     "sortAz": "А–Я",
-    "yearHeader": "{{year}}"
+    "yearHeader": "{{year}}",
+    "mergeHint": "Same trip? Tap to merge ▸"
   },
   "allCountries": {
     "heading": "Все страны",
@@ -135,7 +136,8 @@
     "tripRecent": "Свежее",
     "tripDayOnly": "1 день (на день)",
     "tripDuration": "поездка на {{days}} дн.",
-    "deleteAction": "Удалить"
+    "deleteAction": "Удалить",
+    "mergeButton": "Merge ▸"
   },
   "titles": {
     "heading": "Звание",
@@ -476,5 +478,14 @@
       "acceptAll": "Оставшиеся — мои",
       "goHome": "На главный экран"
     }
+  },
+  "merge": {
+    "title": "Merge {{country}} trips",
+    "subtitle": "Select trips to merge",
+    "gapLabel": "{{days}}-day gap",
+    "selectedCount": "{{count}} selected",
+    "actionMerge": "Merge",
+    "confirmGapTitle": "Really one trip?",
+    "confirmGapBody": "There is up to a {{days}}-day gap between selected trips. Merge them into one trip anyway?"
   }
 }

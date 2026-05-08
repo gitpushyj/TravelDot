@@ -54,3 +54,8 @@ export {
   removeAutoVisitsForCountry,
   wipeAllVisits,
 } from "./visit/maintenance";
+
+export {
+  bridgeNearbyVisitDays,
+  mergeTrips,
+} from "./visit/merge";

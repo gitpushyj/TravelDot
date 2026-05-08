@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import { diffInDays } from "../features/travel/visit/dateUtils";
 import {
   loadAllTrips,
   RecentTrip,
@@ -20,9 +21,50 @@ import TripRow from "./HistoryScreen/TripRow";
 type Props = {
   onClose: () => void;
   onSelectTrip: (trip: RecentTrip) => void;
+  onMergeHint: (countryCode: string) => void;
 };
 
-export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
+// 같은 국가의 다른 trip과 4~7일 간격이면 양쪽 trip 모두 hint 대상.
+// 자동 병합 임계값(3) 바로 위 + 1주 이내. 화면 진입 시 한 번 계산.
+const HINT_MIN = 4;
+const HINT_MAX = 7;
+
+function tripKey(trip: TripWithPhotos): string {
+  return `${trip.countryCode}|${trip.startDate}|${trip.endDate}`;
+}
+
+function computeMergeHints(trips: TripWithPhotos[]): Set<string> {
+  const hints = new Set<string>();
+  const byCountry = new Map<string, TripWithPhotos[]>();
+  for (const tr of trips) {
+    const list = byCountry.get(tr.countryCode) ?? [];
+    list.push(tr);
+    byCountry.set(tr.countryCode, list);
+  }
+  for (const list of byCountry.values()) {
+    for (let i = 0; i < list.length; i += 1) {
+      for (let j = i + 1; j < list.length; j += 1) {
+        const a = list[i];
+        const b = list[j];
+        const gap =
+          a.endDate < b.startDate
+            ? diffInDays(a.endDate, b.startDate)
+            : diffInDays(b.endDate, a.startDate);
+        if (gap >= HINT_MIN && gap <= HINT_MAX) {
+          hints.add(tripKey(a));
+          hints.add(tripKey(b));
+        }
+      }
+    }
+  }
+  return hints;
+}
+
+export default function HistoryScreen({
+  onClose,
+  onSelectTrip,
+  onMergeHint,
+}: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -42,6 +84,8 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
       cancelled = true;
     };
   }, [recentTrips]);
+
+  const hintSet = useMemo(() => computeMergeHints(trips ?? []), [trips]);
 
   const totals = useMemo(() => {
     if (!trips) return { countries: 0, visits: 0, days: 0 };
@@ -155,6 +199,7 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
           <TripRow
             theme={theme}
             trip={item}
+            showMergeHint={hintSet.has(tripKey(item))}
             onPress={() =>
               onSelectTrip({
                 countryCode: item.countryCode,
@@ -163,6 +208,7 @@ export default function HistoryScreen({ onClose, onSelectTrip }: Props) {
                 days: item.days,
               })
             }
+            onMergeHintPress={() => onMergeHint(item.countryCode)}
           />
         )}
       />

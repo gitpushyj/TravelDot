@@ -173,5 +173,23 @@ export function makeStyles(theme: Theme) {
       fontSize: 13,
       textAlign: "center",
     },
+    rowWrap: {
+      // 행 본문 + hint 링크를 묶는 외곽 컨테이너. 본문 Pressable과 hint Pressable
+      // 영역이 분리되도록.
+    },
+    hintRow: {
+      paddingHorizontal: 16,
+      paddingTop: 8,
+      paddingBottom: 12,
+    },
+    hintDivider: {
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: theme.cardBorder,
+      marginBottom: 8,
+    },
+    hintText: {
+      fontSize: 12,
+      color: theme.textSecondary,
+    },
   });
 }

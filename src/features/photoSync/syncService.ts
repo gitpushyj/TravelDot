@@ -1,6 +1,8 @@
 import { toLocalDateKey } from "../../utils/date";
+import { getDb } from "../travel/db";
 import {
   addPhotos,
+  bridgeNearbyVisitDays,
   loadLatestVisitDate,
   PHOTO_LIMIT_PER_DAY,
   VisitPhotoInput,
@@ -16,6 +18,17 @@ import { ensurePermission, iteratePhotos } from "./photoLibrary";
 async function runSync(sinceDate: string | null): Promise<void> {
   const store = useVisitStore.getState();
   const homeCode = store.homeCountry?.code ?? null;
+
+  // 첫 스캔 여부를 사진 추가 *전에* 평가한다 — 사진 추가 후에는 visit_days가
+  // 채워져 더 이상 "첫 스캔"이 아니게 되기 때문. 이후 incremental sync나
+  // Settings의 전체 재스캔에서는 사용자의 수동 분리/병합 결정을 보존하기 위해
+  // 자동 병합을 실행하지 않는다.
+  const dbHandle = await getDb();
+  const existing = await dbHandle.getFirstAsync<{ x: number }>(
+    `SELECT 1 AS x FROM visit_days WHERE deleted_at IS NULL LIMIT 1`
+  );
+  const isFirstScan = existing == null;
+
   const permission = await ensurePermission();
   if (permission === "denied") {
     store.setLastSync({
@@ -89,6 +102,13 @@ async function runSync(sinceDate: string | null): Promise<void> {
     const all: VisitPhotoInput[] = [];
     for (const items of buffer.values()) all.push(...items);
     const added = await addPhotos(all);
+
+    // 첫 스캔이면 인접한 trip을 자동으로 묶는다 (gap ≤ 3일 한정).
+    // 이후 스캔에서는 사용자의 수동 결정을 보존하기 위해 실행하지 않는다.
+    if (isFirstScan) {
+      await bridgeNearbyVisitDays(3);
+    }
+
     await useVisitStore.getState().refreshVisits();
 
     // 사진 추가가 끝났다면 곧바로 디바이스 검증을 돌려 의심 여행을 추려둔다.

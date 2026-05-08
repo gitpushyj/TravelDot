@@ -26,9 +26,14 @@ import { formatMD, groupByYear } from "./CountryDetailScreen/utils";
 type Props = {
   onClose: () => void;
   onSelectTrip?: (trip: RecentTrip) => void;
+  onMergeTrips?: (countryCode: string) => void;
 };
 
-export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
+export default function CountryDetailScreen({
+  onClose,
+  onSelectTrip,
+  onMergeTrips,
+}: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -188,9 +193,22 @@ export default function CountryDetailScreen({ onClose, onSelectTrip }: Props) {
               {t("countryDetail.swipeToDelete")}
             </Text>
           ) : (
-            <Text style={styles.sortLabel}>
-              {t("countryDetail.sortLatest")}
-            </Text>
+            <View style={styles.sectionHeaderRight}>
+              {(trips?.length ?? 0) >= 2 && onMergeTrips && (
+                <Pressable
+                  onPress={() => onMergeTrips(selectedCountry.code)}
+                  hitSlop={6}
+                  style={styles.mergeBtn}
+                >
+                  <Text style={styles.mergeBtnText}>
+                    {t("countryDetail.mergeButton")}
+                  </Text>
+                </Pressable>
+              )}
+              <Text style={styles.sortLabel}>
+                {t("countryDetail.sortLatest")}
+              </Text>
+            </View>
           )}
         </View>
 

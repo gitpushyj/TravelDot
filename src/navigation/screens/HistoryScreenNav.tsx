@@ -15,6 +15,9 @@ export default function HistoryScreenNav({
       <HistoryScreen
         onClose={() => navigation.goBack()}
         onSelectTrip={(trip) => navigation.navigate("TripDetail", { trip })}
+        onMergeHint={(countryCode) =>
+          navigation.navigate("CountryMerge", { countryCode })
+        }
       />
     </>
   );
