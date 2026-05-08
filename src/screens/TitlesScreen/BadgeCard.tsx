@@ -7,11 +7,11 @@ import {
   localizedBadgeTitle,
 } from "../../features/badges/badgeI18n";
 import type { BadgeDefinition } from "../../features/badges/badges";
-import { tierVisualFromBadgeId } from "../../features/travel/tierVisuals";
+import { medalConfigForBadge } from "../../features/badges/badgeVisuals";
 import { getCurrentLocale } from "../../i18n";
 import type { Theme } from "../../theme/theme";
 
-import TierBadgeIcon from "./TierBadgeIcon";
+import BadgeMedal from "./BadgeMedal";
 import { makeStyles } from "./styles";
 
 type Props = {
@@ -32,7 +32,7 @@ export default function BadgeCard({
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const locale = getCurrentLocale();
-  const tierVisual = badge.isTier ? tierVisualFromBadgeId(badge.id) : null;
+  const medalConfig = medalConfigForBadge(badge);
   return (
     <Pressable
       onPress={onPress}
@@ -44,9 +44,9 @@ export default function BadgeCard({
         pressed && !locked && { opacity: 0.75 },
       ]}
     >
-      {tierVisual ? (
+      {medalConfig ? (
         <View style={styles.cardIconWrap}>
-          <TierBadgeIcon visual={tierVisual} size={40} locked={locked} />
+          <BadgeMedal config={medalConfig} size={40} locked={locked} />
         </View>
       ) : (
         <Text style={[styles.cardEmoji, locked && styles.cardEmojiLocked]}>
