@@ -120,6 +120,7 @@ USER PROFILE
 - app language: <lang>
 - age: <만 나이>          (생년월일 미상이면 줄 자체 생략)
 - gender: <male|female|other>   (미상 또는 prefer_not_to_say면 줄 자체 생략)
+- home country: <ISO alpha-2> (미설정이면 줄 자체 생략) — 출발지 항공편/비자/면세 등 답변에 사용
 
 USER COUNTRY STATS  (top 30 by visit count)
 | code | visits | first_visit | last_visit | total_days |

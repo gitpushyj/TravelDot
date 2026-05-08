@@ -24,22 +24,37 @@ Deno.test("buildSystemPrompt - empty trips → has-no-trips line", () => {
     lang: "ko",
     age: null,
     gender: null,
+    homeCountry: null,
     stats: [],
     trips: [],
   });
   assertStringIncludes(out, "USER has no trips yet.");
 });
 
-Deno.test("buildSystemPrompt - age and gender included when known", () => {
+Deno.test("buildSystemPrompt - age, gender, home country included when known", () => {
   const out = buildSystemPrompt({
     lang: "ko",
     age: 33,
     gender: "female",
+    homeCountry: "KR",
     stats: [],
     trips: [],
   });
   assertStringIncludes(out, "age: 33");
   assertStringIncludes(out, "gender: female");
+  assertStringIncludes(out, "home country: KR");
+});
+
+Deno.test("buildSystemPrompt - omits home country line when null", () => {
+  const out = buildSystemPrompt({
+    lang: "ko",
+    age: 33,
+    gender: "female",
+    homeCountry: null,
+    stats: [],
+    trips: [],
+  });
+  assertEquals(out.includes("home country"), false);
 });
 
 Deno.test("buildSystemPrompt - omits age/gender when unknown or prefer_not_to_say", () => {
@@ -59,6 +74,7 @@ Deno.test("buildSystemPrompt - no auth provider / tier mentioned", () => {
     lang: "en",
     age: 28,
     gender: "male",
+    homeCountry: null,
     stats: [],
     trips: [],
   });
@@ -71,6 +87,7 @@ Deno.test("buildSystemPrompt - includes stats and trips sections + truncates mem
     lang: "en",
     age: 30,
     gender: "other",
+    homeCountry: null,
     stats: [
       { code: "JP", visits: 2, first_visit: "2023-04-01", last_visit: "2024-08-12", total_days: 13 },
     ],
@@ -97,6 +114,7 @@ Deno.test("buildSystemPrompt - friend tone + genuine help instruction present", 
     lang: "ko",
     age: null,
     gender: null,
+    homeCountry: null,
     stats: [],
     trips: [],
   });

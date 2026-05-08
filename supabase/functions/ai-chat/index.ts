@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
   const adminClient = createClient(SUPABASE_URL, SERVICE_ROLE);
   const { data: userRow } = await adminClient
     .from("users")
-    .select("tier,birth_year,birth_month,birth_day,gender")
+    .select("tier,birth_year,birth_month,birth_day,gender,home_country_code")
     .eq("id", user.id)
     .maybeSingle();
   const tier = tierFromNumber(userRow?.tier as number | null | undefined);
@@ -153,6 +153,7 @@ Deno.serve(async (req) => {
     (userRow?.birth_day as number | null | undefined) ?? null
   );
   const gender = genderFromColumn(userRow?.gender as string | null | undefined);
+  const homeCountry = ((userRow?.home_country_code as string | null | undefined) ?? null) || null;
 
   // 4) 일일 카운트 조회
   const day = todayKst();
@@ -184,6 +185,7 @@ Deno.serve(async (req) => {
     lang,
     age,
     gender,
+    homeCountry,
     stats: aggregateCountryStats(trips),
     trips: sortTripsForPrompt(trips),
   });

@@ -6,6 +6,7 @@ export type SystemPromptInput = {
   lang: string;
   age: number | null;
   gender: Gender;
+  homeCountry: string | null; // ISO 3166-1 alpha-2 (e.g. "KR"). null이면 줄 생략.
   stats: CountryStat[]; // already top-30 sorted
   trips: TripRow[];     // already start_date desc, capped to 200 by caller
 };
@@ -46,6 +47,9 @@ function profileLines(input: SystemPromptInput): string[] {
   if (input.age != null) lines.push(`- age: ${input.age}`);
   if (input.gender && input.gender !== "prefer_not_to_say") {
     lines.push(`- gender: ${input.gender}`);
+  }
+  if (input.homeCountry) {
+    lines.push(`- home country: ${input.homeCountry} (ISO 3166-1 alpha-2)`);
   }
   return lines;
 }
