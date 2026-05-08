@@ -1,13 +1,11 @@
 import type { RefObject } from "react";
 import type { View } from "react-native";
 import { captureRef } from "react-native-view-shot";
-import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 
 import { SHARE_CARD_HEIGHT, SHARE_CARD_WIDTH } from "./ShareMapCard";
 
 export type CaptureResult = { uri: string };
-export type SaveStatus = "saved" | "permission-denied" | "failed";
 export type ShareStatus = "shared" | "unavailable" | "failed";
 
 // 카드 View 참조를 PNG 파일로 캡처해 임시 경로 URI를 반환한다.
@@ -41,17 +39,6 @@ export async function shareImage(
       UTI: "public.png",
     });
     return "shared";
-  } catch {
-    return "failed";
-  }
-}
-
-export async function saveImageToLibrary(uri: string): Promise<SaveStatus> {
-  try {
-    const perm = await MediaLibrary.requestPermissionsAsync(true);
-    if (!perm.granted) return "permission-denied";
-    await MediaLibrary.saveToLibraryAsync(uri);
-    return "saved";
   } catch {
     return "failed";
   }

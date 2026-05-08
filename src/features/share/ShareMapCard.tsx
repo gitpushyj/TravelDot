@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import DotMap from "../../components/DotMap";
-import type { Theme } from "../../theme/theme";
+import type { SharePalette } from "./sharePalette";
 
 // 공유용 카드는 항상 1080×1920(9:16, 인스타 스토리 권장)로 layout한다.
 // 화면 표시는 부모가 transform: scale 로 축소하고, 캡처는 view-shot이
@@ -18,7 +18,7 @@ const MAP_SLOT_WIDTH = SHARE_CARD_WIDTH - HORIZONTAL_PADDING * 2;
 const MAP_SLOT_HEIGHT = Math.round(MAP_SLOT_WIDTH / MAP_NATURAL_RATIO);
 
 type Props = {
-  theme: Theme;
+  palette: SharePalette;
   visitCounts: Record<string, number>;
   badgeEmoji: string | null;
   badgeTitle: string | null;
@@ -27,11 +27,14 @@ type Props = {
   yearLabel: string;
   countriesUnit: string;
   daysUnit: string;
+  // true이면 사용자가 미리보기 안에서 지도를 핀치/팬으로 줌·이동할 수 있다.
+  // 캡처 시 view-shot이 DotMap 내부 transform을 그대로 픽셀로 굽는다.
+  enableMapZoom?: boolean;
 };
 
 const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
   {
-    theme,
+    palette,
     visitCounts,
     badgeEmoji,
     badgeTitle,
@@ -40,10 +43,11 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
     yearLabel,
     countriesUnit,
     daysUnit,
+    enableMapZoom = false,
   },
   ref
 ) {
-  const styles = makeStyles(theme);
+  const styles = makeStyles(palette);
   return (
     <View ref={ref} collapsable={false} style={styles.card}>
       {/* 호칭 */}
@@ -62,7 +66,7 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
       <View style={styles.mapSlot}>
         <DotMap
           visitCounts={visitCounts}
-          enableZoom={false}
+          enableZoom={enableMapZoom}
           playIntro={false}
           mapAreaStyle={styles.mapInner}
         />
@@ -94,12 +98,12 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
 
 export default ShareMapCard;
 
-function makeStyles(theme: Theme) {
+function makeStyles(palette: SharePalette) {
   return StyleSheet.create({
     card: {
       width: SHARE_CARD_WIDTH,
       height: SHARE_CARD_HEIGHT,
-      backgroundColor: theme.homeBg,
+      backgroundColor: palette.bg,
       paddingTop: 140,
       paddingBottom: 80,
       paddingHorizontal: HORIZONTAL_PADDING,
@@ -110,19 +114,20 @@ function makeStyles(theme: Theme) {
       marginBottom: 80,
     },
     badgeChip: {
-      backgroundColor: theme.accentSoftBg,
+      backgroundColor: palette.badgeBg,
       paddingHorizontal: 44,
       paddingVertical: 22,
       borderRadius: 28,
     },
     badgeText: {
-      color: theme.accentSoftText,
+      color: palette.badgeText,
       fontSize: 72,
       fontWeight: "800",
     },
     mapSlot: {
       width: MAP_SLOT_WIDTH,
       height: MAP_SLOT_HEIGHT,
+      overflow: "hidden",
     },
     mapInner: {
       flex: 1,
@@ -138,17 +143,17 @@ function makeStyles(theme: Theme) {
       alignItems: "baseline",
     },
     statNum: {
-      color: theme.textPrimary,
+      color: palette.textPrimary,
       fontSize: 132,
       fontWeight: "900",
     },
     statUnit: {
-      color: theme.textPrimary,
+      color: palette.textPrimary,
       fontSize: 60,
       fontWeight: "700",
     },
     statDot: {
-      color: theme.textMuted,
+      color: palette.textMuted,
       fontSize: 80,
       fontWeight: "700",
     },
@@ -157,7 +162,7 @@ function makeStyles(theme: Theme) {
       alignItems: "center",
     },
     yearLabel: {
-      color: theme.textSecondary,
+      color: palette.textSecondary,
       fontSize: 56,
       fontWeight: "600",
       letterSpacing: 2,
@@ -168,7 +173,7 @@ function makeStyles(theme: Theme) {
       alignItems: "center",
     },
     watermark: {
-      color: theme.textSecondary,
+      color: palette.textSecondary,
       fontSize: 42,
       fontWeight: "700",
       letterSpacing: 6,

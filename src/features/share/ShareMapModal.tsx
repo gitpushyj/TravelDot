@@ -4,6 +4,7 @@ import {
   Dimensions,
   Modal,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -16,11 +17,8 @@ import ShareMapCard, {
   SHARE_CARD_HEIGHT,
   SHARE_CARD_WIDTH,
 } from "./ShareMapCard";
-import {
-  captureShareCard,
-  saveImageToLibrary,
-  shareImage,
-} from "./shareMapImage";
+import { captureShareCard, shareImage } from "./shareMapImage";
+import { buildPalettes, type SharePalette } from "./sharePalette";
 
 type Props = {
   visible: boolean;
@@ -50,13 +48,20 @@ export default function ShareMapModal({
   const { t } = useTranslation();
   const cardRef = useRef<View>(null);
   const insets = useSafeAreaInsets();
+  const palettes = useMemo(() => buildPalettes(theme), [theme]);
+  const [paletteId, setPaletteId] = useState<string>(palettes[0].id);
+  const palette: SharePalette = useMemo(
+    () => palettes.find((p) => p.id === paletteId) ?? palettes[0],
+    [palettes, paletteId]
+  );
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<Toast>(null);
 
-  // 모달이 닫히면 토스트도 초기화한다.
+  // 모달이 열리면 기본 팔레트로 리셋한다.
   useEffect(() => {
-    if (!visible) setToast(null);
-  }, [visible]);
+    if (visible) setPaletteId(palettes[0].id);
+    else setToast(null);
+  }, [visible, palettes]);
 
   // 토스트는 2초 뒤 자동 사라진다.
   useEffect(() => {
@@ -71,7 +76,8 @@ export default function ShareMapModal({
   const previewLayout = useMemo(() => {
     const screen = Dimensions.get("window");
     const horizontalPadding = 32;
-    const reservedHeight = 280; // 헤더 + 버튼 row + 여백
+    // 헤더 + 색상 칩 row + 버튼 row + 여백.
+    const reservedHeight = 360;
     const maxW = screen.width - horizontalPadding * 2;
     const maxH = screen.height - reservedHeight - insets.top - insets.bottom;
     const scaleByW = maxW / SHARE_CARD_WIDTH;
@@ -102,29 +108,6 @@ export default function ShareMapModal({
     }
   };
 
-  const runSave = async () => {
-    if (busy) return;
-    setBusy(true);
-    try {
-      const { uri } = await captureShareCard(cardRef);
-      const status = await saveImageToLibrary(uri);
-      if (status === "saved") {
-        setToast({ kind: "info", message: t("share.savedToast") });
-      } else if (status === "permission-denied") {
-        Alert.alert(
-          t("share.permissionDeniedTitle"),
-          t("share.permissionDeniedBody")
-        );
-      } else {
-        setToast({ kind: "error", message: t("share.saveFailed") });
-      }
-    } catch {
-      setToast({ kind: "error", message: t("share.captureFailed") });
-    } finally {
-      setBusy(false);
-    }
-  };
-
   return (
     <Modal
       visible={visible}
@@ -135,6 +118,7 @@ export default function ShareMapModal({
       <View style={[styles.backdrop, { paddingTop: insets.top }]}>
         <View style={styles.header}>
           <Text style={styles.title}>{t("share.previewTitle")}</Text>
+          <Text style={styles.hint}>{t("share.zoomHint")}</Text>
         </View>
 
         <View style={styles.previewArea}>
@@ -145,9 +129,10 @@ export default function ShareMapModal({
             ]}
           >
             {/*
-              1080×1920 카드를 좌상단 기준으로 축소해 미리보기 박스에 채운다.
+              1080×1920 카드를 좌상단(0,0) 기준으로 축소해 미리보기에 채운다.
               카드 본체의 layout frame은 1080×1920 그대로 유지되어, view-shot이
-              unscaled bounds 기준으로 캡처할 때 본래 해상도가 그대로 PNG로 나온다.
+              unscaled bounds 기준으로 캡처할 때 본래 해상도가 PNG로 나오고
+              사용자가 미리보기에서 줌·이동한 지도 상태도 그대로 굽힌다.
             */}
             <View
               style={{
@@ -160,7 +145,7 @@ export default function ShareMapModal({
             >
               <ShareMapCard
                 ref={cardRef}
-                theme={theme}
+                palette={palette}
                 visitCounts={visitCounts}
                 badgeEmoji={badgeEmoji}
                 badgeTitle={badgeTitle}
@@ -169,6 +154,7 @@ export default function ShareMapModal({
                 yearLabel={yearLabel}
                 countriesUnit={t("home.countriesUnit")}
                 daysUnit={t("home.daysUnit")}
+                enableMapZoom
               />
             </View>
           </View>
@@ -185,6 +171,12 @@ export default function ShareMapModal({
           </View>
         ) : null}
 
+        <PaletteRow
+          palettes={palettes}
+          selectedId={paletteId}
+          onSelect={setPaletteId}
+        />
+
         <View style={[styles.actions, { paddingBottom: insets.bottom + 16 }]}>
           <Pressable
             onPress={onClose}
@@ -196,17 +188,6 @@ export default function ShareMapModal({
             ]}
           >
             <Text style={styles.btnGhostText}>{t("share.cancel")}</Text>
-          </Pressable>
-          <Pressable
-            onPress={runSave}
-            disabled={busy}
-            style={({ pressed }) => [
-              styles.btn,
-              styles.btnSecondary,
-              pressed && styles.btnPressed,
-            ]}
-          >
-            <Text style={styles.btnSecondaryText}>{t("share.save")}</Text>
           </Pressable>
           <Pressable
             onPress={runShare}
@@ -225,7 +206,65 @@ export default function ShareMapModal({
   );
 }
 
-function makeStyles(theme: Theme) {
+function PaletteRow({
+  palettes,
+  selectedId,
+  onSelect,
+}: {
+  palettes: SharePalette[];
+  selectedId: string;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={paletteStyles.row}
+      contentContainerStyle={paletteStyles.rowContent}
+    >
+      {palettes.map((p) => {
+        const selected = p.id === selectedId;
+        return (
+          <Pressable
+            key={p.id}
+            onPress={() => onSelect(p.id)}
+            hitSlop={6}
+            style={[
+              paletteStyles.swatch,
+              { backgroundColor: p.bg },
+              selected && paletteStyles.swatchSelected,
+            ]}
+          />
+        );
+      })}
+    </ScrollView>
+  );
+}
+
+const paletteStyles = StyleSheet.create({
+  row: {
+    flexGrow: 0,
+    paddingVertical: 12,
+  },
+  rowContent: {
+    paddingHorizontal: 20,
+    gap: 12,
+    alignItems: "center",
+  },
+  swatch: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.18)",
+  },
+  swatchSelected: {
+    borderWidth: 3,
+    borderColor: "#ffffff",
+  },
+});
+
+function makeStyles(_theme: Theme) {
   return StyleSheet.create({
     backdrop: {
       flex: 1,
@@ -236,11 +275,17 @@ function makeStyles(theme: Theme) {
       paddingTop: 12,
       paddingBottom: 8,
       alignItems: "center",
+      gap: 4,
     },
     title: {
       color: "#ffffff",
       fontSize: 17,
       fontWeight: "800",
+    },
+    hint: {
+      color: "rgba(255,255,255,0.6)",
+      fontSize: 12,
+      fontWeight: "600",
     },
     previewArea: {
       flex: 1,
@@ -251,7 +296,6 @@ function makeStyles(theme: Theme) {
     previewBox: {
       borderRadius: 18,
       overflow: "hidden",
-      backgroundColor: theme.homeBg,
       shadowColor: "#000",
       shadowOpacity: 0.4,
       shadowOffset: { width: 0, height: 8 },
@@ -260,7 +304,7 @@ function makeStyles(theme: Theme) {
     },
     toast: {
       position: "absolute",
-      bottom: 120,
+      bottom: 220,
       alignSelf: "center",
       paddingHorizontal: 16,
       paddingVertical: 10,
@@ -279,7 +323,7 @@ function makeStyles(theme: Theme) {
       flexDirection: "row",
       gap: 10,
       paddingHorizontal: 20,
-      paddingTop: 12,
+      paddingTop: 8,
     },
     btn: {
       flex: 1,
@@ -299,16 +343,8 @@ function makeStyles(theme: Theme) {
       fontSize: 15,
       fontWeight: "700",
     },
-    btnSecondary: {
-      backgroundColor: "rgba(255,255,255,0.18)",
-    },
-    btnSecondaryText: {
-      color: "#ffffff",
-      fontSize: 15,
-      fontWeight: "800",
-    },
     btnPrimary: {
-      backgroundColor: theme.accent,
+      backgroundColor: "#ff7a3d",
     },
     btnPrimaryText: {
       color: "#ffffff",
