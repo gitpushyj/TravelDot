@@ -123,6 +123,8 @@ export const useAiChatStore = create<State>((set, get) => ({
         ? "aiChat.error.network"
         : outcome.kind === "invalid_input"
         ? "aiChat.error.invalidInput"
+        : outcome.kind === "upstream"
+        ? "aiChat.error.upstream"
         : "aiChat.error.generic";
     const aiMsg: ChatMessage = {
       id: uuid(),

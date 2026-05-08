@@ -19,9 +19,10 @@
     "exampleSafety": "Where's safe to travel right now?",
     "examplePattern": "What's my travel vibe?",
     "error": {
-      "generic": "Something went off. Try again?",
-      "network": "Network looks shaky. Try again?",
-      "invalidInput": "Mind checking that message?",
+      "generic": "Hit an unexpected snag 🥲 Give it another try — if it keeps happening, come back in a bit.",
+      "network": "Connection looks shaky. Check your Wi-Fi/data and try sending again.",
+      "invalidInput": "Couldn't send that one — make sure it's under 500 characters and try again.",
+      "upstream": "AI service is having a moment 🥲 Try again in a minute or two. You can resend the same message.",
       "imageLoadFailed": "Couldn't load image",
       "rateLimited": {
         "free": "You've used today's free quota ({{limit}}) 🥲 Upgrade to chat more — premium gives you 10/day, power gives you 30/day. Resets at midnight KST.",

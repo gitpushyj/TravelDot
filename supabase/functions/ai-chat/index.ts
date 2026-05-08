@@ -122,8 +122,16 @@ Deno.serve(async (req) => {
     if (m.role !== "user" && m.role !== "assistant") {
       return json({ error: "invalid_input", reason: "role" }, 400);
     }
-    if (typeof m.text !== "string" || m.text.length === 0 || m.text.length > 500) {
-      return json({ error: "invalid_input", reason: "text_length" }, 400);
+    if (typeof m.text !== "string" || m.text.length === 0) {
+      return json({ error: "invalid_input", reason: "text_empty" }, 400);
+    }
+    // user 입력만 500자 제한 (UX). assistant text는 모델 출력이라 길 수 있어
+    // 8000자 안전망만 둔다.
+    if (m.role === "user" && m.text.length > 500) {
+      return json({ error: "invalid_input", reason: "text_too_long" }, 400);
+    }
+    if (m.role === "assistant" && m.text.length > 8000) {
+      return json({ error: "invalid_input", reason: "text_too_long" }, 400);
     }
   }
   if (messages[messages.length - 1].role !== "user") {
