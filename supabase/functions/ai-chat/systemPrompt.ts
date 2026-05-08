@@ -1,12 +1,11 @@
 import type { CountryStat, TripRow } from "./tripStats.ts";
 
-export type TierName = "free" | "premium" | "power";
-export type AuthProvider = "google" | "apple" | "unknown";
+export type Gender = "male" | "female" | "other" | "prefer_not_to_say" | null;
 
 export type SystemPromptInput = {
   lang: string;
-  authProvider: AuthProvider;
-  tier: TierName;
+  age: number | null;
+  gender: Gender;
   stats: CountryStat[]; // already top-30 sorted
   trips: TripRow[];     // already start_date desc, capped to 200 by caller
 };
@@ -42,13 +41,23 @@ function tripsList(trips: TripRow[]): string {
     .join("\n");
 }
 
+function profileLines(input: SystemPromptInput): string[] {
+  const lines: string[] = [`- app language: ${input.lang}`];
+  if (input.age != null) lines.push(`- age: ${input.age}`);
+  if (input.gender && input.gender !== "prefer_not_to_say") {
+    lines.push(`- gender: ${input.gender}`);
+  }
+  return lines;
+}
+
 export function buildSystemPrompt(input: SystemPromptInput): string {
   return [
     "You are VisitGrid's personal travel companion for this user.",
     `Reply in the user's app language: ${input.lang}.`,
     "Talk to the user like a close friend (casual, warm, second-person).",
     "Match the casual register of their app language.",
-    "Be concise and grounded in the user's own travel history.",
+    "Always ground every answer in the user's profile and travel history below.",
+    "Your goal is to be genuinely helpful to this specific traveler — take it seriously.",
     "Use the web_search tool ONLY when the question depends on time-sensitive,",
     "real-world facts (current safety/geopolitics, visa rules, weather windows,",
     "prices). Do NOT search for general advice the user already implies.",
@@ -57,9 +66,7 @@ export function buildSystemPrompt(input: SystemPromptInput): string {
     "(`![alt](https://...)`). The client renders them inline.",
     "",
     "USER PROFILE",
-    `- auth provider: ${input.authProvider}`,
-    `- app language: ${input.lang}`,
-    `- account tier: ${input.tier}`,
+    ...profileLines(input),
     "",
     "USER COUNTRY STATS  (top 30 by visit count)",
     statsTable(input.stats),

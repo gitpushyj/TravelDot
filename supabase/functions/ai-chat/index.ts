@@ -8,7 +8,9 @@
 
 import { createClient } from "supabase";
 import { aggregateCountryStats, sortTripsForPrompt, type TripRow } from "./tripStats.ts";
-import { buildSystemPrompt, type AuthProvider, type TierName } from "./systemPrompt.ts";
+import { buildSystemPrompt, type Gender } from "./systemPrompt.ts";
+
+type TierName = "free" | "premium" | "power";
 
 type IncomingMessage = { role: "user" | "assistant"; text: string };
 type IncomingBody = { messages: IncomingMessage[] };
@@ -44,11 +46,30 @@ function tierFromNumber(n: number | null | undefined): TierName {
   return TIER_NAMES[n] ?? "free";
 }
 
-function authProviderFromUser(user: { app_metadata?: { provider?: string } }): AuthProvider {
-  const p = user.app_metadata?.provider;
-  if (p === "google") return "google";
-  if (p === "apple") return "apple";
-  return "unknown";
+// 만 나이 계산. KST 기준 오늘 날짜와 비교.
+// 생일을 아직 안 지났으면 한 살 빼고, 월·일이 둘 다 null이면 단순히 (year - birthYear).
+function computeAgeKst(
+  birthYear: number | null,
+  birthMonth: number | null,
+  birthDay: number | null
+): number | null {
+  if (birthYear == null) return null;
+  const kst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+  const ny = kst.getUTCFullYear();
+  const nm = kst.getUTCMonth() + 1;
+  const nd = kst.getUTCDate();
+  let age = ny - birthYear;
+  if (birthMonth != null && birthDay != null) {
+    if (nm < birthMonth || (nm === birthMonth && nd < birthDay)) age -= 1;
+  } else if (birthMonth != null) {
+    if (nm < birthMonth) age -= 1;
+  }
+  return age >= 0 ? age : null;
+}
+
+function genderFromColumn(g: string | null | undefined): Gender {
+  if (g === "male" || g === "female" || g === "other" || g === "prefer_not_to_say") return g;
+  return null;
 }
 
 // Responses API 응답에서 텍스트만 안전하게 추출.
@@ -108,15 +129,21 @@ Deno.serve(async (req) => {
     return json({ error: "invalid_input", reason: "last_role" }, 400);
   }
 
-  // 3) tier 조회 (service_role)
+  // 3) 사용자 행 조회 (service_role): tier(한도용) + 프로필(나이/성별)
   const adminClient = createClient(SUPABASE_URL, SERVICE_ROLE);
   const { data: userRow } = await adminClient
     .from("users")
-    .select("tier")
+    .select("tier,birth_year,birth_month,birth_day,gender")
     .eq("id", user.id)
     .maybeSingle();
   const tier = tierFromNumber(userRow?.tier as number | null | undefined);
   const limit = TIER_LIMITS[tier];
+  const age = computeAgeKst(
+    (userRow?.birth_year as number | null | undefined) ?? null,
+    (userRow?.birth_month as number | null | undefined) ?? null,
+    (userRow?.birth_day as number | null | undefined) ?? null
+  );
+  const gender = genderFromColumn(userRow?.gender as string | null | undefined);
 
   // 4) 일일 카운트 조회
   const day = todayKst();
@@ -146,8 +173,8 @@ Deno.serve(async (req) => {
   const lang = (user.user_metadata?.lang as string | undefined) ?? "en";
   const systemPrompt = buildSystemPrompt({
     lang,
-    authProvider: authProviderFromUser(user),
-    tier,
+    age,
+    gender,
     stats: aggregateCountryStats(trips),
     trips: sortTripsForPrompt(trips),
   });

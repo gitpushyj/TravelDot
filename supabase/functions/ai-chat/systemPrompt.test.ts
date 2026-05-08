@@ -22,19 +22,55 @@ Deno.test("truncateMemo - emoji boundary safe", () => {
 Deno.test("buildSystemPrompt - empty trips → has-no-trips line", () => {
   const out = buildSystemPrompt({
     lang: "ko",
-    authProvider: "google",
-    tier: "free",
+    age: null,
+    gender: null,
     stats: [],
     trips: [],
   });
   assertStringIncludes(out, "USER has no trips yet.");
 });
 
-Deno.test("buildSystemPrompt - includes profile, stats and trips sections", () => {
+Deno.test("buildSystemPrompt - age and gender included when known", () => {
+  const out = buildSystemPrompt({
+    lang: "ko",
+    age: 33,
+    gender: "female",
+    stats: [],
+    trips: [],
+  });
+  assertStringIncludes(out, "age: 33");
+  assertStringIncludes(out, "gender: female");
+});
+
+Deno.test("buildSystemPrompt - omits age/gender when unknown or prefer_not_to_say", () => {
+  const out = buildSystemPrompt({
+    lang: "ko",
+    age: null,
+    gender: "prefer_not_to_say",
+    stats: [],
+    trips: [],
+  });
+  assertEquals(out.includes("age:"), false);
+  assertEquals(out.includes("gender:"), false);
+});
+
+Deno.test("buildSystemPrompt - no auth provider / tier mentioned", () => {
   const out = buildSystemPrompt({
     lang: "en",
-    authProvider: "apple",
-    tier: "premium",
+    age: 28,
+    gender: "male",
+    stats: [],
+    trips: [],
+  });
+  assertEquals(out.toLowerCase().includes("auth"), false);
+  assertEquals(out.toLowerCase().includes("tier"), false);
+});
+
+Deno.test("buildSystemPrompt - includes stats and trips sections + truncates memo", () => {
+  const out = buildSystemPrompt({
+    lang: "en",
+    age: 30,
+    gender: "other",
     stats: [
       { code: "JP", visits: 2, first_visit: "2023-04-01", last_visit: "2024-08-12", total_days: 13 },
     ],
@@ -48,25 +84,24 @@ Deno.test("buildSystemPrompt - includes profile, stats and trips sections", () =
       { country_code: "JP", start_date: "2023-04-01", end_date: "2023-04-05", body: null },
     ],
   });
-  assertStringIncludes(out, "auth provider: apple");
-  assertStringIncludes(out, "account tier: premium");
-  assertStringIncludes(out, "app language: en");
   assertStringIncludes(out, "JP");
   assertStringIncludes(out, "2024-08-12 ~ 2024-08-19");
   assertStringIncludes(out, "…");
-  // null body는 따옴표 블록 자체가 없어야
+  // null body 줄에는 따옴표 블록 없어야
   const apr1Line = out.split("\n").find((l) => l.includes("2023-04-01"));
   assertEquals(apr1Line?.includes('"'), false);
 });
 
-Deno.test("buildSystemPrompt - friend tone instructions present", () => {
+Deno.test("buildSystemPrompt - friend tone + genuine help instruction present", () => {
   const out = buildSystemPrompt({
     lang: "ko",
-    authProvider: "google",
-    tier: "free",
+    age: null,
+    gender: null,
     stats: [],
     trips: [],
   });
   assertStringIncludes(out, "close friend");
   assertStringIncludes(out, "casual");
+  assertStringIncludes(out, "genuinely helpful");
+  assertStringIncludes(out, "Always ground every answer");
 });
