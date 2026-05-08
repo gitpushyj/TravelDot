@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { ChatMessage } from "./types";
 
 const KEY_PREFIX = "ai_chat:";
-export const MAX_MEMORY_MESSAGES = 10;
 
 function key(userId: string): string {
   return KEY_PREFIX + userId;
@@ -21,11 +20,13 @@ export async function loadMessages(userId: string): Promise<ChatMessage[]> {
   }
 }
 
+// 호출 측이 tier에 맞는 cap을 결정해서 넘긴다 (MEMORY_BY_TIER).
 export async function saveMessages(
   userId: string,
-  messages: ChatMessage[]
+  messages: ChatMessage[],
+  cap: number
 ): Promise<void> {
-  const trimmed = messages.slice(-MAX_MEMORY_MESSAGES);
+  const trimmed = cap > 0 ? messages.slice(-cap) : [];
   await AsyncStorage.setItem(key(userId), JSON.stringify(trimmed));
 }
 

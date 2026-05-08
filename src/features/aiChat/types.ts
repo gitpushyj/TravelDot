@@ -4,6 +4,17 @@ export type ChatRole = "user" | "assistant";
 
 export type TierName = "free" | "premium" | "power";
 
+// tier별 채팅 메모리 길이 (UI 표시 + LLM 컨텍스트 공통).
+// 일일 한도와 동일한 숫자를 그대로 쓴다 (free=1, premium=10, power=30).
+// 변경 시 docs/user-tier.md 와 supabase/functions/ai-chat/index.ts의 cap도 같이 본다.
+export const MEMORY_BY_TIER: Record<TierName, number> = {
+  free: 1,
+  premium: 10,
+  power: 30,
+};
+
+export const MAX_MEMORY = Math.max(...Object.values(MEMORY_BY_TIER));
+
 export type ChatMessage = {
   id: string;
   role: ChatRole;

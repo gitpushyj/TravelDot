@@ -65,12 +65,17 @@ export type ChatMessage = {
 
 - 키: `ai_chat:<userId>` (사용자 분리)
 - 값: `JSON.stringify(ChatMessage[])`
-- **sliding window**: 저장 직전 `slice(-MAX_MEMORY_MESSAGES)`. `MAX_MEMORY_MESSAGES = 10` (user+assistant 합산).
+- **sliding window 길이는 tier별로 다르다** — `MEMORY_BY_TIER`(일일 한도와 동일):
+  - `free`: 1
+  - `premium`: 10
+  - `power`: 30
+- 저장 직전 + store에 set할 때마다 `slice(-cap)` 적용. UI 표시되는 메시지 = 메모리 = LLM 컨텍스트가 모두 같은 cap을 따른다(=일관).
 - 저장 시점: 매 메시지 추가 후 즉시.
-- 로그아웃(`signOut`) 시 해당 키 삭제(`aiChatStorage.clear(userId)`).
+- 로그아웃(`signOut`) 시 해당 키 삭제.
 - 사용자가 "대화 비우기" 누르면 키 삭제.
+- tier 변경 감지: store는 hydrate 시점에 `fetchUserTier`로 한 번 fetch + 매 응답의 `usage.tier`로 동기화. tier가 올라가면 다음 메시지부터 새 cap 적용, tier가 내려가면 즉시 잘려서 표시된다.
 
-전송 시 Edge Function에는 저장된 10개 + 신규 user 메시지를 함께 보낸다(stateless API 표준).
+전송 시 Edge Function에는 저장된 (`cap`개) + 신규 user 메시지를 함께 보낸다.
 
 ### 4.3 Supabase 테이블 신설: `ai_chat_usage`
 
@@ -285,7 +290,7 @@ function todayKst(): string {
 | 항목 | 값 |
 |------|-----|
 | 입력 메시지 1건 길이 | 최대 500자 |
-| 한 요청에 보내는 메시지 수 | 1~11개 (sliding window 10 + 신규 1) |
+| 한 요청에 보내는 메시지 수 | 1~31개 (가장 큰 tier(power=30) sliding window + 신규 1). 검증은 max로 broad하게. 실제 보내는 양은 클라가 자기 tier에 맞게 cap. |
 | OpenAI `max_output_tokens` | 1000 |
 | 일일 메시지 (tier별) | 1 / 10 / 30 |
 | 이미지 inline 표시 | 최대 4장, https만 |

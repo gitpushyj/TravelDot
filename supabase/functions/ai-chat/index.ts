@@ -114,7 +114,8 @@ Deno.serve(async (req) => {
     return json({ error: "invalid_input", reason: "bad_json" }, 400);
   }
   const messages = Array.isArray(body?.messages) ? body.messages : [];
-  if (messages.length < 1 || messages.length > 11) {
+  // max = 가장 큰 tier(power=30) sliding window + 신규 1 = 31.
+  if (messages.length < 1 || messages.length > 31) {
     return json({ error: "invalid_input", reason: "messages_count" }, 400);
   }
   for (const m of messages) {

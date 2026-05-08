@@ -1,8 +1,10 @@
 import { create } from "zustand";
 
+import { fetchUserTier } from "../auth/userTier";
+
 import { sendChat } from "./aiChatClient";
 import { clearMessages, loadMessages, saveMessages } from "./aiChatStorage";
-import type { ChatMessage, TierName } from "./types";
+import { MEMORY_BY_TIER, type ChatMessage, type TierName } from "./types";
 
 function uuid(): string {
   // expo-crypto가 따로 없으니 짧은 랜덤. 충돌 무시 가능 수준.
@@ -13,6 +15,7 @@ type RateLimitInfo = { tier: TierName; limit: number };
 
 type State = {
   loadedUserId: string | null;
+  tier: TierName;
   messages: ChatMessage[];
   isSending: boolean;
   rateLimit: RateLimitInfo | null;
@@ -22,16 +25,35 @@ type State = {
   clear: () => Promise<void>;
 };
 
+// store 안에서 자주 쓰는 짧은 헬퍼.
+function capFor(tier: TierName): number {
+  return MEMORY_BY_TIER[tier];
+}
+
+function trimByTier(messages: ChatMessage[], tier: TierName): ChatMessage[] {
+  const cap = capFor(tier);
+  return cap > 0 ? messages.slice(-cap) : [];
+}
+
 export const useAiChatStore = create<State>((set, get) => ({
   loadedUserId: null,
+  tier: "free",
   messages: [],
   isSending: false,
   rateLimit: null,
 
   hydrate: async (userId) => {
     if (get().loadedUserId === userId) return;
-    const messages = await loadMessages(userId);
-    set({ loadedUserId: userId, messages, rateLimit: null });
+    const [messages, tier] = await Promise.all([
+      loadMessages(userId),
+      fetchUserTier(userId),
+    ]);
+    set({
+      loadedUserId: userId,
+      tier,
+      messages: trimByTier(messages, tier),
+      rateLimit: null,
+    });
   },
 
   send: async (text) => {
@@ -39,6 +61,8 @@ export const useAiChatStore = create<State>((set, get) => ({
     if (!userId || get().isSending) return;
     const trimmed = text.trim();
     if (!trimmed) return;
+    const tier = get().tier;
+    const cap = capFor(tier);
 
     const userMessage: ChatMessage = {
       id: uuid(),
@@ -47,13 +71,14 @@ export const useAiChatStore = create<State>((set, get) => ({
       createdAt: Date.now(),
     };
     const historyForCall = get().messages;
-    const after = [...historyForCall, userMessage];
+    const after = trimByTier([...historyForCall, userMessage], tier);
     set({ messages: after, isSending: true });
-    await saveMessages(userId, after);
+    await saveMessages(userId, after, cap);
 
     const { outcome, assistant } = await sendChat({
       history: historyForCall,
       newUserText: trimmed,
+      historyCap: cap,
     });
 
     if (outcome.kind === "ok" && assistant) {
@@ -64,9 +89,12 @@ export const useAiChatStore = create<State>((set, get) => ({
         imageUrls: assistant.imageUrls.length ? assistant.imageUrls : undefined,
         createdAt: Date.now(),
       };
-      const next = [...after, aiMsg];
-      set({ messages: next, isSending: false, rateLimit: null });
-      await saveMessages(userId, next);
+      // 응답에 담긴 tier로 동기화 (서버가 권위 있는 출처).
+      const newTier = outcome.tier;
+      const newCap = capFor(newTier);
+      const next = trimByTier([...after, aiMsg], newTier);
+      set({ messages: next, isSending: false, rateLimit: null, tier: newTier });
+      await saveMessages(userId, next, newCap);
       return;
     }
 
@@ -78,13 +106,15 @@ export const useAiChatStore = create<State>((set, get) => ({
         error: `aiChat.error.rateLimited.${outcome.tier}`,
         createdAt: Date.now(),
       };
-      const next = [...after, aiMsg];
+      const newCap = capFor(outcome.tier);
+      const next = trimByTier([...after, aiMsg], outcome.tier);
       set({
         messages: next,
         isSending: false,
         rateLimit: { tier: outcome.tier, limit: outcome.limit },
+        tier: outcome.tier,
       });
-      await saveMessages(userId, next);
+      await saveMessages(userId, next, newCap);
       return;
     }
 
@@ -101,9 +131,9 @@ export const useAiChatStore = create<State>((set, get) => ({
       error: errKey,
       createdAt: Date.now(),
     };
-    const next = [...after, aiMsg];
+    const next = trimByTier([...after, aiMsg], tier);
     set({ messages: next, isSending: false });
-    await saveMessages(userId, next);
+    await saveMessages(userId, next, cap);
   },
 
   clear: async () => {
