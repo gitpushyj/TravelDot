@@ -455,14 +455,14 @@ export default function MainScreen({
               </View>
             </GestureDetector>
           </View>
-          <MapActions
-            styles={styles}
-            onShare={() => setShareModalOpen(true)}
-            onZoom={() => navigation.navigate("MapZoom")}
-            shareA11yLabel={t("home.shareBtnA11y")}
-            zoomA11yLabel={t("home.zoomBtnA11y")}
-          />
         </View>
+        <MapActions
+          styles={styles}
+          onShare={() => setShareModalOpen(true)}
+          onZoom={() => navigation.navigate("MapZoom")}
+          shareA11yLabel={t("home.shareBtnA11y")}
+          zoomA11yLabel={t("home.zoomBtnA11y")}
+        />
 
         <View style={styles.statsRow}>
           <MiniCard
