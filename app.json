@@ -56,7 +56,7 @@
         "expo-media-library",
         {
           "photosPermission": "TravelDot reads dates and location metadata from your photos to automatically detect the countries you've visited. Your photos stay on your device and are never uploaded.",
-          "savePhotosPermission": false,
+          "savePhotosPermission": "TravelDot saves your shared travel map image to your photo library when you tap Save.",
           "isAccessMediaLocationEnabled": true,
           "granularPermissions": [
             "photo"

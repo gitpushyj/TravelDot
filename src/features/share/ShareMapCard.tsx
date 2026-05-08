@@ -13,8 +13,8 @@ export const SHARE_CARD_HEIGHT = 1920;
 // DotMap의 자연 비율(viewBoxW:viewBoxH = 360:145).
 const MAP_NATURAL_RATIO = 360 / 145;
 
-const MAP_HORIZONTAL_PADDING = 60;
-const MAP_SLOT_WIDTH = SHARE_CARD_WIDTH - MAP_HORIZONTAL_PADDING * 2;
+const HORIZONTAL_PADDING = 30;
+const MAP_SLOT_WIDTH = SHARE_CARD_WIDTH - HORIZONTAL_PADDING * 2;
 const MAP_SLOT_HEIGHT = Math.round(MAP_SLOT_WIDTH / MAP_NATURAL_RATIO);
 
 type Props = {
@@ -46,7 +46,8 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
   const styles = makeStyles(theme);
   return (
     <View ref={ref} collapsable={false} style={styles.card}>
-      <View style={styles.header}>
+      {/* 호칭 */}
+      <View style={styles.titleSection}>
         {badgeTitle ? (
           <View style={styles.badgeChip}>
             <Text style={styles.badgeText}>
@@ -55,16 +56,9 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
             </Text>
           </View>
         ) : null}
-        <View style={styles.statRow}>
-          <Text style={styles.statNum}>{countries}</Text>
-          <Text style={styles.statUnit}> {countriesUnit}</Text>
-          <Text style={styles.statDot}> · </Text>
-          <Text style={styles.statNum}>{days}</Text>
-          <Text style={styles.statUnit}> {daysUnit}</Text>
-        </View>
-        {yearLabel ? <Text style={styles.yearLabel}>{yearLabel}</Text> : null}
       </View>
 
+      {/* 지도 */}
       <View style={styles.mapSlot}>
         <DotMap
           visitCounts={visitCounts}
@@ -74,6 +68,23 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
         />
       </View>
 
+      {/* 통계 */}
+      <View style={styles.statsSection}>
+        <View style={styles.statRow}>
+          <Text style={styles.statNum}>{countries}</Text>
+          <Text style={styles.statUnit}> {countriesUnit}</Text>
+          <Text style={styles.statDot}> · </Text>
+          <Text style={styles.statNum}>{days}</Text>
+          <Text style={styles.statUnit}> {daysUnit}</Text>
+        </View>
+      </View>
+
+      {/* 날짜 */}
+      <View style={styles.yearSection}>
+        {yearLabel ? <Text style={styles.yearLabel}>{yearLabel}</Text> : null}
+      </View>
+
+      {/* 워터마크는 카드 맨 아래에 붙는다. */}
       <View style={styles.footer}>
         <Text style={styles.watermark}>· TravelDot ·</Text>
       </View>
@@ -89,26 +100,38 @@ function makeStyles(theme: Theme) {
       width: SHARE_CARD_WIDTH,
       height: SHARE_CARD_HEIGHT,
       backgroundColor: theme.homeBg,
-      paddingTop: 200,
-      paddingBottom: 120,
-      paddingHorizontal: MAP_HORIZONTAL_PADDING,
+      paddingTop: 140,
+      paddingBottom: 80,
+      paddingHorizontal: HORIZONTAL_PADDING,
       alignItems: "center",
-      justifyContent: "flex-start",
     },
-    header: {
+    titleSection: {
       alignItems: "center",
-      gap: 32,
+      marginBottom: 80,
     },
     badgeChip: {
       backgroundColor: theme.accentSoftBg,
-      paddingHorizontal: 36,
-      paddingVertical: 18,
-      borderRadius: 24,
+      paddingHorizontal: 44,
+      paddingVertical: 22,
+      borderRadius: 28,
     },
     badgeText: {
       color: theme.accentSoftText,
-      fontSize: 56,
+      fontSize: 72,
       fontWeight: "800",
+    },
+    mapSlot: {
+      width: MAP_SLOT_WIDTH,
+      height: MAP_SLOT_HEIGHT,
+    },
+    mapInner: {
+      flex: 1,
+      width: "100%",
+      aspectRatio: undefined,
+    },
+    statsSection: {
+      marginTop: 110,
+      alignItems: "center",
     },
     statRow: {
       flexDirection: "row",
@@ -116,34 +139,28 @@ function makeStyles(theme: Theme) {
     },
     statNum: {
       color: theme.textPrimary,
-      fontSize: 96,
+      fontSize: 132,
       fontWeight: "900",
     },
     statUnit: {
       color: theme.textPrimary,
-      fontSize: 44,
+      fontSize: 60,
       fontWeight: "700",
     },
     statDot: {
       color: theme.textMuted,
-      fontSize: 56,
+      fontSize: 80,
       fontWeight: "700",
+    },
+    yearSection: {
+      marginTop: 28,
+      alignItems: "center",
     },
     yearLabel: {
       color: theme.textSecondary,
-      fontSize: 40,
+      fontSize: 56,
       fontWeight: "600",
-      letterSpacing: 1,
-    },
-    mapSlot: {
-      width: MAP_SLOT_WIDTH,
-      height: MAP_SLOT_HEIGHT,
-      marginTop: 80,
-    },
-    mapInner: {
-      flex: 1,
-      width: "100%",
-      aspectRatio: undefined,
+      letterSpacing: 2,
     },
     footer: {
       flex: 1,
@@ -152,9 +169,9 @@ function makeStyles(theme: Theme) {
     },
     watermark: {
       color: theme.textSecondary,
-      fontSize: 36,
+      fontSize: 42,
       fontWeight: "700",
-      letterSpacing: 4,
+      letterSpacing: 6,
     },
   });
 }
