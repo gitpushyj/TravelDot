@@ -20,9 +20,9 @@
       "upstream": "AI service is having a moment 🥲 Try again in a minute or two. You can resend the same message.",
       "imageLoadFailed": "Couldn't load image",
       "rateLimited": {
-        "free": "You've used today's free quota ({{limit}}) 🥲 Upgrade to chat more — premium gives you 10/day, power gives you 30/day. Refills {{resetAt}}.",
-        "premium": "You've used today's premium quota ({{limit}}) 🥲 Upgrade to power for 30/day. Refills {{resetAt}}.",
-        "power": "You've used today's power quota ({{limit}}) 🥲 Refills {{resetAt}}."
+        "free": "You've used today's free quota (1) 🥲 Upgrade your plan to chat more — premium gives you 10/day, power gives you 30/day. Refills {{resetAt}}.",
+        "premium": "You've used today's premium quota (10) 🥲 Upgrade your plan for 30/day. Refills {{resetAt}}.",
+        "power": "You've used today's power quota (30) 🥲 Refills {{resetAt}}."
       }
     },
     "confirmClear": {

@@ -19,7 +19,6 @@ export default function UsageLimitBanner({ tier, limit }: Props) {
     <View style={styles.root}>
       <Text style={styles.text}>
         {t(`aiChat.error.rateLimited.${tier}`, {
-          limit,
           resetAt: formatResetAtText(t, i18n.language),
         })}
       </Text>
