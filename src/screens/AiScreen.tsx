@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import {
   AiChatComposer,
@@ -28,6 +29,7 @@ export default function AiScreen() {
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const bottomInset = useScreenBottomInset();
+  const safeInsets = useSafeAreaInsets();
 
   const userId = useAuthStore((s) => s.user?.id ?? null);
   const messages = useAiChatStore((s) => s.messages);
@@ -65,7 +67,7 @@ export default function AiScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.root}
+      style={[styles.root, { paddingTop: safeInsets.top }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.header}>
