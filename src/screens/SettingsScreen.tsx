@@ -29,7 +29,7 @@ import ActionRow from "./SettingsScreen/ActionRow";
 import { makeStyles } from "./SettingsScreen/styles";
 
 type Props = {
-  onClose: () => void;
+  onClose?: () => void;
   onAddTrip: () => void;
   onOpenTitles: () => void;
   onOpenMilestones: () => void;
@@ -187,9 +187,13 @@ export default function SettingsScreen({
   return (
     <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
-        <Pressable onPress={onClose} hitSlop={8}>
-          <Text style={styles.cancel}>{t("common.close")}</Text>
-        </Pressable>
+        {onClose ? (
+          <Pressable onPress={onClose} hitSlop={8}>
+            <Text style={styles.cancel}>{t("common.close")}</Text>
+          </Pressable>
+        ) : (
+          <View style={{ minWidth: 40 }} />
+        )}
         <Text style={styles.title}>{t("settings.heading")}</Text>
         <View style={{ minWidth: 40 }} />
       </View>

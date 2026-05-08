@@ -25,6 +25,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
+import type { CompositeScreenProps } from "@react-navigation/native";
+import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import AddTripActionSheet from "../../components/AddTripActionSheet";
@@ -45,7 +47,7 @@ import { useScreenBottomInset } from "../../hooks/useScreenInsets";
 import { getCurrentLocale } from "../../i18n";
 import { getCountryName } from "../../lib/countryName";
 import { useAppCtx } from "../../navigation/AppCtx";
-import type { RootStackParamList } from "../../navigation/types";
+import type { MainTabParamList, RootStackParamList } from "../../navigation/types";
 import { useTheme } from "../../theme/themeStore";
 import MapActions from "./MapActions";
 import MiniCard from "./MiniCard";
@@ -75,9 +77,12 @@ const MAP_MAX_EXTRA = Math.max(
 // 다시 false로 초기화되어 새 세션에서 한 번 더 재생된다.
 let mapHandleHintShown = false;
 
-export default function MainScreen({
-  navigation,
-}: NativeStackScreenProps<RootStackParamList, "Main">) {
+type Props = CompositeScreenProps<
+  BottomTabScreenProps<MainTabParamList, "Home">,
+  NativeStackScreenProps<RootStackParamList>
+>;
+
+export default function MainScreen({ navigation }: Props) {
   const { t } = useTranslation();
   const { yearMode, setYearMode, activeCounts } = useAppCtx();
   const visitCounts = useVisitStore((s) => s.visitCounts);

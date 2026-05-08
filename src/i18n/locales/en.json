@@ -1,4 +1,9 @@
 {
+  "tabs": {
+    "home": "Home",
+    "ai": "AI",
+    "settings": "Settings"
+  },
   "common": {
     "ok": "OK",
     "cancel": "Cancel",

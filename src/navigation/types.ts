@@ -8,10 +8,15 @@ export type ImageDetailPhoto = {
   date: string;
 };
 
+export type MainTabParamList = {
+  Home: undefined;
+  AI: undefined;
+  Settings: undefined;
+};
+
 export type RootStackParamList = {
   Main: undefined;
   AddTrip: undefined;
-  Settings: undefined;
   ChangeHome: undefined;
   Titles: undefined;
   Milestones: undefined;
