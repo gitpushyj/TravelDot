@@ -190,6 +190,7 @@ export function makeStyles(theme: Theme) {
     hintText: {
       fontSize: 12,
       color: theme.textSecondary,
+      textAlign: "center",
     },
   });
 }
