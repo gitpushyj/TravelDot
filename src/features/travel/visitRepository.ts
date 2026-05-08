@@ -62,6 +62,7 @@ export {
 } from "./trip/tripMerge";
 
 export {
+  purgeAllVisits,
   removeAutoVisitsForCountry,
   wipeAllVisits,
 } from "./trip/tripMaintenance";
