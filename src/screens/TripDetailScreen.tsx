@@ -105,9 +105,11 @@ export default function TripDetailScreen({
 
   // 디바이스 사진첩 스캔은 비교적 무거우니 DB 조회와 병렬로 분리해 띄우고 끝나는
   // 대로 카운트와 폴백 슬라이드를 갱신한다.
-  // resolveDisplayUris(MediaLibrary.getAssetInfoAsync 일괄 호출)은 사진이 많을수록
-  // 첫 진입 시 큰 지연을 만들어 호출하지 않는다. iOS의 ph:// URI는 Image 컴포넌트가
-  // 직접 로드 가능 (photoLibrary.ts iteratePhotos 주석 참고).
+  // 스캔 자체는 ph:// URI를 그대로 받아 빠르게 끝내고(첫 진입 지연 회피),
+  // 매칭된 사진에 한해서만 표시 직전에 file:// localUri로 해석한다.
+  // ph:// URI는 RN Image 로더가 케이스(iCloud 미다운로드 자산 등)에 따라
+  // 빈 셀로 그려 카운트와 실제 보이는 수가 어긋난다. savedPhotos와 동일하게
+  // 해석 실패한 항목은 표시 목록에서 제외해 일관성을 유지한다.
   useEffect(() => {
     let cancelled = false;
     void (async () => {
@@ -118,7 +120,17 @@ export default function TripDetailScreen({
           endDate: trip.endDate,
         });
         if (cancelled) return;
-        setDevicePhotos(photos);
+        const resolved = await resolveDisplayUris(
+          photos.map((p) => ({ id: p.id, uri: p.uri }))
+        );
+        if (cancelled) return;
+        setDevicePhotos(
+          photos.flatMap((p) => {
+            const local = resolved[p.id];
+            if (!local || local.startsWith("ph://")) return [];
+            return [{ ...p, uri: local }];
+          })
+        );
       } catch (e) {
         if (cancelled) return;
         // 권한 거부 등으로 실패해도 화면 자체는 동작한다.
