@@ -19,9 +19,9 @@
       "invalidInput": "Mind checking that message?",
       "imageLoadFailed": "Couldn't load image",
       "rateLimited": {
-        "free": "You've used today's free quota ({{limit}}). Upgrade to chat more.",
-        "premium": "You've used today's quota ({{limit}}). Resets at midnight KST.",
-        "power": "You've used today's quota ({{limit}}). Resets at midnight KST."
+        "free": "You've used today's free quota ({{limit}}) 🥲 Upgrade to chat more — premium gives you 10/day, power gives you 30/day. Resets at midnight KST.",
+        "premium": "You've used today's premium quota ({{limit}}) 🥲 Upgrade to power for 30/day. Resets at midnight KST.",
+        "power": "You've used today's power quota ({{limit}}) 🥲 Resets at midnight KST."
       }
     },
     "confirmClear": {
