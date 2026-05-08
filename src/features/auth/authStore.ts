@@ -18,7 +18,7 @@ type State = {
   session: Session | null;
   user: User | null;
   hydrated: boolean;
-  signingIn: boolean;
+  signingInProvider: "google" | "apple" | null;
 
   hydrate: () => Promise<void>;
   signInGoogle: () => Promise<SignInResult>;
@@ -32,7 +32,7 @@ export const useAuthStore = create<State>((set) => ({
   session: null,
   user: null,
   hydrated: false,
-  signingIn: false,
+  signingInProvider: null,
 
   hydrate: async () => {
     configureGoogleSignIn();
@@ -54,7 +54,7 @@ export const useAuthStore = create<State>((set) => ({
   },
 
   signInGoogle: async () => {
-    set({ signingIn: true });
+    set({ signingInProvider: "google" });
     try {
       await signInWithGoogle();
       return { ok: true };
@@ -65,12 +65,12 @@ export const useAuthStore = create<State>((set) => ({
       const message = e instanceof Error ? e.message : String(e);
       return { ok: false, cancelled: false, message };
     } finally {
-      set({ signingIn: false });
+      set({ signingInProvider: null });
     }
   },
 
   signInApple: async () => {
-    set({ signingIn: true });
+    set({ signingInProvider: "apple" });
     try {
       await signInWithApple();
       return { ok: true };
@@ -81,7 +81,7 @@ export const useAuthStore = create<State>((set) => ({
       const message = e instanceof Error ? e.message : String(e);
       return { ok: false, cancelled: false, message };
     } finally {
-      set({ signingIn: false });
+      set({ signingInProvider: null });
     }
   },
 

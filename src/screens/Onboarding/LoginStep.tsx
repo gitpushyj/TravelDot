@@ -19,7 +19,7 @@ export default function LoginStep({ onNext }: Props) {
   const theme = useTheme();
 
   const user = useAuthStore((s) => s.user);
-  const signingIn = useAuthStore((s) => s.signingIn);
+  const signingInProvider = useAuthStore((s) => s.signingInProvider);
   const signInGoogle = useAuthStore((s) => s.signInGoogle);
   const signInApple = useAuthStore((s) => s.signInApple);
 
@@ -63,13 +63,13 @@ export default function LoginStep({ onNext }: Props) {
         <GoogleSignInButton
           label={t("login.googleContinue")}
           onPress={onPressGoogle}
-          loading={signingIn}
+          loading={signingInProvider === "google"}
         />
         {appleAvailable && (
           <AppleSignInButton
             label={t("login.appleContinue")}
             onPress={onPressApple}
-            loading={signingIn}
+            loading={signingInProvider === "apple"}
           />
         )}
       </View>
