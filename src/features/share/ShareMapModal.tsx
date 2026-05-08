@@ -75,9 +75,9 @@ export default function ShareMapModal({
   // 화면 폭에 맞춰 1080×1920 카드를 축소 표시할 scale을 계산한다.
   const previewLayout = useMemo(() => {
     const screen = Dimensions.get("window");
-    const horizontalPadding = 32;
-    // 헤더 + 색상 칩 row + 버튼 row + 여백.
-    const reservedHeight = 360;
+    const horizontalPadding = 16;
+    // 헤더(~60) + 색상 칩 row(~64) + 버튼 row(~80) + 위아래 여백.
+    const reservedHeight = 230;
     const maxW = screen.width - horizontalPadding * 2;
     const maxH = screen.height - reservedHeight - insets.top - insets.bottom;
     const scaleByW = maxW / SHARE_CARD_WIDTH;
@@ -291,7 +291,7 @@ function makeStyles(_theme: Theme) {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      paddingHorizontal: 32,
+      paddingHorizontal: 16,
     },
     previewBox: {
       borderRadius: 18,
