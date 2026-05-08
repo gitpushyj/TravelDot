@@ -1,11 +1,13 @@
 import type { Theme } from "../../theme/theme";
 
 // 공유 카드 배경 팔레트. 사용자가 모달 하단의 색상 칩에서 선택한다.
-// 텍스트/뱃지 색은 배경 톤에 맞춰 가독성을 보장하도록 함께 정의한다.
-// 지도 도트(녹색 계열 heatmap)와 텍스트가 모두 잘 보이는 색만 모았다.
+// frameBg는 카드 바깥쪽 영역(이미지 전체 배경)에 깔리는 색이고, bg는 그 위에
+// 떠 있는 카드의 색이다. 텍스트/뱃지 색은 카드 bg 톤에 맞춰 가독성을 보장하도록
+// 함께 정의한다. 지도 도트(녹색 계열 heatmap)와 텍스트가 모두 잘 보이는 색만 모았다.
 export type SharePalette = {
   id: string;
   bg: string;
+  frameBg: string;
   textPrimary: string;
   textSecondary: string;
   textMuted: string;
@@ -14,10 +16,12 @@ export type SharePalette = {
 };
 
 export function buildPalettes(theme: Theme): SharePalette[] {
+  const isDark = theme.statusBar === "light";
   return [
     {
       id: "theme",
       bg: theme.homeBg,
+      frameBg: isDark ? "#23262f" : "#ede4d0",
       textPrimary: theme.textPrimary,
       textSecondary: theme.textSecondary,
       textMuted: theme.textMuted,
@@ -27,6 +31,7 @@ export function buildPalettes(theme: Theme): SharePalette[] {
     {
       id: "black",
       bg: "#000000",
+      frameBg: "#3a2548",
       textPrimary: "#ffffff",
       textSecondary: "#b0b2ba",
       textMuted: "#6b6e76",
@@ -36,6 +41,7 @@ export function buildPalettes(theme: Theme): SharePalette[] {
     {
       id: "navy",
       bg: "#0a1a2f",
+      frameBg: "#1f4a7d",
       textPrimary: "#f5f5f7",
       textSecondary: "#a0b0c8",
       textMuted: "#6a7a90",
@@ -45,6 +51,7 @@ export function buildPalettes(theme: Theme): SharePalette[] {
     {
       id: "white",
       bg: "#ffffff",
+      frameBg: "#ffd6b8",
       textPrimary: "#1a1a1a",
       textSecondary: "#5f5e57",
       textMuted: "#a8a69b",
@@ -54,6 +61,7 @@ export function buildPalettes(theme: Theme): SharePalette[] {
     {
       id: "cream",
       bg: "#f5e9d3",
+      frameBg: "#a8755a",
       textPrimary: "#3a2e1c",
       textSecondary: "#6f5f3f",
       textMuted: "#a89673",
@@ -63,6 +71,7 @@ export function buildPalettes(theme: Theme): SharePalette[] {
     {
       id: "sky",
       bg: "#d6ebff",
+      frameBg: "#3b82f6",
       textPrimary: "#0e2236",
       textSecondary: "#3a5a7a",
       textMuted: "#7a96b0",

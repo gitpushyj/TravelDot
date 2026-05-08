@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import DotMap from "../../components/DotMap";
 import type { SharePalette } from "./sharePalette";
 
-// 공유용 카드는 항상 1080×1920(9:16, 인스타 스토리 권장)로 layout한다.
+// 공유용 이미지는 항상 1080×1920(9:16, 인스타 스토리 권장)로 layout한다.
 // 화면 표시는 부모가 transform: scale 로 축소하고, 캡처는 view-shot이
 // view의 unscaled bounds 기준으로 렌더하므로 본래 해상도 그대로 PNG가 나온다.
 export const SHARE_CARD_WIDTH = 1080;
@@ -13,8 +13,14 @@ export const SHARE_CARD_HEIGHT = 1920;
 // DotMap의 자연 비율(viewBoxW:viewBoxH = 360:145).
 const MAP_NATURAL_RATIO = 360 / 145;
 
+// 외곽 frame과 안쪽 card 사이 여백. card가 frame 위에 떠 있는 카드처럼 보이도록 한다.
+const FRAME_PADDING_X = 60;
+const FRAME_PADDING_Y = 80;
+const CARD_RADIUS = 56;
+
 const HORIZONTAL_PADDING = 30;
-const MAP_SLOT_WIDTH = SHARE_CARD_WIDTH - HORIZONTAL_PADDING * 2;
+const INNER_CARD_WIDTH = SHARE_CARD_WIDTH - FRAME_PADDING_X * 2;
+const MAP_SLOT_WIDTH = INNER_CARD_WIDTH - HORIZONTAL_PADDING * 2;
 const MAP_SLOT_HEIGHT = Math.round(MAP_SLOT_WIDTH / MAP_NATURAL_RATIO);
 
 type Props = {
@@ -49,48 +55,50 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
 ) {
   const styles = makeStyles(palette);
   return (
-    <View ref={ref} collapsable={false} style={styles.card}>
-      {/* 호칭 */}
-      <View style={styles.titleSection}>
-        {badgeTitle ? (
-          <View style={styles.badgeChip}>
-            <Text style={styles.badgeText}>
-              {badgeEmoji ? `${badgeEmoji} ` : ""}
-              {badgeTitle}
-            </Text>
-          </View>
-        ) : null}
-      </View>
-
-      {/* 지도 */}
-      <View style={styles.mapSlot}>
-        <DotMap
-          visitCounts={visitCounts}
-          enableZoom={enableMapZoom}
-          playIntro={false}
-          mapAreaStyle={styles.mapInner}
-        />
-      </View>
-
-      {/* 통계 */}
-      <View style={styles.statsSection}>
-        <View style={styles.statRow}>
-          <Text style={styles.statNum}>{countries}</Text>
-          <Text style={styles.statUnit}> {countriesUnit}</Text>
-          <Text style={styles.statDot}> · </Text>
-          <Text style={styles.statNum}>{days}</Text>
-          <Text style={styles.statUnit}> {daysUnit}</Text>
+    <View ref={ref} collapsable={false} style={styles.frame}>
+      <View style={styles.card}>
+        {/* 호칭 */}
+        <View style={styles.titleSection}>
+          {badgeTitle ? (
+            <View style={styles.badgeChip}>
+              <Text style={styles.badgeText}>
+                {badgeEmoji ? `${badgeEmoji} ` : ""}
+                {badgeTitle}
+              </Text>
+            </View>
+          ) : null}
         </View>
-      </View>
 
-      {/* 날짜 */}
-      <View style={styles.yearSection}>
-        {yearLabel ? <Text style={styles.yearLabel}>{yearLabel}</Text> : null}
-      </View>
+        {/* 지도 */}
+        <View style={styles.mapSlot}>
+          <DotMap
+            visitCounts={visitCounts}
+            enableZoom={enableMapZoom}
+            playIntro={false}
+            mapAreaStyle={styles.mapInner}
+          />
+        </View>
 
-      {/* 워터마크는 카드 맨 아래에 붙는다. */}
-      <View style={styles.footer}>
-        <Text style={styles.watermark}>· TravelDot ·</Text>
+        {/* 통계 */}
+        <View style={styles.statsSection}>
+          <View style={styles.statRow}>
+            <Text style={styles.statNum}>{countries}</Text>
+            <Text style={styles.statUnit}> {countriesUnit}</Text>
+            <Text style={styles.statDot}> · </Text>
+            <Text style={styles.statNum}>{days}</Text>
+            <Text style={styles.statUnit}> {daysUnit}</Text>
+          </View>
+        </View>
+
+        {/* 날짜 */}
+        <View style={styles.yearSection}>
+          {yearLabel ? <Text style={styles.yearLabel}>{yearLabel}</Text> : null}
+        </View>
+
+        {/* 워터마크는 카드 맨 아래에 붙는다. */}
+        <View style={styles.footer}>
+          <Text style={styles.watermark}>· TravelDot ·</Text>
+        </View>
       </View>
     </View>
   );
@@ -100,18 +108,27 @@ export default ShareMapCard;
 
 function makeStyles(palette: SharePalette) {
   return StyleSheet.create({
-    card: {
+    frame: {
       width: SHARE_CARD_WIDTH,
       height: SHARE_CARD_HEIGHT,
+      backgroundColor: palette.frameBg,
+      paddingHorizontal: FRAME_PADDING_X,
+      paddingVertical: FRAME_PADDING_Y,
+    },
+    card: {
+      flex: 1,
+      width: "100%",
       backgroundColor: palette.bg,
-      paddingTop: 220,
-      paddingBottom: 80,
+      borderRadius: CARD_RADIUS,
+      paddingTop: 180,
+      paddingBottom: 60,
       paddingHorizontal: HORIZONTAL_PADDING,
       alignItems: "center",
+      overflow: "hidden",
     },
     titleSection: {
       alignItems: "center",
-      marginBottom: 140,
+      marginBottom: 110,
     },
     badgeChip: {
       backgroundColor: palette.badgeBg,
@@ -135,7 +152,7 @@ function makeStyles(palette: SharePalette) {
       aspectRatio: undefined,
     },
     statsSection: {
-      marginTop: 110,
+      marginTop: 90,
       alignItems: "center",
     },
     statRow: {
