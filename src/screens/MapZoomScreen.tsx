@@ -90,8 +90,13 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
   }, [showCloseTemporarily]);
 
   useEffect(() => {
-    if (!selectedCountry) return;
-    if (selectedCountry.code === homeCountry?.code) return;
+    // 선택이 비-본국이 아닐 때(없거나 본국)는 토스트를 즉시 비운다.
+    // 이전 선택의 cleanup이 타이머를 clear하기 때문에, 여기서 setToastName(null)을
+    // 부르지 않으면 직전 국가명이 화면에 박혀 안 사라지는 버그가 난다.
+    if (!selectedCountry || selectedCountry.code === homeCountry?.code) {
+      setToastName(null);
+      return;
+    }
     setToastName(getCountryName(selectedCountry.code, getCurrentLocale()));
     if (hideTimer.current) clearTimeout(hideTimer.current);
     hideTimer.current = setTimeout(() => {
