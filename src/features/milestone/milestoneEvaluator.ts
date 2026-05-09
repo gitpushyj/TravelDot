@@ -3,6 +3,7 @@
 
 import { CONTINENTS, ContinentId, continentOf } from "../badges/continents";
 import { TIER_CUTOFFS, TIERS } from "../travel/tierTitles";
+import type { PremiumContext } from "./premium/types";
 import {
   ContinentMilestoneId,
   isPremiumMilestoneKind,
@@ -10,6 +11,20 @@ import {
   MilestoneProgress,
   MilestoneUnit,
 } from "./milestoneTypes";
+
+/**
+ * `evaluateMilestone`에 주입되는 컨텍스트.
+ * 무료 마일스톤(countries/days/continent_*)은 `visitCounts`만 참조한다.
+ * Premium 마일스톤은 `premiumContext`도 필요하다 — null이면 평가 불가 처리.
+ */
+export type MilestoneEvalContext = {
+  visitCounts: Record<string, number>;
+  /**
+   * Premium 평가에 필요한 컨텍스트. 무료 사용자(`isAllMilestoneVisible: false`)이거나
+   * 아직 로드되지 않았으면 null. Premium kind 평가 시 null이면 진행률 0 placeholder를 반환.
+   */
+  premiumContext: PremiumContext | null;
+};
 
 const DAY_CUTOFFS: readonly number[] = [7, 30, 100, 365, 730, 1000];
 
@@ -65,8 +80,9 @@ function buildProgress(
 
 export function evaluateMilestone(
   kind: MilestoneKind,
-  visitCounts: Record<string, number>
+  ctx: MilestoneEvalContext
 ): MilestoneProgress {
+  const { visitCounts } = ctx;
   if (kind === "countries") {
     const current = Object.keys(visitCounts).length;
     const next = findNextCutoff(TIER_CUTOFFS, current);

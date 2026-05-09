@@ -271,7 +271,7 @@ export default function MainScreen({ navigation }: Props) {
 
   const milestoneKind = useMilestoneStore((s) => s.kind);
   const milestoneProgress = useMemo(
-    () => evaluateMilestone(milestoneKind, visitCounts),
+    () => evaluateMilestone(milestoneKind, { visitCounts, premiumContext: null }),
     [milestoneKind, visitCounts]
   );
 

@@ -175,7 +175,7 @@ export default function SettingsScreen({
 
   const milestoneKind = useMilestoneStore((s) => s.kind);
   const milestoneProgress = useMemo(
-    () => evaluateMilestone(milestoneKind, visitCounts),
+    () => evaluateMilestone(milestoneKind, { visitCounts, premiumContext: null }),
     [milestoneKind, visitCounts]
   );
   const milestoneSub = milestoneProgress.reachedFinal

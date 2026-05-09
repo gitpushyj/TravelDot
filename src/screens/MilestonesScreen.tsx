@@ -39,7 +39,7 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
 
   const rows = useMemo(() => {
     return ALL_MILESTONE_KINDS.map((k) => {
-      const progress = evaluateMilestone(k, visitCounts);
+      const progress = evaluateMilestone(k, { visitCounts, premiumContext: null });
       return {
         kind: k,
         label: t(`milestones.option.${k}`),
