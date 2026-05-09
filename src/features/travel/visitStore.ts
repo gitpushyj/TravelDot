@@ -28,6 +28,7 @@ import { useEntitlementStore } from "../entitlement/entitlementStore";
 import { useProfileStore } from "../onboarding/profileStore";
 import { buildPremiumContext } from "../milestone/premium/buildContext";
 import { evaluatePremiumBadges } from "../milestone/premium/evaluatePremium";
+import type { PremiumContext } from "../milestone/premium/types";
 import { markHomeCountryChangedInDb } from "../onboarding/saveUserProfile";
 
 const HOME_AUTO_CLEANUP_FLAG = "visitgrid:migration:autoHomeCleanup_v1";
@@ -80,6 +81,12 @@ type State = {
   homeCleanupReport: HomeCleanupReport | null;
   /** 다른 기기 사진만 있어 본인 여행이 맞는지 사용자 확인이 필요한 묶음들. */
   suspectTrips: SuspectTrip[];
+  /**
+   * Premium 마일스톤 진행률 평가용 컨텍스트.
+   * `evaluateBadges`가 유료 사용자에 한해 채운다. 무료 사용자거나
+   * 아직 평가 전이면 null. UI는 이를 `evaluateMilestone`에 동기 전달한다.
+   */
+  premiumContext: PremiumContext | null;
   hydrate: () => Promise<void>;
   setHomeCountry: (c: HomeCountry) => Promise<void>;
   changeHomeCountry: (c: HomeCountry) => Promise<void>;
@@ -115,6 +122,7 @@ export const useVisitStore = create<State>((set, get) => ({
   selectedCountry: null,
   homeCleanupReport: null,
   suspectTrips: [],
+  premiumContext: null,
   hydrate: async () => {
     // 뱃지 스토어는 visitStore보다 먼저 hydrate되어야 한다 — 첫 evaluate에서
     // seeded 플래그를 정확히 읽어 retroactive 알림을 묵음 처리하기 위함.
@@ -237,16 +245,18 @@ export const useVisitStore = create<State>((set, get) => ({
     // 갈라질 수 있으니 DB 값을 권위 자료로 한 번 더 확인한다.
     const dbDays = await loadTotalVisitDays();
     let premiumBadges: BadgeDefinition[] = [];
+    let premiumContext: PremiumContext | null = null;
     if (useEntitlementStore.getState().isAllMilestoneVisible) {
       const profile = useProfileStore.getState().profile;
-      const ctx = await buildPremiumContext({
+      premiumContext = await buildPremiumContext({
         profile,
         homeCountryCode: homeCountry.code,
         visitedCountryCodes: Object.keys(visitCounts),
         now: Date.now(),
       });
-      premiumBadges = evaluatePremiumBadges(ctx);
+      premiumBadges = evaluatePremiumBadges(premiumContext);
     }
+    set({ premiumContext });
     await useBadgeStore.getState().evaluate(
       {
         visitedCountriesCount: Object.keys(visitCounts).length,

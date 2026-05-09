@@ -270,9 +270,10 @@ export default function MainScreen({ navigation }: Props) {
   }, [activeCounts]);
 
   const milestoneKind = useMilestoneStore((s) => s.kind);
+  const premiumContext = useVisitStore((s) => s.premiumContext);
   const milestoneProgress = useMemo(
-    () => evaluateMilestone(milestoneKind, { visitCounts, premiumContext: null }),
-    [milestoneKind, visitCounts]
+    () => evaluateMilestone(milestoneKind, { visitCounts, premiumContext }),
+    [milestoneKind, visitCounts, premiumContext]
   );
 
   const tier = useMemo(
