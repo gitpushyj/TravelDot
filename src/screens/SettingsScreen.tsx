@@ -251,8 +251,9 @@ export default function SettingsScreen({
           promoHeadline={t("settings.subscription.promoHeadline")}
           promoSub={t("settings.subscription.promoSub")}
           promoCta={t("settings.subscription.promoCta")}
-          activeLabel={t("settings.subscription.activeLabel")}
-          activeSub={t("settings.subscription.activeSub")}
+          activeHeadline={t("settings.subscription.activeHeadline")}
+          activeFeatures={t("settings.subscription.activeFeatures")}
+          activeBadge={t("settings.subscription.activeBadge")}
         />
 
         <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>

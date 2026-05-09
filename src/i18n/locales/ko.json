@@ -1,7 +1,6 @@
 {
   "tabs": {
     "home": "홈",
-    "allCountries": "모든 나라",
     "ai": "AI",
     "settings": "설정"
   },
@@ -701,8 +700,9 @@
       "promoHeadline": "프리미엄으로 모든 기능 열기",
       "promoSub": "여행 데이터 동기화 · AI 채팅 한도 증가 · 모든 호칭과 마일스톤",
       "promoCta": "업그레이드",
-      "activeLabel": "프리미엄 사용 중",
-      "activeSub": "구독 정보 보기"
+      "activeHeadline": "프리미엄 사용 중",
+      "activeFeatures": "✓ 여행 데이터 동기화 · ✓ AI 한도 증가 · ✓ 모든 호칭/마일스톤",
+      "activeBadge": "PREMIUM"
     }
   },
   "onboarding": {

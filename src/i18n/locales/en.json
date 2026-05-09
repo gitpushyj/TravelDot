@@ -1,7 +1,6 @@
 {
   "tabs": {
     "home": "Home",
-    "allCountries": "All Countries",
     "ai": "AI",
     "settings": "Settings"
   },
@@ -701,8 +700,9 @@
       "promoHeadline": "Unlock all features with Premium",
       "promoSub": "Sync travel data · more AI chats · all titles & milestones",
       "promoCta": "Upgrade",
-      "activeLabel": "Premium active",
-      "activeSub": "View subscription"
+      "activeHeadline": "Premium active",
+      "activeFeatures": "✓ Travel sync · ✓ Higher AI limit · ✓ All titles & milestones",
+      "activeBadge": "PREMIUM"
     }
   },
   "onboarding": {
