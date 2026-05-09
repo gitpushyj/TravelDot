@@ -1,7 +1,6 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useNavigationState } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   useAnimatedStyle,
@@ -10,6 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { useVisitStore } from "../features/travel/visitStore";
+import { navigationRef } from "../navigation/navigationRef";
 import { useTheme } from "../theme/themeStore";
 
 // MainTabs(BottomTab) 위에 떠 있을 때 가려지지 않도록 띄울 기본 거리.
@@ -27,12 +27,21 @@ export default function GlobalSyncProgressBar() {
 
   // 현재 활성 stack의 최상위 라우트가 'Main'(=MainTabs)인지 판별한다.
   // Stack push된 화면(TripDetail 등)에서는 BottomTab이 사라지므로 띄울 위치가
-  // 다르다.
-  const isInMainTabs = useNavigationState((state) => {
-    if (!state) return false;
-    const top = state.routes[state.index];
-    return top?.name === "Main";
-  });
+  // 다르다. useNavigationState는 navigator 내부 자식에서만 쓸 수 있는데, 이
+  // 컴포넌트는 NavigationContainer의 형제로 두므로 navigationRef listener로
+  // 우회한다.
+  const [isInMainTabs, setIsInMainTabs] = useState(true);
+  useEffect(() => {
+    const update = () => {
+      if (!navigationRef.isReady()) return;
+      const state = navigationRef.getRootState();
+      const top = state.routes[state.index];
+      setIsInMainTabs(top?.name === "Main");
+    };
+    update();
+    const unsub = navigationRef.addListener("state", update);
+    return () => unsub();
+  }, []);
 
   const visible = syncStatus.running;
 
