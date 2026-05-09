@@ -18,6 +18,9 @@ export default function CountryDetailScreenNav({
         onMergeTrips={(countryCode) =>
           navigation.navigate("CountryMerge", { countryCode })
         }
+        onAddTrip={(country) =>
+          navigation.navigate("AddTrip", { prefilledCountry: country })
+        }
       />
     </>
   );

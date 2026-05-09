@@ -26,19 +26,24 @@ import PhotosStep, { type DraftPhoto } from "./PhotosStep";
 import StepIndicator from "./StepIndicator";
 import { makeStyles } from "./styles";
 
-type Props = { onClose: () => void };
-
 type Selected = { code: string; name: string };
 
-export default function AddTripScreen({ onClose }: Props) {
+type Props = {
+  onClose: () => void;
+  prefilledCountry?: Selected;
+};
+
+export default function AddTripScreen({ onClose, prefilledCountry }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const bottomInset = useScreenBottomInset();
   const refreshVisits = useVisitStore((s) => s.refreshVisits);
 
-  const [step, setStep] = useState<0 | 1 | 2>(0);
-  const [selected, setSelected] = useState<Selected | null>(null);
+  const [step, setStep] = useState<0 | 1 | 2>(prefilledCountry ? 1 : 0);
+  const [selected, setSelected] = useState<Selected | null>(
+    prefilledCountry ?? null
+  );
   const today = toLocalDateKey(Date.now());
   const [startDate, setStartDate] = useState<string>(today);
   const [endDate, setEndDate] = useState<string>(today);
@@ -98,7 +103,7 @@ export default function AddTripScreen({ onClose }: Props) {
   };
 
   const onBack = () => {
-    if (step === 0) {
+    if (step === 0 || (prefilledCountry && step === 1)) {
       onClose();
       return;
     }

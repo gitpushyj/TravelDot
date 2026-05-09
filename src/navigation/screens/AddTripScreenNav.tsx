@@ -6,11 +6,15 @@ import type { RootStackParamList } from "../types";
 
 export default function AddTripScreenNav({
   navigation,
+  route,
 }: NativeStackScreenProps<RootStackParamList, "AddTrip">) {
   return (
     <>
       <StatusBar style="light" />
-      <AddTripScreen onClose={() => navigation.goBack()} />
+      <AddTripScreen
+        onClose={() => navigation.goBack()}
+        prefilledCountry={route.params?.prefilledCountry}
+      />
     </>
   );
 }

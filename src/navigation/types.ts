@@ -16,7 +16,7 @@ export type MainTabParamList = {
 
 export type RootStackParamList = {
   Main: undefined;
-  AddTrip: undefined;
+  AddTrip: { prefilledCountry?: { code: string; name: string } } | undefined;
   ChangeHome: undefined;
   Titles: undefined;
   Milestones: undefined;

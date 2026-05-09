@@ -121,6 +121,31 @@ export function makeStyles(theme: Theme) {
       fontSize: 17,
       fontWeight: "800",
     },
+    sectionHeaderLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    addBtn: {
+      width: 26,
+      height: 26,
+      borderRadius: 13,
+      backgroundColor: theme.cardBg,
+      borderWidth: 1,
+      borderColor: theme.cardBorder,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    addBtnPressed: {
+      backgroundColor: theme.tabRowBg,
+    },
+    addBtnText: {
+      color: theme.textPrimary,
+      fontSize: 18,
+      fontWeight: "600",
+      lineHeight: 20,
+      marginTop: -1,
+    },
     sortLabel: {
       color: theme.textSecondary,
       fontSize: 12,
