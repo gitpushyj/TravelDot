@@ -3,6 +3,7 @@ import { create } from "zustand";
 
 import { useAuthStore } from "../auth/authStore";
 import { supabase } from "../../lib/supabase";
+import { collapseOverlappingTrips } from "../travel/trip/tripMerge";
 import { pullRemoteTrips } from "./syncPull";
 import { pushPendingTrips } from "./syncPush";
 
@@ -90,6 +91,10 @@ export const useSyncStore = create<State>((set, get) => ({
           );
           set({ lastPulledAtMs: pullRes.newLastPulledAtMs });
         }
+        // pull로 다른 기기의 병합본이 들어오면 로컬 개별 트립과 같은 country에서
+        // 겹칠 수 있다. invariant("active 트립끼리 overlap 없음") 복구를 위해
+        // overlap-only 정리를 돌리고, 흡수 결과는 notifyTripsChanged → 다음 push로 전파.
+        await collapseOverlappingTrips();
       }
     } catch (e) {
       set({ lastError: e instanceof Error ? e.message : String(e) });

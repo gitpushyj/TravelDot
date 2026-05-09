@@ -1,67 +1,53 @@
 import { notifyTripsChanged } from "../../travelSync/notifyTripsChanged";
-import { diffInDays } from "../visit/dateUtils";
 import { getTripDb } from "./tripDb";
 import { newTripId } from "./tripId";
+import {
+  planConsolidations,
+  type ConsolidationOp,
+  type ConsolidationRow,
+  type PlanOptions,
+} from "./tripConsolidationPlan";
 
 // 자동 병합: 같은 country에서 인접 트립 두 개의 gap이 ≤ thresholdDays이면 합친다.
 // 한 번 호출로 chained merge까지 처리하기 위해 각 country를 ASC로 훑으면서 그룹을 모은다.
-// gap 정의는 기존 visit_days 시대와 동일: 두 트립의 (다음 시작 - 이전 끝) 일수 차이.
-//   gap = 1 → 인접 (이미 연속), gap = 2..threshold → 사이 빈 날짜를 다리로 묶음.
-// gap = 1도 같이 합쳐 둔다(이론상 ingestVisitDay에서 처리되지만 인입 경로 누락 대비).
+// gap = 1 → 인접 (이미 연속), gap = 2..threshold → 사이 빈 날짜를 다리로 묶음.
+// 첫 스캔 직후 1회만 호출(이후 스캔에선 사용자의 수동 결정을 보존하기 위해 미실행).
 export async function bridgeNearbyVisitDays(
   thresholdDays: number = 3
 ): Promise<void> {
+  await runConsolidation({
+    adjacentThresholdDays: thresholdDays,
+    includeOverlap: false,
+  });
+}
+
+// cross-device pull 직후 호출. 다른 기기에서 병합된 결과(긴 범위 트립)와
+// 로컬의 개별 트립이 같은 country에서 겹치는 케이스를 정리한다.
+// 인접(gap=1..3) 자동 병합은 끄고 overlap(gap ≤ 0)만 흡수하기 때문에
+// 사용자가 한쪽 기기에서 의도적으로 분리해둔 인접 트립을 자동으로 다시 합치지 않는다.
+export async function collapseOverlappingTrips(): Promise<void> {
+  await runConsolidation({
+    adjacentThresholdDays: 0,
+    includeOverlap: true,
+  });
+}
+
+async function runConsolidation(opts: PlanOptions): Promise<void> {
   const db = await getTripDb();
-  const rows = await db.getAllAsync<{
-    id: string;
-    country_code: string;
-    start_date: string;
-    end_date: string;
-  }>(
+  const rows = await db.getAllAsync<ConsolidationRow>(
     `SELECT id, country_code, start_date, end_date
        FROM trips
       WHERE deleted_at IS NULL
       ORDER BY country_code, start_date`
   );
-
-  type MergeOp = { keepId: string; newEnd: string; absorbIds: string[] };
-  const ops: MergeOp[] = [];
-
-  let curCountry: string | null = null;
-  let cur: MergeOp | null = null;
-  let curEnd = "";
-
-  const flush = () => {
-    if (cur && cur.absorbIds.length > 0) ops.push(cur);
-    cur = null;
-  };
-
-  for (const r of rows) {
-    if (r.country_code !== curCountry) {
-      flush();
-      curCountry = r.country_code;
-      cur = { keepId: r.id, newEnd: r.end_date, absorbIds: [] };
-      curEnd = r.end_date;
-      continue;
-    }
-    const gap = diffInDays(curEnd, r.start_date);
-    if (gap >= 1 && gap <= thresholdDays) {
-      if (!cur) cur = { keepId: r.id, newEnd: r.end_date, absorbIds: [] };
-      else {
-        cur.absorbIds.push(r.id);
-        if (r.end_date > cur.newEnd) cur.newEnd = r.end_date;
-      }
-      curEnd = r.end_date;
-    } else {
-      flush();
-      cur = { keepId: r.id, newEnd: r.end_date, absorbIds: [] };
-      curEnd = r.end_date;
-    }
-  }
-  flush();
-
+  const ops = planConsolidations(rows, opts);
   if (ops.length === 0) return;
+  await applyConsolidationOps(ops);
+  notifyTripsChanged();
+}
 
+async function applyConsolidationOps(ops: ConsolidationOp[]): Promise<void> {
+  const db = await getTripDb();
   await db.withTransactionAsync(async () => {
     const now = Date.now();
     for (const op of ops) {
@@ -81,7 +67,6 @@ export async function bridgeNearbyVisitDays(
       }
     }
   });
-  notifyTripsChanged();
 }
 
 // 수동 병합: 지정 country에서 [startDate, endDate]와 겹치는 모든 트립을
