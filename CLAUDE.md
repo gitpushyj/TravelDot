@@ -68,6 +68,14 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - 기존 파일이 200줄을 넘기 시작하면 분리할 자연스러운 경계가 있는지 먼저 검토한다.
 - 같은 디렉터리 안에서 한 작업이 여러 파일을 동시에 수정해야 한다면 분리가 잘못됐다는 신호다.
 
+## 6. Squash Merge Only
+
+**브랜치를 main으로 머지할 때는 항상 스쿼시 머지를 사용한다.**
+
+- `git merge --squash <branch>` + 단일 커밋으로 main에 들어가야 한다. `--no-ff` 머지 커밋이나 fast-forward 머지는 사용하지 않는다.
+- 피처 브랜치의 중간 커밋 히스토리는 main에 남기지 않는다 — main의 로그는 "기능 단위 한 줄"로만 읽힌다.
+- 스쿼시 후 머지 커밋 메시지는 그대로 피처의 의미를 담은 conventional 메시지로 작성한다 (예: `feat(photos): ...`).
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
