@@ -16,7 +16,6 @@ import {
 } from "../features/photoSync/syncService";
 import { getTierByCount } from "../features/travel/tierTitles";
 import { useVisitStore } from "../features/travel/visitStore";
-import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import {
   getCurrentLocale,
   LOCALE_LABELS,
@@ -53,7 +52,6 @@ export default function SettingsScreen({
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
-  const bottomInset = useScreenBottomInset();
   const mode = useThemeStore((s) => s.mode);
   const setMode = useThemeStore((s) => s.setMode);
 
@@ -226,7 +224,7 @@ export default function SettingsScreen({
   ) as SupportedLocale;
 
   return (
-    <View style={[styles.root, { paddingBottom: bottomInset }]}>
+    <View style={styles.root}>
       <View style={styles.header}>
         {onClose ? (
           <Pressable onPress={onClose} hitSlop={8}>

@@ -21,14 +21,12 @@ import {
 } from "../components/AiChat";
 import { useAiChatStore } from "../features/aiChat/aiChatStore";
 import { useAuthStore } from "../features/auth/authStore";
-import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { useTheme } from "../theme/themeStore";
 
 export default function AiScreen() {
   const theme = useTheme();
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
-  const bottomInset = useScreenBottomInset();
   const safeInsets = useSafeAreaInsets();
 
   const userId = useAuthStore((s) => s.user?.id ?? null);
@@ -100,14 +98,12 @@ export default function AiScreen() {
         <UsageLimitBanner tier={rateLimit.tier} limit={rateLimit.limit} />
       ) : null}
 
-      <View style={{ paddingBottom: bottomInset }}>
-        <AiChatComposer
-          ref={composerRef}
-          isSending={isSending}
-          disabled={!!rateLimit}
-          onSend={(text) => void send(text)}
-        />
-      </View>
+      <AiChatComposer
+        ref={composerRef}
+        isSending={isSending}
+        disabled={!!rateLimit}
+        onSend={(text) => void send(text)}
+      />
     </KeyboardAvoidingView>
   );
 }
