@@ -481,25 +481,33 @@ export default function MainScreen({ navigation }: Props) {
                 strongStyle={styles.statFooterStrong}
               />
             </Text>
-            <View style={styles.statBigRow}>
-              <Text style={styles.statBigNum}>{milestoneProgress.current}</Text>
-              <Text style={styles.statBigDenom}>
-                {milestoneProgress.next != null
-                  ? ` / ${milestoneProgress.next}`
-                  : ""}
-              </Text>
-              <Text style={styles.statBigPercent}>
-                {"  "}{milestoneProgress.percent}%
-              </Text>
-            </View>
-            <View style={styles.progressTrack}>
-              <View
-                style={[
-                  styles.progressFill,
-                  { width: `${milestoneProgress.percent}%` },
-                ]}
-              />
-            </View>
+            {milestoneProgress.unsupportedReason ? (
+              <View style={styles.statBigRow}>
+                <Text style={styles.statBigDenom}>—</Text>
+              </View>
+            ) : (
+              <>
+                <View style={styles.statBigRow}>
+                  <Text style={styles.statBigNum}>{milestoneProgress.current}</Text>
+                  <Text style={styles.statBigDenom}>
+                    {milestoneProgress.next != null
+                      ? ` / ${milestoneProgress.next}`
+                      : ""}
+                  </Text>
+                  <Text style={styles.statBigPercent}>
+                    {"  "}{milestoneProgress.percent}%
+                  </Text>
+                </View>
+                <View style={styles.progressTrack}>
+                  <View
+                    style={[
+                      styles.progressFill,
+                      { width: `${milestoneProgress.percent}%` },
+                    ]}
+                  />
+                </View>
+              </>
+            )}
           </Pressable>
         </View>
 
