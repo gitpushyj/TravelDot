@@ -66,6 +66,8 @@
     "dateInvalidBody": "Dates must be in YYYY-MM-DD format and the start date can't be later than the end date.",
     "rangeChangeConfirmTitle": "Change trip period?",
     "rangeChangeConfirmBody": "Photos and notes outside the new range will be deleted along with it. Continue?",
+    "partialPhotosTitle": "Some photos weren't added",
+    "partialPhotosBody": "Only up to {{limit}} photos per day can be saved, so {{dropped}} weren't added.",
     "tripDeleteTitle": "Delete this trip",
     "tripDeleteBody": "Delete the {{startDate}} — {{endDate}} ({{days}} days) record?\nPhotos and notes from this period will be removed too.",
     "notMyTripTitle": "Not my trip",
@@ -696,7 +698,7 @@
     },
     "subscription": {
       "promoHeadline": "Unlock all features with Premium",
-      "promoSub": "More AI chats · all milestones unlocked",
+      "promoSub": "Sync travel data · more AI chats · all titles & milestones",
       "promoCta": "Upgrade",
       "activeLabel": "Premium active",
       "activeSub": "View subscription"
@@ -777,13 +779,13 @@
     }
   },
   "subscription": {
-    "brand": "been",
+    "brand": "TravelDot",
     "heading": {
-      "prefix": "Get",
-      "highlight": "Unlimited",
-      "suffix": "Access"
+      "prefix": "Unlock",
+      "highlight": "all features",
+      "suffix": ""
     },
-    "subheading": "Keep track of all the places you've been. All your travels, beautifully remembered.",
+    "subheading": "Sync your travel data (dot map) across devices, get a higher daily AI chat limit, and unlock 10+ titles and milestones.",
     "save": "Save {{percent}}%",
     "perWeek": "per week",
     "freeTrial": "{{days}} days free trial",

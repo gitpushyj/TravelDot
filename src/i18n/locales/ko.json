@@ -66,6 +66,8 @@
     "dateInvalidBody": "날짜는 YYYY-MM-DD 형식이어야 하고 시작일이 종료일보다 늦을 수 없어요.",
     "rangeChangeConfirmTitle": "기간 변경 확인",
     "rangeChangeConfirmBody": "새 기간 밖에 있는 사진과 메모는 함께 삭제됩니다. 계속할까요?",
+    "partialPhotosTitle": "일부 사진 미추가",
+    "partialPhotosBody": "하루에 최대 {{limit}}장까지만 저장되어 {{dropped}}장은 추가되지 않았어요.",
     "tripDeleteTitle": "여행 기록 삭제",
     "tripDeleteBody": "{{startDate}} — {{endDate}} ({{days}}일) 기록을 삭제할까요?\n해당 기간의 사진/메모도 함께 사라집니다.",
     "notMyTripTitle": "내 여행 아님",
@@ -696,7 +698,7 @@
     },
     "subscription": {
       "promoHeadline": "프리미엄으로 모든 기능 열기",
-      "promoSub": "AI 채팅 한도 확장 · 모든 마일스톤 공개",
+      "promoSub": "여행 데이터 동기화 · AI 채팅 한도 증가 · 모든 호칭과 마일스톤",
       "promoCta": "업그레이드",
       "activeLabel": "프리미엄 사용 중",
       "activeSub": "구독 정보 보기"
@@ -777,13 +779,13 @@
     }
   },
   "subscription": {
-    "brand": "been",
+    "brand": "TravelDot",
     "heading": {
-      "prefix": "모든 기능을",
-      "highlight": "제한 없이",
-      "suffix": "쓰기"
+      "prefix": "모든 기능",
+      "highlight": "잠금 해제",
+      "suffix": ""
     },
-    "subheading": "지나온 모든 곳을 한 자리에. 내 여행을 더 풍부하게 기록해 보세요.",
+    "subheading": "사진을 제외한 여행 데이터(dot지도) 동기화, 일일 AI 채팅 한도 증가, 10개가 넘는 호칭 및 마일스톤 잠금 해제",
     "save": "{{percent}}% 할인",
     "perWeek": "주당",
     "freeTrial": "{{days}}일 무료 체험",

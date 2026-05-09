@@ -61,8 +61,10 @@ export default function SubscriptionScreen({ onClose }: Props) {
             {t("subscription.heading.prefix")}{" "}
             <Text style={styles.headingAccent}>
               {t("subscription.heading.highlight")}
-            </Text>{" "}
-            {t("subscription.heading.suffix")}
+            </Text>
+            {t("subscription.heading.suffix")
+              ? ` ${t("subscription.heading.suffix")}`
+              : ""}
           </Text>
           <Text style={styles.subheading}>{t("subscription.subheading")}</Text>
 

@@ -16,7 +16,9 @@ export default function HeroCollage({ theme, brand }: Props) {
         <View style={[styles.tile, styles.tileTopRight]} />
       </View>
       <View style={styles.brandRow}>
-        <Text style={styles.brandText}>{brand}</Text>
+        <Text style={styles.brandText} numberOfLines={1} adjustsFontSizeToFit>
+          {brand}
+        </Text>
       </View>
       <View style={styles.row}>
         <View style={[styles.tile, styles.tileBottomLeft]} />
@@ -52,7 +54,7 @@ function makeStyles(theme: Theme) {
     },
     brandText: {
       color: theme.accent,
-      fontSize: 40,
+      fontSize: 32,
       fontWeight: "300",
       letterSpacing: -0.5,
     },
