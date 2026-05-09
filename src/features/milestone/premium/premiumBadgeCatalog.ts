@@ -1,21 +1,9 @@
 import type { BadgeDefinition } from "../../badges/badges";
 
-// Static catalog of all non-dynamic premium badges. The dynamic
-// "premium_four_seasons_<CC>" is handled separately in badgeFromId
-// (it's reconstructible from the country code embedded in the ID).
+// Static catalog of all premium badges currently in scope.
+// 단계 1 범위 외 호칭(premium_n_before_n_*, premium_decade_*, premium_four_seasons_*)은
+// 사용자 결정으로 제거됨 — 평가도 부여도 하지 않는다.
 export const PREMIUM_BADGE_DEFS_BY_ID: Record<string, BadgeDefinition> = {
-  // A1 N Before N
-  premium_n_before_n_5_20:  { id: "premium_n_before_n_5_20",  category: "premium_age", titleKo: "5 Before 20",  titleEn: "5 Before 20",  description: "만 20세 전에 5개국 방문",  emoji: "🏃", rank: 60.5 },
-  premium_n_before_n_10_25: { id: "premium_n_before_n_10_25", category: "premium_age", titleKo: "10 Before 25", titleEn: "10 Before 25", description: "만 25세 전에 10개국 방문", emoji: "🏃", rank: 61 },
-  premium_n_before_n_20_30: { id: "premium_n_before_n_20_30", category: "premium_age", titleKo: "20 Before 30", titleEn: "20 Before 30", description: "만 30세 전에 20개국 방문", emoji: "🏃", rank: 62 },
-  premium_n_before_n_30_40: { id: "premium_n_before_n_30_40", category: "premium_age", titleKo: "30 Before 40", titleEn: "30 Before 40", description: "만 40세 전에 30개국 방문", emoji: "🏃", rank: 63 },
-  premium_n_before_n_50_50: { id: "premium_n_before_n_50_50", category: "premium_age", titleKo: "50 Before 50", titleEn: "50 Before 50", description: "만 50세 전에 50개국 방문", emoji: "🏃", rank: 65 },
-  // A2 Decade Stamps
-  premium_decade_10s:    { id: "premium_decade_10s",    category: "premium_age", titleKo: "10s 컬렉터",    titleEn: "Decade 10s",    description: "10s 시기에 5개국 방문",   emoji: "🌱", rank: 65 },
-  premium_decade_20s:    { id: "premium_decade_20s",    category: "premium_age", titleKo: "20s 컬렉터",    titleEn: "Decade 20s",    description: "20s 시기에 15개국 방문",  emoji: "🌟", rank: 65 },
-  premium_decade_30s:    { id: "premium_decade_30s",    category: "premium_age", titleKo: "30s 컬렉터",    titleEn: "Decade 30s",    description: "30s 시기에 25개국 방문",  emoji: "🎒", rank: 65 },
-  premium_decade_40s:    { id: "premium_decade_40s",    category: "premium_age", titleKo: "40s 컬렉터",    titleEn: "Decade 40s",    description: "40s 시기에 25개국 방문",  emoji: "🧭", rank: 65 },
-  premium_decade_50plus: { id: "premium_decade_50plus", category: "premium_age", titleKo: "50plus 컬렉터", titleEn: "Decade 50plus", description: "50plus 시기에 15개국 방문", emoji: "🌅", rank: 65 },
   // A3 Age Match
   premium_age_match_x1:   { id: "premium_age_match_x1",   category: "premium_age", titleKo: "Age x1",   titleEn: "Age Match x1",   description: "현재 만 나이 × 1 이상의 방문국",   emoji: "🎂", rank: 62 },
   premium_age_match_x1_5: { id: "premium_age_match_x1_5", category: "premium_age", titleKo: "Age x1_5", titleEn: "Age Match x1_5", description: "현재 만 나이 × 1.5 이상의 방문국", emoji: "🎉", rank: 62 },
@@ -40,15 +28,3 @@ export const PREMIUM_BADGE_DEFS_BY_ID: Record<string, BadgeDefinition> = {
   // B3 Round the Clock
   premium_round_the_clock: { id: "premium_round_the_clock", category: "premium_special", titleKo: "지구 한 바퀴", titleEn: "Round the Clock", description: "시차 24시간 이상 차이의 두 국가 모두 방문", emoji: "🕛", rank: 85 },
 };
-
-export function premiumFourSeasonsBadge(code: string): BadgeDefinition {
-  return {
-    id: `premium_four_seasons_${code}`,
-    category: "premium_time",
-    titleKo: `${code} 사계절`,
-    titleEn: `${code} Four Seasons`,
-    description: `${code} 한 국가에서 4계절 모두 사진을 남김`,
-    emoji: "🌸",
-    rank: 70,
-  };
-}

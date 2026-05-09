@@ -195,8 +195,8 @@ function evaluateRoundTheClock(ctx: PremiumContext): MilestoneProgress {
 
 /**
  * Premium 마일스톤 진행률 평가의 단일 진입점.
- * 단계 1 범위(7종) 외 kind는 기본 placeholder 반환 — UI는 이들을 카드 형태로만 노출하므로
- * 호출되지 않아야 하지만 안전한 fallback을 둔다.
+ * `PremiumMilestoneId`가 7종으로 닫혀 있어 switch가 exhaustive — 새 kind 추가 시
+ * 컴파일 에러로 누락 검출 가능.
  */
 export function evaluatePremiumProgress(
   kind: PremiumMilestoneId,
@@ -217,16 +217,5 @@ export function evaluatePremiumProgress(
       return evaluateAgeMatch(ctx);
     case "premium_round_the_clock":
       return evaluateRoundTheClock(ctx);
-    default:
-      return {
-        kind,
-        current: 0,
-        next: null,
-        nextTitleBadgeId: null,
-        percent: 0,
-        reachedFinal: false,
-        unit: "countries",
-        unsupportedReason: null,
-      };
   }
 }

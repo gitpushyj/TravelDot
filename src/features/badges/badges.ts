@@ -9,10 +9,7 @@ import {
 } from "./continents";
 import { getTierByCount, TierDefinition, TIERS } from "../travel/tierTitles";
 import { TIER_VISUALS } from "../travel/tierVisuals";
-import {
-  PREMIUM_BADGE_DEFS_BY_ID,
-  premiumFourSeasonsBadge,
-} from "../milestone/premium/premiumBadgeCatalog";
+import { PREMIUM_BADGE_DEFS_BY_ID } from "../milestone/premium/premiumBadgeCatalog";
 import { flagEmoji } from "../../utils/flag";
 
 export type BadgeCategory =
@@ -299,10 +296,6 @@ export function badgeFromId(
     if (!t) return null;
     const koName = countryNameByCode[code] ?? code;
     return countryBadge(code, koName, t);
-  }
-  if (id.startsWith("premium_four_seasons_")) {
-    const code = id.slice("premium_four_seasons_".length);
-    return premiumFourSeasonsBadge(code);
   }
   if (id.startsWith("premium_")) {
     return PREMIUM_BADGE_DEFS_BY_ID[id] ?? null;

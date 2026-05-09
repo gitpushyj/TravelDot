@@ -1,9 +1,6 @@
 import type { BadgeDefinition } from "../../badges/badges";
 import type { PremiumContext } from "./types";
-import { evaluateNBeforeN } from "./evaluators/nBeforeN";
-import { evaluateDecadeStamps } from "./evaluators/decadeStamps";
 import { evaluateAgeMatch } from "./evaluators/ageMatch";
-import { evaluateFourSeasons } from "./evaluators/fourSeasons";
 import { evaluateCalendar } from "./evaluators/calendar";
 import { evaluateFlagPalette } from "./evaluators/flagPalette";
 import { evaluateUnLinguist } from "./evaluators/unLinguist";
@@ -12,10 +9,7 @@ import { evaluateRoundTheClock } from "./evaluators/roundTheClock";
 
 export function evaluatePremiumBadges(ctx: PremiumContext): BadgeDefinition[] {
   return [
-    ...evaluateNBeforeN(ctx),
-    ...evaluateDecadeStamps(ctx),
     ...evaluateAgeMatch(ctx),
-    ...evaluateFourSeasons(ctx),
     ...evaluateCalendar(ctx),
     ...evaluateFlagPalette(ctx),
     ...evaluateUnLinguist(ctx),

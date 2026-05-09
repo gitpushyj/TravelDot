@@ -554,8 +554,6 @@
       "needsBirth": "Set your birthday in profile to see progress",
       "needsHomeCountry": "Set your home country to see progress"
     },
-    "premium": {
-      "subsectionUnsupported": "Earned automatically when achieved"
-    }
+    "premium": {}
   }
 }

@@ -11,10 +11,7 @@ export type ContinentMilestoneId =
   | "continent_NA";
 
 export type PremiumMilestoneId =
-  | "premium_n_before_n"
-  | "premium_decade_stamps"
   | "premium_age_match"
-  | "premium_four_seasons"
   | "premium_calendar"
   | "premium_flag_palette"
   | "premium_un_linguist"
@@ -39,10 +36,7 @@ export const ALL_MILESTONE_KINDS: readonly MilestoneKind[] = [
 ];
 
 export const ALL_PREMIUM_MILESTONE_KINDS: readonly PremiumMilestoneId[] = [
-  "premium_n_before_n",
-  "premium_decade_stamps",
   "premium_age_match",
-  "premium_four_seasons",
   "premium_calendar",
   "premium_flag_palette",
   "premium_un_linguist",

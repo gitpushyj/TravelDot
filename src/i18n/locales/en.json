@@ -202,8 +202,8 @@
       "lockedHint": "Unlock with Premium",
       "ctaUnlock": "Unlock all with Premium →",
       "slotCounts": {
-        "premium_age": 13,
-        "premium_time": 3,
+        "premium_age": 3,
+        "premium_time": 2,
         "premium_culture": 4,
         "premium_share": 6,
         "premium_special": 1
@@ -250,18 +250,42 @@
       "sectionTitle": "Premium Milestones",
       "lockedHint": "Unlock with Premium",
       "ctaUnlock": "Learn About Premium",
-      "subsectionUnsupported": "Earned automatically when achieved",
       "items": {
-        "premium_n_before_n":      { "name": "N Before N", "icon": "🏃", "description": "Capture journeys made before set ages" },
-        "premium_decade_stamps":   { "name": "Decade Stamps", "icon": "📅", "description": "Collect each life decade — teens, 20s, 30s, and beyond" },
-        "premium_age_match":       { "name": "Age in Countries", "icon": "🎂", "description": "Match your age in unique country count" },
-        "premium_four_seasons":    { "name": "Four Seasons Collector", "icon": "🌸", "description": "All four seasons captured in one country" },
-        "premium_calendar":        { "name": "Calendar Drifter", "icon": "🗓️", "description": "Foreign photos in every month of the year" },
-        "premium_flag_palette":    { "name": "Flag Palette Master", "icon": "🌈", "description": "Collect every flag color across visited countries" },
-        "premium_un_linguist":     { "name": "UN Linguist", "icon": "🌐", "description": "Visit countries that speak each UN official language" },
-        "premium_humanity":        { "name": "Humanity's Share", "icon": "👥", "description": "Population reach across visited countries" },
-        "premium_earth_area":      { "name": "Earth's Share", "icon": "🌍", "description": "Land area reach across visited countries" },
-        "premium_round_the_clock": { "name": "Round the Clock", "icon": "🕛", "description": "Two countries 24+ hours apart in UTC offset" }
+        "premium_age_match": {
+          "name": "Age in Countries",
+          "icon": "🎂",
+          "description": "Match your age in unique country count"
+        },
+        "premium_calendar": {
+          "name": "Calendar Drifter",
+          "icon": "🗓️",
+          "description": "Foreign photos in every month of the year"
+        },
+        "premium_flag_palette": {
+          "name": "Flag Palette Master",
+          "icon": "🌈",
+          "description": "Collect every flag color across visited countries"
+        },
+        "premium_un_linguist": {
+          "name": "UN Linguist",
+          "icon": "🌐",
+          "description": "Visit countries that speak each UN official language"
+        },
+        "premium_humanity": {
+          "name": "Humanity's Share",
+          "icon": "👥",
+          "description": "Population reach across visited countries"
+        },
+        "premium_earth_area": {
+          "name": "Earth's Share",
+          "icon": "🌍",
+          "description": "Land area reach across visited countries"
+        },
+        "premium_round_the_clock": {
+          "name": "Round the Clock",
+          "icon": "🕛",
+          "description": "Two countries 24+ hours apart in UTC offset"
+        }
       }
     }
   },
@@ -512,42 +536,70 @@
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nChoose it from Settings > Titles to display on your home screen.",
     "newMultipleBody": "{{list}}\n\nChoose one from Settings > Titles to display on your home screen.",
     "premium": {
-      "premium_n_before_n_5_20":  { "title": "5 Before 20",  "description": "5 countries before age 20" },
-      "premium_n_before_n_10_25": { "title": "10 Before 25", "description": "10 countries before age 25" },
-      "premium_n_before_n_20_30": { "title": "20 Before 30", "description": "20 countries before age 30" },
-      "premium_n_before_n_30_40": { "title": "30 Before 40", "description": "30 countries before age 40" },
-      "premium_n_before_n_50_50": { "title": "50 Before 50", "description": "50 countries before age 50" },
-
-      "premium_decade_10s":    { "title": "Childhood Wanderer",         "description": "5 countries during teen years" },
-      "premium_decade_20s":    { "title": "Roaring Twenties",           "description": "15 countries during 20s" },
-      "premium_decade_30s":    { "title": "Thirty-Something Collector", "description": "25 countries during 30s" },
-      "premium_decade_40s":    { "title": "Forty Forward",              "description": "25 countries during 40s" },
-      "premium_decade_50plus": { "title": "Late Bloomer",               "description": "15 new countries from age 50+" },
-
-      "premium_age_match_x1":   { "title": "Age-Matched Traveler", "description": "Visited countries ≥ current age" },
-      "premium_age_match_x1_5": { "title": "Beyond Years",         "description": "Visited countries ≥ age × 1.5" },
-      "premium_age_match_x2":   { "title": "Double-Aged",          "description": "Visited countries ≥ age × 2" },
-
-      "premium_calendar_6":  { "title": "Half-Year Drifter", "description": "Foreign photos in 6 different months" },
-      "premium_calendar_12": { "title": "Calendar Drifter",  "description": "Foreign photos in all 12 months" },
-
-      "premium_flag_palette_5": { "title": "Color Collector",      "description": "5 distinct flag colors collected" },
-      "premium_flag_palette_7": { "title": "Flag Palette Master",  "description": "All 7 flag colors collected" },
-
-      "premium_un_linguist_3": { "title": "Trilingual Traveler", "description": "3 of UN's 6 official languages" },
-      "premium_un_linguist_6": { "title": "UN Linguist",          "description": "All 6 UN official languages" },
-
-      "premium_humanity_25": { "title": "Quarter of Humanity",        "description": "25% of world population visited" },
-      "premium_humanity_50": { "title": "Half of Humanity",            "description": "50% of world population visited" },
-      "premium_humanity_75": { "title": "Three-Quarters of Humanity",  "description": "75% of world population visited" },
-
-      "premium_earth_25": { "title": "Quarter of Earth",        "description": "25% of Earth's land area visited" },
-      "premium_earth_50": { "title": "Half of Earth",            "description": "50% of Earth's land area visited" },
-      "premium_earth_75": { "title": "Three-Quarters of Earth",  "description": "75% of Earth's land area visited" },
-
-      "premium_round_the_clock": { "title": "Round the Clock", "description": "Two countries with 24h+ UTC offset gap" },
-
-      "fourSeasonsTemplate": { "title": "{{country}} Four Seasons", "description": "All four seasons captured in {{country}}" }
+      "premium_age_match_x1": {
+        "title": "Age-Matched Traveler",
+        "description": "Visited countries ≥ current age"
+      },
+      "premium_age_match_x1_5": {
+        "title": "Beyond Years",
+        "description": "Visited countries ≥ age × 1.5"
+      },
+      "premium_age_match_x2": {
+        "title": "Double-Aged",
+        "description": "Visited countries ≥ age × 2"
+      },
+      "premium_calendar_6": {
+        "title": "Half-Year Drifter",
+        "description": "Foreign photos in 6 different months"
+      },
+      "premium_calendar_12": {
+        "title": "Calendar Drifter",
+        "description": "Foreign photos in all 12 months"
+      },
+      "premium_flag_palette_5": {
+        "title": "Color Collector",
+        "description": "5 distinct flag colors collected"
+      },
+      "premium_flag_palette_7": {
+        "title": "Flag Palette Master",
+        "description": "All 7 flag colors collected"
+      },
+      "premium_un_linguist_3": {
+        "title": "Trilingual Traveler",
+        "description": "3 of UN's 6 official languages"
+      },
+      "premium_un_linguist_6": {
+        "title": "UN Linguist",
+        "description": "All 6 UN official languages"
+      },
+      "premium_humanity_25": {
+        "title": "Quarter of Humanity",
+        "description": "25% of world population visited"
+      },
+      "premium_humanity_50": {
+        "title": "Half of Humanity",
+        "description": "50% of world population visited"
+      },
+      "premium_humanity_75": {
+        "title": "Three-Quarters of Humanity",
+        "description": "75% of world population visited"
+      },
+      "premium_earth_25": {
+        "title": "Quarter of Earth",
+        "description": "25% of Earth's land area visited"
+      },
+      "premium_earth_50": {
+        "title": "Half of Earth",
+        "description": "50% of Earth's land area visited"
+      },
+      "premium_earth_75": {
+        "title": "Three-Quarters of Earth",
+        "description": "75% of Earth's land area visited"
+      },
+      "premium_round_the_clock": {
+        "title": "Round the Clock",
+        "description": "Two countries with 24h+ UTC offset gap"
+      }
     }
   },
   "settings": {

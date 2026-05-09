@@ -202,8 +202,8 @@
       "lockedHint": "Premium 가입 시 잠금 해제",
       "ctaUnlock": "Premium 가입하면 모두 잠금 해제 →",
       "slotCounts": {
-        "premium_age": 13,
-        "premium_time": 3,
+        "premium_age": 3,
+        "premium_time": 2,
         "premium_culture": 4,
         "premium_share": 6,
         "premium_special": 1
@@ -250,18 +250,42 @@
       "sectionTitle": "유료 결제자에게 제공되는 마일스톤",
       "lockedHint": "Premium 가입 시 잠금 해제",
       "ctaUnlock": "Premium 알아보기",
-      "subsectionUnsupported": "달성 시 호칭이 자동 부여됩니다",
       "items": {
-        "premium_n_before_n":      { "name": "N Before N", "icon": "🏃", "description": "정해진 나이에 도달하기 전까지의 여행 기록을 모은다" },
-        "premium_decade_stamps":   { "name": "인생 단계별 도장", "icon": "📅", "description": "10대·20대·30대… 인생 시기마다 찍어둔 발자취를 컬렉션으로" },
-        "premium_age_match":       { "name": "내 나이만큼의 발자취", "icon": "🎂", "description": "현재 나이만큼의 국가를 모았는가" },
-        "premium_four_seasons":    { "name": "사계절 컬렉터", "icon": "🌸", "description": "한 나라에서 봄·여름·가을·겨울 모두를 사진에 담는다" },
-        "premium_calendar":        { "name": "달력의 여행자", "icon": "🗓️", "description": "1월부터 12월까지 모든 달에 해외 사진" },
-        "premium_flag_palette":    { "name": "국기 팔레트 마스터", "icon": "🌈", "description": "방문국 국기에 쓰인 모든 색을 모은다" },
-        "premium_un_linguist":     { "name": "UN 공용어 정복", "icon": "🌐", "description": "UN 6공용어 — 영·중·스페인·프랑스·러시아·아랍 — 권역 모두 방문" },
-        "premium_humanity":        { "name": "인류의 X", "icon": "👥", "description": "방문국 인구가 세계 인구에서 차지하는 비중" },
-        "premium_earth_area":      { "name": "지구의 X", "icon": "🌍", "description": "방문국 면적이 지구 육지에서 차지하는 비중" },
-        "premium_round_the_clock": { "name": "지구 한 바퀴", "icon": "🕛", "description": "시차 24시간 이상 차이의 두 국가 모두 방문" }
+        "premium_age_match": {
+          "name": "내 나이만큼의 발자취",
+          "icon": "🎂",
+          "description": "현재 나이만큼의 국가를 모았는가"
+        },
+        "premium_calendar": {
+          "name": "달력의 여행자",
+          "icon": "🗓️",
+          "description": "1월부터 12월까지 모든 달에 해외 사진"
+        },
+        "premium_flag_palette": {
+          "name": "국기 팔레트 마스터",
+          "icon": "🌈",
+          "description": "방문국 국기에 쓰인 모든 색을 모은다"
+        },
+        "premium_un_linguist": {
+          "name": "UN 공용어 정복",
+          "icon": "🌐",
+          "description": "UN 6공용어 — 영·중·스페인·프랑스·러시아·아랍 — 권역 모두 방문"
+        },
+        "premium_humanity": {
+          "name": "인류의 X",
+          "icon": "👥",
+          "description": "방문국 인구가 세계 인구에서 차지하는 비중"
+        },
+        "premium_earth_area": {
+          "name": "지구의 X",
+          "icon": "🌍",
+          "description": "방문국 면적이 지구 육지에서 차지하는 비중"
+        },
+        "premium_round_the_clock": {
+          "name": "지구 한 바퀴",
+          "icon": "🕛",
+          "description": "시차 24시간 이상 차이의 두 국가 모두 방문"
+        }
       }
     }
   },
@@ -512,42 +536,70 @@
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.",
     "newMultipleBody": "{{list}}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.",
     "premium": {
-      "premium_n_before_n_5_20":  { "title": "조숙한 발자국",       "description": "만 20세 전 5개국 방문" },
-      "premium_n_before_n_10_25": { "title": "이른 노마드",         "description": "만 25세 전 10개국 방문" },
-      "premium_n_before_n_20_30": { "title": "서른 전의 세계",       "description": "만 30세 전 20개국 방문" },
-      "premium_n_before_n_30_40": { "title": "불혹의 컬렉터",       "description": "만 40세 전 30개국 방문" },
-      "premium_n_before_n_50_50": { "title": "반세기 컬렉터",       "description": "만 50세 전 50개국 방문" },
-
-      "premium_decade_10s":     { "title": "유년의 발자취",     "description": "10대 시기에 5개국" },
-      "premium_decade_20s":     { "title": "청춘의 방랑",       "description": "20대 시기에 15개국" },
-      "premium_decade_30s":     { "title": "삼십대의 컬렉터",   "description": "30대 시기에 25개국" },
-      "premium_decade_40s":     { "title": "불혹의 떠돌이",     "description": "40대 시기에 25개국" },
-      "premium_decade_50plus":  { "title": "제2의 출발선",       "description": "50대 이후 신규 15개국" },
-
-      "premium_age_match_x1":   { "title": "동갑 수집가",       "description": "방문국 수 ≥ 만 나이" },
-      "premium_age_match_x1_5": { "title": "초과달성",           "description": "방문국 수 ≥ 만 나이 × 1.5" },
-      "premium_age_match_x2":   { "title": "두 배의 인생",       "description": "방문국 수 ≥ 만 나이 × 2" },
-
-      "premium_calendar_6":  { "title": "반년의 여행자",     "description": "12개월 중 6개월 해외 사진" },
-      "premium_calendar_12": { "title": "달력의 여행자",     "description": "12개월 모두 해외 사진" },
-
-      "premium_flag_palette_5": { "title": "색의 수집가",     "description": "방문국 국기에서 5색 수집" },
-      "premium_flag_palette_7": { "title": "팔레트 마스터",   "description": "방문국 국기에서 7색 모두 수집" },
-
-      "premium_un_linguist_3": { "title": "3개 국어의 여행자", "description": "UN 6공용어 중 3개 권역 방문" },
-      "premium_un_linguist_6": { "title": "UN 공용어 정복자", "description": "UN 6공용어 모두 권역 방문" },
-
-      "premium_humanity_25":  { "title": "인류의 4분의 1",     "description": "방문국 인구 ≥ 세계 인구 25%" },
-      "premium_humanity_50":  { "title": "인류의 절반",         "description": "방문국 인구 ≥ 세계 인구 50%" },
-      "premium_humanity_75":  { "title": "인류의 4분의 3",     "description": "방문국 인구 ≥ 세계 인구 75%" },
-
-      "premium_earth_25": { "title": "지구의 4분의 1",     "description": "방문국 면적 ≥ 지구 육지 25%" },
-      "premium_earth_50": { "title": "지구의 절반",         "description": "방문국 면적 ≥ 지구 육지 50%" },
-      "premium_earth_75": { "title": "지구의 4분의 3",     "description": "방문국 면적 ≥ 지구 육지 75%" },
-
-      "premium_round_the_clock": { "title": "지구 한 바퀴", "description": "시차 24시간 차이 두 국가 방문" },
-
-      "fourSeasonsTemplate": { "title": "{{country}} 사계절", "description": "{{country}}에서 4계절 모두 사진" }
+      "premium_age_match_x1": {
+        "title": "동갑 수집가",
+        "description": "방문국 수 ≥ 만 나이"
+      },
+      "premium_age_match_x1_5": {
+        "title": "초과달성",
+        "description": "방문국 수 ≥ 만 나이 × 1.5"
+      },
+      "premium_age_match_x2": {
+        "title": "두 배의 인생",
+        "description": "방문국 수 ≥ 만 나이 × 2"
+      },
+      "premium_calendar_6": {
+        "title": "반년의 여행자",
+        "description": "12개월 중 6개월 해외 사진"
+      },
+      "premium_calendar_12": {
+        "title": "달력의 여행자",
+        "description": "12개월 모두 해외 사진"
+      },
+      "premium_flag_palette_5": {
+        "title": "색의 수집가",
+        "description": "방문국 국기에서 5색 수집"
+      },
+      "premium_flag_palette_7": {
+        "title": "팔레트 마스터",
+        "description": "방문국 국기에서 7색 모두 수집"
+      },
+      "premium_un_linguist_3": {
+        "title": "3개 국어의 여행자",
+        "description": "UN 6공용어 중 3개 권역 방문"
+      },
+      "premium_un_linguist_6": {
+        "title": "UN 공용어 정복자",
+        "description": "UN 6공용어 모두 권역 방문"
+      },
+      "premium_humanity_25": {
+        "title": "인류의 4분의 1",
+        "description": "방문국 인구 ≥ 세계 인구 25%"
+      },
+      "premium_humanity_50": {
+        "title": "인류의 절반",
+        "description": "방문국 인구 ≥ 세계 인구 50%"
+      },
+      "premium_humanity_75": {
+        "title": "인류의 4분의 3",
+        "description": "방문국 인구 ≥ 세계 인구 75%"
+      },
+      "premium_earth_25": {
+        "title": "지구의 4분의 1",
+        "description": "방문국 면적 ≥ 지구 육지 25%"
+      },
+      "premium_earth_50": {
+        "title": "지구의 절반",
+        "description": "방문국 면적 ≥ 지구 육지 50%"
+      },
+      "premium_earth_75": {
+        "title": "지구의 4분의 3",
+        "description": "방문국 면적 ≥ 지구 육지 75%"
+      },
+      "premium_round_the_clock": {
+        "title": "지구 한 바퀴",
+        "description": "시차 24시간 차이 두 국가 방문"
+      }
     }
   },
   "settings": {
