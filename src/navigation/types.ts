@@ -4,6 +4,9 @@ export type YearMode = { kind: "all" } | { kind: "year"; year: number };
 
 export type ImageDetailPhoto = {
   key: string;
+  // MediaLibrary asset id 또는 DB photo id. 표시 시점에 ph:// → file://로 lazy
+  // 해석할 때 키로 쓴다.
+  id: string;
   uri: string;
   date: string;
 };

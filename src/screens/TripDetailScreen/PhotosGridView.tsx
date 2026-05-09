@@ -1,13 +1,17 @@
 import React from "react";
-import { FlatList, Image, Pressable, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useScreenBottomInset } from "../../hooks/useScreenInsets";
 
+import LazyGridImage from "./LazyGridImage";
 import { GRID_COLS, type TripDetailStyles } from "./styles";
 
 export type GridPhoto = {
   key: string;
+  // MediaLibrary asset id 또는 DB photo id. ph://인 경우 셀이 화면에 들어올
+  // 때 id를 키로 lazy resolve한다.
+  id: string;
   uri: string;
   takenAt: number;
   date: string;
@@ -81,7 +85,11 @@ export default function PhotosGridView({
               style={styles.gridCell}
               onPress={() => onSelectPhoto(index)}
             >
-              <Image source={{ uri: item.uri }} style={styles.gridImage} />
+              <LazyGridImage
+                id={item.id}
+                uri={item.uri}
+                style={styles.gridImage}
+              />
             </Pressable>
           )}
         />

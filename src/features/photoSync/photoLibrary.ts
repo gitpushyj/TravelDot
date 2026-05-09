@@ -32,6 +32,12 @@ export async function ensurePermission(): Promise<
   return "denied";
 }
 
+// 세션 내 resolve 결과 캐시. 같은 자산을 여러 화면(미리보기, grid, image
+// detail)에서 다시 표시할 때 native 왕복을 0회로 줄인다. file://만 캐시한다 —
+// ph://가 그대로 나온 경우(삭제됨/iCloud 미다운로드)는 다음에 재시도해야 하므로
+// 캐시하지 않는다.
+const resolvedUriCache = new Map<string, string>();
+
 // iOS의 ph:// URI는 일부 RN Image 로더 빌드가 인식하지 못해 "no suitable image
 // URL loader found for ph://" 에러를 낸다. 표시 직전에 MediaLibrary로 file://
 // localUri를 해석한다. 이미 file://(Android 등)인 URI는 그대로 통과시킨다.
@@ -53,12 +59,22 @@ export async function resolveDisplayUris(
         out[id] = uri;
         return;
       }
+      const cached = resolvedUriCache.get(id);
+      if (cached) {
+        out[id] = cached;
+        return;
+      }
       try {
         const info = await MediaLibrary.getAssetInfoAsync(id, {
           shouldDownloadFromNetwork,
         });
         const local = info.localUri ?? info.uri;
-        if (local) out[id] = local;
+        if (local) {
+          out[id] = local;
+          if (!local.startsWith("ph://")) {
+            resolvedUriCache.set(id, local);
+          }
+        }
       } catch {
         // 자산이 삭제됐거나 권한이 바뀐 경우는 표시에서 빠진다.
       }

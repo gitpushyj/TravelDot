@@ -74,7 +74,7 @@ export default function ImageDetailScreen({
         initialNumToRender={1}
         maxToRenderPerBatch={2}
         renderItem={({ item }) => (
-          <ImagePage uri={item.uri} onTap={toggleOverlay} />
+          <ImagePage id={item.id} uri={item.uri} onTap={toggleOverlay} />
         )}
       />
       <Overlay
