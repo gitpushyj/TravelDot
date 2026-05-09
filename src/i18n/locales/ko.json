@@ -693,6 +693,13 @@
     "devAllMilestonesVisible": {
       "title": "[DEV] 전체 마일스톤 표시 토글",
       "subtitle": "tier 0이면 자동 false. 수동 override용"
+    },
+    "subscription": {
+      "promoHeadline": "프리미엄으로 모든 기능 열기",
+      "promoSub": "AI 채팅 한도 확장 · 모든 마일스톤 공개",
+      "promoCta": "업그레이드",
+      "activeLabel": "프리미엄 사용 중",
+      "activeSub": "구독 정보 보기"
     }
   },
   "onboarding": {
@@ -767,6 +774,38 @@
       "allClearedBody": "확인이 필요한 여행은 없어요. 이제 지도에서 여행 기록을 살펴볼 수 있어요.",
       "acceptAll": "남은 여행은 모두 내 여행",
       "goHome": "홈으로 이동하기"
+    }
+  },
+  "subscription": {
+    "brand": "been",
+    "heading": {
+      "prefix": "모든 기능을",
+      "highlight": "제한 없이",
+      "suffix": "쓰기"
+    },
+    "subheading": "지나온 모든 곳을 한 자리에. 내 여행을 더 풍부하게 기록해 보세요.",
+    "save": "{{percent}}% 할인",
+    "perWeek": "주당",
+    "freeTrial": "{{days}}일 무료 체험",
+    "plan": {
+      "yearly": {
+        "title": "1년 구독",
+        "period": "{{price}}/년"
+      },
+      "weekly": {
+        "title": "1주 구독"
+      }
+    },
+    "continue": {
+      "label": "계속하기",
+      "alreadySubscribed": "닫기"
+    },
+    "disclaimer": {
+      "trial": "{{days}}일간 무료, 이후 자동 결제됩니다. 언제든 해지할 수 있어요.",
+      "regular": "결제 후 즉시 적용됩니다. 언제든 해지할 수 있어요."
+    },
+    "error": {
+      "title": "구독 처리 실패"
     }
   }
 }

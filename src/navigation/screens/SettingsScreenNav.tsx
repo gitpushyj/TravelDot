@@ -24,6 +24,7 @@ export default function SettingsScreenNav({ navigation }: Props) {
         onChangeHome={() => navigation.navigate("ChangeHome")}
         onReviewSuspect={() => navigation.navigate("ReviewSuspect")}
         onOpenLanguage={() => navigation.navigate("Language")}
+        onOpenSubscription={() => navigation.navigate("Subscription")}
       />
     </>
   );

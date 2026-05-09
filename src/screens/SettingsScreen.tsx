@@ -9,6 +9,7 @@ import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
 import { useEntitlementStore } from "../features/entitlement/entitlementStore";
 import { evaluateMilestone } from "../features/milestone/milestoneEvaluator";
+import { useSubscription } from "../features/subscription/useSubscription";
 import { useMilestoneStore } from "../features/milestone/milestoneStore";
 import {
   runFullSync,
@@ -26,6 +27,7 @@ import type { ThemeMode } from "../theme/theme";
 import { useTheme, useThemeStore } from "../theme/themeStore";
 
 import ActionRow from "./SettingsScreen/ActionRow";
+import SubscriptionEntryCard from "./SettingsScreen/SubscriptionEntryCard";
 import { makeStyles } from "./SettingsScreen/styles";
 
 type Props = {
@@ -36,6 +38,7 @@ type Props = {
   onChangeHome: () => void;
   onReviewSuspect: () => void;
   onOpenLanguage: () => void;
+  onOpenSubscription: () => void;
 };
 
 const THEME_MODES: ThemeMode[] = ["system", "light", "dark"];
@@ -48,6 +51,7 @@ export default function SettingsScreen({
   onChangeHome,
   onReviewSuspect,
   onOpenLanguage,
+  onOpenSubscription,
 }: Props) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -63,6 +67,8 @@ export default function SettingsScreen({
 
   const authUser = useAuthStore((s) => s.user);
   const authSignOut = useAuthStore((s) => s.signOut);
+
+  const { isSubscribed } = useSubscription();
 
   const isAllMilestoneVisible = useEntitlementStore(
     (s) => s.isAllMilestoneVisible
@@ -238,7 +244,18 @@ export default function SettingsScreen({
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionLabel}>
+        <SubscriptionEntryCard
+          theme={theme}
+          isSubscribed={isSubscribed}
+          onPress={onOpenSubscription}
+          promoHeadline={t("settings.subscription.promoHeadline")}
+          promoSub={t("settings.subscription.promoSub")}
+          promoCta={t("settings.subscription.promoCta")}
+          activeLabel={t("settings.subscription.activeLabel")}
+          activeSub={t("settings.subscription.activeSub")}
+        />
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
           {t("settings.section.account")}
         </Text>
         <View style={styles.card}>

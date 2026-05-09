@@ -693,6 +693,13 @@
     "devAllMilestonesVisible": {
       "title": "[DEV] Show all milestones toggle",
       "subtitle": "Auto-false at tier 0. Manual override"
+    },
+    "subscription": {
+      "promoHeadline": "Unlock all features with Premium",
+      "promoSub": "More AI chats · all milestones unlocked",
+      "promoCta": "Upgrade",
+      "activeLabel": "Premium active",
+      "activeSub": "View subscription"
     }
   },
   "onboarding": {
@@ -767,6 +774,38 @@
       "allClearedBody": "Nothing needs review. You're ready to explore your map.",
       "acceptAll": "Keep all remaining",
       "goHome": "Go to home"
+    }
+  },
+  "subscription": {
+    "brand": "been",
+    "heading": {
+      "prefix": "Get",
+      "highlight": "Unlimited",
+      "suffix": "Access"
+    },
+    "subheading": "Keep track of all the places you've been. All your travels, beautifully remembered.",
+    "save": "Save {{percent}}%",
+    "perWeek": "per week",
+    "freeTrial": "{{days}} days free trial",
+    "plan": {
+      "yearly": {
+        "title": "Yearly",
+        "period": "{{price}}/year"
+      },
+      "weekly": {
+        "title": "Weekly"
+      }
+    },
+    "continue": {
+      "label": "Continue",
+      "alreadySubscribed": "Close"
+    },
+    "disclaimer": {
+      "trial": "{{days}} days free, then converts to subscription. Cancel anytime before.",
+      "regular": "Charged immediately. Cancel anytime."
+    },
+    "error": {
+      "title": "Subscription failed"
     }
   }
 }

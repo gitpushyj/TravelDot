@@ -28,6 +28,7 @@ export type RootStackParamList = {
   ReviewSuspect: undefined;
   AllCountries: undefined;
   Language: undefined;
+  Subscription: undefined;
   CountryMerge: { countryCode: string };
   ImageDetail: {
     photos: ImageDetailPhoto[];

@@ -16,6 +16,7 @@ import LanguageScreenNav from "./screens/LanguageScreenNav";
 import MapZoomScreenNav from "./screens/MapZoomScreenNav";
 import ReviewSuspectScreenNav from "./screens/ReviewSuspectScreenNav";
 import MilestonesScreenNav from "./screens/MilestonesScreenNav";
+import SubscriptionScreenNav from "./screens/SubscriptionScreenNav";
 import TitlesScreenNav from "./screens/TitlesScreenNav";
 import TripDetailScreenNav from "./screens/TripDetailScreenNav";
 import { navigationRef } from "./navigationRef";
@@ -47,6 +48,7 @@ export default function RootNavigator() {
         <Stack.Screen name="ReviewSuspect" component={ReviewSuspectScreenNav} />
         <Stack.Screen name="AllCountries" component={AllCountriesScreenNav} />
         <Stack.Screen name="Language" component={LanguageScreenNav} />
+        <Stack.Screen name="Subscription" component={SubscriptionScreenNav} />
         <Stack.Screen
           name="ImageDetail"
           component={ImageDetailScreenNav}
