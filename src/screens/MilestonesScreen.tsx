@@ -96,6 +96,8 @@ function buildActiveDescription(
   progress: MilestoneProgress,
   t: ReturnType<typeof useTranslation>["t"]
 ): ActiveDescription | null {
+  if (progress.unsupportedReason === "needs_birth") return { kind: "needsBirth" };
+  if (progress.unsupportedReason === "needs_home_country") return { kind: "needsHomeCountry" };
   if (progress.reachedFinal) return { kind: "completed" };
   const next = progress.next;
   const badgeId = progress.nextTitleBadgeId;
