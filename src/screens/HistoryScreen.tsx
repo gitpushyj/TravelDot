@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Pressable, SectionList, Text, View } from "react-native";
+import { Alert, Pressable, SectionList, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import AddTripActionSheet from "../components/AddTripActionSheet";
 import { diffInDays } from "../features/travel/visit/dateUtils";
 import {
+  deleteTrip,
   loadAllTrips,
   RecentTrip,
   TripWithPhotos,
@@ -15,6 +16,7 @@ import { KO_NAME_BY_CODE } from "../lib/countryLookup";
 import type { Theme } from "../theme/theme";
 import { useTheme } from "../theme/themeStore";
 
+import { formatMD } from "./CountryDetailScreen/utils";
 import SortTabs, { type SortKey } from "./HistoryScreen/SortTabs";
 import { makeStyles } from "./HistoryScreen/styles";
 import TripRow from "./HistoryScreen/TripRow";
@@ -49,6 +51,7 @@ export default function HistoryScreen({
   const bottomInset = useScreenBottomInset();
   // recentTrips가 바뀌면(여행 추가/삭제 등) 리스트를 다시 불러온다.
   const recentTrips = useVisitStore((s) => s.recentTrips);
+  const refreshVisits = useVisitStore((s) => s.refreshVisits);
   const [trips, setTrips] = useState<TripWithPhotos[] | null>(null);
   const [sort, setSort] = useState<SortKey>("recent");
   const [addSheetOpen, setAddSheetOpen] = useState(false);
@@ -127,6 +130,28 @@ export default function HistoryScreen({
     }
     return hints;
   }, [sections, sort]);
+
+  const handleLongPress = (trip: TripWithPhotos) => {
+    Alert.alert(
+      t("alerts.tripDeleteTitle"),
+      t("alerts.tripDeleteBody", {
+        startDate: formatMD(trip.startDate),
+        endDate: formatMD(trip.endDate),
+        days: trip.days,
+      }),
+      [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("common.delete"),
+          style: "destructive",
+          onPress: async () => {
+            await deleteTrip(trip.countryCode, trip.startDate, trip.endDate);
+            await refreshVisits();
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <View style={[styles.root, { paddingBottom: bottomInset }]}>
@@ -217,6 +242,7 @@ export default function HistoryScreen({
                 days: item.days,
               })
             }
+            onLongPress={() => handleLongPress(item)}
             onMergeHintPress={() => onMergeHint(item.countryCode)}
           />
         )}

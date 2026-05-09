@@ -17,6 +17,7 @@ type Props = {
   trip: TripWithPhotos;
   showMergeHint: boolean;
   onPress: () => void;
+  onLongPress: () => void;
   onMergeHintPress: () => void;
 };
 
@@ -25,6 +26,7 @@ export default function TripRow({
   trip,
   showMergeHint,
   onPress,
+  onLongPress,
   onMergeHintPress,
 }: Props) {
   const { t } = useTranslation();
@@ -36,6 +38,7 @@ export default function TripRow({
     <View style={styles.rowWrap}>
       <Pressable
         onPress={onPress}
+        onLongPress={onLongPress}
         style={({ pressed }) => [
           styles.row,
           pressed && { backgroundColor: theme.rowPressedBg },
