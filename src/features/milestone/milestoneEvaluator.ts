@@ -3,6 +3,7 @@
 
 import { CONTINENTS, ContinentId, continentOf } from "../badges/continents";
 import { TIER_CUTOFFS, TIERS } from "../travel/tierTitles";
+import { evaluatePremiumProgress } from "./premium/evaluatePremiumProgress";
 import type { PremiumContext } from "./premium/types";
 import {
   ContinentMilestoneId,
@@ -107,9 +108,24 @@ export function evaluateMilestone(
       "days"
     );
   }
-  // 프리미엄 마일스톤은 별도 평가기에서 처리 — 여기서는 미구현 상태를 반환
+  // 프리미엄 마일스톤은 별도 평가기로 위임. 컨텍스트가 아직 로드되지 않았으면
+  // 진행률 0 placeholder를 반환 — visitStore.evaluateBadges가 컨텍스트를 채우면
+  // 자연스럽게 재평가된다.
   if (isPremiumMilestoneKind(kind)) {
-    return buildProgress(kind, 0, null, null, "countries");
+    const { premiumContext } = ctx;
+    if (!premiumContext) {
+      return {
+        kind,
+        current: 0,
+        next: null,
+        nextTitleBadgeId: null,
+        percent: 0,
+        reachedFinal: false,
+        unit: "countries",
+        unsupportedReason: null,
+      };
+    }
+    return evaluatePremiumProgress(kind, premiumContext);
   }
   // 대륙 마일스톤
   const continentId = CONTINENT_KIND_TO_ID[kind];
