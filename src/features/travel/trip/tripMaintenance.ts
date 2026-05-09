@@ -39,22 +39,29 @@ export async function removeAutoVisitsForCountry(
 ): Promise<{ photosDeleted: number; daysDeleted: number }> {
   const db = await getTripDb();
   const now = Date.now();
-  let photosDeleted = 0;
-  let daysDeleted = 0;
-  await db.withTransactionAsync(async () => {
-    const r1 = await db.runAsync(
-      `UPDATE visit_photos
-          SET deleted_at = ?, updated_at = ?
-        WHERE country_code = ? AND source = 'auto' AND deleted_at IS NULL`,
-      now,
-      now,
-      countryCode
-    );
-    photosDeleted = r1.changes;
+  const r = await db.runAsync(
+    `UPDATE visit_photos
+        SET deleted_at = ?, updated_at = ?
+      WHERE country_code = ? AND source = 'auto' AND deleted_at IS NULL`,
+    now,
+    now,
+    countryCode
+  );
+  const { tripsDeleted } = await softDeleteEmptyTripsForCountry(countryCode);
+  return { photosDeleted: r.changes, daysDeleted: tripsDeleted };
+}
 
-    // 그 country의 트립 중에서 (사진/노트가 모두 비어 있는) 트립을 찾아 soft-delete.
-    // - body가 NULL/빈 문자열
-    // - 트립 [start, end] 범위에 살아있는 manual 사진이 0
+// 한 country의 트립 중 살아있는 사진/노트(body)가 모두 비어 있는 것을 soft-delete.
+// 의심 여행 reject나 본국 정리처럼 사진을 비운 직후 빈 껍데기 트립을 같이
+// 정리하기 위한 헬퍼. trips.deleted_at은 sync push로 전파되므로 호출만 해두면
+// 로컬 화면에서 사라지고 다음 push에서 서버에도 전파된다.
+export async function softDeleteEmptyTripsForCountry(
+  countryCode: string
+): Promise<{ tripsDeleted: number }> {
+  const db = await getTripDb();
+  const now = Date.now();
+  let tripsDeleted = 0;
+  await db.withTransactionAsync(async () => {
     const candidateTrips = await db.getAllAsync<{
       id: string;
       start_date: string;
@@ -77,15 +84,15 @@ export async function removeAutoVisitsForCountry(
         t.end_date
       );
       if ((surviving?.n ?? 0) > 0) continue;
-      const r2 = await db.runAsync(
+      const r = await db.runAsync(
         `UPDATE trips SET deleted_at = ?, updated_at = ? WHERE id = ?`,
         now,
         now,
         t.id
       );
-      daysDeleted += r2.changes;
+      tripsDeleted += r.changes;
     }
   });
-  if (daysDeleted > 0) notifyTripsChanged();
-  return { photosDeleted, daysDeleted };
+  if (tripsDeleted > 0) notifyTripsChanged();
+  return { tripsDeleted };
 }

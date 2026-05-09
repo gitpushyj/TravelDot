@@ -64,5 +64,6 @@ export {
 export {
   purgeAllVisits,
   removeAutoVisitsForCountry,
+  softDeleteEmptyTripsForCountry,
   wipeAllVisits,
 } from "./trip/tripMaintenance";

@@ -11,6 +11,7 @@ import {
   markPhotosUserReviewed,
   RecentTrip,
   removeAutoVisitsForCountry,
+  softDeleteEmptyTripsForCountry,
   softDeletePhotosByIds,
   wipeAllVisits,
 } from "./visitRepository";
@@ -280,7 +281,11 @@ export const useVisitStore = create<State>((set, get) => ({
   setHomeCleanupReport: (r) => set({ homeCleanupReport: r }),
   setSuspectTrips: (trips) => set({ suspectTrips: trips }),
   rejectSuspectTrip: async (trip) => {
+    // 사진을 soft-delete하고, 그 결과 사진/노트가 모두 비어버린 트립을
+    // 같이 soft-delete한다. trips.deleted_at은 sync push로 전파되어
+    // 다음 push에서 서버에도 같은 deleted_at이 적용된다.
     await softDeletePhotosByIds(trip.photoIds);
+    await softDeleteEmptyTripsForCountry(trip.countryCode);
     set((s) => ({
       suspectTrips: s.suspectTrips.filter(
         (t) =>
