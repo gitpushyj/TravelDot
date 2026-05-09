@@ -61,8 +61,6 @@
     "dateInvalidBody": "日付はYYYY-MM-DD形式で、開始日は終了日より後にできません。",
     "rangeChangeConfirmTitle": "期間を変更しますか？",
     "rangeChangeConfirmBody": "新しい期間の外にある写真とメモは一緒に削除されます。続けますか？",
-    "partialPhotosTitle": "一部の写真は追加されませんでした",
-    "partialPhotosBody": "1日に最大{{limit}}枚までしか保存できないため、{{dropped}}枚は追加されませんでした。",
     "tripDeleteTitle": "旅の記録を削除",
     "tripDeleteBody": "{{startDate}} 〜 {{endDate}}（{{days}}日間）の記録を削除しますか？\nこの期間の写真とメモも一緒に削除されます。",
     "notMyTripTitle": "自分の旅ではない",

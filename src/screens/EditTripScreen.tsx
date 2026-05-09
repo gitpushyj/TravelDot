@@ -20,7 +20,6 @@ import {
   deleteNote,
   loadLatestNoteForTrip,
   loadPhotosForTrip,
-  PHOTO_LIMIT_PER_DAY,
   RecentTrip,
   softDeletePhotosByIds,
   TripPhoto,
@@ -235,9 +234,8 @@ export default function EditTripScreen({ trip, onClose }: Props) {
         await softDeletePhotosByIds(removedIds);
       }
 
-      // 3) 새로 추가된 사진 insert (PHOTO_LIMIT_PER_DAY는 addPhotos에서 enforce).
+      // 3) 새로 추가된 사진 insert.
       const addedPhotos = photos.filter((p) => p.state === "added");
-      let dropped = 0;
       if (addedPhotos.length > 0) {
         const inputs: VisitPhotoInput[] = addedPhotos.map((p) => ({
           id: p.id,
@@ -248,8 +246,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
           source: "manual",
           takenAt: p.takenAt,
         }));
-        const inserted = await addPhotos(inputs);
-        dropped = addedPhotos.length - inserted;
+        await addPhotos(inputs);
       }
 
       // 4) 메모 갱신 — 비우면 기존 메모 삭제, 채우면 upsert.
@@ -274,18 +271,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
       }
 
       await refreshVisits();
-      if (dropped > 0) {
-        Alert.alert(
-          t("alerts.partialPhotosTitle"),
-          t("alerts.partialPhotosBody", {
-            limit: PHOTO_LIMIT_PER_DAY,
-            dropped,
-          }),
-          [{ text: t("common.ok"), onPress: () => onClose(true) }]
-        );
-      } else {
-        onClose(true);
-      }
+      onClose(true);
     } catch (e) {
       Alert.alert(t("alerts.saveFailed"), String(e));
       setSubmitting(false);
@@ -426,7 +412,7 @@ export default function EditTripScreen({ trip, onClose }: Props) {
                           ? cancelAddedPhoto(p.id)
                           : togglePhotoRemoval(p.id)
                       }
-                      hitSlop={4}
+                      hitSlop={10}
                       style={styles.photoRemoveBtn}
                     >
                       <Text style={styles.photoRemoveText}>×</Text>

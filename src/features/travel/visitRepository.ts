@@ -4,7 +4,6 @@
 // 기존 visit_days 시대의 시그니처를 유지하기 위해 trip/* 모듈에서 호환 wrapper를 노출한다.
 
 export {
-  PHOTO_LIMIT_PER_DAY,
   type VisitPhotoInput,
   type TripPhoto,
   type VisitPhotoForReview,

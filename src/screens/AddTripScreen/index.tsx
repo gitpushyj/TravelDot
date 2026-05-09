@@ -112,8 +112,7 @@ export default function AddTripScreen({ onClose }: Props) {
       // 1) 범위 전체에 visit_days 보장 — 사진 없는 날도 여행에 포함되도록.
       await createTrip(selected.code, startDate, endDate);
 
-      // 2) 사진 등록 (PHOTO_LIMIT_PER_DAY는 addPhotos 내부에서 enforce).
-      let dropped = 0;
+      // 2) 사진 등록.
       if (photos.length > 0) {
         const inputs: VisitPhotoInput[] = photos.map((p) => ({
           id: p.id,
@@ -123,8 +122,7 @@ export default function AddTripScreen({ onClose }: Props) {
           source: "manual",
           takenAt: p.takenAt,
         }));
-        const inserted = await addPhotos(inputs);
-        dropped = photos.length - inserted;
+        await addPhotos(inputs);
       }
 
       // 3) 메모.
@@ -142,15 +140,7 @@ export default function AddTripScreen({ onClose }: Props) {
       }
 
       await refreshVisits();
-      if (dropped > 0) {
-        Alert.alert(
-          t("alerts.partialPhotosTitle"),
-          t("alerts.partialPhotosBody", { limit: 5, dropped }),
-          [{ text: t("common.ok"), onPress: onClose }]
-        );
-      } else {
-        onClose();
-      }
+      onClose();
     } catch (e) {
       Alert.alert(t("alerts.registerFailedTitle"), String(e));
       setSubmitting(false);
