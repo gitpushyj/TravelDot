@@ -181,7 +181,12 @@
     "autoActive": "Aktiv",
     "autoSet": "Auf Auto",
     "noCountryHint": "Bleibe 30 Tage oder länger in einem Land, um seinen Stammgast-Titel freizuschalten.",
-    "noneToShow": "Keine Titel zum Anzeigen."
+    "noneToShow": "Keine Titel zum Anzeigen.",
+    "filter": {
+      "all": "Alle",
+      "unlocked": "Verdient",
+      "emptyUnlocked": "Du hast noch keinen Titel verdient."
+    }
   },
   "reviewSuspect": {
     "heading": "Reisen prüfen",

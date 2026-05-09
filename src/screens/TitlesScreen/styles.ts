@@ -77,6 +77,37 @@ export function makeStyles(theme: Theme) {
     autoBtnTextActive: {
       color: theme.radioCheckColor,
     },
+    filterTabs: {
+      flexDirection: "row",
+      backgroundColor: theme.tabRowBg,
+      borderRadius: 10,
+      padding: 3,
+      marginBottom: 20,
+    },
+    filterTab: {
+      flex: 1,
+      paddingVertical: 8,
+      borderRadius: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    filterTabActive: {
+      backgroundColor: theme.cardBg,
+      shadowColor: "#000",
+      shadowOpacity: 0.08,
+      shadowRadius: 2,
+      shadowOffset: { width: 0, height: 1 },
+      elevation: 1,
+    },
+    filterTabText: {
+      color: theme.textSecondary,
+      fontSize: 13,
+      fontWeight: "600",
+    },
+    filterTabTextActive: {
+      color: theme.textPrimary,
+      fontWeight: "700",
+    },
     section: {
       marginBottom: 24,
     },
