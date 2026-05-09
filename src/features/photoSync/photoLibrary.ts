@@ -35,9 +35,17 @@ export async function ensurePermission(): Promise<
 // iOS의 ph:// URI는 일부 RN Image 로더 빌드가 인식하지 못해 "no suitable image
 // URL loader found for ph://" 에러를 낸다. 표시 직전에 MediaLibrary로 file://
 // localUri를 해석한다. 이미 file://(Android 등)인 URI는 그대로 통과시킨다.
+//
+// shouldDownloadFromNetwork: true로 호출하면 iCloud-only 자산도 네트워크에서
+// 받아와 localUri를 채운다. 호출 측에서 다운로드 비용을 감수할 가치가 있을 때만
+// 켠다(예: 사용자가 곧장 보게 될 미리보기). 기본값(false)은 디바이스에 캐시된
+// 자산만 해석해 빠르고 데이터 사용이 없다.
 export async function resolveDisplayUris(
-  entries: { id: string; uri: string }[]
+  entries: { id: string; uri: string }[],
+  options?: { shouldDownloadFromNetwork?: boolean }
 ): Promise<Record<string, string>> {
+  const shouldDownloadFromNetwork =
+    options?.shouldDownloadFromNetwork ?? false;
   const out: Record<string, string> = {};
   await Promise.all(
     entries.map(async ({ id, uri }) => {
@@ -47,7 +55,7 @@ export async function resolveDisplayUris(
       }
       try {
         const info = await MediaLibrary.getAssetInfoAsync(id, {
-          shouldDownloadFromNetwork: false,
+          shouldDownloadFromNetwork,
         });
         const local = info.localUri ?? info.uri;
         if (local) out[id] = local;
