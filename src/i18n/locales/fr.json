@@ -181,7 +181,12 @@
     "autoActive": "Actif",
     "autoSet": "Passer en auto",
     "noCountryHint": "Reste 30 jours ou plus dans un pays pour débloquer son titre d'habitué.",
-    "noneToShow": "Aucun titre à afficher."
+    "noneToShow": "Aucun titre à afficher.",
+    "filter": {
+      "all": "Tout",
+      "unlocked": "Obtenus",
+      "emptyUnlocked": "Tu n'as encore obtenu aucun titre."
+    }
   },
   "reviewSuspect": {
     "heading": "Vérifier les voyages",

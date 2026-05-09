@@ -181,7 +181,12 @@
     "autoActive": "Activo",
     "autoSet": "Usar automático",
     "noCountryHint": "Quédate 30 días o más en un país para desbloquear su título de habitual.",
-    "noneToShow": "No hay títulos que mostrar."
+    "noneToShow": "No hay títulos que mostrar.",
+    "filter": {
+      "all": "Todos",
+      "unlocked": "Obtenidos",
+      "emptyUnlocked": "Aún no has obtenido ningún título."
+    }
   },
   "reviewSuspect": {
     "heading": "Revisar viajes",

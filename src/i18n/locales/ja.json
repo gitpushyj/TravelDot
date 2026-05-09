@@ -181,7 +181,12 @@
     "autoActive": "使用中",
     "autoSet": "自動にする",
     "noCountryHint": "一つの国に30日以上滞在すると、常連称号がアンロックされます。",
-    "noneToShow": "表示できる称号がありません。"
+    "noneToShow": "表示できる称号がありません。",
+    "filter": {
+      "all": "すべて",
+      "unlocked": "獲得済み",
+      "emptyUnlocked": "まだ獲得した称号がありません。"
+    }
   },
   "reviewSuspect": {
     "heading": "旅を確認する",

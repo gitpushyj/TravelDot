@@ -197,6 +197,11 @@
     "noCountryHint": "한 국가에서 30일 이상 머무르면 단골 호칭이 잠금 해제됩니다.",
     "noneToShow": "표시할 호칭이 없어요.",
     "gotoMilestones": "마일스톤",
+    "filter": {
+      "all": "전체",
+      "unlocked": "획득",
+      "emptyUnlocked": "아직 획득한 호칭이 없어요."
+    },
     "premium": {
       "lockedTitle": "?????",
       "lockedHint": "Premium 가입 시 잠금 해제",

@@ -181,7 +181,12 @@
     "autoActive": "Attivo",
     "autoSet": "Passa ad auto",
     "noCountryHint": "Trascorri 30 giorni o più in un paese per sbloccare il titolo da abituale.",
-    "noneToShow": "Nessun titolo da mostrare."
+    "noneToShow": "Nessun titolo da mostrare.",
+    "filter": {
+      "all": "Tutti",
+      "unlocked": "Ottenuti",
+      "emptyUnlocked": "Non hai ancora ottenuto nessun titolo."
+    }
   },
   "reviewSuspect": {
     "heading": "Verifica viaggi",

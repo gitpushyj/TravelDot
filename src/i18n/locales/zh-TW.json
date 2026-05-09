@@ -181,7 +181,12 @@
     "autoActive": "使用中",
     "autoSet": "改為自動",
     "noCountryHint": "在同一國家停留 30 天以上即可解鎖該國常客稱號。",
-    "noneToShow": "沒有可顯示的稱號。"
+    "noneToShow": "沒有可顯示的稱號。",
+    "filter": {
+      "all": "全部",
+      "unlocked": "已獲得",
+      "emptyUnlocked": "你還沒有獲得任何稱號。"
+    }
   },
   "reviewSuspect": {
     "heading": "確認旅行",

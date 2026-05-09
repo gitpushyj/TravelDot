@@ -181,7 +181,12 @@
     "autoActive": "使用中",
     "autoSet": "改为自动",
     "noCountryHint": "在同一国家停留 30 天以上即可解锁该国常客称号。",
-    "noneToShow": "没有可显示的称号。"
+    "noneToShow": "没有可显示的称号。",
+    "filter": {
+      "all": "全部",
+      "unlocked": "已获得",
+      "emptyUnlocked": "你还没有获得任何称号。"
+    }
   },
   "reviewSuspect": {
     "heading": "确认旅行",

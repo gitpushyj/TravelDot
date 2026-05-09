@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -21,6 +21,9 @@ import { useTheme } from "../theme/themeStore";
 
 import BadgeCard from "./TitlesScreen/BadgeCard";
 import PremiumCategorySection from "./TitlesScreen/PremiumCategorySection";
+import TitleFilterTabs, {
+  TitleFilter,
+} from "./TitlesScreen/TitleFilterTabs";
 import { makeStyles } from "./TitlesScreen/styles";
 
 type Props = { onClose: () => void; onOpenMilestones: () => void };
@@ -38,6 +41,9 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
   const isAllMilestoneVisible = useEntitlementStore(
     (s) => s.isAllMilestoneVisible
   );
+
+  const [filter, setFilter] = useState<TitleFilter>("all");
+  const isUnlockedFilter = filter === "unlocked";
 
   const currentTierBadgeId = useMemo(() => {
     const tier = getTierByCount(Object.keys(visitCounts).length);
@@ -137,56 +143,101 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
           </Pressable>
         </View>
 
-        {sections.map((section) => {
-          const isPremiumCat = section.category.startsWith("premium_");
-          const showLocked = isPremiumCat && !isAllMilestoneVisible;
-          const unlockedCount = section.items.filter((b) =>
-            unlockedSet.has(b.id)
-          ).length;
-          const lockedSlotCount = showLocked
-            ? Number(
-                t(`titles.premium.slotCounts.${section.category}`, {
-                  defaultValue: "1",
-                })
-              ) || 1
-            : section.items.length;
-          return (
-            <View key={section.category} style={styles.section}>
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionLabel}>{section.label}</Text>
-                <Text style={styles.sectionCount}>
-                  {unlockedCount} / {lockedSlotCount}
-                </Text>
-              </View>
-              {showLocked ? (
-                <PremiumCategorySection
-                  category={section.category}
-                  theme={theme}
-                  styles={styles}
-                />
-              ) : section.items.length === 0 ? (
-                <Text style={styles.emptyText}>
-                  {section.category === "country"
-                    ? t("titles.noCountryHint")
-                    : t("titles.noneToShow")}
-                </Text>
-              ) : (
-                <View style={styles.grid}>
-                  {section.items.map((badge) => (
-                    <BadgeCard
-                      key={badge.id}
+        <TitleFilterTabs theme={theme} value={filter} onChange={setFilter} />
+
+        {(() => {
+          const renderedSections = sections
+            .map((section) => {
+              const isPremiumCat = section.category.startsWith("premium_");
+              const showLocked = isPremiumCat && !isAllMilestoneVisible;
+              const unlockedCount = section.items.filter((b) =>
+                unlockedSet.has(b.id)
+              ).length;
+              const lockedSlotCount = showLocked
+                ? Number(
+                    t(`titles.premium.slotCounts.${section.category}`, {
+                      defaultValue: "1",
+                    })
+                  ) || 1
+                : section.items.length;
+
+              if (isUnlockedFilter) {
+                if (unlockedCount === 0) return null;
+                const visibleItems = section.items.filter((b) =>
+                  unlockedSet.has(b.id)
+                );
+                return (
+                  <View key={section.category} style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                      <Text style={styles.sectionLabel}>{section.label}</Text>
+                      <Text style={styles.sectionCount}>
+                        {unlockedCount} / {lockedSlotCount}
+                      </Text>
+                    </View>
+                    <View style={styles.grid}>
+                      {visibleItems.map((badge) => (
+                        <BadgeCard
+                          key={badge.id}
+                          theme={theme}
+                          badge={badge}
+                          locked={false}
+                          active={effectiveActiveId === badge.id}
+                          onPress={() => handlePick(badge.id)}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                );
+              }
+
+              return (
+                <View key={section.category} style={styles.section}>
+                  <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionLabel}>{section.label}</Text>
+                    <Text style={styles.sectionCount}>
+                      {unlockedCount} / {lockedSlotCount}
+                    </Text>
+                  </View>
+                  {showLocked ? (
+                    <PremiumCategorySection
+                      category={section.category}
                       theme={theme}
-                      badge={badge}
-                      locked={!unlockedSet.has(badge.id)}
-                      active={effectiveActiveId === badge.id}
-                      onPress={() => handlePick(badge.id)}
+                      styles={styles}
                     />
-                  ))}
+                  ) : section.items.length === 0 ? (
+                    <Text style={styles.emptyText}>
+                      {section.category === "country"
+                        ? t("titles.noCountryHint")
+                        : t("titles.noneToShow")}
+                    </Text>
+                  ) : (
+                    <View style={styles.grid}>
+                      {section.items.map((badge) => (
+                        <BadgeCard
+                          key={badge.id}
+                          theme={theme}
+                          badge={badge}
+                          locked={!unlockedSet.has(badge.id)}
+                          active={effectiveActiveId === badge.id}
+                          onPress={() => handlePick(badge.id)}
+                        />
+                      ))}
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
-          );
-        })}
+              );
+            })
+            .filter(Boolean);
+
+          if (isUnlockedFilter && renderedSections.length === 0) {
+            return (
+              <Text style={styles.emptyText}>
+                {t("titles.filter.emptyUnlocked")}
+              </Text>
+            );
+          }
+          return renderedSections;
+        })()}
       </ScrollView>
     </View>
   );
