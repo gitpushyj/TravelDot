@@ -304,7 +304,6 @@
     "all": "全部",
     "yearPicker": "年份 ▾",
     "yearPickerSelected": "{{year}}年 ▾",
-    "syncing": "正在扫描照片 · 已处理 {{processed}} 张",
     "homeBadge": "本国",
     "visitedDays": "停留 {{days}} 天",
     "isHome": "本国",
@@ -339,6 +338,11 @@
     "suspectFound": "\n\n发现 {{count}} 段仅由其他设备拍摄的照片组成的旅行。\n如果是朋友发来的照片,请从记录中移除。",
     "reviewAction": "前往确认",
     "scanFailed": "扫描失败"
+  },
+  "sync": {
+    "scanning": "正在扫描照片 · 已处理 {{processed}} 张",
+    "saving": "正在保存旅行记录…",
+    "verifying": "正在验证旅行…"
   },
   "homeCleanup": {
     "title": "本国自动记录清理",
@@ -437,8 +441,14 @@
       "addManuallySub": "手动输入国家和日期",
       "scanIncremental": "自动添加新照片",
       "scanIncrementalSub": "仅快速处理上次扫描之后的照片",
+      "scanIncrementalConfirmTitle": "自动添加新照片",
+      "scanIncrementalConfirmBody": "将查看上次扫描之后拍摄的照片，并根据位置信息自动添加到你的旅行记录中。\n\n照片较多时可能需要一会儿。要开始吗？",
+      "scanIncrementalConfirmAction": "开始扫描",
       "scanFull": "重新扫描照片",
       "scanFullSub": "重新检查所有照片并刷新记录",
+      "scanFullConfirmTitle": "重新扫描照片",
+      "scanFullConfirmBody": "将从头开始重新检查整个照片库，找出可能遗漏的旅行并刷新记录。\n\n照片库越大，所需时间越长。要继续吗？",
+      "scanFullConfirmAction": "开始重扫",
       "review": "确认旅行 ({{count}})",
       "reviewSub": "仅由其他设备照片组成的旅行 — 请确认是否为本人旅行"
     },

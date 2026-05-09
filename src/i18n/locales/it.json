@@ -304,7 +304,6 @@
     "all": "Tutto",
     "yearPicker": "Anno ▾",
     "yearPickerSelected": "{{year}} ▾",
-    "syncing": "Scansione foto · {{processed}} elaborate",
     "homeBadge": "Paese di residenza",
     "visitedDays": "{{days}} giorni di permanenza",
     "isHome": "Paese di residenza",
@@ -339,6 +338,11 @@
     "suspectFound": "\n\nTrovato/i {{count}} viaggio/i con foto provenienti solo da un altro dispositivo.\nSe sono foto ricevute da amici, rimuovile dai registri.",
     "reviewAction": "Verifica ora",
     "scanFailed": "Scansione non riuscita"
+  },
+  "sync": {
+    "scanning": "Scansione foto · {{processed}} elaborate",
+    "saving": "Salvataggio dei viaggi…",
+    "verifying": "Verifica dei viaggi…"
   },
   "homeCleanup": {
     "title": "Pulizia automatica del paese di residenza",
@@ -437,8 +441,14 @@
       "addManuallySub": "Inserisci paese e date manualmente",
       "scanIncremental": "Aggiungi automaticamente le nuove foto",
       "scanIncrementalSub": "Elabora velocemente solo le foto successive all'ultima scansione",
+      "scanIncrementalConfirmTitle": "Aggiungi automaticamente le nuove foto",
+      "scanIncrementalConfirmBody": "Esamineremo le foto scattate dall'ultima scansione e le aggiungeremo automaticamente ai tuoi registri di viaggio in base ai dati di posizione.\n\nPuò richiedere qualche istante se hai molte foto. Continuare?",
+      "scanIncrementalConfirmAction": "Avvia scansione",
       "scanFull": "Riesegui la scansione delle foto",
       "scanFullSub": "Riesamina l'intera libreria e aggiorna i registri",
+      "scanFullConfirmTitle": "Riesegui la scansione delle foto",
+      "scanFullConfirmBody": "Esamineremo nuovamente l'intera libreria di foto da zero per trovare viaggi mancanti e aggiornare i tuoi registri.\n\nPuò richiedere più tempo con librerie grandi. Continuare?",
+      "scanFullConfirmAction": "Avvia riscansione",
       "review": "Verifica viaggi ({{count}})",
       "reviewSub": "Viaggi con sole foto di un altro dispositivo — conferma se sono tuoi"
     },

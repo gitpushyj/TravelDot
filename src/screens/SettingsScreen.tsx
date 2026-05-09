@@ -89,12 +89,38 @@ export default function SettingsScreen({
   );
 
   const handleIncrementalSync = () => {
-    runIncrementalSync().catch((e) =>
-      Alert.alert(t("scan.scanFailed"), String(e))
+    Alert.alert(
+      t("settings.trips.scanIncrementalConfirmTitle"),
+      t("settings.trips.scanIncrementalConfirmBody"),
+      [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("settings.trips.scanIncrementalConfirmAction"),
+          onPress: () => {
+            runIncrementalSync().catch((e) =>
+              Alert.alert(t("scan.scanFailed"), String(e))
+            );
+          },
+        },
+      ]
     );
   };
   const handleFullSync = () => {
-    runFullSync().catch((e) => Alert.alert(t("scan.scanFailed"), String(e)));
+    Alert.alert(
+      t("settings.trips.scanFullConfirmTitle"),
+      t("settings.trips.scanFullConfirmBody"),
+      [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("settings.trips.scanFullConfirmAction"),
+          onPress: () => {
+            runFullSync().catch((e) =>
+              Alert.alert(t("scan.scanFailed"), String(e))
+            );
+          },
+        },
+      ]
+    );
   };
   const handleSignOut = () => {
     Alert.alert(
