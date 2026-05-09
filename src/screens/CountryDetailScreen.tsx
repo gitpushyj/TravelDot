@@ -27,12 +27,14 @@ type Props = {
   onClose: () => void;
   onSelectTrip?: (trip: RecentTrip) => void;
   onMergeTrips?: (countryCode: string) => void;
+  onAddTrip?: (country: { code: string; name: string }) => void;
 };
 
 export default function CountryDetailScreen({
   onClose,
   onSelectTrip,
   onMergeTrips,
+  onAddTrip,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -185,9 +187,31 @@ export default function CountryDetailScreen({
         </View>
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>
-            {t("countryDetail.sectionTrips")}
-          </Text>
+          <View style={styles.sectionHeaderLeft}>
+            <Text style={styles.sectionTitle}>
+              {t("countryDetail.sectionTrips")}
+            </Text>
+            {!editMode && onAddTrip && (
+              <Pressable
+                onPress={() =>
+                  onAddTrip({
+                    code: selectedCountry.code,
+                    name: getCountryName(
+                      selectedCountry.code,
+                      getCurrentLocale()
+                    ),
+                  })
+                }
+                hitSlop={8}
+                style={({ pressed }) => [
+                  styles.addBtn,
+                  pressed && styles.addBtnPressed,
+                ]}
+              >
+                <Text style={styles.addBtnText}>+</Text>
+              </Pressable>
+            )}
+          </View>
           {editMode ? (
             <Text style={styles.editHint}>
               {t("countryDetail.swipeToDelete")}
