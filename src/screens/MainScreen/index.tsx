@@ -89,7 +89,6 @@ export default function MainScreen({ navigation }: Props) {
   const homeCountry = useVisitStore((s) => s.homeCountry);
   const recentTrips = useVisitStore((s) => s.recentTrips);
   const availableYears = useVisitStore((s) => s.availableYears);
-  const syncStatus = useVisitStore((s) => s.syncStatus);
   const setSelectedCountry = useVisitStore((s) => s.setSelectedCountry);
   const activeBadgeId = useBadgeStore((s) => s.activeId);
   const theme = useTheme();
@@ -351,14 +350,6 @@ export default function MainScreen({ navigation }: Props) {
         onScroll={scrollHandler}
         scrollEventThrottle={16}
       >
-        {syncStatus.running && (
-          <View style={styles.syncBar}>
-            <Text style={styles.syncText}>
-              {t("home.syncing", { processed: syncStatus.processed })}
-            </Text>
-          </View>
-        )}
-
         <View style={styles.mapStatsCard}>
           <View style={styles.mapStatsHeader}>
             <View style={styles.headerLeft}>

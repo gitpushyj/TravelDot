@@ -373,7 +373,6 @@
     "all": "All",
     "yearPicker": "Year ▾",
     "yearPickerSelected": "{{year}} ▾",
-    "syncing": "Scanning photos · {{processed}} processed",
     "homeBadge": "Home",
     "visitedDays": "{{days}} days visited",
     "isHome": "Home",
@@ -420,6 +419,11 @@
     "suspectFound": "\n\nFound {{count}} trip(s) that only have photos from another device.\nIf they were sent to you by friends, please remove them.",
     "reviewAction": "Review now",
     "scanFailed": "Scan failed"
+  },
+  "sync": {
+    "scanning": "Scanning photos · {{processed}} processed",
+    "saving": "Saving travel records…",
+    "verifying": "Verifying trips…"
   },
   "homeCleanup": {
     "title": "Home country cleanup",
@@ -565,8 +569,14 @@
       "addManuallySub": "Enter the country and dates manually",
       "scanIncremental": "Auto-add new photos",
       "scanIncrementalSub": "Quickly process photos taken since the last scan",
+      "scanIncrementalConfirmTitle": "Auto-add new photos",
+      "scanIncrementalConfirmBody": "We'll look through photos taken since your last scan and automatically add them to your travel records based on their location data.\n\nThis may take a moment if you have many photos. Continue?",
+      "scanIncrementalConfirmAction": "Start scan",
       "scanFull": "Rescan all photos",
       "scanFullSub": "Re-examine your entire library and refresh records",
+      "scanFullConfirmTitle": "Rescan all photos",
+      "scanFullConfirmBody": "We'll re-examine your entire photo library from scratch to find any missed trips and refresh your records.\n\nThis can take longer with larger libraries. Continue?",
+      "scanFullConfirmAction": "Start rescan",
       "review": "Review trips ({{count}})",
       "reviewSub": "Trips with only other-device photos — confirm they're yours"
     },

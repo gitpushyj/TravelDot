@@ -304,7 +304,6 @@
     "all": "Todo",
     "yearPicker": "Año ▾",
     "yearPickerSelected": "{{year}} ▾",
-    "syncing": "Escaneando fotos · {{processed}} procesadas",
     "homeBadge": "País de origen",
     "visitedDays": "{{days}} días de estancia",
     "isHome": "País de origen",
@@ -339,6 +338,11 @@
     "suspectFound": "\n\nSe encontraron {{count}} viaje(s) que solo tienen fotos de otro dispositivo.\nSi te las enviaron amigos, quítalas de los registros.",
     "reviewAction": "Revisar ahora",
     "scanFailed": "Error de escaneo"
+  },
+  "sync": {
+    "scanning": "Escaneando fotos · {{processed}} procesadas",
+    "saving": "Guardando registros de viaje…",
+    "verifying": "Verificando viajes…"
   },
   "homeCleanup": {
     "title": "Limpieza automática del país de origen",
@@ -437,8 +441,14 @@
       "addManuallySub": "Introduce el país y las fechas manualmente",
       "scanIncremental": "Añadir fotos nuevas automáticamente",
       "scanIncrementalSub": "Procesa rápidamente solo las fotos posteriores al último escaneo",
+      "scanIncrementalConfirmTitle": "Añadir fotos nuevas automáticamente",
+      "scanIncrementalConfirmBody": "Revisaremos las fotos tomadas desde el último escaneo y las añadiremos automáticamente a tus registros de viaje según los datos de ubicación.\n\nPuede tardar un momento si tienes muchas fotos. ¿Continuar?",
+      "scanIncrementalConfirmAction": "Iniciar escaneo",
       "scanFull": "Volver a escanear fotos",
       "scanFullSub": "Revisa de nuevo toda la biblioteca y actualiza los registros",
+      "scanFullConfirmTitle": "Volver a escanear fotos",
+      "scanFullConfirmBody": "Revisaremos toda tu biblioteca de fotos desde el principio para encontrar viajes que pudimos haber omitido y actualizar tus registros.\n\nPuede tardar más con bibliotecas grandes. ¿Continuar?",
+      "scanFullConfirmAction": "Iniciar reescaneo",
       "review": "Revisar viajes ({{count}})",
       "reviewSub": "Viajes con fotos solo de otro dispositivo — confirma si son tuyos"
     },

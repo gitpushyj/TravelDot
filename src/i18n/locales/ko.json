@@ -373,7 +373,6 @@
     "all": "전체",
     "yearPicker": "연도 ▾",
     "yearPickerSelected": "{{year}} ▾",
-    "syncing": "사진 스캔 중 · {{processed}}장 처리됨",
     "homeBadge": "본국",
     "visitedDays": "{{days}}일 방문",
     "isHome": "본국",
@@ -420,6 +419,11 @@
     "suspectFound": "\n\n다른 기기로 찍힌 사진만 있는 여행 {{count}}개를 찾았어요.\n친구한테 받은 사진이라면 기록에서 빼주세요.",
     "reviewAction": "확인하러 가기",
     "scanFailed": "스캔 실패"
+  },
+  "sync": {
+    "scanning": "사진 스캔 중 · {{processed}}장 처리됨",
+    "saving": "여행 기록 저장 중…",
+    "verifying": "여행 검증 중…"
   },
   "homeCleanup": {
     "title": "본국 자동 기록 정리",
@@ -565,8 +569,14 @@
       "addManuallySub": "국가와 날짜를 직접 입력해 추가",
       "scanIncremental": "새 사진 자동 추가",
       "scanIncrementalSub": "마지막 스캔 이후의 사진만 빠르게 처리",
+      "scanIncrementalConfirmTitle": "새 사진 자동 추가",
+      "scanIncrementalConfirmBody": "마지막 스캔 이후 새로 찍힌 사진을 살펴보고, 위치 정보를 바탕으로 여행 기록에 자동으로 추가합니다.\n\n사진이 많으면 잠깐 시간이 걸릴 수 있어요. 시작할까요?",
+      "scanIncrementalConfirmAction": "스캔 시작",
       "scanFull": "사진 재스캔",
       "scanFullSub": "전체 사진을 다시 훑어 기록을 갱신",
+      "scanFullConfirmTitle": "사진 재스캔",
+      "scanFullConfirmBody": "전체 사진을 처음부터 다시 훑어 누락된 여행이 있는지 확인하고 기록을 갱신합니다.\n\n사진이 많을수록 시간이 더 걸려요. 진행할까요?",
+      "scanFullConfirmAction": "재스캔 시작",
       "review": "여행 확인하기 ({{count}})",
       "reviewSub": "다른 기기 사진만 있는 여행 — 본인 여행 맞는지 확인"
     },

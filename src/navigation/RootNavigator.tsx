@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import GlobalSyncProgressBar from "../components/GlobalSyncProgressBar";
 import { useTheme } from "../theme/themeStore";
 import MainTabs from "./MainTabs";
 import AddTripScreenNav from "./screens/AddTripScreenNav";
@@ -52,6 +53,7 @@ export default function RootNavigator() {
           options={{ animation: "fade" }}
         />
       </Stack.Navigator>
+      <GlobalSyncProgressBar />
     </NavigationContainer>
   );
 }

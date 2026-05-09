@@ -140,17 +140,6 @@ export function makeStyles(theme: Theme) {
       color: theme.textPrimary,
       fontWeight: "700",
     },
-    syncBar: {
-      marginHorizontal: 20,
-      marginTop: 4,
-      paddingHorizontal: 14,
-      paddingVertical: 8,
-      backgroundColor: theme.cardBg,
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-    },
-    syncText: { color: theme.accentSoftText, fontSize: 12, fontWeight: "600" },
     mapStatsCard: {
       backgroundColor: theme.cardBg,
       borderTopWidth: 1,

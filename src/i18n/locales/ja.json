@@ -304,7 +304,6 @@
     "all": "全期間",
     "yearPicker": "年 ▾",
     "yearPickerSelected": "{{year}}年 ▾",
-    "syncing": "写真をスキャン中・{{processed}}枚処理済み",
     "homeBadge": "母国",
     "visitedDays": "{{days}}日間滞在",
     "isHome": "母国",
@@ -339,6 +338,11 @@
     "suspectFound": "\n\n他の端末で撮影された写真しかない旅を{{count}}件見つけました。\n友人から受け取った写真であれば、記録から除外してください。",
     "reviewAction": "確認しに行く",
     "scanFailed": "スキャン失敗"
+  },
+  "sync": {
+    "scanning": "写真をスキャン中・{{processed}}枚処理済み",
+    "saving": "旅行記録を保存中…",
+    "verifying": "旅行を検証中…"
   },
   "homeCleanup": {
     "title": "母国の自動記録を整理",
@@ -437,8 +441,14 @@
       "addManuallySub": "国と日付を直接入力して追加",
       "scanIncremental": "新しい写真を自動追加",
       "scanIncrementalSub": "前回のスキャン以降の写真だけを素早く処理",
+      "scanIncrementalConfirmTitle": "新しい写真を自動追加",
+      "scanIncrementalConfirmBody": "前回のスキャン以降に撮影された写真を確認し、位置情報を元に旅行記録へ自動で追加します。\n\n写真が多いと少し時間がかかることがあります。開始しますか？",
+      "scanIncrementalConfirmAction": "スキャン開始",
       "scanFull": "写真を再スキャン",
       "scanFullSub": "すべての写真を再確認して記録を更新",
+      "scanFullConfirmTitle": "写真を再スキャン",
+      "scanFullConfirmBody": "すべての写真をゼロから再確認し、見落とした旅行がないかを確認して記録を更新します。\n\n写真が多いほど時間がかかります。開始しますか？",
+      "scanFullConfirmAction": "再スキャン開始",
       "review": "旅を確認 ({{count}})",
       "reviewSub": "他の端末の写真しかない旅 — 自分の旅か確認"
     },

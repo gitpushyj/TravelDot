@@ -304,7 +304,6 @@
     "all": "Alles",
     "yearPicker": "Jahr ▾",
     "yearPickerSelected": "{{year}} ▾",
-    "syncing": "Fotos werden gescannt · {{processed}} verarbeitet",
     "homeBadge": "Heimatland",
     "visitedDays": "{{days}} Tage besucht",
     "isHome": "Heimatland",
@@ -339,6 +338,11 @@
     "suspectFound": "\n\n{{count}} Reise(n) mit Fotos nur von einem anderen Gerät gefunden.\nFalls sie von Freunden stammen, entferne sie bitte aus deinen Aufzeichnungen.",
     "reviewAction": "Jetzt prüfen",
     "scanFailed": "Scan fehlgeschlagen"
+  },
+  "sync": {
+    "scanning": "Fotos werden gescannt · {{processed}} verarbeitet",
+    "saving": "Reisedaten werden gespeichert…",
+    "verifying": "Reisen werden geprüft…"
   },
   "homeCleanup": {
     "title": "Heimatland: automatische Bereinigung",
@@ -437,8 +441,14 @@
       "addManuallySub": "Land und Daten manuell eingeben",
       "scanIncremental": "Neue Fotos automatisch hinzufügen",
       "scanIncrementalSub": "Verarbeitet schnell nur Fotos seit dem letzten Scan",
+      "scanIncrementalConfirmTitle": "Neue Fotos automatisch hinzufügen",
+      "scanIncrementalConfirmBody": "Wir prüfen die seit dem letzten Scan aufgenommenen Fotos und fügen sie anhand der Standortdaten automatisch zu deinen Reise-Aufzeichnungen hinzu.\n\nBei vielen Fotos kann das einen Moment dauern. Fortfahren?",
+      "scanIncrementalConfirmAction": "Scan starten",
       "scanFull": "Fotos erneut scannen",
       "scanFullSub": "Gesamte Bibliothek erneut prüfen und aktualisieren",
+      "scanFullConfirmTitle": "Fotos erneut scannen",
+      "scanFullConfirmBody": "Wir prüfen deine gesamte Fotobibliothek von Anfang an erneut, um verpasste Reisen zu finden und deine Aufzeichnungen zu aktualisieren.\n\nBei größeren Bibliotheken dauert das länger. Fortfahren?",
+      "scanFullConfirmAction": "Scan starten",
       "review": "Reisen prüfen ({{count}})",
       "reviewSub": "Reisen nur mit Fotos von einem anderen Gerät — bestätige, ob sie deine sind"
     },
