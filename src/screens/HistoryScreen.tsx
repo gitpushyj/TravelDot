@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, SectionList, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import AddTripActionSheet from "../components/AddTripActionSheet";
 import { diffInDays } from "../features/travel/visit/dateUtils";
 import {
   loadAllTrips,
@@ -22,6 +23,8 @@ type Props = {
   onClose: () => void;
   onSelectTrip: (trip: RecentTrip) => void;
   onMergeHint: (countryCode: string) => void;
+  onAddManual: () => void;
+  onAddAutoScan: () => void;
 };
 
 // 같은 국가의 다른 trip과 4~7일 간격이면 양쪽 trip 모두 hint 대상.
@@ -37,6 +40,8 @@ export default function HistoryScreen({
   onClose,
   onSelectTrip,
   onMergeHint,
+  onAddManual,
+  onAddAutoScan,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -46,6 +51,7 @@ export default function HistoryScreen({
   const recentTrips = useVisitStore((s) => s.recentTrips);
   const [trips, setTrips] = useState<TripWithPhotos[] | null>(null);
   const [sort, setSort] = useState<SortKey>("recent");
+  const [addSheetOpen, setAddSheetOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -136,7 +142,16 @@ export default function HistoryScreen({
           <Text style={styles.iconBtnText}>‹</Text>
         </Pressable>
         <Text style={styles.headerTitle}>{t("history.heading")}</Text>
-        <View style={styles.iconBtnPlaceholder} />
+        <Pressable
+          onPress={() => setAddSheetOpen(true)}
+          hitSlop={8}
+          style={({ pressed }) => [
+            styles.iconBtn,
+            pressed && styles.iconBtnPressed,
+          ]}
+        >
+          <Text style={styles.addBtnText}>+</Text>
+        </Pressable>
       </View>
 
       <SectionList
@@ -205,6 +220,18 @@ export default function HistoryScreen({
             onMergeHintPress={() => onMergeHint(item.countryCode)}
           />
         )}
+      />
+      <AddTripActionSheet
+        visible={addSheetOpen}
+        onCancel={() => setAddSheetOpen(false)}
+        onManual={() => {
+          setAddSheetOpen(false);
+          onAddManual();
+        }}
+        onAutoScan={() => {
+          setAddSheetOpen(false);
+          onAddAutoScan();
+        }}
       />
     </View>
   );

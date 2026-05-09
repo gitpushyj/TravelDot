@@ -34,6 +34,13 @@ export function makeStyles(theme: Theme) {
       fontWeight: "600",
       lineHeight: 24,
     },
+    addBtnText: {
+      color: theme.textPrimary,
+      fontSize: 22,
+      fontWeight: "700",
+      lineHeight: 24,
+      marginTop: -2,
+    },
     headerTitle: {
       color: theme.textPrimary,
       fontSize: 17,
