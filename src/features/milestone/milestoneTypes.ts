@@ -60,10 +60,21 @@ export function isPremiumMilestoneKind(v: unknown): v is PremiumMilestoneId {
 
 export const DEFAULT_MILESTONE_KIND: MilestoneKind = "countries";
 
+export type MilestoneUnit =
+  | "countries"
+  | "days"
+  | "months"
+  | "colors"
+  | "languages"
+  | "percent"
+  | "hours";
+
+export type MilestoneUnsupportedReason = "needs_birth" | "needs_home_country";
+
 /** UI에서 진행률·다음 단계를 그리기 위한 평가 결과 */
 export type MilestoneProgress = {
   kind: MilestoneKind;
-  /** 현재 값 (방문 국가 수 / 누적 일수 / 해당 대륙 방문 국가 수) */
+  /** 현재 값 (방문 국가 수 / 누적 일수 / 해당 대륙 방문 국가 수 / 그 외 단위별 수치) */
   current: number;
   /** 다음 단계 컷오프. 최종 단계 도달 시 null */
   next: number | null;
@@ -74,7 +85,12 @@ export type MilestoneProgress = {
   /** true면 최종 단계 도달 — UI는 "최고 단계 달성" 표시 */
   reachedFinal: boolean;
   /** 푸터 라벨 단위 분기용 */
-  unit: "countries" | "days";
+  unit: MilestoneUnit;
+  /**
+   * 평가에 필요한 사용자 데이터가 없을 때 사유. UI가 진행률 대신 안내 문구로 분기.
+   * null이면 정상 평가 결과 (현재 진행률을 그대로 표시).
+   */
+  unsupportedReason: MilestoneUnsupportedReason | null;
 };
 
 export function isMilestoneKind(value: unknown): value is MilestoneKind {

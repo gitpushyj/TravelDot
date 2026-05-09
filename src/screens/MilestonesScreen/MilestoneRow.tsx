@@ -2,7 +2,10 @@ import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Trans, useTranslation } from "react-i18next";
 
-import type { MilestoneProgress } from "../../features/milestone/milestoneTypes";
+import type {
+  MilestoneProgress,
+  MilestoneUnit,
+} from "../../features/milestone/milestoneTypes";
 import type { Theme } from "../../theme/theme";
 
 import { makeStyles } from "./styles";
@@ -18,7 +21,7 @@ export type ActiveDescription =
       kind: "next";
       count: number;
       title: string;
-      unit: "countries" | "days";
+      unit: MilestoneUnit;
     };
 
 type Props = {

@@ -8,6 +8,7 @@ import {
   isPremiumMilestoneKind,
   MilestoneKind,
   MilestoneProgress,
+  MilestoneUnit,
 } from "./milestoneTypes";
 
 const DAY_CUTOFFS: readonly number[] = [7, 30, 100, 365, 730, 1000];
@@ -35,7 +36,7 @@ function buildProgress(
   current: number,
   next: number | null,
   nextTitleBadgeId: string | null,
-  unit: "countries" | "days"
+  unit: MilestoneUnit
 ): MilestoneProgress {
   if (next == null) {
     return {
@@ -46,6 +47,7 @@ function buildProgress(
       percent: 100,
       reachedFinal: true,
       unit,
+      unsupportedReason: null,
     };
   }
   const percent = Math.round((current / next) * 1000) / 10;
@@ -57,6 +59,7 @@ function buildProgress(
     percent: Math.min(100, percent),
     reachedFinal: false,
     unit,
+    unsupportedReason: null,
   };
 }
 
