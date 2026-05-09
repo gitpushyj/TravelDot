@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { badgeFromId } from "../features/badges/badges";
 import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
+import { useEntitlementStore } from "../features/entitlement/entitlementStore";
 import { evaluateMilestone } from "../features/milestone/milestoneEvaluator";
 import { useMilestoneStore } from "../features/milestone/milestoneStore";
 import {
@@ -19,7 +20,10 @@ import { useTheme } from "../theme/themeStore";
 
 import MilestoneRow from "./MilestonesScreen/MilestoneRow";
 import type { ActiveDescription } from "./MilestonesScreen/MilestoneRow";
-import PremiumSection from "./MilestonesScreen/PremiumSection";
+import PremiumLockedSection from "./MilestonesScreen/PremiumLockedSection";
+import PremiumUnlockedSection, {
+  SELECTABLE_PREMIUM_KINDS,
+} from "./MilestonesScreen/PremiumUnlockedSection";
 import { makeStyles } from "./MilestonesScreen/styles";
 
 type Props = {
@@ -37,8 +41,11 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
   const setKind = useMilestoneStore((s) => s.setKind);
   const visitCounts = useVisitStore((s) => s.visitCounts);
   const premiumContext = useVisitStore((s) => s.premiumContext);
+  const isAllMilestoneVisible = useEntitlementStore(
+    (s) => s.isAllMilestoneVisible
+  );
 
-  const rows = useMemo(() => {
+  const baseRows = useMemo(() => {
     return ALL_MILESTONE_KINDS.map((k) => {
       const progress = evaluateMilestone(k, { visitCounts, premiumContext });
       return {
@@ -49,6 +56,19 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
       };
     });
   }, [t, visitCounts, premiumContext]);
+
+  const premiumRows = useMemo(() => {
+    if (!isAllMilestoneVisible) return [];
+    return SELECTABLE_PREMIUM_KINDS.map((k) => {
+      const progress = evaluateMilestone(k, { visitCounts, premiumContext });
+      return {
+        kind: k,
+        label: t(`milestones.option.${k}`),
+        progress,
+        activeDescription: buildActiveDescription(progress, t),
+      };
+    });
+  }, [isAllMilestoneVisible, t, visitCounts, premiumContext]);
 
   const handlePick = (k: MilestoneKind) => {
     if (k === kind) return;
@@ -68,7 +88,7 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        {rows.map((row) => (
+        {baseRows.map((row) => (
           <MilestoneRow
             key={row.kind}
             theme={theme}
@@ -79,13 +99,23 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
             onPress={() => handlePick(row.kind)}
           />
         ))}
-        <PremiumSection
-          theme={theme}
-          styles={styles}
-          onPressUpsell={() => {
-            Alert.alert(t("milestones.premium.ctaUnlock"));
-          }}
-        />
+        {isAllMilestoneVisible ? (
+          <PremiumUnlockedSection
+            theme={theme}
+            styles={styles}
+            selectedKind={kind}
+            rows={premiumRows}
+            onPick={handlePick}
+          />
+        ) : (
+          <PremiumLockedSection
+            theme={theme}
+            styles={styles}
+            onPressUpsell={() => {
+              Alert.alert(t("milestones.premium.ctaUnlock"));
+            }}
+          />
+        )}
         <Text style={styles.footnote}>{t("milestones.footnote")}</Text>
       </ScrollView>
     </View>
