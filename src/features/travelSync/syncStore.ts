@@ -6,11 +6,11 @@ import { supabase } from "../../lib/supabase";
 import { pullRemoteTrips } from "./syncPull";
 import { pushPendingTrips } from "./syncPush";
 
-const KEY_LAST_PUSHED = "tripSync:lastPushedAtMs";
 const KEY_LAST_PULLED = "tripSync:lastPulledAtMs";
 
 type State = {
-  lastPushedAtMs: number | null;
+  // pull은 서버 시계 단일 프레임에서만 비교하므로 그대로 epoch ms로 추적.
+  // push는 per-row last_synced_updated_at 컬럼으로 추적하며 별도 store 상태가 필요 없다.
   lastPulledAtMs: number | null;
   syncing: boolean;
   lastError: string | null;
@@ -26,19 +26,14 @@ type State = {
 let pushPending = false;
 
 export const useSyncStore = create<State>((set, get) => ({
-  lastPushedAtMs: null,
   lastPulledAtMs: null,
   syncing: false,
   lastError: null,
   hydrated: false,
 
   hydrate: async () => {
-    const [pushedRaw, pulledRaw] = await Promise.all([
-      AsyncStorage.getItem(KEY_LAST_PUSHED),
-      AsyncStorage.getItem(KEY_LAST_PULLED),
-    ]);
+    const pulledRaw = await AsyncStorage.getItem(KEY_LAST_PULLED);
     set({
-      lastPushedAtMs: pushedRaw ? Number(pushedRaw) : null,
       lastPulledAtMs: pulledRaw ? Number(pulledRaw) : null,
       hydrated: true,
     });
@@ -53,20 +48,7 @@ export const useSyncStore = create<State>((set, get) => ({
     }
     set({ syncing: true, lastError: null });
     try {
-      const { newLastPushedAtMs } = await pushPendingTrips({
-        userId,
-        sinceMs: get().lastPushedAtMs,
-      });
-      if (
-        newLastPushedAtMs != null &&
-        newLastPushedAtMs !== get().lastPushedAtMs
-      ) {
-        await AsyncStorage.setItem(
-          KEY_LAST_PUSHED,
-          String(newLastPushedAtMs)
-        );
-        set({ lastPushedAtMs: newLastPushedAtMs });
-      }
+      await pushPendingTrips({ userId });
     } catch (e) {
       set({ lastError: e instanceof Error ? e.message : String(e) });
     } finally {
@@ -91,20 +73,7 @@ export const useSyncStore = create<State>((set, get) => ({
       const tier = await fetchTier(userId);
 
       // push는 모든 tier에서 실행. 결제 후 무료 → 유료 전환 시 데이터 살아있게.
-      const pushRes = await pushPendingTrips({
-        userId,
-        sinceMs: get().lastPushedAtMs,
-      });
-      if (
-        pushRes.newLastPushedAtMs != null &&
-        pushRes.newLastPushedAtMs !== get().lastPushedAtMs
-      ) {
-        await AsyncStorage.setItem(
-          KEY_LAST_PUSHED,
-          String(pushRes.newLastPushedAtMs)
-        );
-        set({ lastPushedAtMs: pushRes.newLastPushedAtMs });
-      }
+      await pushPendingTrips({ userId });
 
       // pull은 premium 이상(tier >= 1)만.
       if (tier >= 1) {
