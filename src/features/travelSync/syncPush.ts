@@ -1,25 +1,23 @@
 import { getTripDb } from "../travel/trip/tripDb";
-import { listLocalTripsForPush } from "./localPushFetch";
-import { upsertRemoteTrips, type RemoteTripRow } from "./remoteRepository";
+import { listLocalTripsForPush, type LocalTripForPush } from "./localPushFetch";
+import { upsertRemoteTrips } from "./remoteRepository";
 
 export type PushResult = {
   pushed: number;
-  newLastPushedAtMs: number | null;
 };
 
-// 로컬 변경분(updated_at > sinceMs)을 원격에 upsert하고,
-// 응답으로 받은 server timestamps를 로컬에 sync한다.
-// sinceMs == null이면 전체 트립 push (재설치 후 첫 push 시나리오).
+// dirty 행(last_synced_updated_at != updated_at)을 원격에 upsert한 뒤,
+// "push 시점에 캡처해둔 updated_at가 지금도 그대로인 행"만 clean 처리한다.
+// push 도중 사용자가 같은 행을 또 만졌으면(updated_at 변경) clean 처리에서 제외되어
+// 다음 push 사이클에서 다시 picked up.
 //
-// race-safe: push 도중 사용자가 같은 트립을 또 변경하면(updated_at가 server보다 큼)
-// 로컬 timestamps를 덮지 않는다. 그 변경분은 다음 push 사이클에서 잡힌다.
+// 시계는 모두 로컬 단일 프레임으로만 비교하므로 디바이스↔서버 시계 skew와 무관.
 export async function pushPendingTrips(input: {
   userId: string;
-  sinceMs: number | null;
 }): Promise<PushResult> {
-  const candidates = await listLocalTripsForPush(input.sinceMs);
+  const candidates = await listLocalTripsForPush();
   if (candidates.length === 0) {
-    return { pushed: 0, newLastPushedAtMs: input.sinceMs };
+    return { pushed: 0 };
   }
   const payload = candidates.map((c) => ({
     id: c.id,
@@ -29,41 +27,27 @@ export async function pushPendingTrips(input: {
     body: c.body,
     deleted_at: c.deleted_at,
   }));
-  const remote = await upsertRemoteTrips(input.userId, payload);
-  await applyServerTimestampsLocally(remote);
-
-  let newest = input.sinceMs ?? 0;
-  for (const r of remote) {
-    const ms = Date.parse(r.updated_at);
-    if (ms > newest) newest = ms;
-  }
-  return {
-    pushed: remote.length,
-    newLastPushedAtMs: newest > 0 ? newest : null,
-  };
+  await upsertRemoteTrips(input.userId, payload);
+  await markPushedRowsClean(candidates);
+  return { pushed: candidates.length };
 }
 
-async function applyServerTimestampsLocally(
-  rows: RemoteTripRow[]
+async function markPushedRowsClean(
+  candidates: LocalTripForPush[]
 ): Promise<void> {
-  if (rows.length === 0) return;
+  if (candidates.length === 0) return;
   const db = await getTripDb();
   await db.withTransactionAsync(async () => {
-    for (const r of rows) {
-      const updatedMs = Date.parse(r.updated_at);
-      const createdMs = Date.parse(r.created_at);
-      const deletedMs = r.deleted_at == null ? null : Date.parse(r.deleted_at);
-      // 로컬이 push 직후 또 변경됐으면(updated_at > updatedMs) 덮지 않는다.
-      // 그 행은 다음 push에 자연스럽게 다시 잡힘.
+    for (const c of candidates) {
+      // updated_at가 캡처값과 같을 때만 clean. 다르면 push 도중 또 변경됐다는 뜻이므로
+      // dirty로 두고 다음 사이클에서 다시 push되도록 한다.
       await db.runAsync(
         `UPDATE trips
-            SET created_at = ?, updated_at = ?, deleted_at = ?
-          WHERE id = ? AND updated_at <= ?`,
-        createdMs,
-        updatedMs,
-        deletedMs,
-        r.id,
-        updatedMs
+            SET last_synced_updated_at = ?
+          WHERE id = ? AND updated_at = ?`,
+        c.capturedUpdatedAtMs,
+        c.id,
+        c.capturedUpdatedAtMs
       );
     }
   });

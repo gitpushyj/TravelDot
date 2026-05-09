@@ -31,6 +31,7 @@ async function openAndInit(): Promise<SQLite.SQLiteDatabase> {
       created_at   INTEGER NOT NULL,
       updated_at   INTEGER NOT NULL,
       deleted_at   INTEGER,
+      last_synced_updated_at INTEGER,
       CHECK (start_date <= end_date)
     );
     CREATE INDEX IF NOT EXISTS idx_trips_country_start
@@ -56,5 +57,18 @@ async function openAndInit(): Promise<SQLite.SQLiteDatabase> {
     CREATE INDEX IF NOT EXISTS idx_visit_photos_country_date
       ON visit_photos (country_code, date);
   `);
+
+  // 기존 설치(이전 스키마) 업그레이드: last_synced_updated_at가 없으면 추가.
+  // NULL로 두면 모든 행이 dirty로 취급되어 다음 push에서 일괄 재전송된다.
+  // 첫 sync race로 서버에 누락됐을 가능성이 있는 행도 이 경로로 복구된다.
+  const cols = await db.getAllAsync<{ name: string }>(
+    `PRAGMA table_info(trips)`
+  );
+  if (!cols.some((c) => c.name === "last_synced_updated_at")) {
+    await db.execAsync(
+      `ALTER TABLE trips ADD COLUMN last_synced_updated_at INTEGER`
+    );
+  }
+
   return db;
 }
