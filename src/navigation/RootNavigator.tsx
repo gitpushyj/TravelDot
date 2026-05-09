@@ -5,7 +5,6 @@ import GlobalSyncProgressBar from "../components/GlobalSyncProgressBar";
 import { useTheme } from "../theme/themeStore";
 import MainTabs from "./MainTabs";
 import AddTripScreenNav from "./screens/AddTripScreenNav";
-import AllCountriesScreenNav from "./screens/AllCountriesScreenNav";
 import ChangeHomeScreenNav from "./screens/ChangeHomeScreenNav";
 import CountryDetailScreenNav from "./screens/CountryDetailScreenNav";
 import CountryMergeScreenNav from "./screens/CountryMergeScreenNav";
@@ -46,7 +45,6 @@ export default function RootNavigator() {
         <Stack.Screen name="EditTrip" component={EditTripScreenNav} />
         <Stack.Screen name="History" component={HistoryScreenNav} />
         <Stack.Screen name="ReviewSuspect" component={ReviewSuspectScreenNav} />
-        <Stack.Screen name="AllCountries" component={AllCountriesScreenNav} />
         <Stack.Screen name="Language" component={LanguageScreenNav} />
         <Stack.Screen name="Subscription" component={SubscriptionScreenNav} />
         <Stack.Screen

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   Pressable,
@@ -19,6 +19,15 @@ import { flagEmoji } from "../utils/flag";
 import { isUnMember } from "../utils/unMembers";
 
 import {
+  DEFAULT_PREFS,
+  FILTER_KEYS,
+  loadAllCountriesPrefs,
+  saveAllCountriesPrefs,
+  SORT_KEYS,
+  type FilterKey,
+  type SortKey,
+} from "./AllCountriesScreen/prefsStorage";
+import {
   CELL_GAP,
   LIST_PADDING_H,
   makeStyles,
@@ -31,24 +40,20 @@ const COUNTRIES = (countriesJson as CountryEntry[]).filter((c) =>
   isUnMember(c.code)
 );
 
-type FilterKey = "all" | "visited" | "unvisited";
-type SortKey = "name" | "popular";
-
-const FILTER_KEYS: FilterKey[] = ["all", "visited", "unvisited"];
 const FILTER_I18N: Record<FilterKey, string> = {
   all: "allCountries.filterAll",
   visited: "allCountries.filterVisited",
   unvisited: "allCountries.filterUnvisited",
 };
 
-const SORT_KEYS: SortKey[] = ["name", "popular"];
 const SORT_I18N: Record<SortKey, string> = {
   name: "allCountries.sortName",
   popular: "allCountries.sortPopular",
 };
 
 type Props = {
-  onClose: () => void;
+  // 탭 화면으로 진입했을 땐 닫기 버튼이 필요 없으므로 optional이다.
+  onClose?: () => void;
   onSelectCountry: (country: CountryEntry) => void;
 };
 
@@ -71,8 +76,31 @@ export default function AllCountriesScreen({
   );
   const visitCounts = useVisitStore((s) => s.visitCounts);
   const homeCode = useVisitStore((s) => s.homeCountry?.code ?? null);
-  const [filter, setFilter] = useState<FilterKey>("all");
-  const [sort, setSort] = useState<SortKey>("popular");
+  const [filter, setFilter] = useState<FilterKey>(DEFAULT_PREFS.filter);
+  const [sort, setSort] = useState<SortKey>(DEFAULT_PREFS.sort);
+  // 저장된 prefs를 읽어와 적용하기 전엔 자동 저장이 동작하면 안 된다. 첫 마운트
+  // 직후의 기본값이 디스크의 실제 저장값을 덮어쓰는 race를 막는다.
+  const [prefsHydrated, setPrefsHydrated] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadAllCountriesPrefs().then((prefs) => {
+      if (cancelled) return;
+      if (prefs) {
+        setFilter(prefs.filter);
+        setSort(prefs.sort);
+      }
+      setPrefsHydrated(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!prefsHydrated) return;
+    saveAllCountriesPrefs({ filter, sort }).catch(() => {});
+  }, [filter, sort, prefsHydrated]);
 
   const isVisited = useMemo(() => {
     return (code: string) =>
@@ -107,16 +135,20 @@ export default function AllCountriesScreen({
   return (
     <View style={[styles.root, { paddingBottom: bottomInset }]}>
       <View style={styles.header}>
-        <Pressable
-          onPress={onClose}
-          hitSlop={8}
-          style={({ pressed }) => [
-            styles.iconBtn,
-            pressed && styles.iconBtnPressed,
-          ]}
-        >
-          <Text style={styles.iconBtnText}>‹</Text>
-        </Pressable>
+        {onClose ? (
+          <Pressable
+            onPress={onClose}
+            hitSlop={8}
+            style={({ pressed }) => [
+              styles.iconBtn,
+              pressed && styles.iconBtnPressed,
+            ]}
+          >
+            <Text style={styles.iconBtnText}>‹</Text>
+          </Pressable>
+        ) : (
+          <View style={styles.iconBtnPlaceholder} />
+        )}
         <Text style={styles.headerTitle}>{t("allCountries.heading")}</Text>
         <View style={styles.iconBtnPlaceholder} />
       </View>

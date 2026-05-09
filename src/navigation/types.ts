@@ -10,6 +10,7 @@ export type ImageDetailPhoto = {
 
 export type MainTabParamList = {
   Home: undefined;
+  AllCountries: undefined;
   AI: undefined;
   Settings: undefined;
 };
@@ -26,7 +27,6 @@ export type RootStackParamList = {
   EditTrip: { trip: RecentTrip };
   History: undefined;
   ReviewSuspect: undefined;
-  AllCountries: undefined;
   Language: undefined;
   Subscription: undefined;
   CountryMerge: { countryCode: string };

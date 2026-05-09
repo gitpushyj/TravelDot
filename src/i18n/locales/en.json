@@ -1,6 +1,7 @@
 {
   "tabs": {
     "home": "Home",
+    "allCountries": "All Countries",
     "ai": "AI",
     "settings": "Settings"
   },

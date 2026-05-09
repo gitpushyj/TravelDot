@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   BotMessageSquare,
+  Globe2,
   Home as HomeIcon,
   Settings as SettingsIcon,
 } from "lucide-react-native";
@@ -9,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import MainScreen from "../screens/MainScreen";
 import { useTheme } from "../theme/themeStore";
 import AiScreenNav from "./screens/AiScreenNav";
+import AllCountriesScreenNav from "./screens/AllCountriesScreenNav";
 import SettingsScreenNav from "./screens/SettingsScreenNav";
 import type { MainTabParamList } from "./types";
 
@@ -35,6 +37,14 @@ export default function MainTabs() {
         options={{
           tabBarLabel: t("tabs.home"),
           tabBarIcon: ({ color, size }) => <HomeIcon color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name="AllCountries"
+        component={AllCountriesScreenNav}
+        options={{
+          tabBarLabel: t("tabs.allCountries"),
+          tabBarIcon: ({ color, size }) => <Globe2 color={color} size={size} />,
         }}
       />
       <Tab.Screen

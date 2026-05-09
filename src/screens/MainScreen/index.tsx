@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Dimensions,
-  Image,
   Pressable,
   Text,
   View,
@@ -324,22 +323,6 @@ export default function MainScreen({ navigation }: Props) {
       <StatusBar style={theme.statusBar} />
       <Animated.View style={[styles.topAppBar, topBarStyle]}>
         <Text style={styles.topAppBarTitle}>TravelDot</Text>
-        <View style={styles.topAppBarActions}>
-          <Pressable
-            onPress={() => navigation.navigate("AllCountries")}
-            hitSlop={8}
-            style={({ pressed }) => [
-              styles.menuBtn,
-              pressed && styles.menuBtnPressed,
-            ]}
-          >
-            <Image
-              source={require("../../../assets/all_country_flag.png")}
-              style={styles.menuBtnImage}
-              resizeMode="contain"
-            />
-          </Pressable>
-        </View>
       </Animated.View>
       <AnimatedScrollView
         style={styles.scroll}

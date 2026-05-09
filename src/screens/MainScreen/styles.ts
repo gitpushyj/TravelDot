@@ -42,22 +42,6 @@ export function makeStyles(theme: Theme) {
       fontWeight: "800",
       letterSpacing: 0.2,
     },
-    topAppBarActions: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 4,
-    },
-    menuBtn: {
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-    },
-    menuBtnPressed: {
-      opacity: 0.5,
-    },
-    menuBtnImage: {
-      width: 32,
-      height: 32,
-    },
     mapStatsHeader: {
       flexDirection: "row",
       alignItems: "center",
