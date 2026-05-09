@@ -200,9 +200,10 @@ export default function SettingsScreen({
     : t("settings.title.none");
 
   const milestoneKind = useMilestoneStore((s) => s.kind);
+  const premiumContext = useVisitStore((s) => s.premiumContext);
   const milestoneProgress = useMemo(
-    () => evaluateMilestone(milestoneKind, visitCounts),
-    [milestoneKind, visitCounts]
+    () => evaluateMilestone(milestoneKind, { visitCounts, premiumContext }),
+    [milestoneKind, visitCounts, premiumContext]
   );
   const milestoneSub = milestoneProgress.reachedFinal
     ? t("settings.milestone.previewCompleted", {

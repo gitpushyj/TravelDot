@@ -2,7 +2,10 @@ import React, { useMemo } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Trans, useTranslation } from "react-i18next";
 
-import type { MilestoneProgress } from "../../features/milestone/milestoneTypes";
+import type {
+  MilestoneProgress,
+  MilestoneUnit,
+} from "../../features/milestone/milestoneTypes";
 import type { Theme } from "../../theme/theme";
 
 import { makeStyles } from "./styles";
@@ -10,16 +13,39 @@ import { makeStyles } from "./styles";
 /**
  * 활성 row 아래에 펼쳐 보여줄 다음 호칭 안내.
  * - completed: 최고 단계 도달
+ * - needsBirth / needsHomeCountry: 평가에 필요한 사용자 데이터 부재
  * - next: 다음 컷오프까지의 안내 (호칭 이름은 굵게)
  */
 export type ActiveDescription =
   | { kind: "completed" }
+  | { kind: "needsBirth" }
+  | { kind: "needsHomeCountry" }
   | {
       kind: "next";
       count: number;
       title: string;
-      unit: "countries" | "days";
+      unit: MilestoneUnit;
     };
+
+const UNIT_I18N_KEY: Record<MilestoneUnit, string> = {
+  countries: "home.countriesUnit",
+  days: "home.daysUnit",
+  months: "home.monthsUnit",
+  colors: "home.colorsUnit",
+  languages: "home.languagesUnit",
+  percent: "home.percentUnit",
+  hours: "home.hoursUnit",
+};
+
+const ACTIVE_NEXT_I18N_KEY: Record<MilestoneUnit, string> = {
+  countries: "milestones.activeNext.countries",
+  days: "milestones.activeNext.days",
+  months: "milestones.activeNext.months",
+  colors: "milestones.activeNext.colors",
+  languages: "milestones.activeNext.languages",
+  percent: "milestones.activeNext.percent",
+  hours: "milestones.activeNext.hours",
+};
 
 type Props = {
   theme: Theme;
@@ -41,16 +67,15 @@ export default function MilestoneRow({
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
-  const progressText = progress.reachedFinal
-    ? t("milestones.preview.completed")
-    : t("milestones.preview.progress", {
-        current: progress.current,
-        next: progress.next,
-        unit:
-          progress.unit === "days"
-            ? t("home.daysUnit")
-            : t("home.countriesUnit"),
-      });
+  const progressText = progress.unsupportedReason
+    ? "—"
+    : progress.reachedFinal
+      ? t("milestones.preview.completed")
+      : t("milestones.preview.progress", {
+          current: progress.current,
+          next: progress.next,
+          unit: t(UNIT_I18N_KEY[progress.unit]),
+        });
 
   return (
     <Pressable
@@ -97,14 +122,25 @@ function renderDescription(
       </Text>
     );
   }
-  const i18nKey =
-    desc.unit === "days"
-      ? "milestones.activeNext.days"
-      : "milestones.activeNext.countries";
+  if (desc.kind === "needsBirth") {
+    return (
+      <Text style={styles.rowDescription}>
+        <Trans i18nKey="milestones.activeNext.needsBirth" />
+      </Text>
+    );
+  }
+  if (desc.kind === "needsHomeCountry") {
+    return (
+      <Text style={styles.rowDescription}>
+        <Trans i18nKey="milestones.activeNext.needsHomeCountry" />
+      </Text>
+    );
+  }
+  // desc.kind === "next"
   return (
     <Text style={styles.rowDescription}>
       <Trans
-        i18nKey={i18nKey}
+        i18nKey={ACTIVE_NEXT_I18N_KEY[desc.unit]}
         values={{ count: desc.count, title: desc.title }}
         components={{ b: <Text style={styles.rowDescriptionBold} /> }}
       />

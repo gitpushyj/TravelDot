@@ -3,12 +3,29 @@
 
 import { CONTINENTS, ContinentId, continentOf } from "../badges/continents";
 import { TIER_CUTOFFS, TIERS } from "../travel/tierTitles";
+import { evaluatePremiumProgress } from "./premium/evaluatePremiumProgress";
+import type { PremiumContext } from "./premium/types";
 import {
   ContinentMilestoneId,
   isPremiumMilestoneKind,
   MilestoneKind,
   MilestoneProgress,
+  MilestoneUnit,
 } from "./milestoneTypes";
+
+/**
+ * `evaluateMilestone`에 주입되는 컨텍스트.
+ * 무료 마일스톤(countries/days/continent_*)은 `visitCounts`만 참조한다.
+ * Premium 마일스톤은 `premiumContext`도 필요하다 — null이면 평가 불가 처리.
+ */
+export type MilestoneEvalContext = {
+  visitCounts: Record<string, number>;
+  /**
+   * Premium 평가에 필요한 컨텍스트. 무료 사용자(`isAllMilestoneVisible: false`)이거나
+   * 아직 로드되지 않았으면 null. Premium kind 평가 시 null이면 진행률 0 placeholder를 반환.
+   */
+  premiumContext: PremiumContext | null;
+};
 
 const DAY_CUTOFFS: readonly number[] = [7, 30, 100, 365, 730, 1000];
 
@@ -35,7 +52,7 @@ function buildProgress(
   current: number,
   next: number | null,
   nextTitleBadgeId: string | null,
-  unit: "countries" | "days"
+  unit: MilestoneUnit
 ): MilestoneProgress {
   if (next == null) {
     return {
@@ -46,6 +63,7 @@ function buildProgress(
       percent: 100,
       reachedFinal: true,
       unit,
+      unsupportedReason: null,
     };
   }
   const percent = Math.round((current / next) * 1000) / 10;
@@ -57,13 +75,15 @@ function buildProgress(
     percent: Math.min(100, percent),
     reachedFinal: false,
     unit,
+    unsupportedReason: null,
   };
 }
 
 export function evaluateMilestone(
   kind: MilestoneKind,
-  visitCounts: Record<string, number>
+  ctx: MilestoneEvalContext
 ): MilestoneProgress {
+  const { visitCounts } = ctx;
   if (kind === "countries") {
     const current = Object.keys(visitCounts).length;
     const next = findNextCutoff(TIER_CUTOFFS, current);
@@ -88,9 +108,24 @@ export function evaluateMilestone(
       "days"
     );
   }
-  // 프리미엄 마일스톤은 별도 평가기에서 처리 — 여기서는 미구현 상태를 반환
+  // 프리미엄 마일스톤은 별도 평가기로 위임. 컨텍스트가 아직 로드되지 않았으면
+  // 진행률 0 placeholder를 반환 — visitStore.evaluateBadges가 컨텍스트를 채우면
+  // 자연스럽게 재평가된다.
   if (isPremiumMilestoneKind(kind)) {
-    return buildProgress(kind, 0, null, null, "countries");
+    const { premiumContext } = ctx;
+    if (!premiumContext) {
+      return {
+        kind,
+        current: 0,
+        next: null,
+        nextTitleBadgeId: null,
+        percent: 0,
+        reachedFinal: false,
+        unit: "countries",
+        unsupportedReason: null,
+      };
+    }
+    return evaluatePremiumProgress(kind, premiumContext);
   }
   // 대륙 마일스톤
   const continentId = CONTINENT_KIND_TO_ID[kind];
