@@ -85,8 +85,12 @@ export default function TripDetailScreen({
       // 자산이 디바이스에서 삭제됐다면 resolve가 실패해 ph://가 그대로 남는데
       // 이 경우 화면에 빈 셀로만 그려져 카운트와 실제 보이는 수가 어긋난다.
       // 표시 가능한 자산만 남긴다.
+      // shouldDownloadFromNetwork: true → iCloud에 있고 디바이스 미다운로드된
+      // 자산도 받아와 표시한다. savedPhotos는 사용자가 의도적으로 저장한
+      // 항목이라 수가 많지 않아 일괄 해석으로도 부담이 적다.
       const resolved = await resolveDisplayUris(
-        photos.map((p) => ({ id: p.id, uri: p.localUri }))
+        photos.map((p) => ({ id: p.id, uri: p.localUri })),
+        { shouldDownloadFromNetwork: true }
       );
       if (cancelled) return;
       setSavedPhotos(
@@ -105,11 +109,18 @@ export default function TripDetailScreen({
 
   // 디바이스 사진첩 스캔은 비교적 무거우니 DB 조회와 병렬로 분리해 띄우고 끝나는
   // 대로 카운트와 폴백 슬라이드를 갱신한다.
-  // 스캔 자체는 ph:// URI를 그대로 받아 빠르게 끝내고(첫 진입 지연 회피),
-  // 매칭된 사진에 한해서만 표시 직전에 file:// localUri로 해석한다.
-  // ph:// URI는 RN Image 로더가 케이스(iCloud 미다운로드 자산 등)에 따라
-  // 빈 셀로 그려 카운트와 실제 보이는 수가 어긋난다. savedPhotos와 동일하게
-  // 해석 실패한 항목은 표시 목록에서 제외해 일관성을 유지한다.
+  //
+  // 표시 단계는 두 단계로 나눈다:
+  //   1) 미리보기에 쓰일 첫 PREVIEW_PHOTO_COUNT장만 우선 resolve해서 즉시 setState.
+  //      → 첫 진입 지연을 짧게 유지한다.
+  //   2) 나머지 사진을 백그라운드로 resolve해서 전체 목록으로 교체.
+  //      → grid 진입 시 전체가 보인다.
+  //
+  // 두 단계 모두 shouldDownloadFromNetwork: true로 호출해 iCloud-only 자산도
+  // 받아온다. ph:// 그대로 RN Image에 넘기면 iCloud 미다운로드 자산이 흰 셀로
+  // 그려지고 카운트와 실제 보이는 수가 어긋나는데, 이 패턴은 그 회귀를 막으면서
+  // 못 가져오는 사진이 없게 한다. 해석 실패한 항목은 savedPhotos와 동일하게
+  // 표시 목록에서 제외한다.
   useEffect(() => {
     let cancelled = false;
     void (async () => {
@@ -120,17 +131,35 @@ export default function TripDetailScreen({
           endDate: trip.endDate,
         });
         if (cancelled) return;
-        const resolved = await resolveDisplayUris(
-          photos.map((p) => ({ id: p.id, uri: p.uri }))
+
+        const head = photos.slice(0, PREVIEW_PHOTO_COUNT);
+        const tail = photos.slice(PREVIEW_PHOTO_COUNT);
+
+        const headResolved = await resolveDisplayUris(
+          head.map((p) => ({ id: p.id, uri: p.uri })),
+          { shouldDownloadFromNetwork: true }
         );
         if (cancelled) return;
-        setDevicePhotos(
-          photos.flatMap((p) => {
-            const local = resolved[p.id];
-            if (!local || local.startsWith("ph://")) return [];
-            return [{ ...p, uri: local }];
-          })
+        const headPhotos = head.flatMap((p) => {
+          const local = headResolved[p.id];
+          if (!local || local.startsWith("ph://")) return [];
+          return [{ ...p, uri: local }];
+        });
+        setDevicePhotos(headPhotos);
+
+        if (tail.length === 0) return;
+
+        const tailResolved = await resolveDisplayUris(
+          tail.map((p) => ({ id: p.id, uri: p.uri })),
+          { shouldDownloadFromNetwork: true }
         );
+        if (cancelled) return;
+        const tailPhotos = tail.flatMap((p) => {
+          const local = tailResolved[p.id];
+          if (!local || local.startsWith("ph://")) return [];
+          return [{ ...p, uri: local }];
+        });
+        setDevicePhotos([...headPhotos, ...tailPhotos]);
       } catch (e) {
         if (cancelled) return;
         // 권한 거부 등으로 실패해도 화면 자체는 동작한다.
