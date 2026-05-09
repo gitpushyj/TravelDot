@@ -220,7 +220,14 @@
       "continent_EU": "Europe expert",
       "continent_SA": "South America expert",
       "continent_AF": "Africa expert",
-      "continent_NA": "North America expert"
+      "continent_NA": "North America expert",
+      "premium_humanity": "Humanity's Share",
+      "premium_earth_area": "Earth's Share",
+      "premium_calendar": "Calendar Drifter",
+      "premium_flag_palette": "Flag Palette Master",
+      "premium_un_linguist": "UN Linguist",
+      "premium_age_match": "Age in Countries",
+      "premium_round_the_clock": "Round the Clock"
     },
     "preview": {
       "progress": "{{current}} / {{next}}{{unit}}",
@@ -229,13 +236,21 @@
     "activeNext": {
       "countries": "Visit {{count}} countries to earn the <b>{{title}}</b> title",
       "days": "Travel for {{count}} days to earn the <b>{{title}}</b> title",
-      "completed": "Top tier reached — all titles unlocked"
+      "completed": "Top tier reached — all titles unlocked",
+      "months": "Reach {{count}} months to earn the <b>{{title}}</b> title",
+      "colors": "Reach {{count}} colors to earn the <b>{{title}}</b> title",
+      "languages": "Reach {{count}} UN languages to earn the <b>{{title}}</b> title",
+      "percent": "Reach {{count}}% to earn the <b>{{title}}</b> title",
+      "hours": "Reach {{count}} hours of timezone spread to earn the <b>{{title}}</b> title",
+      "needsBirth": "Set your birthday in profile to see progress",
+      "needsHomeCountry": "Set your home country to see progress"
     },
     "footnote": "All milestones unlock automatically when their conditions are met. The selected milestone is shown as your featured one on the home screen.",
     "premium": {
       "sectionTitle": "Premium Milestones",
       "lockedHint": "Unlock with Premium",
       "ctaUnlock": "Learn About Premium",
+      "subsectionUnsupported": "Earned automatically when achieved",
       "items": {
         "premium_n_before_n":      { "name": "N Before N", "icon": "🏃", "description": "Capture journeys made before set ages" },
         "premium_decade_stamps":   { "name": "Decade Stamps", "icon": "📅", "description": "Collect each life decade — teens, 20s, 30s, and beyond" },
@@ -380,7 +395,14 @@
     "milestoneFooter": {
       "countries": "{{count}} more to {{title}}",
       "days": "{{count}} more days to {{title}}",
-      "completed": "Top tier reached 🎉"
+      "completed": "Top tier reached 🎉",
+      "months": "{{count}} more months to {{title}}",
+      "colors": "{{count}} more colors to {{title}}",
+      "languages": "{{count}} more UN languages to {{title}}",
+      "percent": "{{count}}% more to {{title}}",
+      "hours": "{{count}} more hours of timezone spread to {{title}}",
+      "needsBirth": "Set your birthday in profile",
+      "needsHomeCountry": "Set your home country"
     },
     "recentTitle": "Recent Trips",
     "viewAll": "View all →",
@@ -392,6 +414,11 @@
     "yearPickerEmptyBody": "No trips have been recorded yet.",
     "countriesUnit": "countries",
     "daysUnit": "days",
+    "monthsUnit": "months",
+    "colorsUnit": "colors",
+    "languagesUnit": "languages",
+    "percentUnit": "%",
+    "hoursUnit": "hours",
     "shareBtnA11y": "Share map",
     "zoomBtnA11y": "Open fullscreen map"
   },

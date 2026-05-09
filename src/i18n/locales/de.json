@@ -311,7 +311,14 @@
     "milestoneFooter": {
       "countries": "Noch {{count}} Länder bis {{title}}",
       "days": "Noch {{count}} Tage bis {{title}}",
-      "completed": "Höchste Stufe erreicht 🎉"
+      "completed": "Höchste Stufe erreicht 🎉",
+      "months": "{{count}} more months to {{title}}",
+      "colors": "{{count}} more colors to {{title}}",
+      "languages": "{{count}} more UN languages to {{title}}",
+      "percent": "{{count}}% more to {{title}}",
+      "hours": "{{count}} more hours of timezone spread to {{title}}",
+      "needsBirth": "Set your birthday in profile",
+      "needsHomeCountry": "Set your home country"
     },
     "recentTitle": "Letzte Reisen",
     "viewAll": "Alle anzeigen →",
@@ -322,7 +329,12 @@
     "yearPickerEmptyTitle": "Jahr auswählen",
     "yearPickerEmptyBody": "Es wurden noch keine Reisen erfasst.",
     "countriesUnit": "Länder",
-    "daysUnit": "Tage"
+    "daysUnit": "Tage",
+    "monthsUnit": "months",
+    "colorsUnit": "colors",
+    "languagesUnit": "languages",
+    "percentUnit": "%",
+    "hoursUnit": "hours"
   },
   "scan": {
     "completedTitle": "Foto-Scan abgeschlossen",
@@ -522,5 +534,28 @@
     "actionMerge": "Merge",
     "confirmGapTitle": "Really one trip?",
     "confirmGapBody": "There is up to a {{days}}-day gap between selected trips. Merge them into one trip anyway?"
+  },
+  "milestones": {
+    "option": {
+      "premium_humanity": "Humanity's Share",
+      "premium_earth_area": "Earth's Share",
+      "premium_calendar": "Calendar Drifter",
+      "premium_flag_palette": "Flag Palette Master",
+      "premium_un_linguist": "UN Linguist",
+      "premium_age_match": "Age in Countries",
+      "premium_round_the_clock": "Round the Clock"
+    },
+    "activeNext": {
+      "months": "Reach {{count}} months to earn the <b>{{title}}</b> title",
+      "colors": "Reach {{count}} colors to earn the <b>{{title}}</b> title",
+      "languages": "Reach {{count}} UN languages to earn the <b>{{title}}</b> title",
+      "percent": "Reach {{count}}% to earn the <b>{{title}}</b> title",
+      "hours": "Reach {{count}} hours of timezone spread to earn the <b>{{title}}</b> title",
+      "needsBirth": "Set your birthday in profile to see progress",
+      "needsHomeCountry": "Set your home country to see progress"
+    },
+    "premium": {
+      "subsectionUnsupported": "Earned automatically when achieved"
+    }
   }
 }

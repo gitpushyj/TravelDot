@@ -220,7 +220,14 @@
       "continent_EU": "유럽 전문가",
       "continent_SA": "남미 전문가",
       "continent_AF": "아프리카 전문가",
-      "continent_NA": "북미 전문가"
+      "continent_NA": "북미 전문가",
+      "premium_humanity": "인류의 X",
+      "premium_earth_area": "지구의 X",
+      "premium_calendar": "달력의 여행자",
+      "premium_flag_palette": "국기 팔레트 마스터",
+      "premium_un_linguist": "UN 공용어 정복",
+      "premium_age_match": "내 나이만큼의 발자취",
+      "premium_round_the_clock": "지구 한 바퀴"
     },
     "preview": {
       "progress": "{{current}} / {{next}}{{unit}}",
@@ -229,13 +236,21 @@
     "activeNext": {
       "countries": "{{count}}개국을 여행하면 <b>{{title}}</b> 호칭을 얻습니다",
       "days": "{{count}}일을 여행하면 <b>{{title}}</b> 호칭을 얻습니다",
-      "completed": "최고 단계 달성! 모든 호칭을 얻었어요"
+      "completed": "최고 단계 달성! 모든 호칭을 얻었어요",
+      "months": "{{count}}개월에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
+      "colors": "{{count}}색에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
+      "languages": "공용어 {{count}}개에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
+      "percent": "{{count}}%에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
+      "hours": "시차 {{count}}시간에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
+      "needsBirth": "프로필에 생일을 입력하면 진행률이 표시됩니다",
+      "needsHomeCountry": "본국이 설정되어야 진행률이 계산됩니다"
     },
     "footnote": "모든 목표 마일스톤은 조건이 충족되면 자동으로 달성됩니다. 선택한 마일스톤은 홈 화면에 보일 대표 마일스톤이 됩니다.",
     "premium": {
       "sectionTitle": "유료 결제자에게 제공되는 마일스톤",
       "lockedHint": "Premium 가입 시 잠금 해제",
       "ctaUnlock": "Premium 알아보기",
+      "subsectionUnsupported": "달성 시 호칭이 자동 부여됩니다",
       "items": {
         "premium_n_before_n":      { "name": "N Before N", "icon": "🏃", "description": "정해진 나이에 도달하기 전까지의 여행 기록을 모은다" },
         "premium_decade_stamps":   { "name": "인생 단계별 도장", "icon": "📅", "description": "10대·20대·30대… 인생 시기마다 찍어둔 발자취를 컬렉션으로" },
@@ -380,7 +395,14 @@
     "milestoneFooter": {
       "countries": "{{title}} 호칭 획득까지 {{count}}개국",
       "days": "{{title}} 호칭 획득까지 {{count}}일",
-      "completed": "최고 단계 달성 🎉"
+      "completed": "최고 단계 달성 🎉",
+      "months": "{{title}} 호칭 획득까지 {{count}}개월",
+      "colors": "{{title}} 호칭 획득까지 {{count}}색",
+      "languages": "{{title}} 호칭 획득까지 공용어 {{count}}개",
+      "percent": "{{title}} 호칭 획득까지 {{count}}%",
+      "hours": "{{title}} 호칭 획득까지 시차 {{count}}시간",
+      "needsBirth": "프로필에 생일을 입력해주세요",
+      "needsHomeCountry": "본국을 설정해주세요"
     },
     "recentTitle": "최근 방문",
     "viewAll": "전체보기 →",
@@ -392,6 +414,11 @@
     "yearPickerEmptyBody": "아직 기록된 여행이 없습니다.",
     "countriesUnit": "개국",
     "daysUnit": "일",
+    "monthsUnit": "개월",
+    "colorsUnit": "색",
+    "languagesUnit": "언어",
+    "percentUnit": "%",
+    "hoursUnit": "시간",
     "shareBtnA11y": "지도 공유하기",
     "zoomBtnA11y": "지도 전체화면 보기"
   },
