@@ -3,13 +3,16 @@ import {
   addPhotos,
   bridgeNearbyVisitDays,
   loadLatestVisitDate,
-  PHOTO_LIMIT_PER_DAY,
   VisitPhotoInput,
 } from "../travel/visitRepository";
 import { useVisitStore, SyncReport } from "../travel/visitStore";
 import { resolveCountryDetailed } from "./countryResolver";
 import { reviewSuspectTrips } from "./deviceVerification";
 import { ensurePermission, iteratePhotos } from "./photoLibrary";
+
+// 첫 스캔 메모리/트랜잭션 부담을 막기 위한 chunk 크기.
+// 누적 후보가 이만큼 모이면 즉시 addPhotos로 flush하고 buffer를 비운다.
+const SYNC_FLUSH_CHUNK = 500;
 
 // sinceDate가 주어지면 그 날짜(YYYY-MM-DD) 미만의 사진은 건너뛴다.
 // iteratePhotos는 creationTime DESC로 사진을 내려주므로, 임계 날짜보다
@@ -38,12 +41,22 @@ async function runSync(sinceDate: string | null): Promise<void> {
 
   store.setSyncStatus({ running: true, processed: 0, phase: "scanning" });
 
-  // (country|date) → DB 한도(PHOTO_LIMIT_PER_DAY)와 동일한 장수만 후보로 모은다.
-  const buffer = new Map<string, VisitPhotoInput[]>();
+  // 매칭되는 후보를 모두 모아 addPhotos로 보낸다. 한 번에 다 메모리에 쌓으면
+  // 사진이 많은 디바이스에서 RAM/트랜잭션 시간이 부담되니 SYNC_FLUSH_CHUNK 단위로
+  // flush한다.
+  let buffer: VisitPhotoInput[] = [];
   let scanned = 0;
   let withGps = 0;
   let resolved = 0;
+  let added = 0;
   let sample: SyncReport["sample"] | undefined;
+
+  const flushBuffer = async () => {
+    if (buffer.length === 0) return;
+    const chunk = buffer;
+    buffer = [];
+    added += await addPhotos(chunk);
+  };
 
   try {
     for await (const p of iteratePhotos()) {
@@ -76,10 +89,7 @@ async function runSync(sinceDate: string | null): Promise<void> {
       // 통해 원하는 날짜만 직접 선택하도록 한다.
       if (homeCode && code === homeCode) continue;
       resolved += 1;
-      const key = `${code}|${date}`;
-      const list = buffer.get(key) ?? [];
-      if (list.length >= PHOTO_LIMIT_PER_DAY) continue;
-      list.push({
+      buffer.push({
         id: p.id,
         countryCode: code,
         date,
@@ -87,16 +97,23 @@ async function runSync(sinceDate: string | null): Promise<void> {
         source: "auto",
         takenAt: p.takenAt,
       });
-      buffer.set(key, list);
+      if (buffer.length >= SYNC_FLUSH_CHUNK) {
+        useVisitStore
+          .getState()
+          .setSyncStatus({
+            running: true,
+            processed: scanned,
+            phase: "saving",
+          });
+        await flushBuffer();
+      }
     }
 
     useVisitStore
       .getState()
       .setSyncStatus({ running: true, processed: scanned, phase: "saving" });
 
-    const all: VisitPhotoInput[] = [];
-    for (const items of buffer.values()) all.push(...items);
-    const added = await addPhotos(all);
+    await flushBuffer();
 
     // 첫 스캔이면 인접한 trip을 자동으로 묶는다 (gap ≤ 3일 한정).
     // 이후 스캔에서는 사용자의 수동 결정을 보존하기 위해 실행하지 않는다.

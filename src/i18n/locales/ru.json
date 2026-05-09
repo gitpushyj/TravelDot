@@ -61,8 +61,6 @@
     "dateInvalidBody": "Даты должны быть в формате YYYY-MM-DD, дата начала не может быть позже даты окончания.",
     "rangeChangeConfirmTitle": "Изменить даты поездки?",
     "rangeChangeConfirmBody": "Фото и заметки за пределами нового периода будут удалены вместе с ним. Продолжить?",
-    "partialPhotosTitle": "Часть фото не добавлена",
-    "partialPhotosBody": "В день можно сохранить не более {{limit}} фото — {{dropped}} не добавлено.",
     "tripDeleteTitle": "Удалить запись о поездке",
     "tripDeleteBody": "Удалить запись {{startDate}} — {{endDate}} ({{days}} дн.)?\nФото и заметки за этот период тоже будут удалены.",
     "notMyTripTitle": "Не моя поездка",

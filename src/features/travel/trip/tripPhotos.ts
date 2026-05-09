@@ -1,10 +1,6 @@
 import { notifyTripsChanged } from "../../travelSync/notifyTripsChanged";
 import { getTripDb } from "./tripDb";
 import { ingestVisitDay } from "./tripIngest";
-import { countPhotosForDay } from "./tripPhotoCounts";
-
-// 무료 사용자의 일별 사진 저장 한도. 추후 유료 tier 도입 시 함수로 분기.
-export const PHOTO_LIMIT_PER_DAY = 5;
 
 export type VisitPhotoInput = {
   id: string;
@@ -36,8 +32,7 @@ export type VisitPhotoForReview = {
   deviceCheckedAt: number | null;
 };
 
-// 사진 일괄 INSERT. (country, date) 그룹별로 PHOTO_LIMIT_PER_DAY 한도를 강제하고,
-// 그룹마다 한 번씩 ingestVisitDay를 호출해 트립을 자동 갱신한다.
+// 사진 일괄 INSERT. (country, date) 그룹마다 한 번씩 ingestVisitDay를 호출해 트립을 자동 갱신한다.
 export async function addPhotos(inputs: VisitPhotoInput[]): Promise<number> {
   if (inputs.length === 0) return 0;
   const db = await getTripDb();
@@ -56,12 +51,8 @@ export async function addPhotos(inputs: VisitPhotoInput[]): Promise<number> {
     }
     for (const [, items] of groups) {
       const { countryCode, date } = items[0];
-      const existing = await countPhotosForDay(countryCode, date);
-      const slots = Math.max(0, PHOTO_LIMIT_PER_DAY - existing);
-      const toInsert = items.slice(0, slots);
-      if (toInsert.length === 0) continue;
       let groupInserted = 0;
-      for (const ph of toInsert) {
+      for (const ph of items) {
         const hasDevice =
           ph.deviceMake !== undefined || ph.deviceModel !== undefined;
         const r = await db.runAsync(

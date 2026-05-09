@@ -61,8 +61,6 @@
     "dateInvalidBody": "日期須為 YYYY-MM-DD 格式,且開始日期不能晚於結束日期。",
     "rangeChangeConfirmTitle": "變更旅行期間?",
     "rangeChangeConfirmBody": "新期間之外的相片與備註將一併刪除。要繼續嗎?",
-    "partialPhotosTitle": "部分相片未新增",
-    "partialPhotosBody": "每天最多只能儲存 {{limit}} 張,因此 {{dropped}} 張未被新增。",
     "tripDeleteTitle": "刪除旅行紀錄",
     "tripDeleteBody": "刪除 {{startDate}} — {{endDate}}({{days}}天)的紀錄嗎?\n該期間的相片與備註也會一併移除。",
     "notMyTripTitle": "不是我的旅行",

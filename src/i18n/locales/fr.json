@@ -61,8 +61,6 @@
     "dateInvalidBody": "Les dates doivent être au format YYYY-MM-DD et la date de début ne peut pas être postérieure à la date de fin.",
     "rangeChangeConfirmTitle": "Modifier la période du voyage ?",
     "rangeChangeConfirmBody": "Les photos et notes en dehors de la nouvelle période seront supprimées avec elle. Continuer ?",
-    "partialPhotosTitle": "Certaines photos n'ont pas été ajoutées",
-    "partialPhotosBody": "Seules {{limit}} photos par jour peuvent être enregistrées : {{dropped}} n'ont pas été ajoutées.",
     "tripDeleteTitle": "Supprimer ce voyage",
     "tripDeleteBody": "Supprimer l'enregistrement {{startDate}} — {{endDate}} ({{days}} jours) ?\nLes photos et notes de cette période seront également effacées.",
     "notMyTripTitle": "Pas mon voyage",

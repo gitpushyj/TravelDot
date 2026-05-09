@@ -66,8 +66,6 @@
     "dateInvalidBody": "날짜는 YYYY-MM-DD 형식이어야 하고 시작일이 종료일보다 늦을 수 없어요.",
     "rangeChangeConfirmTitle": "기간 변경 확인",
     "rangeChangeConfirmBody": "새 기간 밖에 있는 사진과 메모는 함께 삭제됩니다. 계속할까요?",
-    "partialPhotosTitle": "일부 사진 미추가",
-    "partialPhotosBody": "하루에 최대 {{limit}}장까지만 저장되어 {{dropped}}장은 추가되지 않았어요.",
     "tripDeleteTitle": "여행 기록 삭제",
     "tripDeleteBody": "{{startDate}} — {{endDate}} ({{days}}일) 기록을 삭제할까요?\n해당 기간의 사진/메모도 함께 사라집니다.",
     "notMyTripTitle": "내 여행 아님",
