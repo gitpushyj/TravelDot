@@ -513,6 +513,7 @@
       "button": "开始同步",
       "scanning": "正在查看 {{processed}} 张照片…",
       "preparing": "正在准备扫描照片…",
+      "verifying": "正在收集设备上的照片信息，分析日期并为地图上色…",
       "limitedHint": "目前仅分析所选照片。可在设置中改为完整访问,以发现更多旅行。",
       "permissionDeniedTitle": "需要照片访问权限",
       "permissionDeniedBody": "创建旅行记录需要访问照片。请允许权限后再试。",

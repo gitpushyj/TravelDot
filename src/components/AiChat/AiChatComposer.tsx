@@ -12,7 +12,7 @@ import {
 
 import { useTheme } from "../../theme/themeStore";
 
-const MAX = 500;
+const MAX = 150;
 
 export type AiChatComposerHandle = {
   setText: (next: string) => void;

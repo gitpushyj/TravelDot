@@ -513,6 +513,7 @@
       "button": "Lancer la synchronisation",
       "scanning": "Analyse de {{processed}} photos…",
       "preparing": "Préparation de l'analyse de tes photos…",
+      "verifying": "Collecte des informations photo de ton appareil pour analyser les dates et colorer la carte…",
       "limitedHint": "Seules les photos sélectionnées sont analysées. Accorde l'accès complet dans les Réglages pour retrouver plus de voyages.",
       "permissionDeniedTitle": "Accès aux photos requis",
       "permissionDeniedBody": "Nous avons besoin d'accéder à tes photos pour créer tes enregistrements de voyage. Autorise l'accès puis réessaie.",

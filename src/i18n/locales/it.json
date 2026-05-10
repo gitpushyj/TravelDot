@@ -513,6 +513,7 @@
       "button": "Avvia sincronizzazione",
       "scanning": "Sto esaminando {{processed}} foto…",
       "preparing": "Preparazione dell'analisi delle foto…",
+      "verifying": "Raccogliamo le info delle foto dal dispositivo per analizzare le date e colorare la mappa…",
       "limitedHint": "Sto analizzando solo le foto selezionate. Concedi l'accesso completo in Impostazioni per trovare più viaggi.",
       "permissionDeniedTitle": "Accesso alle foto necessario",
       "permissionDeniedBody": "Per creare i registri di viaggio serve l'accesso alle foto. Concedi il permesso e riprova.",

@@ -513,6 +513,7 @@
       "button": "Synchronisierung starten",
       "scanning": "{{processed}} Fotos werden geprüft …",
       "preparing": "Foto-Scan wird vorbereitet …",
+      "verifying": "Fotoinformationen vom Gerät werden gesammelt, um Daten zu analysieren und die Karte einzufärben…",
       "limitedHint": "Es werden nur die ausgewählten Fotos analysiert. Erlaube in den Einstellungen vollen Zugriff, um mehr Reisen zu finden.",
       "permissionDeniedTitle": "Foto-Zugriff erforderlich",
       "permissionDeniedBody": "Wir brauchen Zugriff auf deine Fotos, um Reise-Einträge zu erstellen. Bitte erlaube den Zugriff und versuche es erneut.",

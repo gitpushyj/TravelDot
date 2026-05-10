@@ -513,6 +513,7 @@
       "button": "開始同步",
       "scanning": "正在檢視 {{processed}} 張相片…",
       "preparing": "正在準備掃描相片…",
+      "verifying": "正在收集裝置上的相片資訊，分析日期並為地圖上色…",
       "limitedHint": "目前僅分析所選的相片。可至設定改為完整存取,以找出更多旅行。",
       "permissionDeniedTitle": "需要相片存取權限",
       "permissionDeniedBody": "建立旅行紀錄需要存取相片。請允許權限後再試。",

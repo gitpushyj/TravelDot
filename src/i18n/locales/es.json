@@ -513,6 +513,7 @@
       "button": "Iniciar sincronización",
       "scanning": "Revisando {{processed}} fotos…",
       "preparing": "Preparando la revisión de tus fotos…",
+      "verifying": "Recopilando la información de las fotos del dispositivo para analizar fechas y colorear el mapa…",
       "limitedHint": "Solo se están analizando las fotos seleccionadas. Concede acceso completo en Ajustes para encontrar más viajes.",
       "permissionDeniedTitle": "Se necesita acceso a las fotos",
       "permissionDeniedBody": "Necesitamos acceso a las fotos para crear tus registros de viaje. Concede el permiso e inténtalo de nuevo.",
