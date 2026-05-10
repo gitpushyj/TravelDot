@@ -1,7 +1,8 @@
 // RevenueCat SDK 래퍼. Purchases.* 직접 호출은 이 파일을 통해서만 한다.
 //
 // API 키: EXPO_PUBLIC_REVENUECAT_IOS_KEY / _ANDROID_KEY (publishable, 클라이언트 노출 OK).
-// Entitlement ID: RevenueCat 대시보드 > Entitlements 에서 만든 ID와 정확히 일치해야 한다.
+// Entitlement ID: RevenueCat 대시보드 > Entitlements 의 Identifier 와 정확히 일치해야 한다.
+// 현재는 setup wizard가 자동 생성한 "TravelDot Premium"(공백 포함)을 사용한다.
 //
 // 키가 비어있으면 모든 함수는 no-op으로 동작해 dev 빌드에서 .env 미설정 시 크래시를 막는다.
 
@@ -17,7 +18,7 @@ import Purchases, {
 
 import type { PlanId } from "../features/subscription/plans";
 
-export const PREMIUM_ENTITLEMENT_ID = "premium";
+export const PREMIUM_ENTITLEMENT_ID = "TravelDot Premium";
 
 const IOS_KEY = process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY ?? "";
 const ANDROID_KEY = process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_KEY ?? "";
