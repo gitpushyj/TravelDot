@@ -23,7 +23,7 @@ export const PLANS: Record<PlanId, Plan> = {
     priceLabel: "₩29,000",
     perWeekLabel: "₩558",
     savePercent: 92,
-    freeTrialDays: 3,
+    freeTrialDays: 7,
   },
   weekly: {
     id: "weekly",

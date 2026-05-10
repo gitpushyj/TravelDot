@@ -8,8 +8,9 @@ import { useSubscription } from "../features/subscription/useSubscription";
 import { useTheme } from "../theme/themeStore";
 
 import ContinueButton from "./SubscriptionScreen/ContinueButton";
+import FeatureGrid from "./SubscriptionScreen/FeatureGrid";
 import FooterDisclaimer from "./SubscriptionScreen/FooterDisclaimer";
-import HeroCollage from "./SubscriptionScreen/HeroCollage";
+import HeroDotMap from "./SubscriptionScreen/HeroDotMap";
 import PlanCard from "./SubscriptionScreen/PlanCard";
 import { makeStyles } from "./SubscriptionScreen/styles";
 
@@ -54,7 +55,7 @@ export default function SubscriptionScreen({ onClose }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>
-        <HeroCollage theme={theme} brand={t("subscription.brand")} />
+        <HeroDotMap theme={theme} brand={t("subscription.brand")} />
 
         <View style={styles.contentWrap}>
           <Text style={styles.heading}>
@@ -67,6 +68,10 @@ export default function SubscriptionScreen({ onClose }: Props) {
               : ""}
           </Text>
           <Text style={styles.subheading}>{t("subscription.subheading")}</Text>
+
+          <View style={styles.featureWrap}>
+            <FeatureGrid theme={theme} />
+          </View>
 
           <View style={styles.plansWrap}>
             <PlanCard

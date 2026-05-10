@@ -788,6 +788,12 @@
       "suffix": ""
     },
     "subheading": "사진을 제외한 여행 데이터(dot지도) 동기화, 일일 AI 채팅 한도 증가, 10개가 넘는 호칭 및 마일스톤 잠금 해제",
+    "feature": {
+      "sync": "모든 여행 데이터\n동기화",
+      "aiChat": "일일 AI 채팅\n한도 증가",
+      "titles": "10개+ 호칭 및\n마일스톤 해제",
+      "premium": "프리미엄 기능\n지속 추가"
+    },
     "save": "{{percent}}% 할인",
     "perWeek": "주당",
     "freeTrial": "{{days}}일 무료 체험",

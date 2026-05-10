@@ -788,6 +788,12 @@
       "suffix": ""
     },
     "subheading": "Sync your travel data (dot map) across devices, get a higher daily AI chat limit, and unlock 10+ titles and milestones.",
+    "feature": {
+      "sync": "Sync all your\ntravel data",
+      "aiChat": "Higher daily\nAI chat limit",
+      "titles": "Unlock 10+ titles\n& milestones",
+      "premium": "Ongoing premium\nfeature drops"
+    },
     "save": "Save {{percent}}%",
     "perWeek": "per week",
     "freeTrial": "{{days}} days free trial",

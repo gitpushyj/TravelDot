@@ -53,6 +53,9 @@ export function makeStyles(theme: Theme) {
       marginTop: 12,
       paddingHorizontal: 8,
     },
+    featureWrap: {
+      marginTop: 20,
+    },
     plansWrap: {
       marginTop: 24,
       gap: 12,
