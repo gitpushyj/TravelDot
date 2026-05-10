@@ -82,6 +82,15 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - "완료 판단"의 기준: 사용자의 원 요청이 모두 충족 + 빌드/타입체크/테스트(해당되는 경우) 통과 + 사용자가 추가 수정 요청을 하지 않은 상태.
 - 머지 절차는 위의 스쿼시 머지 규칙(`git merge --squash` + 단일 커밋)을 그대로 따르고, 머지 후에는 워크트리/피처 브랜치를 정리할지 사용자에게 확인한다.
 
+## 7. No Remote Push
+
+**모든 작업에 대해 원격 저장소에 push하지 않는다.**
+
+- `git push`, `git push --force`, `git push -u`, PR 생성(`gh pr create`) 등 원격을 변경하는 명령은 사용자가 명시적으로 요청하기 전에는 절대 실행하지 않는다.
+- 로컬 커밋, 로컬 브랜치 생성/삭제, 로컬 머지(스쿼시 머지 포함), 워크트리 정리는 평소처럼 진행해도 된다 — 원격으로 나가는 동작만 금지한다.
+- 작업이 완료되어 push가 필요해 보이는 상황이라도, 먼저 사용자에게 push 여부를 확인하고 명시적 승인을 받은 뒤에만 실행한다.
+- 위 규칙은 main, 피처 브랜치, 태그, 워크트리 브랜치 등 모든 ref에 동일하게 적용된다.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
