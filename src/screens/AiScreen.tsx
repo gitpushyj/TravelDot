@@ -1,8 +1,9 @@
 import { Trash2 } from "lucide-react-native";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -38,10 +39,24 @@ export default function AiScreen() {
   const clear = useAiChatStore((s) => s.clear);
 
   const composerRef = useRef<AiChatComposerHandle>(null);
+  const [copiedToastVisible, setCopiedToastVisible] = useState(false);
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (userId) void hydrate(userId);
   }, [userId, hydrate]);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
+
+  const handleCopied = useCallback(() => {
+    setCopiedToastVisible(true);
+    if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    copiedTimerRef.current = setTimeout(() => setCopiedToastVisible(false), 1500);
+  }, []);
 
   const onClear = () => {
     if (messages.length === 0) return;
@@ -80,7 +95,7 @@ export default function AiScreen() {
         </Pressable>
       </View>
 
-      <View style={styles.body}>
+      <Pressable style={styles.body} onPress={Keyboard.dismiss}>
         {messages.length === 0 && !isSending ? (
           <AiChatEmptyState
             onPickExample={(text) => composerRef.current?.setText(text)}
@@ -90,9 +105,18 @@ export default function AiScreen() {
             messages={messages}
             isThinking={isSending}
             onImagePress={onImagePress}
+            onCopied={handleCopied}
           />
         )}
-      </View>
+      </Pressable>
+
+      {copiedToastVisible ? (
+        <View pointerEvents="none" style={styles.toastWrap}>
+          <View style={styles.toast}>
+            <Text style={styles.toastText}>{t("aiChat.copied")}</Text>
+          </View>
+        </View>
+      ) : null}
 
       {rateLimit ? (
         <UsageLimitBanner tier={rateLimit.tier} limit={rateLimit.limit} />
@@ -124,5 +148,20 @@ function makeStyles(theme: ReturnType<typeof useTheme>) {
     clearBtn: { padding: 4, borderRadius: 8 },
     clearBtnPressed: { opacity: 0.6 },
     body: { flex: 1 },
+    toastWrap: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 88,
+      alignItems: "center",
+    },
+    toast: {
+      backgroundColor: theme.textPrimary,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+      borderRadius: 16,
+      opacity: 0.9,
+    },
+    toastText: { color: theme.homeBg, fontSize: 13, fontWeight: "500" },
   });
 }

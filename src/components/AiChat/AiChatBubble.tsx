@@ -1,3 +1,5 @@
+import * as Clipboard from "expo-clipboard";
+import * as Haptics from "expo-haptics";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -10,9 +12,10 @@ import { useTheme } from "../../theme/themeStore";
 type Props = {
   message: ChatMessage;
   onImagePress: (url: string) => void;
+  onCopied?: () => void;
 };
 
-export default function AiChatBubble({ message, onImagePress }: Props) {
+export default function AiChatBubble({ message, onImagePress, onCopied }: Props) {
   const theme = useTheme();
   const { t, i18n } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -25,13 +28,24 @@ export default function AiChatBubble({ message, onImagePress }: Props) {
     : message.text;
   const useMarkdown = !isUser && !message.error && message.text.length > 0;
 
+  const copyText = useMarkdown ? message.text : fallbackText;
+  const handleLongPress = async () => {
+    if (!copyText) return;
+    await Clipboard.setStringAsync(copyText);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onCopied?.();
+  };
+
   return (
     <View style={[styles.row, isUser ? styles.rowUser : styles.rowAssistant]}>
-      <View
-        style={[
+      <Pressable
+        onLongPress={handleLongPress}
+        delayLongPress={350}
+        style={({ pressed }) => [
           styles.bubble,
           isUser ? styles.bubbleUser : styles.bubbleAssistant,
           message.error ? styles.bubbleError : null,
+          pressed && copyText ? styles.bubblePressed : null,
         ]}
       >
         {useMarkdown ? (
@@ -54,7 +68,7 @@ export default function AiChatBubble({ message, onImagePress }: Props) {
             ))}
           </View>
         ) : null}
-      </View>
+      </Pressable>
     </View>
   );
 }
@@ -83,6 +97,7 @@ function makeStyles(theme: ReturnType<typeof useTheme>) {
       borderBottomLeftRadius: 4,
     },
     bubbleError: { opacity: 0.85 },
+    bubblePressed: { opacity: 0.7 },
     text: { fontSize: 15, lineHeight: 21 },
     textUser: { color: theme.accentOn },
     textAssistant: { color: theme.textPrimary },

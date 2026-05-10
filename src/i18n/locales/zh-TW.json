@@ -6,6 +6,7 @@
     "composerCounter": "{{n}}/150",
     "send": "Send",
     "thinking": "Thinking…",
+    "copied": "已複製",
     "empty": {
       "heading": "Ask your travel buddy",
       "subheading": "I'll answer using your travel data"

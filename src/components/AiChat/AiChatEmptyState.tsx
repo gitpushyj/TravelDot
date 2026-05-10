@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useTheme } from "../../theme/themeStore";
 
@@ -19,8 +19,9 @@ export default function AiChatEmptyState({ onPickExample }: Props) {
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
+  // chip이 차지하지 않은 빈 영역 탭으로 키보드를 내리기 위해 root 자체를 Pressable로 둔다.
   return (
-    <View style={styles.root}>
+    <Pressable style={styles.root} onPress={Keyboard.dismiss}>
       <Text style={styles.heading}>{t("aiChat.empty.heading")}</Text>
       <Text style={styles.sub}>{t("aiChat.empty.subheading")}</Text>
       <View style={styles.chips}>
@@ -40,7 +41,7 @@ export default function AiChatEmptyState({ onPickExample }: Props) {
           );
         })}
       </View>
-    </View>
+    </Pressable>
   );
 }
 
