@@ -624,8 +624,7 @@
       "title": "Title",
       "milestone": "Featured Milestone",
       "theme": "Theme",
-      "language": "Language",
-      "dev": "Developer"
+      "language": "Language"
     },
     "account": {
       "google": "Google Account",
@@ -693,10 +692,6 @@
       "wipeConfirmBody": "All trips, badges, home country, theme, and language preferences will be deleted and you'll be signed out. The app will return to the initial install state. Continue?",
       "wipeConfirmAction": "Erase",
       "wipeFailed": "Data wipe failed"
-    },
-    "devAllMilestonesVisible": {
-      "title": "[DEV] Show all milestones toggle",
-      "subtitle": "Auto-false at tier 0. Manual override"
     },
     "subscription": {
       "promoHeadline": "Unlock all features with Premium",

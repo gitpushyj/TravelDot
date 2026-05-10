@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Alert, Pressable, ScrollView, Switch, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "../features/auth/authStore";
@@ -7,7 +7,6 @@ import { deleteAccount } from "../features/auth/deleteAccount";
 import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
-import { useEntitlementStore } from "../features/entitlement/entitlementStore";
 import { evaluateMilestone } from "../features/milestone/milestoneEvaluator";
 import { useSubscription } from "../features/subscription/useSubscription";
 import { useMilestoneStore } from "../features/milestone/milestoneStore";
@@ -69,19 +68,6 @@ export default function SettingsScreen({
   const authSignOut = useAuthStore((s) => s.signOut);
 
   const { isSubscribed } = useSubscription();
-
-  const isAllMilestoneVisible = useEntitlementStore(
-    (s) => s.isAllMilestoneVisible
-  );
-  const setAllMilestoneVisible = useEntitlementStore(
-    (s) => s.setAllMilestoneVisible
-  );
-  const evaluateBadges = useVisitStore((s) => s.evaluateBadges);
-
-  const onToggleAllMilestoneVisible = async (next: boolean) => {
-    await setAllMilestoneVisible(next);
-    await evaluateBadges();
-  };
 
   const themeOptions: { mode: ThemeMode; label: string }[] = useMemo(
     () =>
@@ -380,30 +366,6 @@ export default function SettingsScreen({
             />
           )}
         </View>
-
-        {__DEV__ && (
-          <>
-            <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-              {t("settings.section.dev")}
-            </Text>
-            <View style={styles.card}>
-              <View style={styles.row}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.rowLabel}>
-                    {t("settings.devAllMilestonesVisible.title")}
-                  </Text>
-                  <Text style={styles.rowSub}>
-                    {t("settings.devAllMilestonesVisible.subtitle")}
-                  </Text>
-                </View>
-                <Switch
-                  value={isAllMilestoneVisible}
-                  onValueChange={onToggleAllMilestoneVisible}
-                />
-              </View>
-            </View>
-          </>
-        )}
 
         <View style={styles.deleteAccountWrap}>
           <Pressable onPress={handleDeleteAccount} hitSlop={8}>

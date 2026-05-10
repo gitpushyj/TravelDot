@@ -624,8 +624,7 @@
       "title": "호칭",
       "milestone": "대표 마일스톤",
       "theme": "테마",
-      "language": "언어",
-      "dev": "개발자"
+      "language": "언어"
     },
     "account": {
       "google": "Google 계정",
@@ -693,10 +692,6 @@
       "wipeConfirmBody": "모든 여행 기록·뱃지·본국·테마·언어 설정이 삭제되고 로그아웃됩니다. 앱이 처음 설치한 상태로 돌아가요. 계속하시겠어요?",
       "wipeConfirmAction": "지우기",
       "wipeFailed": "데이터 삭제 실패"
-    },
-    "devAllMilestonesVisible": {
-      "title": "[DEV] 전체 마일스톤 표시 토글",
-      "subtitle": "tier 0이면 자동 false. 수동 override용"
     },
     "subscription": {
       "promoHeadline": "프리미엄으로 모든 기능 열기",
