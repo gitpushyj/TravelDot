@@ -38,7 +38,7 @@ export async function wipeAllLocalData(): Promise<void> {
     pendingNotifications: [],
     hydrated: false,
   });
-  useOnboardingStore.setState({ hydrated: false, completed: false });
+  useOnboardingStore.setState({ hydrated: false, completed: false, lastStep: 0 });
   useProfileStore.setState({ hydrated: false, profile: null });
   useVisitStore.setState({
     ready: false,

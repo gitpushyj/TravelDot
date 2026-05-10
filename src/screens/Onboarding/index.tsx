@@ -32,10 +32,22 @@ export default function OnboardingFlow() {
   const profileHydrated = useProfileStore((s) => s.hydrated);
   const profileHydrate = useProfileStore((s) => s.hydrate);
   const markCompleted = useOnboardingStore((s) => s.markCompleted);
+  const setLastStep = useOnboardingStore((s) => s.setLastStep);
 
   // 초기 step 결정: 이미 완료된 단계는 자동 skip.
   // step 1(LoginStep)은 환영+로그인 통합 화면. 로그인이 이미 돼 있으면 effect가 step=2로 당긴다.
-  const [step, setStep] = useState<number>(1);
+  // 마지막으로 머물렀던 step이 영속화돼 있으면 거기서 재개한다 (앱 강제 종료 후 재진입 대응).
+  const [step, setStep] = useState<number>(() => {
+    const persisted = useOnboardingStore.getState().lastStep;
+    return persisted >= 1 ? persisted : 1;
+  });
+
+  // step 변화를 영속화한다. mid-flow 종료 후 재진입 시 같은 step으로 복원되며,
+  // App.tsx의 자동 완료 분기는 lastStep > 0을 보고 mid-flow 사용자에게 markCompleted를
+  // 강제하지 않는다.
+  useEffect(() => {
+    void setLastStep(step);
+  }, [step, setLastStep]);
 
   // step을 절대값으로 advance한다. step 컴포넌트의 onNext와 외부 상태 useEffect가
   // 동시에 발동해도 race 없이 정확한 step에 안착한다. 예: step 2에서 본국 선택 시
@@ -49,11 +61,11 @@ export default function OnboardingFlow() {
 
   // 시스템 back:
   //  - step 1(LoginStep): Android 기본 동작(앱 종료) 허용.
-  //  - step 3(BirthGenderStep): 본국을 잘못 골랐을 때 다시 고를 수 있도록 step 2로 복귀.
-  //  - 그 외 step(2, 4, 5): 진행 데이터 보호 및 sync 진행 상태와의 충돌 방지를 위해 차단.
+  //  - step 3(BirthGenderStep), step 4(SyncStep): 본국 재선택을 위해 한 단계씩 이전으로 이동.
+  //  - 그 외 step(2, 5): 진행 데이터/검토 단계 보호를 위해 차단.
   useEffect(() => {
     const sub = BackHandler.addEventListener("hardwareBackPress", () => {
-      if (step === 3) {
+      if (step === 3 || step === 4) {
         goBack();
         return true;
       }
@@ -101,7 +113,7 @@ export default function OnboardingFlow() {
       <OnboardingProgress
         current={step}
         total={TOTAL_STEPS}
-        onBack={step === 3 ? goBack : undefined}
+        onBack={step === 3 || step === 4 ? goBack : undefined}
       />
       {step === 1 && <LoginStep onNext={() => goTo(2)} />}
       {step === 2 && <HomeCountryStep onNext={() => goTo(3)} />}
