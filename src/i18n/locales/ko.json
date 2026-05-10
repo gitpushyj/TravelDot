@@ -713,7 +713,7 @@
   },
   "onboarding": {
     "login": {
-      "title": "TravelDot을 시작할게요",
+      "title": "PixelTravel을 시작할게요",
       "subtitle": "기록을 기기에 안전하게 저장하기 위해 로그인해 주세요",
       "feature1": {
         "title": "사진으로 자동 기록",
@@ -806,7 +806,7 @@
     }
   },
   "subscription": {
-    "brand": "TravelDot",
+    "brand": "PixelTravel",
     "heading": {
       "prefix": "모든 기능",
       "highlight": "잠금 해제",

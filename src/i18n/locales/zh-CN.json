@@ -488,7 +488,7 @@
   },
   "onboarding": {
     "login": {
-      "title": "开始使用 TravelDot",
+      "title": "开始使用 PixelTravel",
       "subtitle": "请登录,以便将记录安全地保存在此设备上",
       "feature1": {
         "title": "照片自动记录",

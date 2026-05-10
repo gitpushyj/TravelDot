@@ -97,7 +97,7 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
 
         {/* 워터마크는 카드 맨 아래에 붙는다. */}
         <View style={styles.footer}>
-          <Text style={styles.watermark}>· TravelDot ·</Text>
+          <Text style={styles.watermark}>· PixelTravel ·</Text>
         </View>
       </View>
     </View>

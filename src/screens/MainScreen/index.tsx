@@ -322,7 +322,7 @@ export default function MainScreen({ navigation }: Props) {
     <View style={styles.root}>
       <StatusBar style={theme.statusBar} />
       <Animated.View style={[styles.topAppBar, topBarStyle]}>
-        <Text style={styles.topAppBarTitle}>TravelDot</Text>
+        <Text style={styles.topAppBarTitle}>PixelTravel</Text>
       </Animated.View>
       <AnimatedScrollView
         style={styles.scroll}

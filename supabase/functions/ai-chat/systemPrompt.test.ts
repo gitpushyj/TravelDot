@@ -124,7 +124,7 @@ Deno.test("buildSystemPrompt - friend tone + genuine help instruction present", 
   assertStringIncludes(out, "Always ground every answer");
 });
 
-Deno.test("buildSystemPrompt - app context (TravelDot map metaphor) included", () => {
+Deno.test("buildSystemPrompt - app context (PixelTravel map metaphor) included", () => {
   const out = buildSystemPrompt({
     lang: "en",
     age: null,
@@ -133,7 +133,7 @@ Deno.test("buildSystemPrompt - app context (TravelDot map metaphor) included", (
     stats: [],
     trips: [],
   });
-  assertStringIncludes(out, "ABOUT TRAVELDOT");
+  assertStringIncludes(out, "ABOUT PIXELTRAVEL");
   assertStringIncludes(out, "dot-map");
   assertStringIncludes(out, "metaphor");
 });
