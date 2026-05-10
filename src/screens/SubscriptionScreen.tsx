@@ -3,7 +3,8 @@ import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useScreenBottomInset } from "../hooks/useScreenInsets";
-import { PLANS, type PlanId } from "../features/subscription/plans";
+import type { PlanId } from "../features/subscription/plans";
+import { usePlans } from "../features/subscription/usePlans";
 import { useSubscription } from "../features/subscription/useSubscription";
 import { useTheme } from "../theme/themeStore";
 
@@ -12,6 +13,7 @@ import FeatureGrid from "./SubscriptionScreen/FeatureGrid";
 import FooterDisclaimer from "./SubscriptionScreen/FooterDisclaimer";
 import HeroDotMap from "./SubscriptionScreen/HeroDotMap";
 import PlanCard from "./SubscriptionScreen/PlanCard";
+import RestoreLink from "./SubscriptionScreen/RestoreLink";
 import { makeStyles } from "./SubscriptionScreen/styles";
 
 type Props = {
@@ -26,7 +28,8 @@ export default function SubscriptionScreen({ onClose }: Props) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const bottomInset = useScreenBottomInset();
 
-  const { isSubscribed, loading, subscribe } = useSubscription();
+  const { isSubscribed, loading, subscribe, restore } = useSubscription();
+  const { plans } = usePlans();
   const [selected, setSelected] = useState<PlanId>("yearly");
 
   const handleContinue = async () => {
@@ -42,8 +45,23 @@ export default function SubscriptionScreen({ onClose }: Props) {
     }
   };
 
-  const yearly = PLANS.yearly;
-  const weekly = PLANS.weekly;
+  const handleRestore = async () => {
+    try {
+      const restored = await restore();
+      Alert.alert(
+        t("subscription.restore.label"),
+        restored
+          ? t("subscription.restore.success")
+          : t("subscription.restore.notFound")
+      );
+      if (restored) onClose();
+    } catch (e) {
+      Alert.alert(t("subscription.error.title"), String(e));
+    }
+  };
+
+  const yearly = plans.yearly;
+  const monthly = plans.monthly;
 
   return (
     <View style={styles.root}>
@@ -82,8 +100,8 @@ export default function SubscriptionScreen({ onClose }: Props) {
               periodLabel={t("subscription.plan.yearly.period", {
                 price: yearly.priceLabel,
               })}
-              rightPrimary={yearly.perWeekLabel}
-              rightSecondary={t("subscription.perWeek")}
+              rightPrimary={yearly.perMonthLabel}
+              rightSecondary={t("subscription.perMonth")}
               trialLabel={
                 yearly.freeTrialDays > 0
                   ? t("subscription.freeTrial", {
@@ -99,11 +117,11 @@ export default function SubscriptionScreen({ onClose }: Props) {
             />
             <PlanCard
               theme={theme}
-              selected={selected === "weekly"}
-              onPress={() => setSelected("weekly")}
-              title={t("subscription.plan.weekly.title")}
-              rightPrimary={weekly.priceLabel}
-              rightSecondary={t("subscription.perWeek")}
+              selected={selected === "monthly"}
+              onPress={() => setSelected("monthly")}
+              title={t("subscription.plan.monthly.title")}
+              rightPrimary={monthly.priceLabel}
+              rightSecondary={t("subscription.perMonth")}
             />
           </View>
         </View>
@@ -129,6 +147,13 @@ export default function SubscriptionScreen({ onClose }: Props) {
                 })
               : t("subscription.disclaimer.regular")
           }
+        />
+        <View style={{ height: 8 }} />
+        <RestoreLink
+          theme={theme}
+          label={t("subscription.restore.label")}
+          disabled={loading}
+          onPress={handleRestore}
         />
       </View>
     </View>

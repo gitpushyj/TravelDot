@@ -820,15 +820,15 @@
       "premium": "Ongoing premium\nfeature drops"
     },
     "save": "Save {{percent}}%",
-    "perWeek": "per week",
+    "perMonth": "per month",
     "freeTrial": "{{days}} days free trial",
     "plan": {
       "yearly": {
         "title": "Yearly",
         "period": "{{price}}/year"
       },
-      "weekly": {
-        "title": "Weekly"
+      "monthly": {
+        "title": "Monthly"
       }
     },
     "continue": {
@@ -841,6 +841,11 @@
     },
     "error": {
       "title": "Subscription failed"
+    },
+    "restore": {
+      "label": "Restore Purchases",
+      "success": "Subscription restored",
+      "notFound": "No active subscription to restore"
     }
   }
 }

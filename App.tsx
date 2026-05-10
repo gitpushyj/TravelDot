@@ -6,6 +6,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { initI18n } from "./src/i18n";
+import {
+  configurePurchases,
+  forgetPurchases,
+  identifyPurchases,
+} from "./src/lib/revenuecat";
 import { requestTrackingPermissionIfNeeded } from "./src/lib/tracking";
 import AppAlerts from "./src/components/AppAlerts";
 import { useAuthStore } from "./src/features/auth/authStore";
@@ -74,6 +79,7 @@ export default function App() {
     void milestoneHydrate();
     void syncHydrate();
     void entitlementHydrate();
+    void configurePurchases();
     void initI18n().then(() => setI18nReady(true));
   }, [
     hydrate,
@@ -96,10 +102,13 @@ export default function App() {
   // user.id 변화 시 entitlement(isAllMilestoneVisible)를 서버 tier로 자동 동기화.
   // 로그아웃 시(user === null)에는 false로 리셋한다. 수동 dev 토글은 이 effect
   // 외에서만 살아 있으므로 override 의도가 살아남는다.
+  // RevenueCat user identity도 같은 시점에 맞춘다 — Supabase user.id를 RC appUserID로 사용.
   useEffect(() => {
     if (authUser?.id) {
+      void identifyPurchases(authUser.id);
       void useEntitlementStore.getState().syncFromUserId(authUser.id);
     } else {
+      void forgetPurchases();
       void useEntitlementStore.getState().setAllMilestoneVisible(false);
     }
   }, [authUser?.id]);
