@@ -3,7 +3,7 @@
     "title": "AI",
     "headerClear": "Clear chat",
     "composerPlaceholder": "Ask your travel buddy",
-    "composerCounter": "{{n}}/500",
+    "composerCounter": "{{n}}/150",
     "send": "Send",
     "thinking": "Thinking…",
     "empty": {
@@ -16,7 +16,7 @@
     "error": {
       "generic": "Hit an unexpected snag 🥲 Give it another try — if it keeps happening, come back in a bit.",
       "network": "Connection looks shaky. Check your Wi-Fi/data and try sending again.",
-      "invalidInput": "Couldn't send that one — make sure it's under 500 characters and try again.",
+      "invalidInput": "Couldn't send that one — make sure it's under 150 characters and try again.",
       "upstream": "AI service is having a moment 🥲 Try again in a minute or two. You can resend the same message.",
       "imageLoadFailed": "Couldn't load image",
       "rateLimited": {
