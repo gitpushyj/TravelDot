@@ -638,7 +638,14 @@
       "deleteConfirmTitle": "Delete account",
       "deleteConfirmBody": "Your account and all travel records will be permanently deleted. This cannot be undone. Continue?",
       "deleteAction": "Delete",
-      "deleteFailed": "Account deletion failed"
+      "deleteFailed": "Account deletion failed",
+      "deleteSubscriptionWarningTitle": "You have an active subscription",
+      "deleteSubscriptionWarningBody": "Deleting your account does NOT cancel your App Store / Play Store subscription — you will continue to be billed. Please cancel your subscription in the store first, then delete your account.",
+      "manageSubscription": "Manage subscription",
+      "deleteAnyway": "Delete anyway",
+      "deleteFinalConfirmTitle": "Delete for real?",
+      "deleteFinalConfirmBody": "This will permanently delete your account and travel records. Your subscription will keep being billed unless you cancel it directly in the store.",
+      "storeOpenFailed": "Couldn't open the store. Please manage your subscription from your device settings."
     },
     "home": {
       "current": "Current home country",

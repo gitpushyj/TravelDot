@@ -638,7 +638,14 @@
       "deleteConfirmTitle": "계정 삭제",
       "deleteConfirmBody": "계정과 모든 여행 기록이 영구 삭제됩니다. 이 작업은 되돌릴 수 없어요. 계속하시겠어요?",
       "deleteAction": "삭제",
-      "deleteFailed": "계정 삭제 실패"
+      "deleteFailed": "계정 삭제 실패",
+      "deleteSubscriptionWarningTitle": "활성 구독이 있어요",
+      "deleteSubscriptionWarningBody": "계정을 삭제해도 App Store / Play Store 구독은 자동으로 해지되지 않으며 계속 청구돼요. 먼저 스토어에서 구독을 해지한 뒤 계정을 삭제하는 걸 권장해요.",
+      "manageSubscription": "구독 관리로 이동",
+      "deleteAnyway": "그래도 삭제",
+      "deleteFinalConfirmTitle": "정말 삭제할까요?",
+      "deleteFinalConfirmBody": "이대로 진행하면 계정과 여행 기록이 영구 삭제돼요. 구독은 별도로 해지하지 않으면 계속 청구되니, 스토어에서 직접 해지해 주세요.",
+      "storeOpenFailed": "스토어를 열 수 없어요. 기기 설정에서 직접 구독을 관리해 주세요."
     },
     "home": {
       "current": "현재 본국",

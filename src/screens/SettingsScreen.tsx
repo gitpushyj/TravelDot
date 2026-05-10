@@ -8,6 +8,7 @@ import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
 import { evaluateMilestone } from "../features/milestone/milestoneEvaluator";
+import { openStoreSubscriptionManagement } from "../features/subscription/storeSubscriptionLink";
 import { useSubscription } from "../features/subscription/useSubscription";
 import { useMilestoneStore } from "../features/milestone/milestoneStore";
 import {
@@ -137,7 +138,54 @@ export default function SettingsScreen({
     t("settings.account.google");
   const accountSub = authUser?.email ?? t("settings.account.googleSub");
 
+  // 두 번째 단계: "그래도 삭제"를 누른 사용자에게 마지막 confirm을 띄운 뒤 실제 삭제.
+  const confirmAndDelete = () => {
+    Alert.alert(
+      t("settings.account.deleteFinalConfirmTitle"),
+      t("settings.account.deleteFinalConfirmBody"),
+      [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("settings.account.deleteAction"),
+          style: "destructive",
+          onPress: () => {
+            deleteAccount().catch((e) =>
+              Alert.alert(t("settings.account.deleteFailed"), String(e))
+            );
+          },
+        },
+      ]
+    );
+  };
+
   const handleDeleteAccount = () => {
+    // 활성 구독이 있으면 스토어에서 먼저 해지하라고 안내한다.
+    // 탈퇴 자체를 막진 않는다 — App Store Review Guideline 5.1.1(v)는
+    // 활성 구독을 이유로 계정 삭제를 차단하는 걸 허용하지 않는다.
+    if (isSubscribed) {
+      Alert.alert(
+        t("settings.account.deleteSubscriptionWarningTitle"),
+        t("settings.account.deleteSubscriptionWarningBody"),
+        [
+          { text: t("common.cancel"), style: "cancel" },
+          {
+            text: t("settings.account.deleteAnyway"),
+            style: "destructive",
+            onPress: confirmAndDelete,
+          },
+          {
+            text: t("settings.account.manageSubscription"),
+            onPress: () => {
+              openStoreSubscriptionManagement().catch(() =>
+                Alert.alert(t("settings.account.storeOpenFailed"))
+              );
+            },
+          },
+        ]
+      );
+      return;
+    }
+
     Alert.alert(
       t("settings.account.deleteConfirmTitle"),
       t("settings.account.deleteConfirmBody"),
