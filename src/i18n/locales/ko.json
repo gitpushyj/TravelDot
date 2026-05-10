@@ -772,6 +772,26 @@
       "feature3": {
         "title": "언제든지 변경 가능해요",
         "desc": "설정은 언제든지 변경하거나\n철회할 수 있어요"
+      },
+      "analyzingTitleLine1": "내 기기의 사진 정보를",
+      "analyzingTitleHighlight": "분석하고 있어요",
+      "analyzingSubtitle": "날짜를 분석하고, 지도에 색칠할 준비를 하고 있어요.\n잠시만 기다려주세요!",
+      "analyzingStep1": {
+        "title": "사진 메타데이터 분석 중",
+        "desc": "날짜 및 위치 정보 추출"
+      },
+      "analyzingStep2": {
+        "title": "여행 기록 분류 중",
+        "desc": "여행지 및 일정 정리"
+      },
+      "analyzingStep3": {
+        "title": "지도에 색칠할 준비 중",
+        "desc": "국가별 방문 횟수 계산"
+      },
+      "analyzingAutoNext": {
+        "prefix": "분석이 완료되면 ",
+        "highlight": "자동으로 다음 단계",
+        "suffix": "로 넘어갑니다."
       }
     },
     "suspect": {

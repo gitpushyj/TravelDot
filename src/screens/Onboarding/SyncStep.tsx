@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -17,6 +16,9 @@ import { useTheme } from "../../theme/themeStore";
 import { makeOnboardingStyles } from "./styles";
 import SyncFeatureRows from "./SyncFeatureRows";
 import SyncHero from "./SyncHero";
+import SyncingAutoNextNotice from "./SyncingAutoNextNotice";
+import SyncingHero from "./SyncingHero";
+import SyncingProgressCard from "./SyncingProgressCard";
 import SyncPermissionNotice from "./SyncPermissionNotice";
 
 type Phase = "idle" | "syncing" | "denied";
@@ -91,23 +93,50 @@ export default function SyncStep({ onNext }: Props) {
   }
 
   if (phase === "syncing") {
-    const processed = syncStatus.processed;
-    const message =
-      syncStatus.phase === "saving"
-        ? t("onboarding.sync.saving")
-        : syncStatus.phase === "verifying"
-          ? t("onboarding.sync.verifying")
-          : processed > 0
-            ? t("onboarding.sync.scanning", { processed })
-            : t("onboarding.sync.preparing");
     return (
-      <View style={styles.centerWrap}>
-        <ActivityIndicator color={theme.accent} size="large" />
-        <Text style={styles.centerTitle}>{message}</Text>
+      <ScrollView
+        style={localStyles.scroll}
+        contentContainerStyle={localStyles.syncingContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <SyncingHero
+          theme={theme}
+          titleLine1={t("onboarding.sync.analyzingTitleLine1")}
+          titleHighlight={t("onboarding.sync.analyzingTitleHighlight")}
+          subtitle={t("onboarding.sync.analyzingSubtitle")}
+        />
+        <View style={localStyles.syncingCard}>
+          <SyncingProgressCard
+            theme={theme}
+            phase={syncStatus.phase}
+            step1={{
+              title: t("onboarding.sync.analyzingStep1.title"),
+              desc: t("onboarding.sync.analyzingStep1.desc"),
+            }}
+            step2={{
+              title: t("onboarding.sync.analyzingStep2.title"),
+              desc: t("onboarding.sync.analyzingStep2.desc"),
+            }}
+            step3={{
+              title: t("onboarding.sync.analyzingStep3.title"),
+              desc: t("onboarding.sync.analyzingStep3.desc"),
+            }}
+          />
+        </View>
+        <View style={localStyles.syncingNotice}>
+          <SyncingAutoNextNotice
+            theme={theme}
+            prefix={t("onboarding.sync.analyzingAutoNext.prefix")}
+            highlight={t("onboarding.sync.analyzingAutoNext.highlight")}
+            suffix={t("onboarding.sync.analyzingAutoNext.suffix")}
+          />
+        </View>
         {permission === "limited" && (
-          <Text style={styles.smallNote}>{t("onboarding.sync.limitedHint")}</Text>
+          <Text style={[styles.smallNote, localStyles.syncingLimited]}>
+            {t("onboarding.sync.limitedHint")}
+          </Text>
         )}
-      </View>
+      </ScrollView>
     );
   }
 
@@ -169,5 +198,19 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 24,
+  },
+  syncingContent: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 28,
+  },
+  syncingCard: {
+    marginTop: 22,
+  },
+  syncingNotice: {
+    marginTop: 14,
+  },
+  syncingLimited: {
+    marginTop: 12,
   },
 });

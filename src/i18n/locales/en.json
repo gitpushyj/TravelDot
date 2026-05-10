@@ -772,6 +772,26 @@
       "feature3": {
         "title": "Change anytime",
         "desc": "You can revoke or change permissions at any time"
+      },
+      "analyzingTitleLine1": "We're analyzing the photo info",
+      "analyzingTitleHighlight": "on your device",
+      "analyzingSubtitle": "We're reading dates and getting ready to paint your map.\nThis only takes a moment!",
+      "analyzingStep1": {
+        "title": "Reading photo metadata",
+        "desc": "Extracting dates and locations"
+      },
+      "analyzingStep2": {
+        "title": "Sorting trip records",
+        "desc": "Organizing destinations and timelines"
+      },
+      "analyzingStep3": {
+        "title": "Preparing your map",
+        "desc": "Counting visits per country"
+      },
+      "analyzingAutoNext": {
+        "prefix": "Once analysis is done, you'll move to the ",
+        "highlight": "next step automatically",
+        "suffix": "."
       }
     },
     "suspect": {
