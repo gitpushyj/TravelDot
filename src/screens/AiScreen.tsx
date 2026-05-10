@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Trash2 } from "lucide-react-native";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,6 +24,8 @@ import {
 } from "../components/AiChat";
 import { useAiChatStore } from "../features/aiChat/aiChatStore";
 import { useAuthStore } from "../features/auth/authStore";
+import { useSubscription } from "../features/subscription/useSubscription";
+import type { RootStackParamList } from "../navigation/types";
 import { useTheme } from "../theme/themeStore";
 
 export default function AiScreen() {
@@ -29,6 +33,8 @@ export default function AiScreen() {
   const { t } = useTranslation();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const safeInsets = useSafeAreaInsets();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const userId = useAuthStore((s) => s.user?.id ?? null);
   const messages = useAiChatStore((s) => s.messages);
@@ -37,6 +43,11 @@ export default function AiScreen() {
   const hydrate = useAiChatStore((s) => s.hydrate);
   const send = useAiChatStore((s) => s.send);
   const clear = useAiChatStore((s) => s.clear);
+
+  // tier가 명확히 'free'인 경우만 잠금 — 아직 로드 전(null)일 땐 잠그지 않아
+  // 유료 사용자가 잠깐이라도 잠금 UI를 보지 않게 한다.
+  const { tier } = useSubscription();
+  const lockedForUpgrade = tier === "free";
 
   const composerRef = useRef<AiChatComposerHandle>(null);
   const [copiedToastVisible, setCopiedToastVisible] = useState(false);
@@ -118,7 +129,7 @@ export default function AiScreen() {
         </View>
       ) : null}
 
-      {rateLimit ? (
+      {rateLimit && !lockedForUpgrade ? (
         <UsageLimitBanner tier={rateLimit.tier} limit={rateLimit.limit} />
       ) : null}
 
@@ -127,6 +138,8 @@ export default function AiScreen() {
         isSending={isSending}
         disabled={!!rateLimit}
         onSend={(text) => void send(text)}
+        lockedForUpgrade={lockedForUpgrade}
+        onUpgrade={() => navigation.navigate("Subscription")}
       />
     </KeyboardAvoidingView>
   );

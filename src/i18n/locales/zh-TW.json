@@ -3,8 +3,10 @@
     "title": "AI",
     "headerClear": "Clear chat",
     "composerPlaceholder": "Ask your travel buddy",
+    "composerLockedPlaceholder": "升級到 Pro 後即可使用",
     "composerCounter": "{{n}}/150",
     "send": "Send",
+    "upgrade": "升級",
     "thinking": "Thinking…",
     "copied": "已複製",
     "empty": {

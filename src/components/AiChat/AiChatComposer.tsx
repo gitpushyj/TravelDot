@@ -1,4 +1,4 @@
-import { Send } from "lucide-react-native";
+import { Lock, Send } from "lucide-react-native";
 import { forwardRef, useImperativeHandle, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -22,10 +22,14 @@ type Props = {
   isSending: boolean;
   disabled: boolean;
   onSend: (text: string) => void;
+  // free tier 사용자에게 채팅을 완전히 막는다. true면 입력은 잠기고
+  // 우측 버튼은 onUpgrade()로 결제 안내 화면을 연다.
+  lockedForUpgrade?: boolean;
+  onUpgrade?: () => void;
 };
 
 const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function AiChatComposer(
-  { isSending, disabled, onSend },
+  { isSending, disabled, onSend, lockedForUpgrade, onUpgrade },
   ref
 ) {
   const theme = useTheme();
@@ -44,6 +48,30 @@ const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function AiChatCo
     setText("");
     onSend(value);
   };
+
+  if (lockedForUpgrade) {
+    return (
+      <View style={styles.root}>
+        <View style={styles.inputRow}>
+          <View style={[styles.input, styles.inputLocked]}>
+            <Text style={styles.inputLockedText} numberOfLines={2}>
+              {t("aiChat.composerLockedPlaceholder")}
+            </Text>
+          </View>
+          <Pressable
+            onPress={onUpgrade}
+            style={({ pressed }) => [
+              styles.sendBtn,
+              pressed ? styles.sendBtnPressed : null,
+            ]}
+            accessibilityLabel={t("aiChat.upgrade")}
+          >
+            <Lock size={20} color={theme.accentOn} />
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.root}>
@@ -108,6 +136,13 @@ function makeStyles(theme: ReturnType<typeof useTheme>) {
       borderRadius: 18,
       backgroundColor: theme.cardBg,
       color: theme.textPrimary,
+      fontSize: 15,
+    },
+    inputLocked: {
+      justifyContent: "center",
+    },
+    inputLockedText: {
+      color: theme.textSecondary,
       fontSize: 15,
     },
     sendBtn: {

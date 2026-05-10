@@ -3,8 +3,10 @@
     "title": "AI",
     "headerClear": "Clear chat",
     "composerPlaceholder": "Ask your travel buddy",
+    "composerLockedPlaceholder": "Обновитесь до Pro, чтобы использовать чат",
     "composerCounter": "{{n}}/150",
     "send": "Send",
+    "upgrade": "Улучшить",
     "thinking": "Thinking…",
     "copied": "Скопировано",
     "empty": {

@@ -9,8 +9,10 @@
     "title": "AI",
     "headerClear": "Clear chat",
     "composerPlaceholder": "Ask your travel buddy",
+    "composerLockedPlaceholder": "Upgrade to Pro to use chat",
     "composerCounter": "{{n}}/150",
     "send": "Send",
+    "upgrade": "Upgrade",
     "thinking": "Thinking…",
     "copied": "Copied",
     "empty": {

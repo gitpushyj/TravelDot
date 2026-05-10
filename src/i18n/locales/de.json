@@ -3,8 +3,10 @@
     "title": "AI",
     "headerClear": "Clear chat",
     "composerPlaceholder": "Ask your travel buddy",
+    "composerLockedPlaceholder": "Auf Pro upgraden, um den Chat zu nutzen",
     "composerCounter": "{{n}}/150",
     "send": "Send",
+    "upgrade": "Upgraden",
     "thinking": "Thinking…",
     "copied": "Kopiert",
     "empty": {

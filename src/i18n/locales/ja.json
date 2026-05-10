@@ -3,8 +3,10 @@
     "title": "AI",
     "headerClear": "Clear chat",
     "composerPlaceholder": "Ask your travel buddy",
+    "composerLockedPlaceholder": "Pro にアップグレードしてご利用ください",
     "composerCounter": "{{n}}/150",
     "send": "Send",
+    "upgrade": "アップグレード",
     "thinking": "Thinking…",
     "copied": "コピーしました",
     "empty": {

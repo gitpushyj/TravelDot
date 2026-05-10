@@ -9,8 +9,10 @@
     "title": "AI",
     "headerClear": "대화 비우기",
     "composerPlaceholder": "여행 친구에게 물어보세요",
+    "composerLockedPlaceholder": "pro사용자로 업데이트 후 사용해보세요",
     "composerCounter": "{{n}}/150",
     "send": "보내기",
+    "upgrade": "업그레이드",
     "thinking": "타이핑 중…",
     "copied": "복사했어요",
     "empty": {
