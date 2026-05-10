@@ -1,8 +1,10 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 import type { Theme } from "../../theme/theme";
+
+import SyncingActiveDots from "./SyncingActiveDots";
 
 export type RowState = "done" | "active" | "pending";
 
@@ -34,11 +36,19 @@ export default function SyncingProgressRow({
         <Text style={[styles.title, { color: theme.textPrimary }]}>{title}</Text>
         <Text style={[styles.desc, { color: theme.textSecondary }]}>{desc}</Text>
       </View>
-      <View style={[styles.statusWrap, { backgroundColor: theme.accentSoftBg }]}>
+      <View
+        style={[
+          styles.statusWrap,
+          {
+            backgroundColor:
+              state === "active" ? theme.accent : theme.accentSoftBg,
+          },
+        ]}
+      >
         {state === "done" ? (
           <CheckIcon color={theme.accent} />
         ) : state === "active" ? (
-          <ActivityIndicator color={theme.accent} size="small" />
+          <SyncingActiveDots color="#ffffff" />
         ) : (
           <View style={[styles.pendingDot, { borderColor: theme.textMuted }]} />
         )}
