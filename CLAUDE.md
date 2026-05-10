@@ -76,6 +76,12 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - 피처 브랜치의 중간 커밋 히스토리는 main에 남기지 않는다 — main의 로그는 "기능 단위 한 줄"로만 읽힌다.
 - 스쿼시 후 머지 커밋 메시지는 그대로 피처의 의미를 담은 conventional 메시지로 작성한다 (예: `feat(photos): ...`).
 
+**워크트리에서 작업이 완전히 끝났다고 판단되면 즉시 main에 스쿼시 머지한다.**
+
+- 워크트리(`.claude/worktrees/...` 또는 별도 worktree 디렉터리)에서 진행한 작업이 완료 상태(요청한 기능/수정이 모두 반영되고, 검증이 끝난 상태)에 도달했다고 판단되면, 사용자가 별도로 지시하지 않아도 main으로의 스쿼시 머지를 명시적으로 제안하거나 실행한다.
+- "완료 판단"의 기준: 사용자의 원 요청이 모두 충족 + 빌드/타입체크/테스트(해당되는 경우) 통과 + 사용자가 추가 수정 요청을 하지 않은 상태.
+- 머지 절차는 위의 스쿼시 머지 규칙(`git merge --squash` + 단일 커밋)을 그대로 따르고, 머지 후에는 워크트리/피처 브랜치를 정리할지 사용자에게 확인한다.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
