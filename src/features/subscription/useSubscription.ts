@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useAuthStore } from "../auth/authStore";
-import { fetchUserTier } from "../auth/userTier";
 import type { TierName } from "../aiChat/types";
 import { useEntitlementStore } from "../entitlement/entitlementStore";
 
 import type { PlanId } from "./plans";
-import { activateSubscription } from "./subscriptionService";
+import { useSubscriptionStore } from "./subscriptionStore";
 
 type State = {
   tier: TierName | null;        // null = 아직 모름
@@ -18,21 +17,17 @@ type State = {
 
 // tier 0(free)은 미구독, 1·2(premium·power)는 구독 상태로 본다.
 // 구독 처리 후엔 entitlementStore도 동기화해서 부가 기능 토글이 맞춰진다.
+// 실제 상태는 useSubscriptionStore(글로벌 zustand)에서 관리하므로
+// 여러 화면이 동시에 mount돼 있어도 subscribe 직후 즉시 함께 갱신된다.
 export function useSubscription(): State {
   const userId = useAuthStore((s) => s.user?.id ?? null);
+  const tier = useSubscriptionStore((s) => s.tier);
+  const loading = useSubscriptionStore((s) => s.loading);
+  const refreshStore = useSubscriptionStore((s) => s.refresh);
+  const subscribeStore = useSubscriptionStore((s) => s.subscribe);
   const syncFromUserId = useEntitlementStore((s) => s.syncFromUserId);
 
-  const [tier, setTier] = useState<TierName | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const refresh = useCallback(async () => {
-    if (!userId) {
-      setTier(null);
-      return;
-    }
-    const next = await fetchUserTier(userId);
-    setTier(next);
-  }, [userId]);
+  const refresh = useCallback(() => refreshStore(userId), [userId, refreshStore]);
 
   useEffect(() => {
     void refresh();
@@ -41,16 +36,10 @@ export function useSubscription(): State {
   const subscribe = useCallback(
     async (plan: PlanId) => {
       if (!userId) throw new Error("not_signed_in");
-      setLoading(true);
-      try {
-        await activateSubscription(userId, plan);
-        await refresh();
-        await syncFromUserId(userId);
-      } finally {
-        setLoading(false);
-      }
+      await subscribeStore(userId, plan);
+      await syncFromUserId(userId);
     },
-    [userId, refresh, syncFromUserId]
+    [userId, subscribeStore, syncFromUserId]
   );
 
   return {
