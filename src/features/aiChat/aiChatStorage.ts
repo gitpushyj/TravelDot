@@ -20,7 +20,7 @@ export async function loadMessages(userId: string): Promise<ChatMessage[]> {
   }
 }
 
-// 호출 측이 tier에 맞는 cap을 결정해서 넘긴다 (MEMORY_BY_TIER).
+// 호출 측이 tier에 맞는 보관(=화면 표시) cap을 결정해서 넘긴다 (UI_MEMORY_BY_TIER).
 export async function saveMessages(
   userId: string,
   messages: ChatMessage[],

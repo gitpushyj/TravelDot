@@ -4,7 +4,12 @@ import { fetchUserTier } from "../auth/userTier";
 
 import { sendChat } from "./aiChatClient";
 import { clearMessages, loadMessages, saveMessages } from "./aiChatStorage";
-import { MEMORY_BY_TIER, type ChatMessage, type TierName } from "./types";
+import {
+  MEMORY_BY_TIER,
+  UI_MEMORY_BY_TIER,
+  type ChatMessage,
+  type TierName,
+} from "./types";
 
 function uuid(): string {
   // expo-crypto가 따로 없으니 짧은 랜덤. 충돌 무시 가능 수준.
@@ -25,13 +30,18 @@ type State = {
   clear: () => Promise<void>;
 };
 
-// store 안에서 자주 쓰는 짧은 헬퍼.
-function capFor(tier: TierName): number {
+// UI(채팅 내역)에 보여주는 sliding window 길이.
+function uiCapFor(tier: TierName): number {
+  return UI_MEMORY_BY_TIER[tier];
+}
+
+// LLM 컨텍스트에 넘기는 sliding window 길이 (일일 한도와 동일).
+function historyCapFor(tier: TierName): number {
   return MEMORY_BY_TIER[tier];
 }
 
 function trimByTier(messages: ChatMessage[], tier: TierName): ChatMessage[] {
-  const cap = capFor(tier);
+  const cap = uiCapFor(tier);
   return cap > 0 ? messages.slice(-cap) : [];
 }
 
@@ -62,7 +72,7 @@ export const useAiChatStore = create<State>((set, get) => ({
     const trimmed = text.trim();
     if (!trimmed) return;
     const tier = get().tier;
-    const cap = capFor(tier);
+    const uiCap = uiCapFor(tier);
 
     const userMessage: ChatMessage = {
       id: uuid(),
@@ -73,12 +83,12 @@ export const useAiChatStore = create<State>((set, get) => ({
     const historyForCall = get().messages;
     const after = trimByTier([...historyForCall, userMessage], tier);
     set({ messages: after, isSending: true });
-    await saveMessages(userId, after, cap);
+    await saveMessages(userId, after, uiCap);
 
     const { outcome, assistant } = await sendChat({
       history: historyForCall,
       newUserText: trimmed,
-      historyCap: cap,
+      historyCap: historyCapFor(tier),
     });
 
     if (outcome.kind === "ok" && assistant) {
@@ -91,10 +101,9 @@ export const useAiChatStore = create<State>((set, get) => ({
       };
       // 응답에 담긴 tier로 동기화 (서버가 권위 있는 출처).
       const newTier = outcome.tier;
-      const newCap = capFor(newTier);
       const next = trimByTier([...after, aiMsg], newTier);
       set({ messages: next, isSending: false, rateLimit: null, tier: newTier });
-      await saveMessages(userId, next, newCap);
+      await saveMessages(userId, next, uiCapFor(newTier));
       return;
     }
 
@@ -106,7 +115,6 @@ export const useAiChatStore = create<State>((set, get) => ({
         error: `aiChat.error.rateLimited.${outcome.tier}`,
         createdAt: Date.now(),
       };
-      const newCap = capFor(outcome.tier);
       const next = trimByTier([...after, aiMsg], outcome.tier);
       set({
         messages: next,
@@ -114,7 +122,7 @@ export const useAiChatStore = create<State>((set, get) => ({
         rateLimit: { tier: outcome.tier, limit: outcome.limit },
         tier: outcome.tier,
       });
-      await saveMessages(userId, next, newCap);
+      await saveMessages(userId, next, uiCapFor(outcome.tier));
       return;
     }
 
@@ -135,7 +143,7 @@ export const useAiChatStore = create<State>((set, get) => ({
     };
     const next = trimByTier([...after, aiMsg], tier);
     set({ messages: next, isSending: false });
-    await saveMessages(userId, next, cap);
+    await saveMessages(userId, next, uiCap);
   },
 
   clear: async () => {
