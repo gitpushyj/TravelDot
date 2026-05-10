@@ -82,7 +82,7 @@ function FeatureCell({
   return (
     <View style={styles.cell}>
       <View style={[styles.iconBox, { backgroundColor: iconBg }]}>
-        <Icon size={26} color={iconColor} strokeWidth={2.2} />
+        <Icon size={22} color={iconColor} strokeWidth={2.2} />
       </View>
       <Text style={styles.label} numberOfLines={2}>
         {label}
@@ -95,10 +95,10 @@ function makeStyles(theme: Theme) {
   return StyleSheet.create({
     card: {
       backgroundColor: theme.cardBg,
-      borderRadius: 18,
-      paddingVertical: 20,
-      paddingHorizontal: 12,
-      gap: 18,
+      borderRadius: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      gap: 10,
     },
     row: {
       flexDirection: "row",
@@ -106,22 +106,22 @@ function makeStyles(theme: Theme) {
     cell: {
       flex: 1,
       alignItems: "center",
-      gap: 8,
+      gap: 6,
       paddingHorizontal: 4,
     },
     iconBox: {
-      width: 56,
-      height: 56,
-      borderRadius: 16,
+      width: 44,
+      height: 44,
+      borderRadius: 12,
       alignItems: "center",
       justifyContent: "center",
     },
     label: {
       color: theme.textPrimary,
-      fontSize: 13,
+      fontSize: 12,
       fontWeight: "600",
       textAlign: "center",
-      lineHeight: 18,
+      lineHeight: 16,
     },
   });
 }

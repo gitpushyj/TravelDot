@@ -13,8 +13,8 @@ export function makeStyles(theme: Theme) {
       alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: 16,
-      paddingTop: 56,
-      paddingBottom: 4,
+      paddingTop: 48,
+      paddingBottom: 0,
     },
     closeBtn: {
       width: 32,
@@ -32,38 +32,38 @@ export function makeStyles(theme: Theme) {
     },
     contentWrap: {
       paddingHorizontal: 24,
-      paddingTop: 16,
-      paddingBottom: 32,
+      paddingTop: 4,
+      paddingBottom: 8,
     },
     heading: {
       color: theme.textPrimary,
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: "800",
       textAlign: "center",
-      marginTop: 16,
+      marginTop: 4,
     },
     headingAccent: {
       color: theme.accent,
     },
     subheading: {
       color: theme.textSecondary,
-      fontSize: 14,
-      lineHeight: 20,
+      fontSize: 13,
+      lineHeight: 18,
       textAlign: "center",
-      marginTop: 12,
+      marginTop: 6,
       paddingHorizontal: 8,
     },
     featureWrap: {
-      marginTop: 20,
+      marginTop: 12,
     },
     plansWrap: {
-      marginTop: 24,
-      gap: 12,
+      marginTop: 14,
+      gap: 10,
     },
     footer: {
       paddingHorizontal: 24,
-      paddingBottom: 24,
-      gap: 12,
+      paddingBottom: 16,
+      gap: 8,
     },
   });
 }

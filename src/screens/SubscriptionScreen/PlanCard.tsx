@@ -71,7 +71,7 @@ function makeStyles(theme: Theme, selected: boolean) {
       borderRadius: 14,
       borderWidth: selected ? 2 : 1,
       borderColor: selected ? theme.accent : theme.cardBorder,
-      paddingVertical: 16,
+      paddingVertical: 12,
       paddingHorizontal: 16,
     },
     row: {

@@ -72,7 +72,7 @@ export default function HeroDotMap({ theme, brand }: Props) {
       </View>
       <View style={styles.brandRow} pointerEvents="none">
         <MapPin
-          size={36}
+          size={28}
           color={theme.accent}
           fill={theme.accent}
           strokeWidth={2.4}
@@ -88,7 +88,7 @@ export default function HeroDotMap({ theme, brand }: Props) {
 function makeStyles(theme: Theme) {
   return StyleSheet.create({
     root: {
-      minHeight: 200,
+      minHeight: 130,
       alignItems: "center",
       justifyContent: "center",
       position: "relative",
@@ -100,12 +100,12 @@ function makeStyles(theme: Theme) {
     brandRow: {
       alignItems: "center",
       justifyContent: "center",
-      gap: 6,
-      paddingVertical: 16,
+      gap: 4,
+      paddingVertical: 10,
     },
     brandText: {
       color: theme.accent,
-      fontSize: 32,
+      fontSize: 26,
       fontWeight: "700",
       letterSpacing: -0.5,
     },
