@@ -67,15 +67,17 @@ export default function TripDetailScreen({
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const bottomInset = useScreenBottomInset();
 
+  // savedPhotos.localUri는 ph:// 그대로 보관한다. 그리드 LazyGridImage가
+  // 화면에 들어오는 셀만 lazy resolve하므로 trip에 사진이 수백 장 있어도
+  // 첫 진입 비용이 일정하다.
   const [savedPhotos, setSavedPhotos] = useState<TripPhoto[] | null>(null);
   // 디바이스 스캔 결과의 raw 형태(ph:// 그대로). 카운트와 grid에 그대로 사용한다.
-  // file:// resolve는 미리보기 head 5장과, grid에서 화면에 들어오는 셀에 한해
-  // lazy로 처리한다.
   const [deviceRawPhotos, setDeviceRawPhotos] = useState<
     DeviceTripPhoto[] | null
   >(null);
-  // 미리보기 head 5장의 id → file:// 매핑. grid LazyGridImage도 photoLibrary
-  // 모듈 캐시를 통해 이 결과를 재사용하므로 grid 진입 시 head는 즉시 표시된다.
+  // 미리보기 head N장의 id → file:// 매핑. savedPhotos head와 deviceRawPhotos
+  // head를 합쳐 채운다. photoLibrary 모듈 캐시를 통해 grid LazyGridImage도
+  // 이 결과를 재사용하므로 그리드 진입 시 head 셀은 즉시 표시된다.
   const [headResolved, setHeadResolved] = useState<Record<string, string>>({});
   const [note, setNote] = useState<VisitNote | null>(null);
   const [view, setView] = useState<"detail" | "all">("detail");
@@ -92,26 +94,22 @@ export default function TripDetailScreen({
         ),
       ]);
       if (cancelled) return;
-      // ph:// URI는 일부 RN Image 로더가 인식하지 못해 화면에서 file:// localUri로 변환.
-      // 자산이 디바이스에서 삭제됐다면 resolve가 실패해 ph://가 그대로 남는데
-      // 이 경우 화면에 빈 셀로만 그려져 카운트와 실제 보이는 수가 어긋난다.
-      // 표시 가능한 자산만 남긴다.
-      // shouldDownloadFromNetwork: true → iCloud에 있고 디바이스 미다운로드된
-      // 자산도 받아와 표시한다. savedPhotos는 사용자가 의도적으로 저장한
-      // 항목이라 수가 많지 않아 일괄 해석으로도 부담이 적다.
+      setSavedPhotos(photos);
+      setNote(latestNote);
+
+      // 미리보기 영역에 즉시 띄울 head만 file://로 풀어둔다. iCloud 미다운로드
+      // 자산도 이 단계에서 받아오기 위해 shouldDownloadFromNetwork: true.
+      // 나머지는 grid 셀이 화면에 들어올 때 LazyGridImage가 lazy resolve한다.
+      const head = photos
+        .slice(0, PREVIEW_PHOTO_COUNT)
+        .filter((p) => p.localUri.startsWith("ph://"));
+      if (head.length === 0) return;
       const resolved = await resolveDisplayUris(
-        photos.map((p) => ({ id: p.id, uri: p.localUri })),
+        head.map((p) => ({ id: p.id, uri: p.localUri })),
         { shouldDownloadFromNetwork: true }
       );
       if (cancelled) return;
-      setSavedPhotos(
-        photos.flatMap((p) => {
-          const local = resolved[p.id];
-          if (!local || local.startsWith("ph://")) return [];
-          return [{ ...p, localUri: local }];
-        })
-      );
-      setNote(latestNote);
+      setHeadResolved((prev) => ({ ...prev, ...resolved }));
     })();
     return () => {
       cancelled = true;
@@ -167,9 +165,9 @@ export default function TripDetailScreen({
   const flag = flagEmoji(trip.countryCode);
   const countryColor = colorForCountry(trip.countryCode);
 
-  // 미리보기는 head 5장만이라 lazy resolve를 쓰지 않는다 — head resolve가
-  // 끝나기 전엔 ph://인 디바이스 사진을 빈 셀로 보여주지 않도록 제외한다
-  // (savedPhotos는 첫 effect에서 이미 file://로 resolve되어 있다).
+  // 미리보기는 head N장만이라 lazy resolve를 쓰지 않는다 — head resolve가
+  // 끝나기 전엔 ph://인 자산을 빈 셀로 보여주지 않도록 제외한다.
+  // savedPhotos·deviceRawPhotos 양쪽 모두 동일한 headResolved를 거친다.
   const previewPhotos = useMemo<DisplayPhoto[]>(() => {
     const result: DisplayPhoto[] = [];
     const seenIds = new Set<string>();
@@ -177,9 +175,13 @@ export default function TripDetailScreen({
       for (const p of savedPhotos) {
         if (result.length >= PREVIEW_PHOTO_COUNT) break;
         if (seenIds.has(p.id)) continue;
+        const display = p.localUri.startsWith("ph://")
+          ? headResolved[p.id]
+          : p.localUri;
+        if (!display || display.startsWith("ph://")) continue;
         result.push({
           key: `db:${p.id}`,
-          uri: p.localUri,
+          uri: display,
           date: p.date,
           fromDb: true,
         });
@@ -205,18 +207,20 @@ export default function TripDetailScreen({
   }, [savedPhotos, deviceRawPhotos, headResolved]);
 
   // 그리드 뷰: DB 저장 사진을 앞쪽에 두고, 디바이스 사진은 그 뒤에 takenAt DESC로
-  // 이어 붙인다. 같은 자산은 asset id로 중복 제거. 디바이스 사진의 uri는 ph://
-  // 그대로 둔다 — grid 셀이 화면에 들어올 때 LazyGridImage가 lazy resolve한다.
+  // 이어 붙인다. 같은 자산은 asset id로 중복 제거. ph:// URI는 그대로 둔다 —
+  // grid 셀이 화면에 들어올 때 LazyGridImage가 lazy resolve한다. head N장은
+  // photoLibrary 모듈 캐시 덕에 즉시 file://로 표시된다.
   const allPhotos = useMemo<GridPhoto[]>(() => {
     const result: GridPhoto[] = [];
     const seenIds = new Set<string>();
     if (savedPhotos) {
       for (const p of savedPhotos) {
         if (seenIds.has(p.id)) continue;
+        const resolved = headResolved[p.id];
         result.push({
           key: `db:${p.id}`,
           id: p.id,
-          uri: p.localUri,
+          uri: resolved ?? p.localUri,
           takenAt: p.takenAt,
           date: p.date,
         });

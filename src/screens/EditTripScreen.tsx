@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -14,7 +13,7 @@ import {
 } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
+import LazyAssetImage from "../features/photoSync/LazyAssetImage";
 import {
   addPhotos,
   deleteNote,
@@ -79,16 +78,14 @@ export default function EditTripScreen({ trip, onClose }: Props) {
         loadLatestNoteForTrip(trip.countryCode, trip.startDate, trip.endDate),
       ]);
       if (cancelled) return;
-      // ph:// → file:// 변환 (없는 자산은 그대로 두면 그리드에서 빈 이미지가 됨).
-      const resolved = await resolveDisplayUris(
-        dbPhotos.map((p) => ({ id: p.id, uri: p.localUri }))
-      );
-      if (cancelled) return;
+      // ph:// URI는 그대로 둔다 — 그리드 셀의 LazyAssetImage가 화면에 들어올
+      // 때만 file://로 해석한다. 트립에 사진이 수백 장이어도 첫 진입 비용이
+      // 일정해진다.
       setPhotos(
         dbPhotos.map<EditPhoto>((p: TripPhoto) => ({
           id: p.id,
           date: p.date,
-          uri: resolved[p.id] ?? p.localUri,
+          uri: p.localUri,
           takenAt: p.takenAt,
           state: "kept",
         }))
@@ -400,7 +397,11 @@ export default function EditTripScreen({ trip, onClose }: Props) {
                 const isAdded = p.state === "added";
                 return (
                   <View key={p.id} style={styles.photoCell}>
-                    <Image source={{ uri: p.uri }} style={styles.photoImage} />
+                    <LazyAssetImage
+                      id={p.id}
+                      uri={p.uri}
+                      style={styles.photoImage}
+                    />
                     {isAdded && (
                       <View style={styles.photoBadge}>
                         <Text style={styles.photoBadgeText}>NEW</Text>
