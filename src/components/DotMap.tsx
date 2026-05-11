@@ -20,6 +20,7 @@ import {
 } from "react-native-reanimated";
 
 import dotData from "../../assets/data/dots.json";
+import { COUNTRY_CAPITALS } from "../data/countryCapitals";
 import { useVisitStore } from "../features/travel/visitStore";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
@@ -37,6 +38,11 @@ const MAX_SCALE = 10;
 // 인트로 줌아웃이 멈추는 최종 배율. 1이면 세계지도 전체가 보이는데
 // 도트가 너무 작아져서 약간 줌인된 상태에서 멈춘다 (세계의 약 3/4가 viewport에 들어옴).
 const INTRO_END_SCALE = 1.33;
+// 인트로 줌아웃이 시작하는 최소 배율. 본국이 미국·프랑스처럼 영토가 크거나
+// 알래스카·DOM-TOM 같은 멀리 떨어진 영토를 포함하면 bbox 기반 target이 1에
+// 가까워져 줌아웃 애니메이션이 사라진다. 한국 같은 작은 본국과 동일하게
+// 본토에 크게 줌인된 상태에서 시작하도록 시작 스케일에 하한을 둔다.
+const INTRO_MIN_START_SCALE = 8;
 // 핀치 도중 한 프레임에 focal이 이만큼 점프하면 비정상으로 보고 무시한다.
 // Android의 ACTION_POINTER_UP에서 centroid가 남은 손가락으로 튀는 현상 차단용.
 // 일반 핀치 프레임에서는 focal이 한 두 픽셀씩만 움직이므로 24px이면 충분.
@@ -363,6 +369,8 @@ export default function DotMap({
     if (size.width === 0 || size.height === 0) return;
     if (!homeCode) return;
 
+    const cxs: number[] = [];
+    const cys: number[] = [];
     let minCx = Infinity;
     let minCy = Infinity;
     let maxCx = -Infinity;
@@ -371,25 +379,52 @@ export default function DotMap({
       if (!d.countries.some((c) => c.code === homeCode)) continue;
       const cx = d.x + halfDotPx;
       const cy = d.y + halfDotPx;
+      cxs.push(cx);
+      cys.push(cy);
       if (cx < minCx) minCx = cx;
       if (cy < minCy) minCy = cy;
       if (cx > maxCx) maxCx = cx;
       if (cy > maxCy) maxCy = cy;
     }
-    if (!isFinite(minCx)) return;
+    if (cxs.length === 0) return;
 
+    // 본국 도트 좌표의 median. 멀리 떨어진 영토/섬(미국 알래스카·하와이,
+    // 프랑스 DOM-TOM 등)의 영향을 거의 받지 않아 본토 중심에 가깝게 잡힌다.
+    cxs.sort((a, b) => a - b);
+    cys.sort((a, b) => a - b);
+    const medianCx = cxs[Math.floor(cxs.length / 2)];
+    const medianCy = cys[Math.floor(cys.length / 2)];
+
+    // 시작 중심점: 본국 수도 좌표가 있으면 그걸 사용(가장 미관 좋음).
+    // 없으면 median으로 fallback.
+    const capital = COUNTRY_CAPITALS[homeCode];
+    let startCx: number;
+    let startCy: number;
+    if (capital) {
+      const [capLat, capLng] = capital;
+      startCx = (capLng + 180) * baseScale;
+      startCy = (maxLat - capLat) * baseScale;
+    } else {
+      startCx = medianCx;
+      startCy = medianCy;
+    }
+
+    // 시작 줌은 본국 bbox에 맞춘 값을 쓰되, 큰 본국(미국·프랑스 등)에서도
+    // 줌아웃 애니메이션이 충분히 보이도록 INTRO_MIN_START_SCALE 이상으로 보장.
     const padding = 1.6;
     const bboxW = Math.max(maxCx - minCx, 1);
     const bboxH = Math.max(maxCy - minCy, 1);
+    const bboxFit = Math.min(
+      size.width / (bboxW * padding),
+      size.height / (bboxH * padding)
+    );
     const target = clampJs(
-      Math.min(size.width / (bboxW * padding), size.height / (bboxH * padding)),
+      Math.max(bboxFit, INTRO_MIN_START_SCALE),
       MIN_SCALE,
       MAX_SCALE
     );
-    const cx0 = (minCx + maxCx) / 2;
-    const cy0 = (minCy + maxCy) / 2;
-    const rawTargetTx = size.width / 2 - target * cx0;
-    const rawTargetTy = size.height / 2 - target * cy0;
+    const rawTargetTx = size.width / 2 - target * startCx;
+    const rawTargetTy = size.height / 2 - target * startCy;
     const targetTx = clampPanX(rawTargetTx, target, size.width, contentW);
     const targetTy = clampPanY(rawTargetTy, target, size.height, contentH);
 
@@ -400,17 +435,18 @@ export default function DotMap({
     savedTx.value = targetTx;
     savedTy.value = targetTy;
 
-    // 종료 위치: 본국이 화면 중앙에 오도록 두되 콘텐츠가 viewport 밖으로
-    // 나가지 않도록 clamp.
+    // 종료 위치는 수도가 아닌 본토 중심(median)을 쓴다. 수도가 본토 한쪽에
+    // 치우친 본국(예: 미국=워싱턴이 동부 해안)에서 줌아웃이 끝났을 때
+    // 본국이 시야 한쪽으로 쏠리는 것을 막는다.
     const endScale = INTRO_END_SCALE;
     const endTx = clampPanX(
-      size.width / 2 - endScale * cx0,
+      size.width / 2 - endScale * medianCx,
       endScale,
       size.width,
       contentW
     );
     const endTy = clampPanY(
-      size.height / 2 - endScale * cy0,
+      size.height / 2 - endScale * medianCy,
       endScale,
       size.height,
       contentH
