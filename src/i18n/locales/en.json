@@ -708,7 +708,9 @@
       "promoCta": "Upgrade",
       "activeHeadline": "Premium active",
       "activeFeatures": "✓ Travel sync · ✓ Higher AI limit · ✓ All titles & milestones",
-      "activeBadge": "PREMIUM"
+      "activeBadge": "PREMIUM",
+      "manageLabel": "Manage subscription",
+      "manageSub": "Change or cancel subscription"
     }
   },
   "onboarding": {

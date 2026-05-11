@@ -290,6 +290,21 @@ export default function SettingsScreen({
           activeBadge={t("settings.subscription.activeBadge")}
         />
 
+        {isSubscribed && (
+          <View style={[styles.card, styles.sectionLabelSpaced]}>
+            <ActionRow
+              theme={theme}
+              label={t("settings.subscription.manageLabel")}
+              sub={t("settings.subscription.manageSub")}
+              onPress={() => {
+                openStoreSubscriptionManagement().catch(() =>
+                  Alert.alert(t("settings.account.storeOpenFailed"))
+                );
+              }}
+            />
+          </View>
+        )}
+
         <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
           {t("settings.section.account")}
         </Text>

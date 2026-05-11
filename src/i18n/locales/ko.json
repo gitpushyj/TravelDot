@@ -708,7 +708,9 @@
       "promoCta": "업그레이드",
       "activeHeadline": "프리미엄 사용 중",
       "activeFeatures": "✓ 여행 데이터 동기화 · ✓ AI 한도 증가 · ✓ 모든 호칭/마일스톤",
-      "activeBadge": "PREMIUM"
+      "activeBadge": "PREMIUM",
+      "manageLabel": "구독 관리",
+      "manageSub": "구독 변경 또는 해지"
     }
   },
   "onboarding": {
