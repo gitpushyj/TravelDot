@@ -244,12 +244,14 @@ export function makeStyles(theme: Theme) {
       gap: 6,
     },
     tripDate: {
+      flexShrink: 1,
       color: theme.textPrimary,
       fontSize: 16,
       fontWeight: "800",
       letterSpacing: 0.3,
     },
     recentBadge: {
+      flexShrink: 0,
       backgroundColor: theme.accentSoftBg,
       borderRadius: 6,
       paddingHorizontal: 6,
