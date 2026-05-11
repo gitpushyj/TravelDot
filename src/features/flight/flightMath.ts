@@ -77,14 +77,16 @@ export function greatCircleInterp(
   return { lat, lng };
 }
 
-// 출발지에서 도착지를 바라본 초기 방위각(true bearing). 북쪽=0°, 시계방향.
-// 비행기 픽셀의 회전 각도 계산에 사용. 출발 시 한 번 계산해 고정 사용.
+// 한 지점에서 다른 지점을 바라본 초기 방위각(true bearing). 북쪽=0°, 시계방향, 단위는 도.
+// 비행기가 곡선(대권) 경로를 따라가며 매 frame 현재 위치→도착지 bearing을 다시 계산해
+// 머리 방향을 자연스럽게 트는 데에도 쓰이므로 worklet 마커가 있다.
 export function initialBearing(
   lat1: number,
   lng1: number,
   lat2: number,
   lng2: number
 ): number {
+  "worklet";
   const φ1 = toRad(lat1);
   const φ2 = toRad(lat2);
   const Δλ = toRad(lng2 - lng1);

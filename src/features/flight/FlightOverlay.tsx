@@ -167,6 +167,8 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   }, [active, progress, checkArrival]);
 
   // 정적 파생값 — 비행이 바뀔 때만 재계산.
+  // bearing은 매 frame 현재 위치에서 도착지로 다시 계산하므로 여기서는 캐시하지 않는다
+  // (곡선 경로를 따라 머리 방향이 부드럽게 돌아가도록).
   const staticGeom = useMemo(() => {
     if (!active) return null;
     const { origin, destination } = active;
@@ -181,19 +183,10 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
       x: lngToX(p.lng, baseScale),
       y: latToY(p.lat, maxLat, baseScale),
     }));
-    const bearingDeg = initialBearing(
-      origin.lat,
-      origin.lng,
-      destination.lat,
-      destination.lng
-    );
-    // SVG/Skia rotate 단위는 라디안(useDerivedValue 안). 정북 0° 그대로 적용 가능 —
-    // 픽셀 그리드의 코가 row 0(위쪽)에 있어 회전 전 방향이 정북이기 때문.
-    const bearingRad = toRad(bearingDeg);
     // 목적지 도트 위치 (도트지도 좌표계). 빨간 깜빡 도트의 고정 위치로 사용.
     const destX = lngToX(destination.lng, baseScale);
     const destY = latToY(destination.lat, maxLat, baseScale);
-    return { pathPx, bearingRad, destX, destY };
+    return { pathPx, destX, destY };
   }, [active, baseScale, maxLat]);
 
   // 비행기 픽셀 1개 크기·pivot 픽셀(화면 좌표계 기준).
@@ -203,10 +196,14 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   const pivotPy = AIRPLANE_PIVOT_ROW * planePx;
   const pathDotPx = cellPx * PATH_DOT_RATIO;
 
-  // 매 프레임 worklet — 비행기 현재 좌표.
+  // 매 프레임 worklet — 비행기 현재 좌표 + 현재 위치 기준 도착지로의 방위각.
+  // 대권 경로는 평면지도에서 곡선으로 보이는데 머리 방향이 출발 시점의 초기 방위각으로
+  // 고정되면 곡선 중간에서 진행 방향과 머리 방향이 어긋나 부자연스럽다. 매 frame 현재
+  // 위치(p)에서 도착지로의 bearing을 새로 계산해 회전에 적용한다.
+  //
   // wobble은 진행 방향(코) 기준 좌우(=픽셀 그리드의 X축)로 미세 흔들림을 더한다.
-  // bearingRad 회전 안쪽에 translateX(wobble)를 넣어, 회전된 비행기 프레임의 좌우로
-  // 흔들리도록 한다(절대 화면 좌우가 아니라 비행기 진행 방향 직각).
+  // rotate 안쪽에 translateX(wobble)를 넣어, 회전된 비행기 프레임의 좌우로 흔들리도록
+  // 한다(절대 화면 좌우가 아니라 비행기 진행 방향 직각).
   const planeTransform = useDerivedValue(() => {
     if (!active || !staticGeom) {
       return [{ translateX: 0 }, { translateY: 0 }, { rotate: 0 }];
@@ -221,11 +218,18 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     );
     const x = lngToX(p.lng, baseScale);
     const y = latToY(p.lat, maxLat, baseScale);
+    const bearingDeg = initialBearing(
+      p.lat,
+      p.lng,
+      active.destination.lat,
+      active.destination.lng
+    );
+    const bearingRad = toRad(bearingDeg);
     const wob = wobble.value * planePx * 0.4; // ±0.4 픽셀 단위
     return [
       { translateX: x },
       { translateY: y },
-      { rotate: staticGeom.bearingRad },
+      { rotate: bearingRad },
       { translateX: -pivotPx + wob },
       { translateY: -pivotPy },
     ];
