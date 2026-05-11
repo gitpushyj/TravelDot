@@ -36,8 +36,10 @@ export const useSubscriptionStore = create<State>((set) => ({
     set({ loading: true });
     try {
       await activateSubscription(userId, plan);
+      // 결제 직후 fetchUserTier로 다시 덮어쓰지 않는다. webhook이 늦게 도착하면
+      // DB는 아직 tier=0이라 낙관적 "premium"을 free로 되돌려버린다.
+      // RC customerInfo listener(useTierAutoSync)가 webhook 도착 후 자동 sync.
       set({ tier: "premium" });
-      void fetchUserTier(userId).then((next) => set({ tier: next }));
     } finally {
       set({ loading: false });
     }

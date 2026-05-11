@@ -108,6 +108,11 @@ export async function restorePurchases(): Promise<CustomerInfo | null> {
   return Purchases.restorePurchases();
 }
 
+export async function getCurrentCustomerInfo(): Promise<CustomerInfo | null> {
+  if (!configured) return null;
+  return Purchases.getCustomerInfo();
+}
+
 export function hasActivePremium(customerInfo: CustomerInfo): boolean {
   return Boolean(customerInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID]);
 }
