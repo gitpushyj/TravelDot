@@ -217,6 +217,27 @@ export async function updatePhotoDevices(
   });
 }
 
+// 디바이스 사진첩 스캔에서 사용자가 명시적으로 제거한 자산을 걸러내기 위한
+// tombstone 목록. visit_photos.id == MediaLibrary asset id이므로 스캔 결과의
+// id 집합에 그대로 매칭된다.
+export async function loadDeletedPhotoIdsForTrip(
+  countryCode: string,
+  startDate: string,
+  endDate: string
+): Promise<string[]> {
+  const db = await getTripDb();
+  const rows = await db.getAllAsync<{ id: string }>(
+    `SELECT id FROM visit_photos
+      WHERE country_code = ?
+        AND date BETWEEN ? AND ?
+        AND deleted_at IS NOT NULL`,
+    countryCode,
+    startDate,
+    endDate
+  );
+  return rows.map((r) => r.id);
+}
+
 // 사진만 soft-delete. 트립은 보존 (사진 분실 ≠ 트립 분실).
 // 의심 여행 reject 같은 흐름에서는 호출 측이 트립도 별도로 삭제할 수 있다.
 export async function softDeletePhotosByIds(

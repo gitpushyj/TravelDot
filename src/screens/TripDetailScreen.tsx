@@ -9,6 +9,7 @@ import {
   type DeviceTripPhoto,
 } from "../features/photoSync/tripPhotos";
 import {
+  loadDeletedPhotoIdsForTrip,
   loadLatestNoteForTrip,
   loadPhotosForTrip,
   RecentTrip,
@@ -79,15 +80,26 @@ export default function TripDetailScreen({
   // head를 합쳐 채운다. photoLibrary 모듈 캐시를 통해 grid LazyGridImage도
   // 이 결과를 재사용하므로 그리드 진입 시 head 셀은 즉시 표시된다.
   const [headResolved, setHeadResolved] = useState<Record<string, string>>({});
+  // 사용자가 EditTrip에서 명시적으로 제거(soft-delete)한 자산 id 집합.
+  // 디바이스 스캔(scanDevicePhotosForTrip)은 DB의 deleted_at을 모르고 좌표·시간만으로
+  // 같은 사진을 다시 잡아오므로, 이 set으로 표시 단계에서 걸러야 한다.
+  const [deletedDeviceIds, setDeletedDeviceIds] = useState<Set<string>>(
+    () => new Set()
+  );
   const [note, setNote] = useState<VisitNote | null>(null);
   const [view, setView] = useState<"detail" | "all">("detail");
 
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const [photos, latestNote] = await Promise.all([
+      const [photos, latestNote, deletedIds] = await Promise.all([
         loadPhotosForTrip(trip.countryCode, trip.startDate, trip.endDate),
         loadLatestNoteForTrip(
+          trip.countryCode,
+          trip.startDate,
+          trip.endDate
+        ),
+        loadDeletedPhotoIdsForTrip(
           trip.countryCode,
           trip.startDate,
           trip.endDate
@@ -96,6 +108,7 @@ export default function TripDetailScreen({
       if (cancelled) return;
       setSavedPhotos(photos);
       setNote(latestNote);
+      setDeletedDeviceIds(new Set(deletedIds));
 
       // 미리보기 영역에 즉시 띄울 head만 file://로 풀어둔다. iCloud 미다운로드
       // 자산도 이 단계에서 받아오기 위해 shouldDownloadFromNetwork: true.
@@ -165,6 +178,15 @@ export default function TripDetailScreen({
   const flag = flagEmoji(trip.countryCode);
   const countryColor = colorForCountry(trip.countryCode);
 
+  // 사용자가 EditTrip에서 제거한 자산을 디바이스 스캔 결과에서 걸러낸다.
+  // deviceRawPhotos는 좌표·시간만으로 사진첩을 재스캔하므로, 이 필터 없이는
+  // 제거된 사진이 TripDetail에 계속 다시 등장한다.
+  const visibleDevicePhotos = useMemo<DeviceTripPhoto[] | null>(() => {
+    if (deviceRawPhotos == null) return null;
+    if (deletedDeviceIds.size === 0) return deviceRawPhotos;
+    return deviceRawPhotos.filter((p) => !deletedDeviceIds.has(p.id));
+  }, [deviceRawPhotos, deletedDeviceIds]);
+
   // 미리보기는 head N장만이라 lazy resolve를 쓰지 않는다 — head resolve가
   // 끝나기 전엔 ph://인 자산을 빈 셀로 보여주지 않도록 제외한다.
   // savedPhotos·deviceRawPhotos 양쪽 모두 동일한 headResolved를 거친다.
@@ -188,8 +210,8 @@ export default function TripDetailScreen({
         seenIds.add(p.id);
       }
     }
-    if (deviceRawPhotos && result.length < PREVIEW_PHOTO_COUNT) {
-      for (const p of deviceRawPhotos) {
+    if (visibleDevicePhotos && result.length < PREVIEW_PHOTO_COUNT) {
+      for (const p of visibleDevicePhotos) {
         if (result.length >= PREVIEW_PHOTO_COUNT) break;
         if (seenIds.has(p.id)) continue;
         const display = p.uri.startsWith("ph://") ? headResolved[p.id] : p.uri;
@@ -204,7 +226,7 @@ export default function TripDetailScreen({
       }
     }
     return result;
-  }, [savedPhotos, deviceRawPhotos, headResolved]);
+  }, [savedPhotos, visibleDevicePhotos, headResolved]);
 
   // 그리드 뷰: DB 저장 사진을 앞쪽에 두고, 디바이스 사진은 그 뒤에 takenAt DESC로
   // 이어 붙인다. 같은 자산은 asset id로 중복 제거. ph:// URI는 그대로 둔다 —
@@ -227,8 +249,8 @@ export default function TripDetailScreen({
         seenIds.add(p.id);
       }
     }
-    if (deviceRawPhotos) {
-      for (const p of deviceRawPhotos) {
+    if (visibleDevicePhotos) {
+      for (const p of visibleDevicePhotos) {
         if (seenIds.has(p.id)) continue;
         const resolved = headResolved[p.id];
         result.push({
@@ -242,7 +264,7 @@ export default function TripDetailScreen({
       }
     }
     return result;
-  }, [savedPhotos, deviceRawPhotos, headResolved]);
+  }, [savedPhotos, visibleDevicePhotos, headResolved]);
 
   const openImageDetail = useCallback(
     (initialIndex: number) => {
@@ -272,12 +294,12 @@ export default function TripDetailScreen({
   // 삭제된 자산이 카운트에 포함될 수 있는 미세한 부정확성은 화면이 안 끊기는
   // 이득에 비해 무시할 만하다.
   const totalPhotos = useMemo(() => {
-    if (savedPhotos == null || deviceRawPhotos == null) return null;
+    if (savedPhotos == null || visibleDevicePhotos == null) return null;
     const ids = new Set<string>();
     for (const p of savedPhotos) ids.add(p.id);
-    for (const p of deviceRawPhotos) ids.add(p.id);
+    for (const p of visibleDevicePhotos) ids.add(p.id);
     return ids.size;
-  }, [savedPhotos, deviceRawPhotos]);
+  }, [savedPhotos, visibleDevicePhotos]);
 
   if (view === "all") {
     return (

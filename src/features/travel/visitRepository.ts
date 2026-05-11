@@ -8,6 +8,7 @@ export {
   type TripPhoto,
   type VisitPhotoForReview,
   addPhotos,
+  loadDeletedPhotoIdsForTrip,
   loadPhotosForTrip,
   loadAllPhotosForReview,
   loadPhotoUrisByIds,
