@@ -18,6 +18,7 @@ import { useEntitlementStore } from "./src/features/entitlement/entitlementStore
 import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrateUserProfileFromDb";
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
 import { useMilestoneStore } from "./src/features/milestone/milestoneStore";
+import { useTierAutoSync } from "./src/features/subscription/useTierAutoSync";
 import { useSyncStore } from "./src/features/travelSync/syncStore";
 import { useVisitStore } from "./src/features/travel/visitStore";
 import { useScreenBottomInset } from "./src/hooks/useScreenInsets";
@@ -90,6 +91,10 @@ export default function App() {
     syncHydrate,
     entitlementHydrate,
   ]);
+
+  // RC customerInfo 변화·앱 foreground 진입 시 서버 tier와 호칭을 다시 fetch한다.
+  // 결제 만료 후 client가 stale "premium" 상태로 남는 문제를 막는 핵심.
+  useTierAutoSync(authUser?.id ?? null);
 
   // 로그인되어 있고 sync store도 hydrate된 시점에 트립 동기화를 시작한다.
   // push는 모든 tier에서, pull은 premium 이상에서. 결과는 백그라운드라 await하지 않는다.

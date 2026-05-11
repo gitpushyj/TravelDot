@@ -111,3 +111,16 @@ export async function restorePurchases(): Promise<CustomerInfo | null> {
 export function hasActivePremium(customerInfo: CustomerInfo): boolean {
   return Boolean(customerInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID]);
 }
+
+// iOS가 영수증 만료/갱신을 감지하면 RC가 이 listener를 호출한다.
+// EXPIRATION webhook 도착보다 빠른 경우가 많아 client 측 tier 갱신의 1차 트리거.
+// 미설정 환경에서는 no-op + 빈 cleanup 반환.
+export function addCustomerInfoListener(
+  cb: (info: CustomerInfo) => void
+): () => void {
+  if (!configured) return () => {};
+  Purchases.addCustomerInfoUpdateListener(cb);
+  return () => {
+    Purchases.removeCustomerInfoUpdateListener(cb);
+  };
+}
