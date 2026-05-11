@@ -3,7 +3,7 @@
     "title": "AI",
     "headerClear": "Очистить чат",
     "composerPlaceholder": "Спроси у напарника по путешествиям",
-    "composerLockedPlaceholder": "Premium-функция",
+    "composerLockedPlaceholder": "Только для Premium",
     "composerCounter": "{{n}}/150",
     "send": "Отправить",
     "upgrade": "Улучшить",

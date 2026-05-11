@@ -3,7 +3,7 @@
     "title": "AI",
     "headerClear": "Effacer le chat",
     "composerPlaceholder": "Demande à ton pote de voyage",
-    "composerLockedPlaceholder": "Fonctionnalité Premium",
+    "composerLockedPlaceholder": "Exclusivité Premium",
     "composerCounter": "{{n}}/150",
     "send": "Envoyer",
     "upgrade": "Mettre à niveau",

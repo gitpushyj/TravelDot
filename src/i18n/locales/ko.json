@@ -9,7 +9,7 @@
     "title": "AI",
     "headerClear": "대화 비우기",
     "composerPlaceholder": "여행 친구에게 물어보세요",
-    "composerLockedPlaceholder": "Premium 기능",
+    "composerLockedPlaceholder": "Premium 전용 기능",
     "composerCounter": "{{n}}/150",
     "send": "보내기",
     "upgrade": "업그레이드",
