@@ -556,6 +556,7 @@ export default function DotMap({
     // 시작값이 startScale이 아닌 이전 값(예: 인트로가 끝낸 1.33)부터 보간되는 race가
     // 생긴다. withSequence로 한 번에 묶어 정의하면 worklet에서 일관되게 처리되어
     // "줌인 → 1.5초 줌아웃" 시퀀스가 항상 의도대로 보인다.
+    //
     // 비행 시작 모달의 slide-down(약 280~330ms) 동안 줌 시퀀스가 시작되면 사용자
     // 시야가 모달에 가려 출발지 줌인이 안 보이는 문제가 있다. setTimeout으로 modal close
     // 시간만큼 기다린 뒤 worklet에 schedule해 modal lifecycle/cancelAnimation과의 race를

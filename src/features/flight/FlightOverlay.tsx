@@ -71,49 +71,47 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
 
   // wobble + redBlink 상시 재생. 비행 active 동안만.
   useEffect(() => {
-    if (!active) {
-      cancelAnimation(wobble);
-      cancelAnimation(redBlink);
-      cancelAnimation(destPulse);
-      return;
-    }
-    // 같은 JS tick에서 `v.value = X; v.value = withRepeat(...)`로 두 번 연달아 set하면
-    // worklet 스레드에서 race가 생겨 withRepeat가 시작되지 않는 경우가 있다 (이전에
-    // DotMap 자동 줌에서도 같은 패턴을 fix했음 — commit 0b014ea). 시작값 reset을 분리해
-    // 직접 sharedValue에 쓰지 않고, withRepeat 한 번의 update로 한 번에 schedule한다.
     cancelAnimation(wobble);
-    wobble.value = withRepeat(
-      withSequence(
-        withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
-        withTiming(-1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
-        withTiming(0, { duration: 1200, easing: Easing.inOut(Easing.sin) })
-      ),
-      -1,
-      false
-    );
-    // anti-collision beacon: 약 1초 사이클로 짧게 빨강 점등.
-    // 80ms 동안 풀 밝기, 그 후 약 920ms 동안 어둡게(0.18). 실제 항공기 비콘 분위기.
     cancelAnimation(redBlink);
-    redBlink.value = withRepeat(
-      withSequence(
-        withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) }),
-        withTiming(0.18, { duration: 220, easing: Easing.in(Easing.cubic) }),
-        withTiming(0.18, { duration: 700, easing: Easing.linear })
-      ),
-      -1,
-      false
-    );
-    // 목적지 도트 펄스: 1.4초 주기로 부드럽게 호흡(0.25 ↔ 1). 비콘과는 분리된 리듬.
     cancelAnimation(destPulse);
-    destPulse.value = withRepeat(
-      withSequence(
-        withTiming(1, { duration: 700, easing: Easing.inOut(Easing.sin) }),
-        withTiming(0.25, { duration: 700, easing: Easing.inOut(Easing.sin) })
-      ),
-      -1,
-      false
-    );
+    if (!active) return;
+    // useEffect body의 동기 흐름에서 cancelAnimation 후 즉시 `v.value = withRepeat(...)`을
+    // schedule하면, worklet runtime이 같은 JS tick에 도착한 두 명령(cancel + 새 schedule)을
+    // 함께 처리하면서 새 schedule이 무시되는 경우가 있다. DotMap 자동 줌은 setTimeout
+    // 가드 안에서 schedule되어 우연히 race를 피하고 있었음. 같은 패턴으로 worklet schedule을
+    // 다음 macrotask로 분리한다.
+    const startTimer = setTimeout(() => {
+      wobble.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
+          withTiming(-1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
+          withTiming(0, { duration: 1200, easing: Easing.inOut(Easing.sin) })
+        ),
+        -1,
+        false
+      );
+      // anti-collision beacon: 약 1초 사이클로 짧게 빨강 점등.
+      redBlink.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) }),
+          withTiming(0.18, { duration: 220, easing: Easing.in(Easing.cubic) }),
+          withTiming(0.18, { duration: 700, easing: Easing.linear })
+        ),
+        -1,
+        false
+      );
+      // 목적지 도트 펄스: 1.4초 주기로 부드럽게 호흡(0.25 ↔ 1).
+      destPulse.value = withRepeat(
+        withSequence(
+          withTiming(1, { duration: 700, easing: Easing.inOut(Easing.sin) }),
+          withTiming(0.25, { duration: 700, easing: Easing.inOut(Easing.sin) })
+        ),
+        -1,
+        false
+      );
+    }, 0);
     return () => {
+      clearTimeout(startTimer);
       cancelAnimation(wobble);
       cancelAnimation(redBlink);
       cancelAnimation(destPulse);
@@ -122,12 +120,8 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
 
   // active 비행이 바뀌거나 AppState가 active로 돌아올 때 progress를 (남은 시간)만큼 다시 보간.
   useEffect(() => {
-    if (!active) {
-      cancelAnimation(progress);
-      // 다음 tick에 set해 cancelAnimation의 worklet schedule과 race되지 않도록.
-      progress.value = withTiming(0, { duration: 0 });
-      return;
-    }
+    cancelAnimation(progress);
+    if (!active) return;
 
     const setup = () => {
       const now = Date.now();
@@ -135,23 +129,20 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
       const elapsed = now - active.departAt;
       const startP = Math.max(0, Math.min(1, elapsed / total));
       const remainingMs = Math.max(0, active.arriveAt - now);
-      cancelAnimation(progress);
       if (remainingMs <= 0) {
         progress.value = 1;
         void checkArrival(now);
         return;
       }
-      // 시작점 set과 보간을 한 번의 update에 묶어 같은 JS tick race를 회피.
-      // `progress.value = startP` + `progress.value = withTiming(...)`을 따로 호출하면
-      // 첫 set이 worklet 스레드에 도달하기 전 withTiming이 queued되어 보간이 시작값을
-      // 잘못 잡거나 아예 시작 안 되는 케이스가 있다.
+      // 시작점 set과 보간을 한 번의 update에 묶고, useEffect의 cancelAnimation과
+      // 다른 macrotask에서 schedule해 worklet race를 회피한다.
       progress.value = withSequence(
         withTiming(startP, { duration: 0 }),
         withTiming(1, { duration: remainingMs, easing: Easing.linear })
       );
     };
 
-    setup();
+    const startTimer = setTimeout(setup, 0);
 
     const sub = AppState.addEventListener("change", (state) => {
       if (state === "active") setup();
@@ -166,6 +157,7 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     }, 30_000);
 
     return () => {
+      clearTimeout(startTimer);
       sub.remove();
       if (arrivalIntervalRef.current) {
         clearInterval(arrivalIntervalRef.current);
