@@ -58,7 +58,16 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   // 살아있음 표현: 비행기를 진행 방향 직각으로 미세 wobble(±1.2px 정도).
   // 실제 비행시간이 길어 progress 변화가 느려도 비행기가 "살아 움직이는" 시각 신호를 준다.
   // 단위는 비행기 픽셀 기준 — 음수면 진행 방향 왼쪽으로 미세 흔들림.
-  const wobble = useSharedValue(0);
+  //
+  // 선형으로 0 → 1을 무한 반복하는 clock에 sin(2π·clock)을 입혀 진짜 연속
+  // 사인파를 만든다. withSequence(0→1→-1→0)에 inOut(sin) 이징을 걸면 매
+  // 세그먼트 끝(0, 1, -1, 0)에서 속도가 0이 돼 그 지점마다 비행기가 멈춰
+  // 끊겨 보였다.
+  const wobbleClock = useSharedValue(0);
+  const wobble = useDerivedValue(() => {
+    "worklet";
+    return Math.sin(wobbleClock.value * Math.PI * 2);
+  });
 
   // 꼬리 끝 빨간 anti-collision 점등. 실제 비콘 패턴(약 1초에 한 번, 짧게 깜빡)
   // 을 흉내내 opacity 0.18 ↔ 1을 빠르게 왕복한다.
@@ -73,7 +82,7 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
 
   // wobble + redBlink 상시 재생. 비행 active 동안만.
   useEffect(() => {
-    cancelAnimation(wobble);
+    cancelAnimation(wobbleClock);
     cancelAnimation(redBlink);
     cancelAnimation(destPulse);
     if (!active) return;
@@ -83,12 +92,11 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     // 가드 안에서 schedule되어 우연히 race를 피하고 있었음. 같은 패턴으로 worklet schedule을
     // 다음 macrotask로 분리한다.
     const startTimer = setTimeout(() => {
-      wobble.value = withRepeat(
-        withSequence(
-          withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
-          withTiming(-1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
-          withTiming(0, { duration: 1200, easing: Easing.inOut(Easing.sin) })
-        ),
+      // clock은 3.6s에 0 → 1을 선형으로 한 바퀴 돈다. sin(2π·clock)이 한
+      // 주기 사인파(끝값=시작값=0)라 반복 join에서도 값/속도가 연속.
+      wobbleClock.value = 0;
+      wobbleClock.value = withRepeat(
+        withTiming(1, { duration: 3600, easing: Easing.linear }),
         -1,
         false
       );
@@ -114,11 +122,11 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     }, 0);
     return () => {
       clearTimeout(startTimer);
-      cancelAnimation(wobble);
+      cancelAnimation(wobbleClock);
       cancelAnimation(redBlink);
       cancelAnimation(destPulse);
     };
-  }, [active, wobble, redBlink, destPulse]);
+  }, [active, wobbleClock, redBlink, destPulse]);
 
   // active 비행이 바뀌거나 AppState가 active로 돌아올 때 progress를 (남은 시간)만큼 다시 보간.
   useEffect(() => {
