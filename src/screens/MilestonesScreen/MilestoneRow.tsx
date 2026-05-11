@@ -13,12 +13,11 @@ import { makeStyles } from "./styles";
 /**
  * 활성 row 아래에 펼쳐 보여줄 다음 호칭 안내.
  * - completed: 최고 단계 도달
- * - needsBirth / needsHomeCountry: 평가에 필요한 사용자 데이터 부재
+ * - needsHomeCountry: 평가에 필요한 사용자 데이터 부재
  * - next: 다음 컷오프까지의 안내 (호칭 이름은 굵게)
  */
 export type ActiveDescription =
   | { kind: "completed" }
-  | { kind: "needsBirth" }
   | { kind: "needsHomeCountry" }
   | {
       kind: "next";
@@ -119,13 +118,6 @@ function renderDescription(
     return (
       <Text style={[styles.rowDescription, styles.rowDescriptionDone]}>
         <Trans i18nKey="milestones.activeNext.completed" />
-      </Text>
-    );
-  }
-  if (desc.kind === "needsBirth") {
-    return (
-      <Text style={styles.rowDescription}>
-        <Trans i18nKey="milestones.activeNext.needsBirth" />
       </Text>
     );
   }

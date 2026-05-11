@@ -18,7 +18,6 @@ export type BadgeCategory =
   | "continent" // 대륙 탐방가/정복자
   | "country" // 국가 단골(동적, 코드별)
   | "foreign" // 해외 사진 누적
-  | "premium_age"
   | "premium_time"
   | "premium_culture"
   | "premium_share"
@@ -340,7 +339,6 @@ export const CATEGORY_LABEL: Record<BadgeCategory, string> = {
   continent: "대륙",
   country: "국가 단골",
   foreign: "해외 사진",
-  premium_age: "Premium · 나이 도전",
   premium_time: "Premium · 시간 컬렉션",
   premium_culture: "Premium · 문화·시각",
   premium_share: "Premium · 점유율",
@@ -354,7 +352,6 @@ export const CATEGORY_ORDER: readonly BadgeCategory[] = [
   "continent",
   "country",
   "foreign",
-  "premium_age",
   "premium_time",
   "premium_culture",
   "premium_share",

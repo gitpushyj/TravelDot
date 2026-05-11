@@ -32,9 +32,6 @@ export function MilestoneFooterText({
 }: Props) {
   const { t } = useTranslation();
 
-  if (progress.unsupportedReason === "needs_birth") {
-    return <>{t("home.milestoneFooter.needsBirth")}</>;
-  }
   if (progress.unsupportedReason === "needs_home_country") {
     return <>{t("home.milestoneFooter.needsHomeCountry")}</>;
   }

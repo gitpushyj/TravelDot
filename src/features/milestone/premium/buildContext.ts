@@ -1,28 +1,18 @@
-import type { UserProfile } from "../../onboarding/profileStore";
 import { getTripDb } from "../../travel/trip/tripDb";
-import { ageAtTimestamp } from "./ageUtils";
 import type { PremiumContext, PremiumPhoto } from "./types";
 
 type Args = {
-  profile: UserProfile | null;
   homeCountryCode: string | null;
   visitedCountryCodes: string[];
-  now: number;
 };
 
 export async function buildPremiumContext(args: Args): Promise<PremiumContext> {
-  const birth = args.profile
-    ? { year: args.profile.birthYear, month: args.profile.birthMonth, day: args.profile.birthDay }
-    : null;
   const photos = await loadAllPhotos();
-  const currentAge = birth ? ageAtTimestamp(args.now, birth) : null;
   return {
-    birth,
     homeCountry: args.homeCountryCode,
     photos,
     visitedCountriesCount: args.visitedCountryCodes.length,
     visitedCountryCodes: args.visitedCountryCodes,
-    currentAge: currentAge != null && currentAge >= 0 ? currentAge : null,
   };
 }
 

@@ -8,8 +8,8 @@ jest.mock("../../badges/data", () => ({
 }));
 
 const empty: PremiumContext = {
-  birth: null, homeCountry: null, photos: [],
-  visitedCountriesCount: 0, visitedCountryCodes: [], currentAge: null,
+  homeCountry: null, photos: [],
+  visitedCountriesCount: 0, visitedCountryCodes: [],
 };
 
 describe("evaluatePremiumBadges", () => {

@@ -211,7 +211,6 @@
       "lockedHint": "Premium 가입 시 잠금 해제",
       "ctaUnlock": "Premium 가입하면 모두 잠금 해제 →",
       "slotCounts": {
-        "premium_age": 3,
         "premium_time": 2,
         "premium_culture": 4,
         "premium_share": 6,
@@ -235,7 +234,6 @@
       "premium_calendar": "달력의 여행자",
       "premium_flag_palette": "국기 팔레트 마스터",
       "premium_un_linguist": "UN 공용어 정복",
-      "premium_age_match": "내 나이만큼의 발자취",
       "premium_round_the_clock": "지구 한 바퀴"
     },
     "preview": {
@@ -251,7 +249,6 @@
       "languages": "공용어 {{count}}개에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
       "percent": "{{count}}%에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
       "hours": "시차 {{count}}시간에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
-      "needsBirth": "프로필에 생일을 입력하면 진행률이 표시됩니다",
       "needsHomeCountry": "본국이 설정되어야 진행률이 계산됩니다"
     },
     "footnote": "모든 목표 마일스톤은 조건이 충족되면 자동으로 달성됩니다. 선택한 마일스톤은 홈 화면에 보일 대표 마일스톤이 됩니다.",
@@ -260,11 +257,6 @@
       "lockedHint": "Premium 가입 시 잠금 해제",
       "ctaUnlock": "Premium 알아보기",
       "items": {
-        "premium_age_match": {
-          "name": "내 나이만큼의 발자취",
-          "icon": "🎂",
-          "description": "현재 나이만큼의 국가를 모았는가"
-        },
         "premium_calendar": {
           "name": "달력의 여행자",
           "icon": "🗓️",
@@ -433,7 +425,6 @@
       "languages": "{{title}} 호칭 획득까지 공용어 {{count}}개",
       "percent": "{{title}} 호칭 획득까지 {{count}}%",
       "hours": "{{title}} 호칭 획득까지 시차 {{count}}시간",
-      "needsBirth": "프로필에 생일을 입력해주세요",
       "needsHomeCountry": "본국을 설정해주세요"
     },
     "recentTitle": "최근 방문",
@@ -496,7 +487,6 @@
       "continent": "대륙",
       "country": "국가 단골",
       "foreign": "해외 사진",
-      "premium_age": "Premium · 나이 도전",
       "premium_time": "Premium · 시간 컬렉션",
       "premium_culture": "Premium · 문화·시각",
       "premium_share": "Premium · 점유율",
@@ -549,18 +539,6 @@
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.",
     "newMultipleBody": "{{list}}\n\n설정 > 호칭에서 골라 홈 화면에 표시할 수 있어요.",
     "premium": {
-      "premium_age_match_x1": {
-        "title": "동갑 수집가",
-        "description": "방문국 수 ≥ 만 나이"
-      },
-      "premium_age_match_x1_5": {
-        "title": "초과달성",
-        "description": "방문국 수 ≥ 만 나이 × 1.5"
-      },
-      "premium_age_match_x2": {
-        "title": "두 배의 인생",
-        "description": "방문국 수 ≥ 만 나이 × 2"
-      },
       "premium_calendar_6": {
         "title": "반년의 여행자",
         "description": "12개월 중 6개월 해외 사진"

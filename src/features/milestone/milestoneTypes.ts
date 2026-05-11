@@ -11,7 +11,6 @@ export type ContinentMilestoneId =
   | "continent_NA";
 
 export type PremiumMilestoneId =
-  | "premium_age_match"
   | "premium_calendar"
   | "premium_flag_palette"
   | "premium_un_linguist"
@@ -36,7 +35,6 @@ export const ALL_MILESTONE_KINDS: readonly MilestoneKind[] = [
 ];
 
 export const ALL_PREMIUM_MILESTONE_KINDS: readonly PremiumMilestoneId[] = [
-  "premium_age_match",
   "premium_calendar",
   "premium_flag_palette",
   "premium_un_linguist",
@@ -63,7 +61,7 @@ export type MilestoneUnit =
   | "percent"
   | "hours";
 
-export type MilestoneUnsupportedReason = "needs_birth" | "needs_home_country";
+export type MilestoneUnsupportedReason = "needs_home_country";
 
 /** UI에서 진행률·다음 단계를 그리기 위한 평가 결과 */
 export type MilestoneProgress = {

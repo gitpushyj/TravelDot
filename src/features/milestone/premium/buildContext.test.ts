@@ -10,28 +10,22 @@ jest.mock("../../travel/trip/tripDb", () => ({
 }));
 
 describe("buildPremiumContext", () => {
-  it("composes context from profile + visit data", async () => {
+  it("composes context from visit data", async () => {
     const ctx = await buildPremiumContext({
-      profile: { birthYear: 1995, birthMonth: 6, birthDay: 15, gender: "male" },
       homeCountryCode: "KR",
       visitedCountryCodes: ["KR", "JP", "FR"],
-      now: new Date(2025, 8, 1).getTime(),
     });
-    expect(ctx.birth).toEqual({ year: 1995, month: 6, day: 15 });
     expect(ctx.homeCountry).toBe("KR");
     expect(ctx.visitedCountryCodes).toEqual(["KR", "JP", "FR"]);
     expect(ctx.visitedCountriesCount).toBe(3);
-    expect(ctx.currentAge).toBe(30);
     expect(ctx.photos).toHaveLength(2);
   });
-  it("yields null fields when profile missing", async () => {
+  it("yields null fields when home country missing", async () => {
     const ctx = await buildPremiumContext({
-      profile: null,
       homeCountryCode: null,
       visitedCountryCodes: [],
-      now: Date.now(),
     });
-    expect(ctx.birth).toBeNull();
-    expect(ctx.currentAge).toBeNull();
+    expect(ctx.homeCountry).toBeNull();
+    expect(ctx.visitedCountriesCount).toBe(0);
   });
 });

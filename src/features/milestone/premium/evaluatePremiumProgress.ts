@@ -149,32 +149,6 @@ function evaluateUnLinguist(ctx: PremiumContext): MilestoneProgress {
   );
 }
 
-function evaluateAgeMatch(ctx: PremiumContext): MilestoneProgress {
-  if (ctx.currentAge == null) {
-    return {
-      kind: "premium_age_match",
-      current: 0,
-      next: null,
-      nextTitleBadgeId: null,
-      percent: 0,
-      reachedFinal: false,
-      unit: "countries",
-      unsupportedReason: "needs_birth",
-    };
-  }
-  const age = ctx.currentAge;
-  return fromStages(
-    "premium_age_match",
-    ctx.visitedCountryCodes.length,
-    [
-      { cutoff: Math.round(age * 1), badgeId: "premium_age_match_x1" },
-      { cutoff: Math.round(age * 1.5), badgeId: "premium_age_match_x1_5" },
-      { cutoff: Math.round(age * 2), badgeId: "premium_age_match_x2" },
-    ],
-    "countries"
-  );
-}
-
 function evaluateRoundTheClock(ctx: PremiumContext): MilestoneProgress {
   let min = +Infinity;
   let max = -Infinity;
@@ -213,8 +187,6 @@ export function evaluatePremiumProgress(
       return evaluateFlagPalette(ctx);
     case "premium_un_linguist":
       return evaluateUnLinguist(ctx);
-    case "premium_age_match":
-      return evaluateAgeMatch(ctx);
     case "premium_round_the_clock":
       return evaluateRoundTheClock(ctx);
   }

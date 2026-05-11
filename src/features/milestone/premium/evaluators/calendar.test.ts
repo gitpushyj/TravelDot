@@ -3,7 +3,6 @@ import type { PremiumContext } from "../types";
 
 function ctx(months: number[]): PremiumContext {
   return {
-    birth: null,
     homeCountry: "KR",
     photos: months.map((m) => ({
       countryCode: "JP",
@@ -11,7 +10,6 @@ function ctx(months: number[]): PremiumContext {
     })),
     visitedCountriesCount: 0,
     visitedCountryCodes: [],
-    currentAge: null,
   };
 }
 

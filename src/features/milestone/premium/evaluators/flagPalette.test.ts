@@ -13,9 +13,9 @@ jest.mock("../../../badges/data", () => ({
 
 function ctx(codes: string[]): PremiumContext {
   return {
-    birth: null, homeCountry: "KR",
+    homeCountry: "KR",
     photos: [], visitedCountriesCount: codes.length,
-    visitedCountryCodes: codes, currentAge: null,
+    visitedCountryCodes: codes,
   };
 }
 

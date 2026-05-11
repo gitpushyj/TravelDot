@@ -4,10 +4,6 @@ import type { BadgeDefinition } from "../../badges/badges";
 // 단계 1 범위 외 호칭(premium_n_before_n_*, premium_decade_*, premium_four_seasons_*)은
 // 사용자 결정으로 제거됨 — 평가도 부여도 하지 않는다.
 export const PREMIUM_BADGE_DEFS_BY_ID: Record<string, BadgeDefinition> = {
-  // A3 Age Match
-  premium_age_match_x1:   { id: "premium_age_match_x1",   category: "premium_age", titleKo: "Age x1",   titleEn: "Age Match x1",   description: "현재 만 나이 × 1 이상의 방문국",   emoji: "🎂", rank: 62 },
-  premium_age_match_x1_5: { id: "premium_age_match_x1_5", category: "premium_age", titleKo: "Age x1_5", titleEn: "Age Match x1_5", description: "현재 만 나이 × 1.5 이상의 방문국", emoji: "🎉", rank: 62 },
-  premium_age_match_x2:   { id: "premium_age_match_x2",   category: "premium_age", titleKo: "Age x2",   titleEn: "Age Match x2",   description: "현재 만 나이 × 2 이상의 방문국",   emoji: "🌠", rank: 62 },
   // C2 Calendar
   premium_calendar_6:  { id: "premium_calendar_6",  category: "premium_time", titleKo: "반년의 여행자", titleEn: "Half-Year Drifter", description: "12개월 중 6개월에 해외 사진", emoji: "📅", rank: 71 },
   premium_calendar_12: { id: "premium_calendar_12", category: "premium_time", titleKo: "달력의 여행자", titleEn: "Calendar Drifter",  description: "12개월 모두 해외 사진",       emoji: "🗓️", rank: 72 },

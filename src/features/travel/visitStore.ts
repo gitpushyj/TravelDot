@@ -26,7 +26,6 @@ import { useBadgeStore } from "../badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../badges/countryNames";
 import type { BadgeDefinition } from "../badges/badges";
 import { useEntitlementStore } from "../entitlement/entitlementStore";
-import { useProfileStore } from "../onboarding/profileStore";
 import { buildPremiumContext } from "../milestone/premium/buildContext";
 import { evaluatePremiumBadges } from "../milestone/premium/evaluatePremium";
 import type { PremiumContext } from "../milestone/premium/types";
@@ -248,12 +247,9 @@ export const useVisitStore = create<State>((set, get) => ({
     let premiumBadges: BadgeDefinition[] = [];
     let premiumContext: PremiumContext | null = null;
     if (useEntitlementStore.getState().isAllMilestoneVisible) {
-      const profile = useProfileStore.getState().profile;
       premiumContext = await buildPremiumContext({
-        profile,
         homeCountryCode: homeCountry.code,
         visitedCountryCodes: Object.keys(visitCounts),
-        now: Date.now(),
       });
       premiumBadges = evaluatePremiumBadges(premiumContext);
     }

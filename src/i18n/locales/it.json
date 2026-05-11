@@ -322,7 +322,6 @@
       "languages": "{{count}} more UN languages to {{title}}",
       "percent": "{{count}}% more to {{title}}",
       "hours": "{{count}} more hours of timezone spread to {{title}}",
-      "needsBirth": "Set your birthday in profile",
       "needsHomeCountry": "Set your home country"
     },
     "recentTitle": "Viaggi recenti",
@@ -559,7 +558,6 @@
       "premium_calendar": "Calendar Drifter",
       "premium_flag_palette": "Flag Palette Master",
       "premium_un_linguist": "UN Linguist",
-      "premium_age_match": "Age in Countries",
       "premium_round_the_clock": "Round the Clock"
     },
     "activeNext": {
@@ -568,7 +566,6 @@
       "languages": "Reach {{count}} UN languages to earn the <b>{{title}}</b> title",
       "percent": "Reach {{count}}% to earn the <b>{{title}}</b> title",
       "hours": "Reach {{count}} hours of timezone spread to earn the <b>{{title}}</b> title",
-      "needsBirth": "Set your birthday in profile to see progress",
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}

@@ -2,12 +2,10 @@ import { evaluatePremiumProgress } from "./evaluatePremiumProgress";
 import type { PremiumContext, PremiumPhoto } from "./types";
 
 const baseCtx: PremiumContext = {
-  birth: null,
   homeCountry: "KR",
   photos: [],
   visitedCountriesCount: 0,
   visitedCountryCodes: [],
-  currentAge: null,
 };
 
 describe("evaluatePremiumProgress - humanity", () => {
@@ -153,46 +151,6 @@ describe("evaluatePremiumProgress - un_linguist", () => {
     });
     expect(p.current).toBe(6);
     expect(p.reachedFinal).toBe(true);
-  });
-});
-
-describe("evaluatePremiumProgress - age_match", () => {
-  it("currentAge 없으면 needs_birth", () => {
-    const p = evaluatePremiumProgress("premium_age_match", { ...baseCtx, currentAge: null });
-    expect(p.unsupportedReason).toBe("needs_birth");
-    expect(p.unit).toBe("countries");
-  });
-
-  it("만 30세, 방문 10개국 → x1=30 미달", () => {
-    const p = evaluatePremiumProgress("premium_age_match", {
-      ...baseCtx,
-      currentAge: 30,
-      visitedCountryCodes: Array.from({ length: 10 }, (_, i) => `C${i}`),
-    });
-    expect(p.current).toBe(10);
-    expect(p.next).toBe(30);
-    expect(p.nextTitleBadgeId).toBe("premium_age_match_x1");
-  });
-
-  it("만 30세, 방문 30개국 → x1.5=45로 이동", () => {
-    const p = evaluatePremiumProgress("premium_age_match", {
-      ...baseCtx,
-      currentAge: 30,
-      visitedCountryCodes: Array.from({ length: 30 }, (_, i) => `C${i}`),
-    });
-    expect(p.current).toBe(30);
-    expect(p.next).toBe(45);
-    expect(p.nextTitleBadgeId).toBe("premium_age_match_x1_5");
-  });
-
-  it("만 30세, 방문 60개국 → x2 도달, reachedFinal", () => {
-    const p = evaluatePremiumProgress("premium_age_match", {
-      ...baseCtx,
-      currentAge: 30,
-      visitedCountryCodes: Array.from({ length: 60 }, (_, i) => `C${i}`),
-    });
-    expect(p.reachedFinal).toBe(true);
-    expect(p.next).toBeNull();
   });
 });
 

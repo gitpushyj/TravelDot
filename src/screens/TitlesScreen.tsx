@@ -74,7 +74,6 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
       continent: [],
       country: [],
       foreign: [],
-      premium_age: [],
       premium_time: [],
       premium_culture: [],
       premium_share: [],
