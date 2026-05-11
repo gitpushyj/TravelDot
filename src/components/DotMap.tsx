@@ -556,17 +556,24 @@ export default function DotMap({
     // 시작값이 startScale이 아닌 이전 값(예: 인트로가 끝낸 1.33)부터 보간되는 race가
     // 생긴다. withSequence로 한 번에 묶어 정의하면 worklet에서 일관되게 처리되어
     // "줌인 → 1.5초 줌아웃" 시퀀스가 항상 의도대로 보인다.
+    //
+    // withDelay(MODAL_GUARD_MS, ...)로 시퀀스 시작을 지연시킨다. 비행 시작 모달의
+    // slide-down(약 280~330ms) 동안 줌 시퀀스가 시작되면 사용자 시야가 모달에 가려
+    // 출발지 줌인 → 줌아웃 시퀀스의 앞 부분이 안 보이는 문제가 발생한다. 350ms 동안
+    // 현재 viewport(인트로 끝의 1.33 줌 등)를 유지하다가 시작값으로 점프해 줌아웃을
+    // 진행하면, modal이 완전히 사라진 직후부터 줌 시퀀스 전체가 보인다.
     const easing = Easing.inOut(Easing.cubic);
+    const MODAL_GUARD_MS = 350;
     scale.value = withSequence(
-      withTiming(startScale, { duration: 0 }),
+      withDelay(MODAL_GUARD_MS, withTiming(startScale, { duration: 0 })),
       withTiming(endScale, { duration: 1500, easing })
     );
     tx.value = withSequence(
-      withTiming(startTx, { duration: 0 }),
+      withDelay(MODAL_GUARD_MS, withTiming(startTx, { duration: 0 })),
       withTiming(endTx, { duration: 1500, easing })
     );
     ty.value = withSequence(
-      withTiming(startTy, { duration: 0 }),
+      withDelay(MODAL_GUARD_MS, withTiming(startTy, { duration: 0 })),
       withTiming(endTy, { duration: 1500, easing }, (finished) => {
         if (finished) {
           savedTx.value = endTx;

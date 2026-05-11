@@ -52,8 +52,15 @@ export const useFlightStore = create<State>((set, get) => ({
       departAt,
       arriveAt,
     };
-    await saveActiveFlight(flight);
+    // set을 먼저, persist를 그 다음. storage I/O가 늦거나 실패해도 화면에는 즉시
+    // 비행이 active로 반영되도록 한다. 영속화 실패는 앱 재시작 시 복원만 못할 뿐
+    // 현재 세션의 비행 동작에는 영향이 없다.
     set({ active: flight, arrived: null });
+    try {
+      await saveActiveFlight(flight);
+    } catch (e) {
+      if (__DEV__) console.warn("[flight] persist failed:", e);
+    }
   },
 
   cancel: async () => {
