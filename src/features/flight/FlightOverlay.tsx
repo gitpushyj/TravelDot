@@ -74,12 +74,14 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     if (!active) {
       cancelAnimation(wobble);
       cancelAnimation(redBlink);
-      wobble.value = 0;
-      redBlink.value = 0;
+      cancelAnimation(destPulse);
       return;
     }
+    // 같은 JS tick에서 `v.value = X; v.value = withRepeat(...)`로 두 번 연달아 set하면
+    // worklet 스레드에서 race가 생겨 withRepeat가 시작되지 않는 경우가 있다 (이전에
+    // DotMap 자동 줌에서도 같은 패턴을 fix했음 — commit 0b014ea). 시작값 reset을 분리해
+    // 직접 sharedValue에 쓰지 않고, withRepeat 한 번의 update로 한 번에 schedule한다.
     cancelAnimation(wobble);
-    wobble.value = 0;
     wobble.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
@@ -90,9 +92,8 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
       false
     );
     // anti-collision beacon: 약 1초 사이클로 짧게 빨강 점등.
-    // 110ms 동안 풀 밝기, 그 후 약 890ms 동안 어둡게(0.18). 실제 항공기 비콘 분위기.
+    // 80ms 동안 풀 밝기, 그 후 약 920ms 동안 어둡게(0.18). 실제 항공기 비콘 분위기.
     cancelAnimation(redBlink);
-    redBlink.value = 0.18;
     redBlink.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) }),
@@ -104,7 +105,6 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     );
     // 목적지 도트 펄스: 1.4초 주기로 부드럽게 호흡(0.25 ↔ 1). 비콘과는 분리된 리듬.
     cancelAnimation(destPulse);
-    destPulse.value = 0.25;
     destPulse.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 700, easing: Easing.inOut(Easing.sin) }),
@@ -124,7 +124,8 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   useEffect(() => {
     if (!active) {
       cancelAnimation(progress);
-      progress.value = 0;
+      // 다음 tick에 set해 cancelAnimation의 worklet schedule과 race되지 않도록.
+      progress.value = withTiming(0, { duration: 0 });
       return;
     }
 
@@ -135,16 +136,19 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
       const startP = Math.max(0, Math.min(1, elapsed / total));
       const remainingMs = Math.max(0, active.arriveAt - now);
       cancelAnimation(progress);
-      progress.value = startP;
       if (remainingMs <= 0) {
         progress.value = 1;
         void checkArrival(now);
         return;
       }
-      progress.value = withTiming(1, {
-        duration: remainingMs,
-        easing: Easing.linear,
-      });
+      // 시작점 set과 보간을 한 번의 update에 묶어 같은 JS tick race를 회피.
+      // `progress.value = startP` + `progress.value = withTiming(...)`을 따로 호출하면
+      // 첫 set이 worklet 스레드에 도달하기 전 withTiming이 queued되어 보간이 시작값을
+      // 잘못 잡거나 아예 시작 안 되는 케이스가 있다.
+      progress.value = withSequence(
+        withTiming(startP, { duration: 0 }),
+        withTiming(1, { duration: remainingMs, easing: Easing.linear })
+      );
     };
 
     setup();
