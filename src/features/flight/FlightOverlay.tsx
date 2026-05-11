@@ -16,6 +16,7 @@ import {
   AIRPLANE_PIVOT_COL,
   AIRPLANE_PIVOT_ROW,
   AIRPLANE_PIXELS,
+  AIRPLANE_RED_LIGHT,
   AIRPLANE_ROWS,
 } from "./airplanePixels";
 import {
@@ -31,8 +32,9 @@ import { useFlightStore } from "./flightStore";
 const PATH_SAMPLES = 50;
 
 // 비행기 한 픽셀 = 도트 한 셀(gridSize*baseScale) × 이 비율.
-// 0.32면 비행기 전체가 11 * 0.32 ≈ 3.5 셀 폭 (스펙: 도트 3 × 2.5개 분).
-const AIRPLANE_PIXEL_RATIO = 0.32;
+// 13×13 그리드에서 0.27 → 비행기 전체가 13 * 0.27 ≈ 3.5 셀 폭. 11×10 기존 크기와
+// 비슷한 화면 면적을 유지하면서 픽셀 수만 풍부해진다.
+const AIRPLANE_PIXEL_RATIO = 0.27;
 
 // 경로 점 한 개 = 도트 셀의 이 비율 (도트보다 작은 사각형).
 const PATH_DOT_RATIO = 0.18;
@@ -56,14 +58,20 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   // 단위는 비행기 픽셀 기준 — 음수면 진행 방향 왼쪽으로 미세 흔들림.
   const wobble = useSharedValue(0);
 
+  // 꼬리 끝 빨간 anti-collision 점등. 실제 비콘 패턴(약 1초에 한 번, 짧게 깜빡)
+  // 을 흉내내 opacity 0.18 ↔ 1을 빠르게 왕복한다.
+  const redBlink = useSharedValue(0);
+
   // 도착시각 도달을 polling으로 잡는다. setInterval 1초 tick + AppState 변화 시점.
   const arrivalIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // wobble 상시 재생. 비행 active 동안만.
+  // wobble + redBlink 상시 재생. 비행 active 동안만.
   useEffect(() => {
     if (!active) {
       cancelAnimation(wobble);
+      cancelAnimation(redBlink);
       wobble.value = 0;
+      redBlink.value = 0;
       return;
     }
     cancelAnimation(wobble);
@@ -77,10 +85,24 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
       -1,
       false
     );
+    // anti-collision beacon: 약 1초 사이클로 짧게 빨강 점등.
+    // 110ms 동안 풀 밝기, 그 후 약 890ms 동안 어둡게(0.18). 실제 항공기 비콘 분위기.
+    cancelAnimation(redBlink);
+    redBlink.value = 0.18;
+    redBlink.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 80, easing: Easing.out(Easing.cubic) }),
+        withTiming(0.18, { duration: 220, easing: Easing.in(Easing.cubic) }),
+        withTiming(0.18, { duration: 700, easing: Easing.linear })
+      ),
+      -1,
+      false
+    );
     return () => {
       cancelAnimation(wobble);
+      cancelAnimation(redBlink);
     };
-  }, [active, wobble]);
+  }, [active, wobble, redBlink]);
 
   // active 비행이 바뀌거나 AppState가 active로 돌아올 때 progress를 (남은 시간)만큼 다시 보간.
   useEffect(() => {
@@ -275,8 +297,63 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
             color="#ffffff"
           />
         ))}
+        {/* 꼬리 끝 빨간 anti-collision 점등. 좌표는 AIRPLANE_RED_LIGHT,
+            opacity는 redBlink sharedValue를 통해 약 1초 사이클로 깜빡임. */}
+        <RedBeacon
+          x={AIRPLANE_RED_LIGHT.col * planePx}
+          y={AIRPLANE_RED_LIGHT.row * planePx}
+          size={planePx}
+          opacity={redBlink}
+        />
       </Group>
     </Group>
+  );
+}
+
+// 꼬리 끝 빨간 anti-collision 점등.
+// - 가장 바깥에 살짝 큰 어두운 후광(halo)을 두어 도트지도 위에서 빨간색이 묻히지 않게.
+// - 그 위에 살짝 큰 반투명 빨강 글로우, 마지막에 진한 빨강 코어. 모두 opacity는 redBlink를
+//   공유해 동시에 깜빡인다(코어가 풀일 때 글로우도 풀).
+function RedBeacon({
+  x,
+  y,
+  size,
+  opacity,
+}: {
+  x: number;
+  y: number;
+  size: number;
+  opacity: { value: number };
+}) {
+  const halo = size * 1.9;
+  const glow = size * 1.4;
+  return (
+    <>
+      <Rect
+        x={x - (halo - size) / 2}
+        y={y - (halo - size) / 2}
+        width={halo}
+        height={halo}
+        color="rgba(120,0,0,0.55)"
+        opacity={opacity}
+      />
+      <Rect
+        x={x - (glow - size) / 2}
+        y={y - (glow - size) / 2}
+        width={glow}
+        height={glow}
+        color="rgba(255,80,80,0.85)"
+        opacity={opacity}
+      />
+      <Rect
+        x={x}
+        y={y}
+        width={size}
+        height={size}
+        color="#ff2a2a"
+        opacity={opacity}
+      />
+    </>
   );
 }
 
