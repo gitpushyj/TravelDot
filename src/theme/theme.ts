@@ -17,6 +17,8 @@ export type Theme = {
   accentOn: string; // accent 위에 얹는 글씨/아이콘 색
   accentSoftBg: string;
   accentSoftText: string;
+  // accent와 함께 ping-pong 보간되는 보조 톤. Premium CTA의 시선 끄는 shimmer에 사용.
+  ctaShimmer: string;
   // 위험/한도 톤 (AI 채팅 한도 초과 배너 등)
   dangerBg: string;
   dangerOn: string;
@@ -60,6 +62,7 @@ export const LIGHT_THEME: Theme = {
   accentOn: "#ffffff",
   accentSoftBg: "#ffe5d3",
   accentSoftText: "#d96a3a",
+  ctaShimmer: "#ffb066",
   dangerBg: "#fee2e2",
   dangerOn: "#991b1b",
   tabRowBg: "#f3efe6",
@@ -93,6 +96,7 @@ export const DARK_THEME: Theme = {
   accentOn: "#ffffff",
   accentSoftBg: "rgba(255,122,61,0.16)",
   accentSoftText: "#ff9a66",
+  ctaShimmer: "#ffc28a",
   dangerBg: "rgba(220,38,38,0.18)",
   dangerOn: "#fecaca",
   tabRowBg: "rgba(255,255,255,0.06)",

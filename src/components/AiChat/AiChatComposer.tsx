@@ -1,4 +1,4 @@
-import { Lock, Send } from "lucide-react-native";
+import { Send } from "lucide-react-native";
 import { forwardRef, useImperativeHandle, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 
 import { useTheme } from "../../theme/themeStore";
+import AiChatComposerLocked from "./AiChatComposerLocked";
 
 const MAX = 150;
 
@@ -50,27 +51,7 @@ const AiChatComposer = forwardRef<AiChatComposerHandle, Props>(function AiChatCo
   };
 
   if (lockedForUpgrade) {
-    return (
-      <View style={styles.root}>
-        <View style={styles.inputRow}>
-          <View style={[styles.input, styles.inputLocked]}>
-            <Text style={styles.inputLockedText} numberOfLines={2}>
-              {t("aiChat.composerLockedPlaceholder")}
-            </Text>
-          </View>
-          <Pressable
-            onPress={onUpgrade}
-            style={({ pressed }) => [
-              styles.sendBtn,
-              pressed ? styles.sendBtnPressed : null,
-            ]}
-            accessibilityLabel={t("aiChat.upgrade")}
-          >
-            <Lock size={20} color={theme.accentOn} />
-          </Pressable>
-        </View>
-      </View>
-    );
+    return <AiChatComposerLocked onUpgrade={onUpgrade} />;
   }
 
   return (
@@ -136,13 +117,6 @@ function makeStyles(theme: ReturnType<typeof useTheme>) {
       borderRadius: 18,
       backgroundColor: theme.cardBg,
       color: theme.textPrimary,
-      fontSize: 15,
-    },
-    inputLocked: {
-      justifyContent: "center",
-    },
-    inputLockedText: {
-      color: theme.textSecondary,
       fontSize: 15,
     },
     sendBtn: {
