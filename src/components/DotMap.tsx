@@ -114,7 +114,11 @@ export default function DotMap({
         const countries =
           d.countries && d.countries.length ? d.countries : fallback;
         const primary = countries[0]?.code;
-        const isHome = primary != null && primary === homeCode;
+        // 본국이 도트의 countries 배열 중 어디에라도 들어있으면 본국으로 간주한다.
+        // primary만 보면 국경 도트(예: ES-FR, IT-FR)가 본국 색 대신 인접국 색이나
+        // selectedCountry 하이라이트(노랑)로 칠해지는 문제가 생긴다.
+        const isHome =
+          homeCode != null && countries.some((c) => c.code === homeCode);
         const count = primary ? visitCounts[primary] ?? 0 : 0;
         return {
           id: d.id,
