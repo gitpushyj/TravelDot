@@ -12,14 +12,12 @@ import {
 } from "react-native-reanimated";
 
 import {
-  AIRPLANE_COLS,
   AIRPLANE_PIVOT_COL,
   AIRPLANE_PIVOT_ROW,
   AIRPLANE_PIXELS,
   AIRPLANE_PIXELS_ACCENT,
   AIRPLANE_PIXELS_BODY,
   AIRPLANE_RED_LIGHT,
-  AIRPLANE_ROWS,
 } from "./airplanePixels";
 import {
   greatCircleInterp,
@@ -34,9 +32,9 @@ import { useFlightStore } from "./flightStore";
 const PATH_SAMPLES = 50;
 
 // 비행기 한 픽셀 = 도트 한 셀(gridSize*baseScale) × 이 비율.
-// 13×13 그리드에서 0.27 → 비행기 전체가 13 * 0.27 ≈ 3.5 셀 폭. 11×10 기존 크기와
-// 비슷한 화면 면적을 유지하면서 픽셀 수만 풍부해진다.
-const AIRPLANE_PIXEL_RATIO = 0.27;
+// 10×10 그리드에서 0.35 → 비행기 전체가 10 * 0.35 = 3.5 셀 폭. 기존(13×13×0.27)과
+// 화면상 비행기 크기를 비슷하게 유지한다.
+const AIRPLANE_PIXEL_RATIO = 0.35;
 
 // 경로 점 한 개 = 도트 셀의 이 비율 (도트보다 작은 사각형).
 const PATH_DOT_RATIO = 0.18;
@@ -237,11 +235,6 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     ];
   });
 
-  // 비행기 후미 트레일. 비행기 꼬리 바로 뒤(진행 방향 반대쪽)에 3개의 작은 점을 두어
-  // 잔상 느낌을 준다. 트레일은 같은 회전 그룹 안에 있어 비행기와 함께 회전 + wobble.
-  const TRAIL_COUNT = 3;
-  const trailDotPx = planePx * 0.7;
-
   // worklet 시간 진행 외에 경로 점의 색을 progress 기반으로 바꾸기 위한 임계값.
   // 각 점 인덱스 i가 progress * (N-1)보다 작으면 "지나온 점"(진한 색).
   // opacity를 점마다 derivedValue로 따로 두면 50개 worklet — 비싸진 않지만,
@@ -285,26 +278,8 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
         size={cellPx * 0.6}
         opacity={destPulse}
       />
-      {/* 비행기 — outline(어두운) layer + body(흰색) layer + 후미 트레일 */}
+      {/* 비행기 — outline(어두운) layer + body(흰색) layer */}
       <Group transform={planeTransform}>
-        {/* 트레일: 비행기 꼬리 뒤(진행 방향 반대쪽)에 점이 점점 흐려지며 깔린다.
-            비행기 그리드의 row 좌표 기준으로 row > AIRPLANE_ROWS 쪽이 꼬리 뒤. */}
-        {Array.from({ length: TRAIL_COUNT }).map((_, i) => {
-          const offset = (i + 1) * planePx * 1.4;
-          const alpha = 0.42 - i * 0.12;
-          const cx = AIRPLANE_PIVOT_COL * planePx;
-          const cy = AIRPLANE_ROWS * planePx + offset;
-          return (
-            <Rect
-              key={`pl-t-${i}`}
-              x={cx - trailDotPx / 2}
-              y={cy - trailDotPx / 2}
-              width={trailDotPx}
-              height={trailDotPx}
-              color={`rgba(255,255,255,${alpha})`}
-            />
-          );
-        })}
         {/* outline: 모든 픽셀(흰 body + 파란 accent)의 가장자리를 어둡게 그려
             검은 outline 효과. 살짝 큰 사각형을 먼저 깔고 그 위에 색 layer를 덮는다. */}
         {AIRPLANE_PIXELS.map((p) => (

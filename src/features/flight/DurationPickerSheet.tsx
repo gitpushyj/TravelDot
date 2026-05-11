@@ -16,9 +16,9 @@ import WheelPicker, { type WheelItem } from "../../components/WheelPicker";
 import { useTheme } from "../../theme/themeStore";
 import type { Theme } from "../../theme/theme";
 
-// 시각 입력 휠 시트. iOS 스타일 두 개의 휠(시간/분)을 가로로 배치.
-// FlightInputModal에서 시각 필드를 탭하면 이 시트가 위로 슬라이드되며 올라온다.
-// "완료"를 누르거나 backdrop을 누르면 닫힌다.
+// 비행 시간(시간:분) 입력 휠 시트. iOS 스타일 두 휠을 가로로 배치.
+// 시 = 0~23, 분 = 0~59. 휠 가운데 콜론 대신 단위 라벨("시간"/"분")을 둬
+// 시각이 아니라 duration임을 명확히 한다.
 
 const FADE_MS = 220;
 const SLIDE_MS = 260;
@@ -26,7 +26,7 @@ const SCREEN_H = Dimensions.get("window").height;
 
 const HOUR_ITEMS: WheelItem[] = Array.from({ length: 24 }, (_, i) => ({
   value: String(i),
-  label: i.toString().padStart(2, "0"),
+  label: String(i),
 }));
 
 const MINUTE_ITEMS: WheelItem[] = Array.from({ length: 60 }, (_, i) => ({
@@ -37,17 +37,17 @@ const MINUTE_ITEMS: WheelItem[] = Array.from({ length: 60 }, (_, i) => ({
 type Props = {
   visible: boolean;
   title: string;
-  initialHour: number;
-  initialMinute: number;
+  initialHours: number;
+  initialMinutes: number;
   onCancel: () => void;
-  onConfirm: (hour: number, minute: number) => void;
+  onConfirm: (hours: number, minutes: number) => void;
 };
 
-export default function TimePickerSheet({
+export default function DurationPickerSheet({
   visible,
   title,
-  initialHour,
-  initialMinute,
+  initialHours,
+  initialMinutes,
   onCancel,
   onConfirm,
 }: Props) {
@@ -55,16 +55,16 @@ export default function TimePickerSheet({
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
-  const [hour, setHour] = useState(String(initialHour));
-  const [minute, setMinute] = useState(String(initialMinute));
+  const [hours, setHours] = useState(String(initialHours));
+  const [minutes, setMinutes] = useState(String(initialMinutes));
 
   // 시트가 열릴 때마다 외부에서 들어온 초기값으로 동기화.
   useEffect(() => {
     if (visible) {
-      setHour(String(initialHour));
-      setMinute(String(initialMinute));
+      setHours(String(initialHours));
+      setMinutes(String(initialMinutes));
     }
-  }, [visible, initialHour, initialMinute]);
+  }, [visible, initialHours, initialMinutes]);
 
   // 슬라이드/페이드 직접 제어 — Modal의 슬라이드 애니메이션은 backdrop까지 함께
   // 슬라이드시키는 부작용이 있어 backdrop은 fade, 시트는 slide로 분리한다.
@@ -110,7 +110,7 @@ export default function TimePickerSheet({
   }, [visible, mountedVisible, backdropOpacity, sheetTranslateY]);
 
   const handleConfirm = () => {
-    onConfirm(Number(hour), Number(minute));
+    onConfirm(Number(hours), Number(minutes));
   };
 
   if (!mountedVisible) return null;
@@ -157,18 +157,19 @@ export default function TimePickerSheet({
             <View style={styles.wheelCol}>
               <WheelPicker
                 items={HOUR_ITEMS}
-                selectedValue={hour}
-                onChange={setHour}
+                selectedValue={hours}
+                onChange={setHours}
               />
             </View>
-            <Text style={styles.colon}>:</Text>
+            <Text style={styles.unit}>{t("flight.unitHour")}</Text>
             <View style={styles.wheelCol}>
               <WheelPicker
                 items={MINUTE_ITEMS}
-                selectedValue={minute}
-                onChange={setMinute}
+                selectedValue={minutes}
+                onChange={setMinutes}
               />
             </View>
+            <Text style={styles.unit}>{t("flight.unitMinute")}</Text>
           </View>
         </SafeAreaView>
       </Animated.View>
@@ -222,15 +223,15 @@ function makeStyles(theme: Theme) {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      paddingHorizontal: 32,
+      paddingHorizontal: 20,
       paddingBottom: 8,
     },
-    wheelCol: { flex: 1, maxWidth: 140 },
-    colon: {
+    wheelCol: { flex: 1, maxWidth: 110 },
+    unit: {
       color: theme.textPrimary,
-      fontSize: 24,
-      fontWeight: "800",
-      marginHorizontal: 8,
+      fontSize: 16,
+      fontWeight: "700",
+      marginHorizontal: 6,
     },
   });
 }

@@ -15,16 +15,9 @@ import type { Theme } from "../../theme/theme";
 
 import AirportPicker from "./AirportPicker";
 import type { Airport } from "./airports";
+import DurationPickerSheet from "./DurationPickerSheet";
 import { estimateFlightMinutes } from "./estimateFlightDuration";
 import { useFlightStore } from "./flightStore";
-import TimePickerSheet from "./TimePickerSheet";
-import {
-  formatDurationMinutes,
-  formatHm,
-  hmToEpochAfter,
-  hmToEpochToday,
-  parseHm,
-} from "./timeUtils";
 
 type Props = {
   visible: boolean;
@@ -32,7 +25,6 @@ type Props = {
 };
 
 type Side = "origin" | "destination" | null;
-type TimeSide = "depart" | "arrive" | null;
 
 export default function FlightInputModal({ visible, onClose }: Props) {
   const { t } = useTranslation();
@@ -43,14 +35,13 @@ export default function FlightInputModal({ visible, onClose }: Props) {
   const [origin, setOrigin] = useState<Airport | null>(null);
   const [destination, setDestination] = useState<Airport | null>(null);
   const [pickerSide, setPickerSide] = useState<Side>(null);
-  const [timeSide, setTimeSide] = useState<TimeSide>(null);
+  const [durationOpen, setDurationOpen] = useState(false);
 
-  // 시각 입력 텍스트. 모달 열릴 때 기본값을 채워 준다.
-  const [departText, setDepartText] = useState("");
-  const [arriveText, setArriveText] = useState("");
-  // 도착 시각을 사용자가 수동 수정했는지 — 수정했으면 출발지/도착지 변경 시 자동
-  // 재계산하지 않는다. 출발지·도착지를 둘 다 다시 바꾸면 false로 리셋된다.
-  const [arriveDirty, setArriveDirty] = useState(false);
+  // 비행 시간 (시/분). 두 공항 선택 시 자동 추정값으로 채우고, 사용자가 한 번이라도
+  // 직접 휠을 돌리면 dirty가 true가 되어 그 뒤부터는 자동 재계산하지 않는다.
+  const [durationHours, setDurationHours] = useState(0);
+  const [durationMinutes, setDurationMinutes] = useState(0);
+  const [durationDirty, setDurationDirty] = useState(false);
 
   // 모달이 열릴 때마다 입력 상태 초기화.
   useEffect(() => {
@@ -58,62 +49,66 @@ export default function FlightInputModal({ visible, onClose }: Props) {
     setOrigin(null);
     setDestination(null);
     setPickerSide(null);
-    setTimeSide(null);
-    setDepartText(formatHm(Date.now()));
-    setArriveText("");
-    setArriveDirty(false);
+    setDurationOpen(false);
+    setDurationHours(0);
+    setDurationMinutes(0);
+    setDurationDirty(false);
   }, [visible]);
 
-  // 두 공항이 다 선택되고 사용자가 도착 시각을 직접 수정하지 않았다면 자동 계산.
+  // 두 공항이 다 선택되고 사용자가 시간을 직접 수정하지 않았다면 추정값으로 자동 채움.
   useEffect(() => {
     if (!origin || !destination) return;
-    if (arriveDirty) return;
-    const dep = parseHm(departText);
-    if (!dep) return;
-    const departEpoch = hmToEpochToday(dep.h, dep.m, Date.now());
+    if (durationDirty) return;
+    if (origin.iata === destination.iata) return;
     const minutes = estimateFlightMinutes(
       origin.lat,
       origin.lng,
       destination.lat,
       destination.lng
     );
-    const arriveEpoch = departEpoch + minutes * 60_000;
-    setArriveText(formatHm(arriveEpoch));
-  }, [origin, destination, departText, arriveDirty]);
+    setDurationHours(Math.floor(minutes / 60));
+    setDurationMinutes(minutes % 60);
+  }, [origin, destination, durationDirty]);
 
-  // 검증: 두 공항 + 시각 둘 다 유효 + 도착>출발이어야 비행 시작 가능.
+  // 총 비행 시간(분). 0이면 시작 불가.
+  const totalMinutes = durationHours * 60 + durationMinutes;
+
   const validation = useMemo(() => {
-    if (!origin || !destination) return { ok: false as const, minutes: 0 };
-    if (origin.iata === destination.iata) return { ok: false as const, minutes: 0 };
-    const dep = parseHm(departText);
-    const arr = parseHm(arriveText);
-    if (!dep || !arr) return { ok: false as const, minutes: 0 };
-    const departEpoch = hmToEpochToday(dep.h, dep.m, Date.now());
-    const arriveEpoch = hmToEpochAfter(arr.h, arr.m, departEpoch);
-    const minutes = Math.round((arriveEpoch - departEpoch) / 60_000);
-    if (minutes < 1) return { ok: false as const, minutes: 0 };
-    return {
-      ok: true as const,
-      departEpoch,
-      arriveEpoch,
-      minutes,
-    };
-  }, [origin, destination, departText, arriveText]);
+    if (!origin || !destination) return { ok: false as const };
+    if (origin.iata === destination.iata) return { ok: false as const };
+    if (totalMinutes < 1) return { ok: false as const };
+    return { ok: true as const };
+  }, [origin, destination, totalMinutes]);
 
   const handleStart = async () => {
     if (!validation.ok || !origin || !destination) return;
-    await start(origin, destination, validation.departEpoch, validation.arriveEpoch);
+    const departAt = Date.now();
+    const arriveAt = departAt + totalMinutes * 60_000;
+    await start(origin, destination, departAt, arriveAt);
     onClose();
   };
 
-  // 휠 시트의 초기값 — 현재 텍스트가 유효하면 그 값, 아니면 "지금"으로.
-  const timeSheetInitial = useMemo(() => {
-    const which = timeSide === "arrive" ? arriveText : departText;
-    const parsed = parseHm(which);
-    if (parsed) return parsed;
-    const d = new Date();
-    return { h: d.getHours(), m: d.getMinutes() };
-  }, [timeSide, departText, arriveText]);
+  // 시간 필드에 표시할 텍스트. "Xh Ym" 형태. 0이면 placeholder.
+  const durationPrimary =
+    totalMinutes === 0
+      ? "--"
+      : durationHours === 0
+        ? t("flight.minuteShort", { minutes: durationMinutes })
+        : durationMinutes === 0
+          ? t("flight.hourShort", { hours: durationHours })
+          : t("flight.hourMinuteShort", {
+              hours: durationHours,
+              minutes: durationMinutes,
+            });
+
+  // 보조 텍스트: 두 공항 미선택이면 안내, 선택 + 자동 채움 직후면 "예상값 안내",
+  // 사용자가 수동 수정했으면 표시하지 않는다.
+  const durationSecondary =
+    !origin || !destination
+      ? t("flight.durationHintAuto")
+      : !durationDirty && totalMinutes > 0
+        ? t("flight.durationHintEstimate")
+        : null;
 
   return (
     <Modal
@@ -156,26 +151,11 @@ export default function FlightInputModal({ visible, onClose }: Props) {
 
           <Field
             styles={styles}
-            label={t("flight.departTime")}
-            onPress={() => setTimeSide("depart")}
-            empty={!parseHm(departText)}
-            primary={departText || "--:--"}
-            secondary={null}
-          />
-
-          <Field
-            styles={styles}
-            label={t("flight.arriveTime")}
-            onPress={() => setTimeSide("arrive")}
-            empty={!parseHm(arriveText)}
-            primary={arriveText || "--:--"}
-            secondary={
-              validation.ok
-                ? t("flight.arriveHintMinutes", {
-                    duration: formatDurationMinutes(validation.minutes),
-                  })
-                : t("flight.arriveHintAuto")
-            }
+            label={t("flight.duration")}
+            onPress={() => setDurationOpen(true)}
+            empty={totalMinutes === 0}
+            primary={durationPrimary}
+            secondary={durationSecondary}
           />
 
           <Pressable
@@ -213,26 +193,17 @@ export default function FlightInputModal({ visible, onClose }: Props) {
           onClose={() => setPickerSide(null)}
         />
 
-        <TimePickerSheet
-          visible={timeSide !== null}
-          title={
-            timeSide === "arrive"
-              ? t("flight.arriveTime")
-              : t("flight.departTime")
-          }
-          initialHour={timeSheetInitial.h}
-          initialMinute={timeSheetInitial.m}
-          onCancel={() => setTimeSide(null)}
+        <DurationPickerSheet
+          visible={durationOpen}
+          title={t("flight.duration")}
+          initialHours={durationHours}
+          initialMinutes={durationMinutes}
+          onCancel={() => setDurationOpen(false)}
           onConfirm={(h, m) => {
-            const hm = `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
-            if (timeSide === "depart") {
-              setDepartText(hm);
-              setArriveDirty(false); // 출발 바뀌면 도착 자동 재계산 허용.
-            } else if (timeSide === "arrive") {
-              setArriveText(hm);
-              setArriveDirty(true);
-            }
-            setTimeSide(null);
+            setDurationHours(h);
+            setDurationMinutes(m);
+            setDurationDirty(true);
+            setDurationOpen(false);
           }}
         />
       </SafeAreaView>
