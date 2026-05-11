@@ -80,12 +80,17 @@ export default function FlightInputModal({ visible, onClose }: Props) {
     return { ok: true as const };
   }, [origin, destination, totalMinutes]);
 
-  const handleStart = async () => {
+  const handleStart = () => {
     if (!validation.ok || !origin || !destination) return;
     const departAt = Date.now();
     const arriveAt = departAt + totalMinutes * 60_000;
-    await start(origin, destination, departAt, arriveAt);
+    // Modal slide-down(약 0.3초)이 끝난 뒤에 비행 store를 set한다. 메인 화면 DotMap의
+    // 자동 줌 시퀀스(출발지 → 두 공항 보이는 viewport, 1.5s)가 모달에 가려지지 않고
+    // 사용자 시야에서 처음부터 끝까지 재생되도록 하기 위함.
     onClose();
+    setTimeout(() => {
+      void start(origin, destination, departAt, arriveAt);
+    }, 350);
   };
 
   // 시간 필드에 표시할 텍스트. "Xh Ym" 형태. 0이면 placeholder.
