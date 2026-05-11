@@ -3,7 +3,7 @@
     "title": "AI",
     "headerClear": "Chat löschen",
     "composerPlaceholder": "Frag deinen Reisekumpel",
-    "composerLockedPlaceholder": "Auf Pro upgraden, um den Chat zu nutzen",
+    "composerLockedPlaceholder": "Premium-Funktion",
     "composerCounter": "{{n}}/150",
     "send": "Senden",
     "upgrade": "Upgraden",

@@ -3,7 +3,7 @@
     "title": "AI",
     "headerClear": "Cancella chat",
     "composerPlaceholder": "Chiedi al tuo compagno di viaggio",
-    "composerLockedPlaceholder": "Passa a Pro per usare la chat",
+    "composerLockedPlaceholder": "Funzione Premium",
     "composerCounter": "{{n}}/150",
     "send": "Invia",
     "upgrade": "Aggiorna",

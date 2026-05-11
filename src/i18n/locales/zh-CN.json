@@ -3,7 +3,7 @@
     "title": "AI",
     "headerClear": "清空对话",
     "composerPlaceholder": "问问你的旅行搭子",
-    "composerLockedPlaceholder": "升级到 Pro 后即可使用",
+    "composerLockedPlaceholder": "Premium 功能",
     "composerCounter": "{{n}}/150",
     "send": "发送",
     "upgrade": "升级",

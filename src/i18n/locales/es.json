@@ -3,7 +3,7 @@
     "title": "AI",
     "headerClear": "Borrar chat",
     "composerPlaceholder": "Pregúntale a tu compi de viaje",
-    "composerLockedPlaceholder": "Actualiza a Pro para usar el chat",
+    "composerLockedPlaceholder": "Función Premium",
     "composerCounter": "{{n}}/150",
     "send": "Enviar",
     "upgrade": "Actualizar",

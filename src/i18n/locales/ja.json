@@ -3,7 +3,7 @@
     "title": "AI",
     "headerClear": "チャットを消す",
     "composerPlaceholder": "旅の相棒に聞いてみて",
-    "composerLockedPlaceholder": "Pro にアップグレードしてご利用ください",
+    "composerLockedPlaceholder": "Premium 機能",
     "composerCounter": "{{n}}/150",
     "send": "送信",
     "upgrade": "アップグレード",
