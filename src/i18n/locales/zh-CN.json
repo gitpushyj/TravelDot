@@ -1,42 +1,42 @@
 {
   "aiChat": {
     "title": "AI",
-    "headerClear": "Clear chat",
-    "composerPlaceholder": "Ask your travel buddy",
+    "headerClear": "清空对话",
+    "composerPlaceholder": "问问你的旅行搭子",
     "composerLockedPlaceholder": "升级到 Pro 后即可使用",
     "composerCounter": "{{n}}/150",
-    "send": "Send",
+    "send": "发送",
     "upgrade": "升级",
-    "thinking": "Thinking…",
+    "thinking": "思考中…",
     "copied": "已复制",
     "empty": {
-      "heading": "Ask your travel buddy",
-      "subheading": "I'll answer using your travel data"
+      "heading": "问问你的旅行搭子",
+      "subheading": "我会根据你的旅行数据来回答"
     },
-    "exampleNextDestination": "Where should I go next?",
-    "exampleSafety": "Where's safe to travel right now?",
-    "examplePattern": "What's my travel vibe?",
+    "exampleNextDestination": "下次去哪儿好呢？",
+    "exampleSafety": "现在哪里旅行最安全？",
+    "examplePattern": "我的旅行风格是怎样的？",
     "error": {
-      "generic": "Hit an unexpected snag 🥲 Give it another try — if it keeps happening, come back in a bit.",
-      "network": "Connection looks shaky. Check your Wi-Fi/data and try sending again.",
-      "invalidInput": "Couldn't send that one — make sure it's under 150 characters and try again.",
-      "upstream": "AI service is having a moment 🥲 Try again in a minute or two. You can resend the same message.",
-      "imageLoadFailed": "Couldn't load image",
+      "generic": "出了点意外的小问题 🥲 再试一次,如果还不行,过一会儿再来。",
+      "network": "网络好像不稳定。检查一下 Wi-Fi/数据再试着发一下。",
+      "invalidInput": "这条没发出去 — 确保在 150 字以内再试试。",
+      "upstream": "AI 服务现在不太给力 🥲 一两分钟后再试,可以再发一次相同的消息。",
+      "imageLoadFailed": "图片加载失败",
       "rateLimited": {
-        "free": "You've used today's free quota (1) 🥲 Upgrade your plan to chat more — premium gives you 10/day, power gives you 30/day. Refills {{resetAt}}.",
-        "premium": "You've used today's premium quota (10) 🥲 Upgrade your plan for 30/day. Refills {{resetAt}}.",
-        "power": "You've used today's power quota (30) 🥲 Refills {{resetAt}}."
+        "free": "今天的免费额度(1 次)用完了 🥲 升级套餐可以聊更多 — 高级版每天 10 次,旗舰版每天 30 次。{{resetAt}}重置。",
+        "premium": "今天的高级额度(10 次)用完了 🥲 升级到旗舰版每天 30 次。{{resetAt}}重置。",
+        "power": "今天的旗舰额度(30 次)用完了 🥲 {{resetAt}}重置。"
       }
     },
     "confirmClear": {
-      "title": "Clear chat",
-      "body": "Wipe everything we've said so far?",
-      "confirm": "Clear",
-      "cancel": "Cancel"
+      "title": "清空对话",
+      "body": "把目前的对话全部清空吗？",
+      "confirm": "清空",
+      "cancel": "取消"
     },
     "relative": {
-      "todayAt": "today at {{time}}",
-      "tomorrowAt": "tomorrow at {{time}}"
+      "todayAt": "今天 {{time}}",
+      "tomorrowAt": "明天 {{time}}"
     }
   },
   "common": {

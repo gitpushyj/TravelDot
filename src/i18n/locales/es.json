@@ -1,42 +1,42 @@
 {
   "aiChat": {
     "title": "AI",
-    "headerClear": "Clear chat",
-    "composerPlaceholder": "Ask your travel buddy",
+    "headerClear": "Borrar chat",
+    "composerPlaceholder": "Pregúntale a tu compi de viaje",
     "composerLockedPlaceholder": "Actualiza a Pro para usar el chat",
     "composerCounter": "{{n}}/150",
-    "send": "Send",
+    "send": "Enviar",
     "upgrade": "Actualizar",
-    "thinking": "Thinking…",
+    "thinking": "Pensando…",
     "copied": "Copiado",
     "empty": {
-      "heading": "Ask your travel buddy",
-      "subheading": "I'll answer using your travel data"
+      "heading": "Pregúntale a tu compi de viaje",
+      "subheading": "Te contesto usando tus datos de viaje"
     },
-    "exampleNextDestination": "Where should I go next?",
-    "exampleSafety": "Where's safe to travel right now?",
-    "examplePattern": "What's my travel vibe?",
+    "exampleNextDestination": "¿A dónde voy la próxima vez?",
+    "exampleSafety": "¿Dónde es seguro viajar ahora mismo?",
+    "examplePattern": "¿Cómo es mi estilo de viaje?",
     "error": {
-      "generic": "Hit an unexpected snag 🥲 Give it another try — if it keeps happening, come back in a bit.",
-      "network": "Connection looks shaky. Check your Wi-Fi/data and try sending again.",
-      "invalidInput": "Couldn't send that one — make sure it's under 150 characters and try again.",
-      "upstream": "AI service is having a moment 🥲 Try again in a minute or two. You can resend the same message.",
-      "imageLoadFailed": "Couldn't load image",
+      "generic": "Surgió un imprevisto 🥲 Inténtalo otra vez — si sigue pasando, vuelve en un rato.",
+      "network": "La conexión parece inestable. Revisa tu Wi-Fi/datos y vuelve a enviar.",
+      "invalidInput": "No se pudo enviar — asegúrate de que tenga menos de 150 caracteres y vuelve a intentarlo.",
+      "upstream": "El servicio de IA está un poco inestable 🥲 Inténtalo en uno o dos minutos. Puedes reenviar el mismo mensaje.",
+      "imageLoadFailed": "No se pudo cargar la imagen",
       "rateLimited": {
-        "free": "You've used today's free quota (1) 🥲 Upgrade your plan to chat more — premium gives you 10/day, power gives you 30/day. Refills {{resetAt}}.",
-        "premium": "You've used today's premium quota (10) 🥲 Upgrade your plan for 30/day. Refills {{resetAt}}.",
-        "power": "You've used today's power quota (30) 🥲 Refills {{resetAt}}."
+        "free": "Ya usaste el cupo gratis de hoy (1) 🥲 Actualiza tu plan para chatear más — premium te da 10/día y power 30/día. Se recarga {{resetAt}}.",
+        "premium": "Ya usaste el cupo premium de hoy (10) 🥲 Sube a power para tener 30/día. Se recarga {{resetAt}}.",
+        "power": "Ya usaste el cupo power de hoy (30) 🥲 Se recarga {{resetAt}}."
       }
     },
     "confirmClear": {
-      "title": "Clear chat",
-      "body": "Wipe everything we've said so far?",
-      "confirm": "Clear",
-      "cancel": "Cancel"
+      "title": "Borrar chat",
+      "body": "¿Borrar todo lo que llevamos dicho?",
+      "confirm": "Borrar",
+      "cancel": "Cancelar"
     },
     "relative": {
-      "todayAt": "today at {{time}}",
-      "tomorrowAt": "tomorrow at {{time}}"
+      "todayAt": "hoy a las {{time}}",
+      "tomorrowAt": "mañana a las {{time}}"
     }
   },
   "common": {

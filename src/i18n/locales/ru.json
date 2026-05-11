@@ -1,42 +1,42 @@
 {
   "aiChat": {
     "title": "AI",
-    "headerClear": "Clear chat",
-    "composerPlaceholder": "Ask your travel buddy",
+    "headerClear": "Очистить чат",
+    "composerPlaceholder": "Спроси у напарника по путешествиям",
     "composerLockedPlaceholder": "Обновитесь до Pro, чтобы использовать чат",
     "composerCounter": "{{n}}/150",
-    "send": "Send",
+    "send": "Отправить",
     "upgrade": "Улучшить",
-    "thinking": "Thinking…",
+    "thinking": "Думаю…",
     "copied": "Скопировано",
     "empty": {
-      "heading": "Ask your travel buddy",
-      "subheading": "I'll answer using your travel data"
+      "heading": "Спроси у напарника по путешествиям",
+      "subheading": "Отвечу, используя твои данные о поездках"
     },
-    "exampleNextDestination": "Where should I go next?",
-    "exampleSafety": "Where's safe to travel right now?",
-    "examplePattern": "What's my travel vibe?",
+    "exampleNextDestination": "Куда поехать в следующий раз?",
+    "exampleSafety": "Где сейчас безопасно путешествовать?",
+    "examplePattern": "Какой у меня стиль путешествий?",
     "error": {
-      "generic": "Hit an unexpected snag 🥲 Give it another try — if it keeps happening, come back in a bit.",
-      "network": "Connection looks shaky. Check your Wi-Fi/data and try sending again.",
-      "invalidInput": "Couldn't send that one — make sure it's under 150 characters and try again.",
-      "upstream": "AI service is having a moment 🥲 Try again in a minute or two. You can resend the same message.",
-      "imageLoadFailed": "Couldn't load image",
+      "generic": "Случилась неожиданная заминка 🥲 Попробуй ещё раз — если продолжится, загляни попозже.",
+      "network": "Похоже, связь нестабильна. Проверь Wi-Fi/мобильную сеть и отправь ещё раз.",
+      "invalidInput": "Не удалось отправить — убедись, что меньше 150 символов, и попробуй снова.",
+      "upstream": "AI-сервис сейчас немного барахлит 🥲 Попробуй через минуту-другую. Можешь отправить то же сообщение.",
+      "imageLoadFailed": "Не удалось загрузить изображение",
       "rateLimited": {
-        "free": "You've used today's free quota (1) 🥲 Upgrade your plan to chat more — premium gives you 10/day, power gives you 30/day. Refills {{resetAt}}.",
-        "premium": "You've used today's premium quota (10) 🥲 Upgrade your plan for 30/day. Refills {{resetAt}}.",
-        "power": "You've used today's power quota (30) 🥲 Refills {{resetAt}}."
+        "free": "Бесплатный лимит на сегодня (1) уже израсходован 🥲 Обнови тариф, чтобы общаться больше — premium даёт 10/день, power — 30/день. Пополнится {{resetAt}}.",
+        "premium": "Premium-лимит на сегодня (10) израсходован 🥲 Перейди на power, чтобы получать 30/день. Пополнится {{resetAt}}.",
+        "power": "Power-лимит на сегодня (30) израсходован 🥲 Пополнится {{resetAt}}."
       }
     },
     "confirmClear": {
-      "title": "Clear chat",
-      "body": "Wipe everything we've said so far?",
-      "confirm": "Clear",
-      "cancel": "Cancel"
+      "title": "Очистить чат",
+      "body": "Стереть всё, что мы наговорили?",
+      "confirm": "Очистить",
+      "cancel": "Отмена"
     },
     "relative": {
-      "todayAt": "today at {{time}}",
-      "tomorrowAt": "tomorrow at {{time}}"
+      "todayAt": "сегодня в {{time}}",
+      "tomorrowAt": "завтра в {{time}}"
     }
   },
   "common": {
