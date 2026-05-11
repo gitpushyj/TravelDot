@@ -16,6 +16,7 @@ import {
   useDerivedValue,
   useSharedValue,
   withDelay,
+  withSequence,
   withTiming,
 } from "react-native-reanimated";
 
@@ -549,21 +550,33 @@ export default function DotMap({
     cancelAnimation(scale);
     cancelAnimation(tx);
     cancelAnimation(ty);
-    scale.value = startScale;
-    tx.value = startTx;
-    ty.value = startTy;
-    savedTx.value = startTx;
-    savedTy.value = startTy;
 
+    // 같은 JS tick에서 `scale.value = startScale` 후 `scale.value = withTiming(end)`을
+    // 연달아 호출하면, 첫 set이 worklet 스레드에 반영되기 전에 withTiming이 큐잉되어
+    // 시작값이 startScale이 아닌 이전 값(예: 인트로가 끝낸 1.33)부터 보간되는 race가
+    // 생긴다. withSequence로 한 번에 묶어 정의하면 worklet에서 일관되게 처리되어
+    // "줌인 → 1.5초 줌아웃" 시퀀스가 항상 의도대로 보인다.
     const easing = Easing.inOut(Easing.cubic);
-    scale.value = withTiming(endScale, { duration: 1500, easing });
-    tx.value = withTiming(endTx, { duration: 1500, easing });
-    ty.value = withTiming(endTy, { duration: 1500, easing }, (finished) => {
-      if (finished) {
-        savedTx.value = endTx;
-        savedTy.value = endTy;
-      }
-    });
+    scale.value = withSequence(
+      withTiming(startScale, { duration: 0 }),
+      withTiming(endScale, { duration: 1500, easing })
+    );
+    tx.value = withSequence(
+      withTiming(startTx, { duration: 0 }),
+      withTiming(endTx, { duration: 1500, easing })
+    );
+    ty.value = withSequence(
+      withTiming(startTy, { duration: 0 }),
+      withTiming(endTy, { duration: 1500, easing }, (finished) => {
+        if (finished) {
+          savedTx.value = endTx;
+          savedTy.value = endTy;
+        }
+      })
+    );
+    // savedTx/Ty는 시퀀스가 끝나면 위 콜백에서 endTx/Ty로 set된다.
+    // 그 사이에 사용자가 pan/pinch를 시작해도 각 제스처의 onStart에서 tx/ty 현재값을
+    // 다시 잡으므로 일관성은 유지된다.
   }, [
     flightAutoZoom,
     activeFlight,
