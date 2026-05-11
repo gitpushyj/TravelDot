@@ -13,7 +13,7 @@
       "backgroundColor": "#1099AC"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.gitpush.visitgrid",
       "appleTeamId": "27LS459HJ3",
       "usesAppleSignIn": true,
