@@ -16,6 +16,8 @@ import {
   AIRPLANE_PIVOT_COL,
   AIRPLANE_PIVOT_ROW,
   AIRPLANE_PIXELS,
+  AIRPLANE_PIXELS_ACCENT,
+  AIRPLANE_PIXELS_BODY,
   AIRPLANE_RED_LIGHT,
   AIRPLANE_ROWS,
 } from "./airplanePixels";
@@ -62,6 +64,10 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   // 을 흉내내 opacity 0.18 ↔ 1을 빠르게 왕복한다.
   const redBlink = useSharedValue(0);
 
+  // 목적지 도트 빨간 깜빡 펄스. 비행기 비콘과는 별도 사이클로 더 부드럽게 호흡하도록
+  // 1.4초 주기 sin-easing pulse를 적용한다.
+  const destPulse = useSharedValue(0);
+
   // 도착시각 도달을 polling으로 잡는다. setInterval 1초 tick + AppState 변화 시점.
   const arrivalIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -98,11 +104,23 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
       -1,
       false
     );
+    // 목적지 도트 펄스: 1.4초 주기로 부드럽게 호흡(0.25 ↔ 1). 비콘과는 분리된 리듬.
+    cancelAnimation(destPulse);
+    destPulse.value = 0.25;
+    destPulse.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 700, easing: Easing.inOut(Easing.sin) }),
+        withTiming(0.25, { duration: 700, easing: Easing.inOut(Easing.sin) })
+      ),
+      -1,
+      false
+    );
     return () => {
       cancelAnimation(wobble);
       cancelAnimation(redBlink);
+      cancelAnimation(destPulse);
     };
-  }, [active, wobble, redBlink]);
+  }, [active, wobble, redBlink, destPulse]);
 
   // active 비행이 바뀌거나 AppState가 active로 돌아올 때 progress를 (남은 시간)만큼 다시 보간.
   useEffect(() => {
@@ -178,7 +196,10 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     // SVG/Skia rotate 단위는 라디안(useDerivedValue 안). 정북 0° 그대로 적용 가능 —
     // 픽셀 그리드의 코가 row 0(위쪽)에 있어 회전 전 방향이 정북이기 때문.
     const bearingRad = toRad(bearingDeg);
-    return { pathPx, bearingRad };
+    // 목적지 도트 위치 (도트지도 좌표계). 빨간 깜빡 도트의 고정 위치로 사용.
+    const destX = lngToX(destination.lng, baseScale);
+    const destY = latToY(destination.lat, maxLat, baseScale);
+    return { pathPx, bearingRad, destX, destY };
   }, [active, baseScale, maxLat]);
 
   // 비행기 픽셀 1개 크기·pivot 픽셀(화면 좌표계 기준).
@@ -256,6 +277,14 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
           progress={progress}
         />
       ))}
+      {/* 목적지 도트 빨간 펄스. 도트지도의 도트와 같은 크기. 비행기 layer 아래에 두어
+          비행기가 도착했을 때도 비행기가 더 위로 보이게 한다. */}
+      <DestinationPulse
+        x={staticGeom.destX}
+        y={staticGeom.destY}
+        size={cellPx * 0.6}
+        opacity={destPulse}
+      />
       {/* 비행기 — outline(어두운) layer + body(흰색) layer + 후미 트레일 */}
       <Group transform={planeTransform}>
         {/* 트레일: 비행기 꼬리 뒤(진행 방향 반대쪽)에 점이 점점 흐려지며 깔린다.
@@ -276,7 +305,8 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
             />
           );
         })}
-        {/* outline: 픽셀 한 변보다 약간 더 크게 그려 1px 정도 어두운 테두리처럼 보임 */}
+        {/* outline: 모든 픽셀(흰 body + 파란 accent)의 가장자리를 어둡게 그려
+            검은 outline 효과. 살짝 큰 사각형을 먼저 깔고 그 위에 색 layer를 덮는다. */}
         {AIRPLANE_PIXELS.map((p) => (
           <Rect
             key={`pl-o-${p.col}-${p.row}`}
@@ -284,10 +314,11 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
             y={p.row * planePx - planePx * 0.18}
             width={planePx * 1.36}
             height={planePx * 1.36}
-            color="rgba(0,0,0,0.65)"
+            color="rgba(0,0,0,0.7)"
           />
         ))}
-        {AIRPLANE_PIXELS.map((p) => (
+        {/* body: 흰색 채움 */}
+        {AIRPLANE_PIXELS_BODY.map((p) => (
           <Rect
             key={`pl-w-${p.col}-${p.row}`}
             x={p.col * planePx}
@@ -295,6 +326,17 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
             width={planePx}
             height={planePx}
             color="#ffffff"
+          />
+        ))}
+        {/* accent: 파란 액센트(조종석, 날개 줄, 창문) — body 위에 덮어 그린다 */}
+        {AIRPLANE_PIXELS_ACCENT.map((p) => (
+          <Rect
+            key={`pl-b-${p.col}-${p.row}`}
+            x={p.col * planePx}
+            y={p.row * planePx}
+            width={planePx}
+            height={planePx}
+            color="#2b6cff"
           />
         ))}
         {/* 꼬리 끝 빨간 anti-collision 점등. 좌표는 AIRPLANE_RED_LIGHT,
@@ -307,6 +349,43 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
         />
       </Group>
     </Group>
+  );
+}
+
+// 목적지 도트 빨간 펄스. (x, y)는 도트지도 좌표계에서 도트의 중심.
+// 도트지도의 다른 도트들과 같은 크기 정도의 빨간 사각형 + 살짝 큰 반투명 후광.
+// opacity는 destPulse sharedValue로 1.4초 주기 호흡.
+function DestinationPulse({
+  x,
+  y,
+  size,
+  opacity,
+}: {
+  x: number;
+  y: number;
+  size: number;
+  opacity: { value: number };
+}) {
+  const halo = size * 2.4;
+  return (
+    <>
+      <Rect
+        x={x - halo / 2}
+        y={y - halo / 2}
+        width={halo}
+        height={halo}
+        color="rgba(255,40,40,0.35)"
+        opacity={opacity}
+      />
+      <Rect
+        x={x - size / 2}
+        y={y - size / 2}
+        width={size}
+        height={size}
+        color="#ff2a2a"
+        opacity={opacity}
+      />
+    </>
   );
 }
 
