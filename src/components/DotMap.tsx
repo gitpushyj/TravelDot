@@ -21,6 +21,8 @@ import {
 
 import dotData from "../../assets/data/dots.json";
 import { COUNTRY_CAPITALS } from "../data/countryCapitals";
+import FlightOverlay from "../features/flight/FlightOverlay";
+import { useFlightStore } from "../features/flight/flightStore";
 import { useVisitStore } from "../features/travel/visitStore";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
@@ -66,6 +68,10 @@ type Props = {
   // 부모 View가 시계방향(rotate: "90deg")으로 회전되어 있는 경우 true.
   // RNGH가 보고하는 translation/focal/탭 좌표를 회전된 로컬 프레임으로 되돌린다.
   parentRotated90?: boolean;
+  // 비행 시작 시 viewport를 출발지 줌인 → 1.5초 줌아웃으로 자동 전환할지 여부.
+  // 메인 화면에만 true. MapZoomScreen 등 다른 instance에서는 false로 두어 사용자의
+  // 자유 줌/팬을 방해하지 않는다.
+  flightAutoZoom?: boolean;
 };
 
 export default function DotMap({
@@ -77,6 +83,7 @@ export default function DotMap({
   autoPickFirst = false,
   playIntro = true,
   parentRotated90 = false,
+  flightAutoZoom = false,
 }: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const viewBoxW = 360;
@@ -478,6 +485,101 @@ export default function DotMap({
     savedTy,
   ]);
 
+  // 비행 시작 시 자동 viewport 줌. 출발지에 줌인된 상태에서 시작 → 1.5초에 걸쳐 부드럽게
+  // 줌아웃해 출발+도착지가 모두 보이는 viewport로 이동. flightAutoZoom prop이 true인
+  // instance(메인 화면)에서만 발동한다. MapZoom 전체화면에서는 자동 줌을 띄우지 않는다.
+  const activeFlight = useFlightStore((s) => s.active);
+  const lastAutoZoomedFlightIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!flightAutoZoom) return;
+    if (size.width === 0 || size.height === 0) return;
+    const id = activeFlight?.id ?? null;
+    if (id === lastAutoZoomedFlightIdRef.current) return;
+    lastAutoZoomedFlightIdRef.current = id;
+    if (!activeFlight) return;
+    if (contentW <= 0 || contentH <= 0) return;
+
+    // 시작 viewport: 출발 공항이 화면 중앙, 도시 한두 개가 보일 만한 줌인 배율.
+    const startScale = clampJs(5, MIN_SCALE, MAX_SCALE);
+    const ox = (activeFlight.origin.lng + 180) * baseScale;
+    const oy = (maxLat - activeFlight.origin.lat) * baseScale;
+    const startTx = clampPanX(
+      size.width / 2 - startScale * ox,
+      startScale,
+      size.width,
+      contentW
+    );
+    const startTy = clampPanY(
+      size.height / 2 - startScale * oy,
+      startScale,
+      size.height,
+      contentH
+    );
+
+    // 종료 viewport: 두 공항 bounding box + padding 1.4 fit.
+    const dx2 = (activeFlight.destination.lng + 180) * baseScale;
+    const dy2 = (maxLat - activeFlight.destination.lat) * baseScale;
+    const minCx = Math.min(ox, dx2);
+    const maxCx = Math.max(ox, dx2);
+    const minCy = Math.min(oy, dy2);
+    const maxCy = Math.max(oy, dy2);
+    const padding = 1.4;
+    const bboxW = Math.max(maxCx - minCx, 1);
+    const bboxH = Math.max(maxCy - minCy, 1);
+    const endScale = clampJs(
+      Math.min(size.width / (bboxW * padding), size.height / (bboxH * padding)),
+      MIN_SCALE,
+      MAX_SCALE
+    );
+    const cx = (minCx + maxCx) / 2;
+    const cy = (minCy + maxCy) / 2;
+    const endTx = clampPanX(
+      size.width / 2 - endScale * cx,
+      endScale,
+      size.width,
+      contentW
+    );
+    const endTy = clampPanY(
+      size.height / 2 - endScale * cy,
+      endScale,
+      size.height,
+      contentH
+    );
+
+    cancelAnimation(scale);
+    cancelAnimation(tx);
+    cancelAnimation(ty);
+    scale.value = startScale;
+    tx.value = startTx;
+    ty.value = startTy;
+    savedTx.value = startTx;
+    savedTy.value = startTy;
+
+    const easing = Easing.inOut(Easing.cubic);
+    scale.value = withTiming(endScale, { duration: 1500, easing });
+    tx.value = withTiming(endTx, { duration: 1500, easing });
+    ty.value = withTiming(endTy, { duration: 1500, easing }, (finished) => {
+      if (finished) {
+        savedTx.value = endTx;
+        savedTy.value = endTy;
+      }
+    });
+  }, [
+    flightAutoZoom,
+    activeFlight,
+    size.width,
+    size.height,
+    baseScale,
+    contentW,
+    contentH,
+    maxLat,
+    scale,
+    tx,
+    ty,
+    savedTx,
+    savedTy,
+  ]);
+
   // 부모가 viewport 높이를 변경하면(예: 홈 화면에서 지도 영역을 늘림) baseScale이
   // 바뀌어 콘텐츠 크기가 달라진다. 정지 상태의 tx/ty가 새 범위를 벗어날 수 있어
   // 다시 클램프한다. 단, 첫 onLayout 직후에는 인트로 effect가 막 큐잉한
@@ -556,6 +658,11 @@ export default function DotMap({
                     }
                   />
                 ))}
+                <FlightOverlay
+                  baseScale={baseScale}
+                  maxLat={maxLat}
+                  gridSize={gridSize}
+                />
               </Group>
             </Canvas>
           </GestureDetector>

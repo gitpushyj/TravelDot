@@ -570,5 +570,29 @@
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}
+  },
+  "flight": {
+    "modalTitle": "Flug starten",
+    "origin": "Abflug",
+    "destination": "Ankunft",
+    "selectAirport": "Flughafen wählen",
+    "searchPlaceholder": "IATA / Stadt / Flughafen",
+    "searchHint": "z. B. FRA, Berlin, München",
+    "searchEmpty": "Keine Treffer",
+    "departTime": "Abflugzeit",
+    "arriveTime": "Ankunftszeit",
+    "arriveHintAuto": "Wird automatisch berechnet, sobald beide Flughäfen gewählt sind.",
+    "arriveHintMinutes": "ca. {{duration}} · bei Bedarf anpassen.",
+    "startBtn": "Flug starten",
+    "detailTitle": "Im Flug",
+    "remaining": "Noch {{value}}",
+    "remainingShort": "Noch {{value}}",
+    "cancelBtn": "Flug beenden",
+    "cancelConfirmTitle": "Flug beenden?",
+    "cancelConfirmBody": "Der aktuelle Flugstatus wird gelöscht.",
+    "cancelConfirmAction": "Beenden",
+    "startA11y": "Flug starten",
+    "liveA11y": "Fluginfo anzeigen",
+    "arrivedToast": "Angekommen · {{iata}} {{city}}"
   }
 }

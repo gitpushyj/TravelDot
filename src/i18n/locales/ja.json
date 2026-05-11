@@ -570,5 +570,29 @@
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}
+  },
+  "flight": {
+    "modalTitle": "フライト開始",
+    "origin": "出発",
+    "destination": "到着",
+    "selectAirport": "空港を選択",
+    "searchPlaceholder": "空港コード / 都市 / 空港名",
+    "searchHint": "例: HND, Tokyo, 東京",
+    "searchEmpty": "該当する空港がありません",
+    "departTime": "出発時刻",
+    "arriveTime": "到着時刻",
+    "arriveHintAuto": "両方の空港を選ぶと平均飛行時間で自動計算されます",
+    "arriveHintMinutes": "飛行時間 約 {{duration}} · 必要に応じて修正してください",
+    "startBtn": "フライト開始",
+    "detailTitle": "フライト中",
+    "remaining": "残り {{value}}",
+    "remainingShort": "残り {{value}}",
+    "cancelBtn": "フライト終了",
+    "cancelConfirmTitle": "フライトを終了しますか？",
+    "cancelConfirmBody": "現在のフライト情報は削除されます。",
+    "cancelConfirmAction": "終了",
+    "startA11y": "フライト開始",
+    "liveA11y": "フライト情報を表示",
+    "arrivedToast": "到着しました · {{iata}} {{city}}"
   }
 }

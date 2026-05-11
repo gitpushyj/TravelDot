@@ -570,5 +570,29 @@
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}
+  },
+  "flight": {
+    "modalTitle": "開始飛行",
+    "origin": "出發",
+    "destination": "到達",
+    "selectAirport": "選擇機場",
+    "searchPlaceholder": "機場代碼 / 城市 / 機場名",
+    "searchHint": "例如: TPE, Taipei, 台北",
+    "searchEmpty": "找不到對應機場",
+    "departTime": "出發時間",
+    "arriveTime": "到達時間",
+    "arriveHintAuto": "選好兩端機場後會用平均飛行時間自動計算",
+    "arriveHintMinutes": "約 {{duration}} · 需要時可調整",
+    "startBtn": "開始飛行",
+    "detailTitle": "飛行中",
+    "remaining": "剩餘 {{value}}",
+    "remainingShort": "剩餘 {{value}}",
+    "cancelBtn": "結束飛行",
+    "cancelConfirmTitle": "要結束飛行嗎？",
+    "cancelConfirmBody": "目前飛行狀態會被清除。",
+    "cancelConfirmAction": "結束",
+    "startA11y": "開始飛行",
+    "liveA11y": "查看飛行資訊",
+    "arrivedToast": "已到達 · {{iata}} {{city}}"
   }
 }

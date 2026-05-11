@@ -570,5 +570,29 @@
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}
+  },
+  "flight": {
+    "modalTitle": "Начать полёт",
+    "origin": "Откуда",
+    "destination": "Куда",
+    "selectAirport": "Выберите аэропорт",
+    "searchPlaceholder": "IATA / город / аэропорт",
+    "searchHint": "напр. SVO, Москва",
+    "searchEmpty": "Ничего не найдено",
+    "departTime": "Время вылета",
+    "arriveTime": "Время прилёта",
+    "arriveHintAuto": "Рассчитается автоматически после выбора обоих аэропортов.",
+    "arriveHintMinutes": "около {{duration}} · при необходимости измените.",
+    "startBtn": "Начать полёт",
+    "detailTitle": "В полёте",
+    "remaining": "Осталось {{value}}",
+    "remainingShort": "Осталось {{value}}",
+    "cancelBtn": "Завершить полёт",
+    "cancelConfirmTitle": "Завершить полёт?",
+    "cancelConfirmBody": "Текущее состояние полёта будет очищено.",
+    "cancelConfirmAction": "Завершить",
+    "startA11y": "Начать полёт",
+    "liveA11y": "Показать полёт",
+    "arrivedToast": "Прилёт · {{iata}} {{city}}"
   }
 }

@@ -570,5 +570,29 @@
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}
+  },
+  "flight": {
+    "modalTitle": "Démarrer un vol",
+    "origin": "Départ",
+    "destination": "Arrivée",
+    "selectAirport": "Choisir un aéroport",
+    "searchPlaceholder": "IATA / ville / aéroport",
+    "searchHint": "ex. CDG, Paris, Nice",
+    "searchEmpty": "Aucun résultat",
+    "departTime": "Heure de départ",
+    "arriveTime": "Heure d'arrivée",
+    "arriveHintAuto": "Calculée automatiquement après avoir choisi les deux aéroports.",
+    "arriveHintMinutes": "env. {{duration}} · ajustez si besoin.",
+    "startBtn": "Démarrer le vol",
+    "detailTitle": "En vol",
+    "remaining": "Reste {{value}}",
+    "remainingShort": "Reste {{value}}",
+    "cancelBtn": "Terminer le vol",
+    "cancelConfirmTitle": "Terminer le vol ?",
+    "cancelConfirmBody": "L'état du vol actuel sera effacé.",
+    "cancelConfirmAction": "Terminer",
+    "startA11y": "Démarrer un vol",
+    "liveA11y": "Voir le vol",
+    "arrivedToast": "Arrivé · {{iata}} {{city}}"
   }
 }

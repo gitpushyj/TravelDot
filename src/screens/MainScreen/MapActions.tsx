@@ -1,6 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
+import FlightButton from "../../features/flight/FlightButton";
 import { useTheme } from "../../theme/themeStore";
 import type { MainScreenStyles } from "./styles";
 
@@ -12,8 +13,10 @@ type Props = {
   zoomA11yLabel: string;
 };
 
-// 지도 아래 별개 섹션으로 위치하는 액션 row. 공유와 풀화면 버튼만 둔다.
+// 지도 아래 별개 섹션으로 위치하는 액션 row. 비행/공유/풀화면 세 버튼.
 // 지도 영역 위에는 어떤 플로팅 UI도 두지 않아 지도 자체를 깔끔하게 유지한다.
+// 비행 진행 중에는 FlightButton이 라이브 chip 형태로 폭이 늘어나, 옆 버튼들이
+// 자연스럽게 오른쪽으로 밀린다.
 export default function MapActions({
   styles,
   onShare,
@@ -24,6 +27,7 @@ export default function MapActions({
   const theme = useTheme();
   return (
     <View style={styles.mapActions}>
+      <FlightButton />
       <Pressable
         onPress={onShare}
         hitSlop={8}

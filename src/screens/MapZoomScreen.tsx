@@ -12,6 +12,8 @@ import {
 } from "react-native";
 
 import DotMap from "../components/DotMap";
+import FlightZoomOverlayPill from "../features/flight/FlightZoomOverlayPill";
+import { useFlightStore } from "../features/flight/flightStore";
 import { useVisitStore } from "../features/travel/visitStore";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
@@ -179,16 +181,27 @@ export default function MapZoomScreen({ visitCounts, onClose }: Props) {
             </Text>
           </Pressable>
         </Animated.View>
-        {toastName && (
-          <View pointerEvents="none" style={styles.bottomOverlay}>
-            <View style={styles.namePill}>
-              <Text style={styles.nameText} numberOfLines={1}>
-                {toastName}
-              </Text>
-            </View>
-          </View>
-        )}
+        <FlightBottomOverlay toastName={toastName} />
       </View>
+    </View>
+  );
+}
+
+// 비행 pill과 국가 이름 toast를 같은 bottom 영역에 stack해서 보여 준다.
+// 비행 active이면 비행 pill을 항상 표시, 국가 toast가 잠시 뜨면 그 위에 함께 표시.
+function FlightBottomOverlay({ toastName }: { toastName: string | null }) {
+  const flightActive = useFlightStore((s) => s.active);
+  if (!toastName && !flightActive) return null;
+  return (
+    <View pointerEvents="none" style={styles.bottomOverlay}>
+      {toastName ? (
+        <View style={styles.namePill}>
+          <Text style={styles.nameText} numberOfLines={1}>
+            {toastName}
+          </Text>
+        </View>
+      ) : null}
+      <FlightZoomOverlayPill />
     </View>
   );
 }
@@ -236,6 +249,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 24,
     alignItems: "center",
+    gap: 8,
   },
   namePill: {
     paddingHorizontal: 20,

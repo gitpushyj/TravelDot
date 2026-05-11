@@ -828,5 +828,29 @@
       "success": "Subscription restored",
       "notFound": "No active subscription to restore"
     }
+  },
+  "flight": {
+    "modalTitle": "Start a flight",
+    "origin": "From",
+    "destination": "To",
+    "selectAirport": "Select airport",
+    "searchPlaceholder": "IATA code / city / airport name",
+    "searchHint": "e.g. ICN, Seoul, Tokyo",
+    "searchEmpty": "No matching airports",
+    "departTime": "Depart time",
+    "arriveTime": "Arrive time",
+    "arriveHintAuto": "Auto-calculated once both airports are selected.",
+    "arriveHintMinutes": "About {{duration}} · adjust if needed.",
+    "startBtn": "Start flight",
+    "detailTitle": "In flight",
+    "remaining": "{{value}} remaining",
+    "remainingShort": "{{value}} left",
+    "cancelBtn": "End flight",
+    "cancelConfirmTitle": "End the flight?",
+    "cancelConfirmBody": "The current flight state will be cleared.",
+    "cancelConfirmAction": "End",
+    "startA11y": "Start flight",
+    "liveA11y": "Show flight info",
+    "arrivedToast": "Arrived · {{iata}} {{city}}"
   }
 }

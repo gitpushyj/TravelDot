@@ -15,6 +15,7 @@ import { requestTrackingPermissionIfNeeded } from "./src/lib/tracking";
 import AppAlerts from "./src/components/AppAlerts";
 import { useAuthStore } from "./src/features/auth/authStore";
 import { useEntitlementStore } from "./src/features/entitlement/entitlementStore";
+import { useFlightStore } from "./src/features/flight/flightStore";
 import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrateUserProfileFromDb";
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
 import { useMilestoneStore } from "./src/features/milestone/milestoneStore";
@@ -63,6 +64,8 @@ export default function App() {
   const syncHydrated = useSyncStore((s) => s.hydrated);
   const entitlementHydrate = useEntitlementStore((s) => s.hydrate);
   const entitlementHydrated = useEntitlementStore((s) => s.hydrated);
+  const flightHydrate = useFlightStore((s) => s.hydrate);
+  const flightHydrated = useFlightStore((s) => s.hydrated);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   useSystemSchemeListener();
@@ -80,6 +83,7 @@ export default function App() {
     void milestoneHydrate();
     void syncHydrate();
     void entitlementHydrate();
+    void flightHydrate();
     void configurePurchases();
     void initI18n().then(() => setI18nReady(true));
   }, [
@@ -90,6 +94,7 @@ export default function App() {
     milestoneHydrate,
     syncHydrate,
     entitlementHydrate,
+    flightHydrate,
   ]);
 
   // RC customerInfo 변화·앱 foreground 진입 시 서버 tier와 호칭을 다시 fetch한다.

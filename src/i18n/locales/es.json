@@ -570,5 +570,29 @@
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}
+  },
+  "flight": {
+    "modalTitle": "Iniciar vuelo",
+    "origin": "Origen",
+    "destination": "Destino",
+    "selectAirport": "Selecciona aeropuerto",
+    "searchPlaceholder": "IATA / ciudad / aeropuerto",
+    "searchHint": "p. ej. MAD, Madrid, Barcelona",
+    "searchEmpty": "Sin resultados",
+    "departTime": "Hora de salida",
+    "arriveTime": "Hora de llegada",
+    "arriveHintAuto": "Se calcula automáticamente al elegir ambos aeropuertos.",
+    "arriveHintMinutes": "Aprox. {{duration}} · ajústalo si hace falta.",
+    "startBtn": "Iniciar vuelo",
+    "detailTitle": "En vuelo",
+    "remaining": "Quedan {{value}}",
+    "remainingShort": "Quedan {{value}}",
+    "cancelBtn": "Terminar vuelo",
+    "cancelConfirmTitle": "¿Terminar el vuelo?",
+    "cancelConfirmBody": "Se borrará el estado actual del vuelo.",
+    "cancelConfirmAction": "Terminar",
+    "startA11y": "Iniciar vuelo",
+    "liveA11y": "Ver vuelo en curso",
+    "arrivedToast": "Aterrizó · {{iata}} {{city}}"
   }
 }

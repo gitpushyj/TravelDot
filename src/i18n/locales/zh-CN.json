@@ -570,5 +570,29 @@
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}
+  },
+  "flight": {
+    "modalTitle": "开始飞行",
+    "origin": "出发",
+    "destination": "到达",
+    "selectAirport": "选择机场",
+    "searchPlaceholder": "机场代码 / 城市 / 机场名",
+    "searchHint": "例如: PEK, Beijing, 北京",
+    "searchEmpty": "没有匹配的机场",
+    "departTime": "出发时间",
+    "arriveTime": "到达时间",
+    "arriveHintAuto": "选择两端机场后会按平均飞行时间自动计算",
+    "arriveHintMinutes": "约 {{duration}} · 如需可修改",
+    "startBtn": "开始飞行",
+    "detailTitle": "飞行中",
+    "remaining": "剩余 {{value}}",
+    "remainingShort": "剩余 {{value}}",
+    "cancelBtn": "结束飞行",
+    "cancelConfirmTitle": "要结束飞行吗？",
+    "cancelConfirmBody": "当前飞行状态会被清除。",
+    "cancelConfirmAction": "结束",
+    "startA11y": "开始飞行",
+    "liveA11y": "查看飞行信息",
+    "arrivedToast": "已到达 · {{iata}} {{city}}"
   }
 }

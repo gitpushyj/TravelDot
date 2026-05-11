@@ -570,5 +570,29 @@
       "needsHomeCountry": "Set your home country to see progress"
     },
     "premium": {}
+  },
+  "flight": {
+    "modalTitle": "Inizia il volo",
+    "origin": "Partenza",
+    "destination": "Arrivo",
+    "selectAirport": "Seleziona aeroporto",
+    "searchPlaceholder": "IATA / città / aeroporto",
+    "searchHint": "es. FCO, Roma, Milano",
+    "searchEmpty": "Nessun risultato",
+    "departTime": "Ora di partenza",
+    "arriveTime": "Ora di arrivo",
+    "arriveHintAuto": "Calcolata automaticamente scegliendo entrambi gli aeroporti.",
+    "arriveHintMinutes": "circa {{duration}} · modifica se serve.",
+    "startBtn": "Inizia il volo",
+    "detailTitle": "In volo",
+    "remaining": "Manca {{value}}",
+    "remainingShort": "Manca {{value}}",
+    "cancelBtn": "Termina il volo",
+    "cancelConfirmTitle": "Terminare il volo?",
+    "cancelConfirmBody": "Lo stato del volo verrà cancellato.",
+    "cancelConfirmAction": "Termina",
+    "startA11y": "Inizia il volo",
+    "liveA11y": "Mostra info volo",
+    "arrivedToast": "Atterrato · {{iata}} {{city}}"
   }
 }

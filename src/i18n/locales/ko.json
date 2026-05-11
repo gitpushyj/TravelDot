@@ -828,5 +828,29 @@
       "success": "구독이 복원되었습니다",
       "notFound": "복원할 활성 구독을 찾지 못했습니다"
     }
+  },
+  "flight": {
+    "modalTitle": "비행 시작",
+    "origin": "출발",
+    "destination": "도착",
+    "selectAirport": "공항 선택",
+    "searchPlaceholder": "공항 코드 / 도시 / 공항명",
+    "searchHint": "예: ICN, 인천, Seoul, 도쿄",
+    "searchEmpty": "검색 결과가 없어요",
+    "departTime": "출발 시각",
+    "arriveTime": "도착 시각",
+    "arriveHintAuto": "두 공항을 선택하면 평균 비행시간으로 자동 계산돼요",
+    "arriveHintMinutes": "비행 시간 약 {{duration}} · 필요하면 수정해 주세요",
+    "startBtn": "비행 시작",
+    "detailTitle": "비행 중",
+    "remaining": "남은 시간 {{value}}",
+    "remainingShort": "{{value}} 남음",
+    "cancelBtn": "비행 종료",
+    "cancelConfirmTitle": "비행을 종료할까요?",
+    "cancelConfirmBody": "현재 비행 상태가 지워집니다.",
+    "cancelConfirmAction": "종료",
+    "startA11y": "비행 시작",
+    "liveA11y": "비행 정보 보기",
+    "arrivedToast": "도착했어요 · {{iata}} {{city}}"
   }
 }

@@ -31,6 +31,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import AddTripActionSheet from "../../components/AddTripActionSheet";
 import DotMap from "../../components/DotMap";
 import YearPickerModal from "../../components/YearPickerModal";
+import ArrivalToast from "../../features/flight/ArrivalToast";
 import { runIncrementalSync } from "../../features/photoSync/syncService";
 import { localizedBadgeTitle } from "../../features/badges/badgeI18n";
 import { badgeFromId } from "../../features/badges/badges";
@@ -414,6 +415,7 @@ export default function MainScreen({ navigation }: Props) {
                   visitCounts={activeCounts}
                   onInteractingChange={setMapInteracting}
                   mapAreaStyle={styles.mapAreaInner}
+                  flightAutoZoom
                 />
               ) : null}
             </Animated.View>
@@ -551,6 +553,7 @@ export default function MainScreen({ navigation }: Props) {
         days={totals.days}
         yearLabel={shareYearLabel}
       />
+      <ArrivalToast />
     </View>
   );
 }
