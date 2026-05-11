@@ -28,6 +28,7 @@ import {
   toRad,
 } from "./flightMath";
 import { useFlightStore } from "./flightStore";
+import { useTheme } from "../../theme/themeStore";
 
 const PATH_SAMPLES = 50;
 
@@ -48,6 +49,7 @@ type Props = {
 export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   const active = useFlightStore((s) => s.active);
   const checkArrival = useFlightStore((s) => s.checkArrival);
+  const theme = useTheme();
 
   // 0 → 1로 흐르는 진행률. withTiming(linear)로 남은 시간만큼 보간한다.
   // 앱 백그라운드 → foreground 전환 시 startProgress부터 다시 셋업해 실제 시각과 동기화.
@@ -255,7 +257,7 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
           y={pt.y - pathDotPx / 2}
           width={pathDotPx}
           height={pathDotPx}
-          color="rgba(255,255,255,0.32)"
+          color={theme.flightPathFaint}
         />
       ))}
       {/* 경로 - 지나온 점 진한 색 (각 점이 progress 임계를 넘으면 보임) */}
@@ -268,6 +270,7 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
           index={i}
           total={staticGeom.pathPx.length}
           progress={progress}
+          color={theme.flightPathBright}
         />
       ))}
       {/* 목적지 도트 빨간 펄스. 도트지도의 도트와 같은 크기. 비행기 layer 아래에 두어
@@ -420,6 +423,7 @@ function ProgressPathDot({
   index,
   total,
   progress,
+  color,
 }: {
   x: number;
   y: number;
@@ -427,6 +431,7 @@ function ProgressPathDot({
   index: number;
   total: number;
   progress: { value: number };
+  color: string;
 }) {
   const threshold = total > 1 ? index / (total - 1) : 0;
   const opacity = useDerivedValue(() => {
@@ -439,7 +444,7 @@ function ProgressPathDot({
       y={y}
       width={size}
       height={size}
-      color="#ffffff"
+      color={color}
       opacity={opacity}
     />
   );

@@ -194,7 +194,10 @@ function makeStyles(theme: Theme) {
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       paddingTop: 8,
-      paddingBottom: 16,
+      // Android 제스처 내비에서 휠 하단을 돌릴 때 한손모드(home indicator를 아래로
+      // 쓸어내리는 제스처)가 트리거되는 걸 막기 위해 SafeArea bottom inset 위에
+      // 추가 여유를 둔다.
+      paddingBottom: 32,
     },
     handle: {
       alignSelf: "center",

@@ -47,6 +47,10 @@ export type Theme = {
   optionBtnBorder: string;
   // 지도 도트 강조 (검색/선택)
   highlightDot: string;
+  // 비행 경로 점선 (전체 흐린 색 + 지나온 진한 색).
+  // 라이트 테마에서는 어두운 톤, 다크 테마에서는 흰 톤.
+  flightPathFaint: string;
+  flightPathBright: string;
   // 상태 표시줄 스타일 ("light" → 흰 글씨)
   statusBar: "light" | "dark";
 };
@@ -81,6 +85,8 @@ export const LIGHT_THEME: Theme = {
   optionBtnPressedBg: "#f3efe6",
   optionBtnBorder: "#ecebe4",
   highlightDot: "#ffd75e",
+  flightPathFaint: "rgba(0,0,0,0.28)",
+  flightPathBright: "#1a1a1a",
   statusBar: "dark",
 };
 
@@ -115,6 +121,8 @@ export const DARK_THEME: Theme = {
   optionBtnPressedBg: "#2c2e36",
   optionBtnBorder: "rgba(255,255,255,0.08)",
   highlightDot: "#ffd75e",
+  flightPathFaint: "rgba(255,255,255,0.32)",
+  flightPathBright: "#ffffff",
   statusBar: "light",
 };
 

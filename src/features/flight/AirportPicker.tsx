@@ -85,7 +85,6 @@ export default function AirportPicker({
           </Pressable>
         </View>
         <TextInput
-          autoFocus
           value={query}
           onChangeText={setQuery}
           placeholder={t("flight.searchPlaceholder")}
