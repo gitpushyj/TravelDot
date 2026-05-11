@@ -329,7 +329,7 @@
     "viewAll": "すべて見る →",
     "viewAllCountries": "すべての国を見る",
     "tripRecent": "最新",
-    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}}日間の旅",
+    "tripDuration": "{{y}}.{{m}}.{{d}} · {{days}}日間の旅",
     "emptyTrips": "まだ旅の記録がありません。写真をスキャンするか、手動で追加してみましょう。",
     "yearPickerEmptyTitle": "年の選択",
     "yearPickerEmptyBody": "まだ記録された旅がありません。",

@@ -440,7 +440,7 @@
     "viewAll": "View all →",
     "viewAllCountries": "All Countries",
     "tripRecent": "Latest",
-    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}}-day trip",
+    "tripDuration": "{{y}}.{{m}}.{{d}} · {{days}}-day trip",
     "emptyTrips": "No trips yet. Scan your photos or add one manually.",
     "yearPickerEmptyTitle": "Select Year",
     "yearPickerEmptyBody": "No trips have been recorded yet.",

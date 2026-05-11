@@ -329,7 +329,7 @@
     "viewAll": "查看全部 →",
     "viewAllCountries": "所有國家",
     "tripRecent": "最新",
-    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}} 天旅程",
+    "tripDuration": "{{y}}.{{m}}.{{d}} · {{days}} 天旅程",
     "emptyTrips": "尚未有旅行紀錄。可以掃描相片或手動新增。",
     "yearPickerEmptyTitle": "選擇年份",
     "yearPickerEmptyBody": "尚未記錄任何旅行。",

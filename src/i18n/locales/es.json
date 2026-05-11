@@ -329,7 +329,7 @@
     "viewAll": "Ver todo →",
     "viewAllCountries": "Todos los países",
     "tripRecent": "Reciente",
-    "tripDuration": "{{y}} · {{m}} · {{d}} · viaje de {{days}} días",
+    "tripDuration": "{{y}}.{{m}}.{{d}} · viaje de {{days}} días",
     "emptyTrips": "Aún no hay viajes registrados. Escanea tus fotos o añade uno manualmente.",
     "yearPickerEmptyTitle": "Seleccionar año",
     "yearPickerEmptyBody": "Aún no se ha registrado ningún viaje.",

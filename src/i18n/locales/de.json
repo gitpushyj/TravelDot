@@ -329,7 +329,7 @@
     "viewAll": "Alle anzeigen →",
     "viewAllCountries": "Alle Länder",
     "tripRecent": "Neueste",
-    "tripDuration": "{{y}} · {{m}} · {{d}} · {{days}}-tägige Reise",
+    "tripDuration": "{{y}}.{{m}}.{{d}} · {{days}}-tägige Reise",
     "emptyTrips": "Noch keine Reisen erfasst. Scanne deine Fotos oder füge eine manuell hinzu.",
     "yearPickerEmptyTitle": "Jahr auswählen",
     "yearPickerEmptyBody": "Es wurden noch keine Reisen erfasst.",

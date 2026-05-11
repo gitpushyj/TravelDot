@@ -329,7 +329,7 @@
     "viewAll": "Все →",
     "viewAllCountries": "Все страны",
     "tripRecent": "Свежее",
-    "tripDuration": "{{y}} · {{m}} · {{d}} · поездка на {{days}} дн.",
+    "tripDuration": "{{y}}.{{m}}.{{d}} · поездка на {{days}} дн.",
     "emptyTrips": "Поездок пока нет. Просканируйте фотографии или добавьте поездку вручную.",
     "yearPickerEmptyTitle": "Выбор года",
     "yearPickerEmptyBody": "Поездок пока не записано.",
