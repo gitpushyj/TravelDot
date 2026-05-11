@@ -197,18 +197,67 @@ const KO_CITY_ALIASES: Record<string, string[]> = {
   nadi: ["나디", "피지"],
 };
 
+// IATA 코드별 추가 별칭. OurAirports의 city 표기와 사용자가 검색할 도시명이
+// 일치하지 않는 케이스(예: NRT=Narita인데 사용자는 "도쿄"로 검색, KUL=Sepang/
+// 쿠알라룸푸르, DPS=Kuta/발리 등)를 보완한다.
+const IATA_ALIASES: Record<string, string[]> = {
+  CJU: ["제주"],
+  NRT: ["도쿄", "동경", "tokyo"],
+  HND: ["도쿄", "동경"],
+  KUL: ["쿠알라룸푸르", "kuala lumpur"],
+  DPS: ["발리", "덴파사르", "denpasar", "bali"],
+  TPE: ["타이베이", "타이페이", "taipei"],
+  TSA: ["타이베이", "taipei"],
+  MFM: ["마카오", "macau"],
+  GRU: ["상파울루", "sao paulo"],
+  GIG: ["리우", "리우데자네이루", "rio de janeiro"],
+  KIX: ["오사카", "간사이"],
+  ITM: ["오사카"],
+  SVO: ["모스크바"],
+  DME: ["모스크바"],
+  VKO: ["모스크바"],
+  PVG: ["상하이", "푸동"],
+  SHA: ["상하이", "훙차오"],
+  PEK: ["베이징", "북경"],
+  PKX: ["베이징", "다싱"],
+  CDG: ["파리"],
+  ORY: ["파리"],
+  LHR: ["런던"],
+  LGW: ["런던"],
+  STN: ["런던"],
+  LTN: ["런던"],
+  EWR: ["뉴어크", "뉴욕"],
+  JFK: ["뉴욕"],
+  LGA: ["뉴욕"],
+  IAD: ["워싱턴"],
+  DCA: ["워싱턴"],
+  HNL: ["호놀룰루", "하와이"],
+};
+
+// 도시명 정규화 — OurAirports의 "Shanghai (Pudong)", "Kuta, Badung",
+// "Sydney (Mascot)" 같은 부가 표기를 떼어 KO_CITY_ALIASES 키와 매칭 가능하게 한다.
+function normalizeCityKey(city: string): string {
+  return city
+    .toLowerCase()
+    .replace(/\s*\([^)]*\)\s*/g, "")
+    .replace(/,.*$/, "")
+    .trim();
+}
+
 // 검색용 사전계산 키 — 공항 1개당 한 줄로 모든 검색 가능 토큰을 이어 둔다.
 type SearchableAirport = Airport & { searchKey: string };
 
 const SEARCHABLE: SearchableAirport[] = ALL_AIRPORTS.map((a) => {
-  const cityKey = a.city.toLowerCase();
-  const aliases = KO_CITY_ALIASES[cityKey] ?? [];
+  const cityKey = normalizeCityKey(a.city);
+  const cityAliases = KO_CITY_ALIASES[cityKey] ?? [];
+  const iataAliases = IATA_ALIASES[a.iata] ?? [];
   const searchKey = [
     a.iata,
     a.name,
     a.city,
     a.country,
-    ...aliases,
+    ...cityAliases,
+    ...iataAliases,
   ]
     .join(" ")
     .toLowerCase();
