@@ -273,7 +273,7 @@ function makeStyles(theme: Theme) {
       gap: 12,
       marginTop: 16,
     },
-    timeBlock: { flex: 1 },
+    timeBlock: { flex: 1, alignItems: "center" },
     timeLabel: { color: theme.textSecondary, fontSize: 12, fontWeight: "600" },
     timeValue: {
       color: theme.textPrimary,
