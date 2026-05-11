@@ -837,6 +837,8 @@
     "searchPlaceholder": "공항 코드 / 도시 / 공항명",
     "searchHint": "예: ICN, 인천, Seoul, 도쿄",
     "searchEmpty": "검색 결과가 없어요",
+    "popularDepartures": "자주 출국하는 공항",
+    "popularArrivals": "자주 도착하는 공항",
     "departTime": "출발 시각",
     "arriveTime": "도착 시각",
     "duration": "비행 시간",

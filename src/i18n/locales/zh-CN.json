@@ -579,6 +579,8 @@
     "searchPlaceholder": "机场代码 / 城市 / 机场名",
     "searchHint": "例如: PEK, Beijing, 北京",
     "searchEmpty": "没有匹配的机场",
+    "popularDepartures": "常用出发机场",
+    "popularArrivals": "常用到达机场",
     "departTime": "出发时间",
     "arriveTime": "到达时间",
     "duration": "飞行时长",

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   Modal,
@@ -16,22 +16,59 @@ import { getCurrentLocale } from "../../i18n";
 import { useTheme } from "../../theme/themeStore";
 import type { Theme } from "../../theme/theme";
 
-import { searchAirports } from "./airports";
+import { getAirportByIata, searchAirports } from "./airports";
 import type { Airport } from "./airports";
+import {
+  POPULAR_ARRIVAL_IATAS,
+  POPULAR_DEPARTURE_IATAS,
+} from "./popularAirports";
 
 type Props = {
   visible: boolean;
   title: string;
+  // 출발/도착 중 어느 쪽 picker인지. 검색어가 비어 있을 때 보여 줄 추천 리스트가
+  // 출발이면 "전체 승객 교통량 top 10", 도착이면 "국제선 승객 교통량 top 10"으로 다르다.
+  side: "origin" | "destination";
   onSelect: (a: Airport) => void;
   onClose: () => void;
 };
 
-export default function AirportPicker({ visible, title, onSelect, onClose }: Props) {
+export default function AirportPicker({
+  visible,
+  title,
+  side,
+  onSelect,
+  onClose,
+}: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [query, setQuery] = useState("");
+
+  // Picker가 열릴 때 이전 검색어를 비운다. visible toggle만으로 사용해 컴포넌트가
+  // unmount되지 않으므로 query state가 그대로 남아, 출발 검색 후 도착 picker를 열면
+  // 이전 검색어가 그대로 보이는 버그가 있었음.
+  useEffect(() => {
+    if (visible) setQuery("");
+  }, [visible]);
+
   const results = useMemo(() => searchAirports(query, 60), [query]);
+
+  // 추천 공항 — 검색어가 비어 있을 때만 표시. side에 따라 다른 리스트.
+  const popularAirports = useMemo(() => {
+    const codes =
+      side === "origin" ? POPULAR_DEPARTURE_IATAS : POPULAR_ARRIVAL_IATAS;
+    return codes
+      .map((c) => getAirportByIata(c))
+      .filter((a): a is Airport => a != null);
+  }, [side]);
+
+  const popularLabel =
+    side === "origin"
+      ? t("flight.popularDepartures")
+      : t("flight.popularArrivals");
+
+  const showPopular = query.trim().length === 0;
 
   return (
     <Modal
@@ -55,37 +92,32 @@ export default function AirportPicker({ visible, title, onSelect, onClose }: Pro
           placeholderTextColor={theme.textSecondary}
           style={styles.input}
         />
-        {query.trim().length === 0 ? (
-          <View style={styles.emptyHint}>
-            <Text style={styles.emptyHintText}>
-              {t("flight.searchHint")}
-            </Text>
-          </View>
+        {showPopular ? (
+          <FlatList
+            data={popularAirports}
+            keyExtractor={(a) => a.iata}
+            keyboardShouldPersistTaps="handled"
+            ListHeaderComponent={
+              <Text style={styles.sectionLabel}>{popularLabel}</Text>
+            }
+            renderItem={({ item }) => (
+              <AirportRow item={item} onSelect={onSelect} styles={styles} />
+            )}
+            ListEmptyComponent={
+              <View style={styles.emptyHint}>
+                <Text style={styles.emptyHintText}>
+                  {t("flight.searchHint")}
+                </Text>
+              </View>
+            }
+          />
         ) : (
           <FlatList
             data={results}
             keyExtractor={(a) => a.iata}
             keyboardShouldPersistTaps="handled"
             renderItem={({ item }) => (
-              <Pressable
-                onPress={() => onSelect(item)}
-                style={({ pressed }) => [
-                  styles.row,
-                  pressed && styles.rowPressed,
-                ]}
-              >
-                <Text style={styles.iata}>{item.iata}</Text>
-                <View style={styles.rowMain}>
-                  <Text style={styles.name} numberOfLines={1}>
-                    {item.name}
-                  </Text>
-                  <Text style={styles.sub} numberOfLines={1}>
-                    {item.city}
-                    {", "}
-                    {getCountryName(item.country, getCurrentLocale())}
-                  </Text>
-                </View>
-              </Pressable>
+              <AirportRow item={item} onSelect={onSelect} styles={styles} />
             )}
             ListEmptyComponent={
               <View style={styles.emptyHint}>
@@ -101,6 +133,35 @@ export default function AirportPicker({ visible, title, onSelect, onClose }: Pro
   );
 }
 
+function AirportRow({
+  item,
+  onSelect,
+  styles,
+}: {
+  item: Airport;
+  onSelect: (a: Airport) => void;
+  styles: ReturnType<typeof makeStyles>;
+}) {
+  return (
+    <Pressable
+      onPress={() => onSelect(item)}
+      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+    >
+      <Text style={styles.iata}>{item.iata}</Text>
+      <View style={styles.rowMain}>
+        <Text style={styles.name} numberOfLines={1}>
+          {item.name}
+        </Text>
+        <Text style={styles.sub} numberOfLines={1}>
+          {item.city}
+          {", "}
+          {getCountryName(item.country, getCurrentLocale())}
+        </Text>
+      </View>
+    </Pressable>
+  );
+}
+
 function makeStyles(theme: Theme) {
   return StyleSheet.create({
     root: { flex: 1, backgroundColor: theme.cardBg },
@@ -109,7 +170,8 @@ function makeStyles(theme: Theme) {
       alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: 16,
-      paddingVertical: 12,
+      paddingTop: 20,
+      paddingBottom: 12,
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomColor: theme.cardBorder,
     },
@@ -126,6 +188,15 @@ function makeStyles(theme: Theme) {
       borderColor: theme.cardBorder,
       color: theme.textPrimary,
       fontSize: 16,
+    },
+    sectionLabel: {
+      paddingHorizontal: 16,
+      paddingTop: 4,
+      paddingBottom: 8,
+      color: theme.textSecondary,
+      fontSize: 13,
+      fontWeight: "700",
+      letterSpacing: 0.4,
     },
     row: {
       flexDirection: "row",

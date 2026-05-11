@@ -1,5 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Animated,
+  Dimensions,
+  Easing,
   Modal,
   Pressable,
   ScrollView,
@@ -18,6 +21,10 @@ import type { Airport } from "./airports";
 import DurationPickerSheet from "./DurationPickerSheet";
 import { estimateFlightMinutes } from "./estimateFlightDuration";
 import { useFlightStore } from "./flightStore";
+
+const FADE_MS = 220;
+const SLIDE_MS = 260;
+const SCREEN_H = Dimensions.get("window").height;
 
 type Props = {
   visible: boolean;
@@ -84,9 +91,8 @@ export default function FlightInputModal({ visible, onClose }: Props) {
     if (!validation.ok || !origin || !destination) return;
     const departAt = Date.now();
     const arriveAt = departAt + totalMinutes * 60_000;
-    // store를 즉시 set하고 modal을 닫는다. 자동 줌 시퀀스는 DotMap에서 withDelay로
-    // modal slide-down 시간만큼 기다린 뒤 시작되므로, 여기서 별도 setTimeout이나
-    // sequencing이 필요 없다 (modal lifecycle과 race도 없음).
+    // store를 즉시 set하고 modal을 닫는다. 자동 줌 시퀀스는 DotMap에서 setTimeout으로
+    // modal slide-down 시간만큼 기다린 뒤 시작되므로, 여기서 별도 sequencing이 필요 없다.
     void start(origin, destination, departAt, arriveAt);
     onClose();
   };
@@ -113,103 +119,166 @@ export default function FlightInputModal({ visible, onClose }: Props) {
         ? t("flight.durationHintEstimate")
         : null;
 
+  // backdrop fade + sheet slide 직접 제어. Modal animationType="slide"는 backdrop까지
+  // 같이 슬라이드시키는 부작용이 있고, presentationStyle="pageSheet"는 항상 화면을
+  // 거의 다 채우는 큰 sheet라 content 양에 비해 비어 보였다. content 높이에 맞는
+  // bottom sheet로 띄워 입력 양에 맞춰 자연스러워진다.
+  const [mountedVisible, setMountedVisible] = useState(visible);
+  const backdropOpacity = useRef(new Animated.Value(0)).current;
+  const sheetTranslateY = useRef(new Animated.Value(SCREEN_H)).current;
+
+  useEffect(() => {
+    if (visible) {
+      setMountedVisible(true);
+      Animated.parallel([
+        Animated.timing(backdropOpacity, {
+          toValue: 1,
+          duration: FADE_MS,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.cubic),
+        }),
+        Animated.timing(sheetTranslateY, {
+          toValue: 0,
+          duration: SLIDE_MS,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.cubic),
+        }),
+      ]).start();
+    } else if (mountedVisible) {
+      Animated.parallel([
+        Animated.timing(backdropOpacity, {
+          toValue: 0,
+          duration: FADE_MS,
+          useNativeDriver: true,
+          easing: Easing.in(Easing.cubic),
+        }),
+        Animated.timing(sheetTranslateY, {
+          toValue: SCREEN_H,
+          duration: SLIDE_MS,
+          useNativeDriver: true,
+          easing: Easing.in(Easing.cubic),
+        }),
+      ]).start(({ finished }) => {
+        if (finished) setMountedVisible(false);
+      });
+    }
+  }, [visible, mountedVisible, backdropOpacity, sheetTranslateY]);
+
+  if (!mountedVisible) return null;
+
   return (
     <Modal
-      visible={visible}
-      animationType="slide"
+      visible={mountedVisible}
+      animationType="none"
+      transparent
       onRequestClose={onClose}
-      presentationStyle="pageSheet"
+      statusBarTranslucent
     >
-      <SafeAreaView style={styles.root} edges={["top"]}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{t("flight.modalTitle")}</Text>
-          <Pressable onPress={onClose} hitSlop={10} style={styles.closeBtn}>
-            <Text style={styles.closeIcon}>✕</Text>
-          </Pressable>
-        </View>
+      <Animated.View
+        pointerEvents={visible ? "auto" : "none"}
+        style={[styles.backdrop, { opacity: backdropOpacity }]}
+      >
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+      </Animated.View>
+      <Animated.View
+        style={[
+          styles.sheetWrap,
+          { transform: [{ translateY: sheetTranslateY }] },
+        ]}
+      >
+        <SafeAreaView edges={["bottom"]} style={styles.sheet}>
+          <View style={styles.handle} />
+          <View style={styles.header}>
+            <Text style={styles.title}>{t("flight.modalTitle")}</Text>
+            <Pressable onPress={onClose} hitSlop={10} style={styles.closeBtn}>
+              <Text style={styles.closeIcon}>✕</Text>
+            </Pressable>
+          </View>
 
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Field
-            styles={styles}
-            label={t("flight.origin")}
-            onPress={() => setPickerSide("origin")}
-            empty={origin == null}
-            primary={origin ? origin.iata : t("flight.selectAirport")}
-            secondary={origin ? `${origin.city} · ${origin.name}` : null}
-          />
-
-          <Field
-            styles={styles}
-            label={t("flight.destination")}
-            onPress={() => setPickerSide("destination")}
-            empty={destination == null}
-            primary={destination ? destination.iata : t("flight.selectAirport")}
-            secondary={
-              destination ? `${destination.city} · ${destination.name}` : null
-            }
-          />
-
-          <Field
-            styles={styles}
-            label={t("flight.duration")}
-            onPress={() => setDurationOpen(true)}
-            empty={totalMinutes === 0}
-            primary={durationPrimary}
-            secondary={durationSecondary}
-          />
-
-          <Pressable
-            onPress={handleStart}
-            disabled={!validation.ok}
-            style={({ pressed }) => [
-              styles.startBtn,
-              !validation.ok && styles.startBtnDisabled,
-              pressed && validation.ok && styles.startBtnPressed,
-            ]}
+          <ScrollView
+            contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps="handled"
           >
-            <Text
-              style={[
-                styles.startBtnText,
-                !validation.ok && styles.startBtnTextDisabled,
+            <Field
+              styles={styles}
+              label={t("flight.origin")}
+              onPress={() => setPickerSide("origin")}
+              empty={origin == null}
+              primary={origin ? origin.iata : t("flight.selectAirport")}
+              secondary={origin ? `${origin.city} · ${origin.name}` : null}
+            />
+
+            <Field
+              styles={styles}
+              label={t("flight.destination")}
+              onPress={() => setPickerSide("destination")}
+              empty={destination == null}
+              primary={destination ? destination.iata : t("flight.selectAirport")}
+              secondary={
+                destination ? `${destination.city} · ${destination.name}` : null
+              }
+            />
+
+            <Field
+              styles={styles}
+              label={t("flight.duration")}
+              onPress={() => setDurationOpen(true)}
+              empty={totalMinutes === 0}
+              primary={durationPrimary}
+              secondary={durationSecondary}
+            />
+
+            <Pressable
+              onPress={handleStart}
+              disabled={!validation.ok}
+              style={({ pressed }) => [
+                styles.startBtn,
+                !validation.ok && styles.startBtnDisabled,
+                pressed && validation.ok && styles.startBtnPressed,
               ]}
             >
-              {t("flight.startBtn")}
-            </Text>
-          </Pressable>
-        </ScrollView>
+              <Text
+                style={[
+                  styles.startBtnText,
+                  !validation.ok && styles.startBtnTextDisabled,
+                ]}
+              >
+                {t("flight.startBtn")}
+              </Text>
+            </Pressable>
+          </ScrollView>
+        </SafeAreaView>
+      </Animated.View>
 
-        <AirportPicker
-          visible={pickerSide !== null}
-          title={
-            pickerSide === "origin"
-              ? t("flight.origin")
-              : t("flight.destination")
-          }
-          onSelect={(a) => {
-            if (pickerSide === "origin") setOrigin(a);
-            if (pickerSide === "destination") setDestination(a);
-            setPickerSide(null);
-          }}
-          onClose={() => setPickerSide(null)}
-        />
+      <AirportPicker
+        visible={pickerSide !== null}
+        title={
+          pickerSide === "origin"
+            ? t("flight.origin")
+            : t("flight.destination")
+        }
+        side={pickerSide === "destination" ? "destination" : "origin"}
+        onSelect={(a) => {
+          if (pickerSide === "origin") setOrigin(a);
+          if (pickerSide === "destination") setDestination(a);
+          setPickerSide(null);
+        }}
+        onClose={() => setPickerSide(null)}
+      />
 
-        <DurationPickerSheet
-          visible={durationOpen}
-          title={t("flight.duration")}
-          initialHours={durationHours}
-          initialMinutes={durationMinutes}
-          onCancel={() => setDurationOpen(false)}
-          onConfirm={(h, m) => {
-            setDurationHours(h);
-            setDurationMinutes(m);
-            setDurationDirty(true);
-            setDurationOpen(false);
-          }}
-        />
-      </SafeAreaView>
+      <DurationPickerSheet
+        visible={durationOpen}
+        title={t("flight.duration")}
+        initialHours={durationHours}
+        initialMinutes={durationMinutes}
+        onCancel={() => setDurationOpen(false)}
+        onConfirm={(h, m) => {
+          setDurationHours(h);
+          setDurationMinutes(m);
+          setDurationDirty(true);
+          setDurationOpen(false);
+        }}
+      />
     </Modal>
   );
 }
@@ -259,20 +328,45 @@ function Field({
 
 function makeStyles(theme: Theme) {
   return StyleSheet.create({
-    root: { flex: 1, backgroundColor: theme.cardBg },
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: "rgba(0,0,0,0.45)",
+    },
+    sheetWrap: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    sheet: {
+      backgroundColor: theme.cardBg,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      paddingTop: 8,
+      // 입력 컨텐츠가 늘어도 너무 커지지 않도록 화면의 약 80%까지로 제한. 일반적인
+      // 입력량(3 필드 + 시작 버튼)에서는 이 limit보다 훨씬 작게 fit된다.
+      maxHeight: SCREEN_H * 0.8,
+    },
+    handle: {
+      alignSelf: "center",
+      width: 40,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: theme.cardBorder,
+      marginBottom: 12,
+    },
     header: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      paddingHorizontal: 16,
-      paddingVertical: 12,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: theme.cardBorder,
+      paddingHorizontal: 20,
+      paddingTop: 8,
+      paddingBottom: 16,
     },
     title: { color: theme.textPrimary, fontSize: 18, fontWeight: "700" },
     closeBtn: { padding: 4 },
     closeIcon: { color: theme.textPrimary, fontSize: 18, fontWeight: "700" },
-    content: { padding: 16, gap: 4 },
+    content: { paddingHorizontal: 16, paddingBottom: 16, gap: 4 },
     field: { marginBottom: 16 },
     fieldLabel: {
       color: theme.textSecondary,

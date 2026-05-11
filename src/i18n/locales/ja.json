@@ -579,6 +579,8 @@
     "searchPlaceholder": "空港コード / 都市 / 空港名",
     "searchHint": "例: HND, Tokyo, 東京",
     "searchEmpty": "該当する空港がありません",
+    "popularDepartures": "よく出発する空港",
+    "popularArrivals": "よく到着する空港",
     "departTime": "出発時刻",
     "arriveTime": "到着時刻",
     "duration": "飛行時間",

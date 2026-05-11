@@ -837,6 +837,8 @@
     "searchPlaceholder": "IATA code / city / airport name",
     "searchHint": "e.g. ICN, Seoul, Tokyo",
     "searchEmpty": "No matching airports",
+    "popularDepartures": "Popular departure hubs",
+    "popularArrivals": "Popular arrival hubs",
     "departTime": "Depart time",
     "arriveTime": "Arrive time",
     "duration": "Flight duration",

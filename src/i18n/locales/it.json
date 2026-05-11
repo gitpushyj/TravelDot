@@ -579,6 +579,8 @@
     "searchPlaceholder": "IATA / città / aeroporto",
     "searchHint": "es. FCO, Roma, Milano",
     "searchEmpty": "Nessun risultato",
+    "popularDepartures": "Hub di partenza popolari",
+    "popularArrivals": "Hub di arrivo popolari",
     "departTime": "Ora di partenza",
     "arriveTime": "Ora di arrivo",
     "duration": "Durata del volo",

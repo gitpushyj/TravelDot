@@ -579,6 +579,8 @@
     "searchPlaceholder": "機場代碼 / 城市 / 機場名",
     "searchHint": "例如: TPE, Taipei, 台北",
     "searchEmpty": "找不到對應機場",
+    "popularDepartures": "常用出發機場",
+    "popularArrivals": "常用到達機場",
     "departTime": "出發時間",
     "arriveTime": "到達時間",
     "duration": "飛行時長",

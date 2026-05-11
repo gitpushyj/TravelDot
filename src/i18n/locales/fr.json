@@ -579,6 +579,8 @@
     "searchPlaceholder": "IATA / ville / aéroport",
     "searchHint": "ex. CDG, Paris, Nice",
     "searchEmpty": "Aucun résultat",
+    "popularDepartures": "Hubs de départ populaires",
+    "popularArrivals": "Hubs d'arrivée populaires",
     "departTime": "Heure de départ",
     "arriveTime": "Heure d'arrivée",
     "duration": "Durée du vol",
