@@ -6,6 +6,8 @@ import {
   Easing,
   useDerivedValue,
   useSharedValue,
+  withRepeat,
+  withSequence,
   withTiming,
 } from "react-native-reanimated";
 
@@ -49,8 +51,36 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   // 앱 백그라운드 → foreground 전환 시 startProgress부터 다시 셋업해 실제 시각과 동기화.
   const progress = useSharedValue(0);
 
+  // 살아있음 표현: 비행기를 진행 방향 직각으로 미세 wobble(±1.2px 정도).
+  // 실제 비행시간이 길어 progress 변화가 느려도 비행기가 "살아 움직이는" 시각 신호를 준다.
+  // 단위는 비행기 픽셀 기준 — 음수면 진행 방향 왼쪽으로 미세 흔들림.
+  const wobble = useSharedValue(0);
+
   // 도착시각 도달을 polling으로 잡는다. setInterval 1초 tick + AppState 변화 시점.
   const arrivalIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // wobble 상시 재생. 비행 active 동안만.
+  useEffect(() => {
+    if (!active) {
+      cancelAnimation(wobble);
+      wobble.value = 0;
+      return;
+    }
+    cancelAnimation(wobble);
+    wobble.value = 0;
+    wobble.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
+        withTiming(-1, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
+        withTiming(0, { duration: 1200, easing: Easing.inOut(Easing.sin) })
+      ),
+      -1,
+      false
+    );
+    return () => {
+      cancelAnimation(wobble);
+    };
+  }, [active, wobble]);
 
   // active 비행이 바뀌거나 AppState가 active로 돌아올 때 progress를 (남은 시간)만큼 다시 보간.
   useEffect(() => {
@@ -137,6 +167,9 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
   const pathDotPx = cellPx * PATH_DOT_RATIO;
 
   // 매 프레임 worklet — 비행기 현재 좌표.
+  // wobble은 진행 방향(코) 기준 좌우(=픽셀 그리드의 X축)로 미세 흔들림을 더한다.
+  // bearingRad 회전 안쪽에 translateX(wobble)를 넣어, 회전된 비행기 프레임의 좌우로
+  // 흔들리도록 한다(절대 화면 좌우가 아니라 비행기 진행 방향 직각).
   const planeTransform = useDerivedValue(() => {
     if (!active || !staticGeom) {
       return [{ translateX: 0 }, { translateY: 0 }, { rotate: 0 }];
@@ -151,14 +184,20 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
     );
     const x = lngToX(p.lng, baseScale);
     const y = latToY(p.lat, maxLat, baseScale);
+    const wob = wobble.value * planePx * 0.4; // ±0.4 픽셀 단위
     return [
       { translateX: x },
       { translateY: y },
       { rotate: staticGeom.bearingRad },
-      { translateX: -pivotPx },
+      { translateX: -pivotPx + wob },
       { translateY: -pivotPy },
     ];
   });
+
+  // 비행기 후미 트레일. 비행기 꼬리 바로 뒤(진행 방향 반대쪽)에 3개의 작은 점을 두어
+  // 잔상 느낌을 준다. 트레일은 같은 회전 그룹 안에 있어 비행기와 함께 회전 + wobble.
+  const TRAIL_COUNT = 3;
+  const trailDotPx = planePx * 0.7;
 
   // worklet 시간 진행 외에 경로 점의 색을 progress 기반으로 바꾸기 위한 임계값.
   // 각 점 인덱스 i가 progress * (N-1)보다 작으면 "지나온 점"(진한 색).
@@ -195,8 +234,26 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
           progress={progress}
         />
       ))}
-      {/* 비행기 — outline(어두운) layer + body(흰색) layer */}
+      {/* 비행기 — outline(어두운) layer + body(흰색) layer + 후미 트레일 */}
       <Group transform={planeTransform}>
+        {/* 트레일: 비행기 꼬리 뒤(진행 방향 반대쪽)에 점이 점점 흐려지며 깔린다.
+            비행기 그리드의 row 좌표 기준으로 row > AIRPLANE_ROWS 쪽이 꼬리 뒤. */}
+        {Array.from({ length: TRAIL_COUNT }).map((_, i) => {
+          const offset = (i + 1) * planePx * 1.4;
+          const alpha = 0.42 - i * 0.12;
+          const cx = AIRPLANE_PIVOT_COL * planePx;
+          const cy = AIRPLANE_ROWS * planePx + offset;
+          return (
+            <Rect
+              key={`pl-t-${i}`}
+              x={cx - trailDotPx / 2}
+              y={cy - trailDotPx / 2}
+              width={trailDotPx}
+              height={trailDotPx}
+              color={`rgba(255,255,255,${alpha})`}
+            />
+          );
+        })}
         {/* outline: 픽셀 한 변보다 약간 더 크게 그려 1px 정도 어두운 테두리처럼 보임 */}
         {AIRPLANE_PIXELS.map((p) => (
           <Rect

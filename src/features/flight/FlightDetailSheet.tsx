@@ -1,6 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
+  Animated,
+  Dimensions,
+  Easing,
   Modal,
   Pressable,
   StyleSheet,
@@ -18,6 +21,10 @@ import {
   formatHm,
   formatRemainingShort,
 } from "./timeUtils";
+
+const FADE_MS = 220;
+const SLIDE_MS = 260;
+const SCREEN_H = Dimensions.get("window").height;
 
 type Props = {
   visible: boolean;
@@ -38,6 +45,51 @@ export default function FlightDetailSheet({ visible, onClose }: Props) {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, [visible]);
+
+  // Modal의 animationType="slide"는 시트뿐 아니라 backdrop까지 함께 슬라이드시켜
+  // dimmed 영역이 같이 내려오는 부자연스러움을 만든다. animationType="none"으로
+  // 두고 backdrop은 fade, 시트는 slide로 분리해 직접 애니메이션한다.
+  // mountedVisible은 종료 애니메이션이 끝난 뒤에야 Modal을 언마운트하기 위한 게이트.
+  const [mountedVisible, setMountedVisible] = useState(visible);
+  const backdropOpacity = useRef(new Animated.Value(0)).current;
+  const sheetTranslateY = useRef(new Animated.Value(SCREEN_H)).current;
+
+  useEffect(() => {
+    if (visible) {
+      setMountedVisible(true);
+      Animated.parallel([
+        Animated.timing(backdropOpacity, {
+          toValue: 1,
+          duration: FADE_MS,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.cubic),
+        }),
+        Animated.timing(sheetTranslateY, {
+          toValue: 0,
+          duration: SLIDE_MS,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.cubic),
+        }),
+      ]).start();
+    } else if (mountedVisible) {
+      Animated.parallel([
+        Animated.timing(backdropOpacity, {
+          toValue: 0,
+          duration: FADE_MS,
+          useNativeDriver: true,
+          easing: Easing.in(Easing.cubic),
+        }),
+        Animated.timing(sheetTranslateY, {
+          toValue: SCREEN_H,
+          duration: SLIDE_MS,
+          useNativeDriver: true,
+          easing: Easing.in(Easing.cubic),
+        }),
+      ]).start(({ finished }) => {
+        if (finished) setMountedVisible(false);
+      });
+    }
+  }, [visible, mountedVisible, backdropOpacity, sheetTranslateY]);
 
   if (!active) return null;
 
@@ -66,15 +118,24 @@ export default function FlightDetailSheet({ visible, onClose }: Props) {
 
   return (
     <Modal
-      visible={visible}
-      animationType="slide"
+      visible={mountedVisible}
+      animationType="none"
       transparent
       onRequestClose={onClose}
+      statusBarTranslucent
     >
-      <Pressable style={styles.backdrop} onPress={onClose}>
-        <View />
-      </Pressable>
-      <View style={styles.sheetWrap}>
+      <Animated.View
+        pointerEvents={visible ? "auto" : "none"}
+        style={[styles.backdrop, { opacity: backdropOpacity }]}
+      >
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+      </Animated.View>
+      <Animated.View
+        style={[
+          styles.sheetWrap,
+          { transform: [{ translateY: sheetTranslateY }] },
+        ]}
+      >
         <SafeAreaView edges={["bottom"]} style={styles.sheet}>
           <View style={styles.handle} />
           <View style={styles.header}>
@@ -135,7 +196,7 @@ export default function FlightDetailSheet({ visible, onClose }: Props) {
             <Text style={styles.cancelBtnText}>{t("flight.cancelBtn")}</Text>
           </Pressable>
         </SafeAreaView>
-      </View>
+      </Animated.View>
     </Modal>
   );
 }

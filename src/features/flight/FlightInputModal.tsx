@@ -1,13 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,6 +17,7 @@ import AirportPicker from "./AirportPicker";
 import type { Airport } from "./airports";
 import { estimateFlightMinutes } from "./estimateFlightDuration";
 import { useFlightStore } from "./flightStore";
+import TimePickerSheet from "./TimePickerSheet";
 import {
   formatDurationMinutes,
   formatHm,
@@ -34,6 +32,7 @@ type Props = {
 };
 
 type Side = "origin" | "destination" | null;
+type TimeSide = "depart" | "arrive" | null;
 
 export default function FlightInputModal({ visible, onClose }: Props) {
   const { t } = useTranslation();
@@ -44,6 +43,7 @@ export default function FlightInputModal({ visible, onClose }: Props) {
   const [origin, setOrigin] = useState<Airport | null>(null);
   const [destination, setDestination] = useState<Airport | null>(null);
   const [pickerSide, setPickerSide] = useState<Side>(null);
+  const [timeSide, setTimeSide] = useState<TimeSide>(null);
 
   // 시각 입력 텍스트. 모달 열릴 때 기본값을 채워 준다.
   const [departText, setDepartText] = useState("");
@@ -58,6 +58,7 @@ export default function FlightInputModal({ visible, onClose }: Props) {
     setOrigin(null);
     setDestination(null);
     setPickerSide(null);
+    setTimeSide(null);
     setDepartText(formatHm(Date.now()));
     setArriveText("");
     setArriveDirty(false);
@@ -105,6 +106,15 @@ export default function FlightInputModal({ visible, onClose }: Props) {
     onClose();
   };
 
+  // 휠 시트의 초기값 — 현재 텍스트가 유효하면 그 값, 아니면 "지금"으로.
+  const timeSheetInitial = useMemo(() => {
+    const which = timeSide === "arrive" ? arriveText : departText;
+    const parsed = parseHm(which);
+    if (parsed) return parsed;
+    const d = new Date();
+    return { h: d.getHours(), m: d.getMinutes() };
+  }, [timeSide, departText, arriveText]);
+
   return (
     <Modal
       visible={visible}
@@ -120,81 +130,73 @@ export default function FlightInputModal({ visible, onClose }: Props) {
           </Pressable>
         </View>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          style={{ flex: 1 }}
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
         >
-          <ScrollView
-            contentContainerStyle={styles.content}
-            keyboardShouldPersistTaps="handled"
+          <Field
+            styles={styles}
+            label={t("flight.origin")}
+            onPress={() => setPickerSide("origin")}
+            empty={origin == null}
+            primary={origin ? origin.iata : t("flight.selectAirport")}
+            secondary={origin ? `${origin.city} · ${origin.name}` : null}
+          />
+
+          <Field
+            styles={styles}
+            label={t("flight.destination")}
+            onPress={() => setPickerSide("destination")}
+            empty={destination == null}
+            primary={destination ? destination.iata : t("flight.selectAirport")}
+            secondary={
+              destination ? `${destination.city} · ${destination.name}` : null
+            }
+          />
+
+          <Field
+            styles={styles}
+            label={t("flight.departTime")}
+            onPress={() => setTimeSide("depart")}
+            empty={!parseHm(departText)}
+            primary={departText || "--:--"}
+            secondary={null}
+          />
+
+          <Field
+            styles={styles}
+            label={t("flight.arriveTime")}
+            onPress={() => setTimeSide("arrive")}
+            empty={!parseHm(arriveText)}
+            primary={arriveText || "--:--"}
+            secondary={
+              validation.ok
+                ? t("flight.arriveHintMinutes", {
+                    duration: formatDurationMinutes(validation.minutes),
+                  })
+                : t("flight.arriveHintAuto")
+            }
+          />
+
+          <Pressable
+            onPress={handleStart}
+            disabled={!validation.ok}
+            style={({ pressed }) => [
+              styles.startBtn,
+              !validation.ok && styles.startBtnDisabled,
+              pressed && validation.ok && styles.startBtnPressed,
+            ]}
           >
-            <Field
-              styles={styles}
-              label={t("flight.origin")}
-              onPress={() => setPickerSide("origin")}
-              empty={origin == null}
-              primary={origin ? origin.iata : t("flight.selectAirport")}
-              secondary={origin ? `${origin.city} · ${origin.name}` : null}
-            />
-
-            <Field
-              styles={styles}
-              label={t("flight.destination")}
-              onPress={() => setPickerSide("destination")}
-              empty={destination == null}
-              primary={destination ? destination.iata : t("flight.selectAirport")}
-              secondary={
-                destination ? `${destination.city} · ${destination.name}` : null
-              }
-            />
-
-            <TimeField
-              styles={styles}
-              label={t("flight.departTime")}
-              value={departText}
-              onChange={(v) => {
-                setDepartText(v);
-                setArriveDirty(false); // 출발 바뀌면 도착 자동 재계산 허용.
-              }}
-            />
-
-            <TimeField
-              styles={styles}
-              label={t("flight.arriveTime")}
-              value={arriveText}
-              onChange={(v) => {
-                setArriveText(v);
-                setArriveDirty(true);
-              }}
-              hint={
-                validation.ok
-                  ? t("flight.arriveHintMinutes", {
-                      duration: formatDurationMinutes(validation.minutes),
-                    })
-                  : t("flight.arriveHintAuto")
-              }
-            />
-
-            <Pressable
-              onPress={handleStart}
-              disabled={!validation.ok}
-              style={({ pressed }) => [
-                styles.startBtn,
-                !validation.ok && styles.startBtnDisabled,
-                pressed && validation.ok && styles.startBtnPressed,
+            <Text
+              style={[
+                styles.startBtnText,
+                !validation.ok && styles.startBtnTextDisabled,
               ]}
             >
-              <Text
-                style={[
-                  styles.startBtnText,
-                  !validation.ok && styles.startBtnTextDisabled,
-                ]}
-              >
-                {t("flight.startBtn")}
-              </Text>
-            </Pressable>
-          </ScrollView>
-        </KeyboardAvoidingView>
+              {t("flight.startBtn")}
+            </Text>
+          </Pressable>
+        </ScrollView>
 
         <AirportPicker
           visible={pickerSide !== null}
@@ -209,6 +211,29 @@ export default function FlightInputModal({ visible, onClose }: Props) {
             setPickerSide(null);
           }}
           onClose={() => setPickerSide(null)}
+        />
+
+        <TimePickerSheet
+          visible={timeSide !== null}
+          title={
+            timeSide === "arrive"
+              ? t("flight.arriveTime")
+              : t("flight.departTime")
+          }
+          initialHour={timeSheetInitial.h}
+          initialMinute={timeSheetInitial.m}
+          onCancel={() => setTimeSide(null)}
+          onConfirm={(h, m) => {
+            const hm = `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+            if (timeSide === "depart") {
+              setDepartText(hm);
+              setArriveDirty(false); // 출발 바뀌면 도착 자동 재계산 허용.
+            } else if (timeSide === "arrive") {
+              setArriveText(hm);
+              setArriveDirty(true);
+            }
+            setTimeSide(null);
+          }}
         />
       </SafeAreaView>
     </Modal>
@@ -258,36 +283,6 @@ function Field({
   );
 }
 
-function TimeField({
-  styles,
-  label,
-  value,
-  onChange,
-  hint,
-}: {
-  styles: ReturnType<typeof makeStyles>;
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  hint?: string;
-}) {
-  return (
-    <View style={styles.field}>
-      <Text style={styles.fieldLabel}>{label}</Text>
-      <TextInput
-        value={value}
-        onChangeText={onChange}
-        placeholder="14:32"
-        placeholderTextColor="#888"
-        keyboardType="numbers-and-punctuation"
-        maxLength={5}
-        style={styles.timeInput}
-      />
-      {hint ? <Text style={styles.fieldHint}>{hint}</Text> : null}
-    </View>
-  );
-}
-
 function makeStyles(theme: Theme) {
   return StyleSheet.create({
     root: { flex: 1, backgroundColor: theme.cardBg },
@@ -331,23 +326,6 @@ function makeStyles(theme: Theme) {
       color: theme.textSecondary,
       fontSize: 13,
       marginTop: 4,
-    },
-    fieldHint: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      marginTop: 6,
-    },
-    timeInput: {
-      paddingHorizontal: 14,
-      paddingVertical: 14,
-      borderRadius: 12,
-      backgroundColor: theme.optionBtnBg,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: theme.cardBorder,
-      color: theme.textPrimary,
-      fontSize: 18,
-      fontWeight: "600",
-      letterSpacing: 0.4,
     },
     startBtn: {
       marginTop: 8,
