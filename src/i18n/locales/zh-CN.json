@@ -419,7 +419,11 @@
     "newSingleTitle": "获得了一枚新徽章!",
     "newMultipleTitle": "获得了 {{count}} 枚新徽章!",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n可在「设置 > 称号」中选择并显示在主页。",
-    "newMultipleBody": "{{list}}\n\n可在「设置 > 称号」中选择并显示在主页。"
+    "newMultipleBody": "{{list}}\n\n可在「设置 > 称号」中选择并显示在主页。",
+    "tier": {
+      "condition": "访问 {{count}}+ 个国家",
+      "conditionAll": "访问全球所有 {{count}} 个国家"
+    }
   },
   "settings": {
     "heading": "设置",

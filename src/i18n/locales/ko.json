@@ -594,6 +594,10 @@
         "title": "지구 한 바퀴",
         "description": "시차 24시간 차이 두 국가 방문"
       }
+    },
+    "tier": {
+      "condition": "{{count}}개국 이상 방문",
+      "conditionAll": "전 세계 {{count}}개국 모두 방문"
     }
   },
   "settings": {

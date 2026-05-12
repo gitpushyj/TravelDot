@@ -419,7 +419,11 @@
     "newSingleTitle": "Nouveau badge débloqué !",
     "newMultipleTitle": "{{count}} nouveaux badges débloqués !",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nChoisis-le dans Réglages > Titres pour l'afficher sur l'écran d'accueil.",
-    "newMultipleBody": "{{list}}\n\nChoisis-en un dans Réglages > Titres pour l'afficher sur l'écran d'accueil."
+    "newMultipleBody": "{{list}}\n\nChoisis-en un dans Réglages > Titres pour l'afficher sur l'écran d'accueil.",
+    "tier": {
+      "condition": "{{count}}+ pays visités",
+      "conditionAll": "Tous les {{count}} pays du monde visités"
+    }
   },
   "settings": {
     "heading": "Réglages",

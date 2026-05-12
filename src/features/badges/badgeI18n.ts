@@ -8,7 +8,7 @@ import {
   ContinentId,
   continentDefinition,
 } from "./continents";
-import type { TierDefinition } from "../travel/tierTitles";
+import { TIERS, type TierDefinition } from "../travel/tierTitles";
 
 export function localizedTierTitle(
   tier: TierDefinition,
@@ -174,4 +174,35 @@ export function localizedBadgeDescription(
     });
   }
   return badge.description;
+}
+
+/**
+ * 공유 카드 등 "객관적 달성 조건"만 보여줘야 하는 곳에서 사용.
+ *
+ * tier 호칭의 i18n description은 "여행이 슬슬 익숙해지는" 같은 감성 문구라
+ * 공유 카드에 들어가면 의미가 모호하다. tier만 threshold 기반 조건문으로 바꾸고,
+ * 나머지(days/continent/country/foreign/premium)는 이미 조건형이라 그대로 사용한다.
+ */
+export function localizedBadgeObjective(
+  badge: BadgeDefinition,
+  t: TFunction,
+  locale: SupportedLocale
+): string {
+  if (badge.id.startsWith("tier_")) {
+    const tierId = badge.id.slice(5);
+    const tier = TIERS.find((tt) => tt.id === tierId);
+    if (tier && tier.threshold > 0) {
+      if (tierId === "UN_MASTER") {
+        return t("badges.tier.conditionAll", {
+          count: tier.threshold,
+          defaultValue: `전 세계 ${tier.threshold}개국 모두 방문`,
+        });
+      }
+      return t("badges.tier.condition", {
+        count: tier.threshold,
+        defaultValue: `${tier.threshold}개국 이상 방문`,
+      });
+    }
+  }
+  return localizedBadgeDescription(badge, t, locale);
 }

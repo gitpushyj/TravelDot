@@ -419,7 +419,11 @@
     "newSingleTitle": "新しいバッジを獲得！",
     "newMultipleTitle": "新しいバッジを{{count}}個獲得！",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\n設定 > 称号から選んでホーム画面に表示できます。",
-    "newMultipleBody": "{{list}}\n\n設定 > 称号から選んでホーム画面に表示できます。"
+    "newMultipleBody": "{{list}}\n\n設定 > 称号から選んでホーム画面に表示できます。",
+    "tier": {
+      "condition": "{{count}}カ国以上訪問",
+      "conditionAll": "世界{{count}}カ国すべて訪問"
+    }
   },
   "settings": {
     "heading": "設定",

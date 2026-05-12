@@ -594,6 +594,10 @@
         "title": "Round the Clock",
         "description": "Two countries with 24h+ UTC offset gap"
       }
+    },
+    "tier": {
+      "condition": "Visited {{count}}+ countries",
+      "conditionAll": "Visited all {{count}} countries on Earth"
     }
   },
   "settings": {

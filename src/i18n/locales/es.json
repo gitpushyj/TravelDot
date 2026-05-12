@@ -419,7 +419,11 @@
     "newSingleTitle": "¡Has conseguido una nueva insignia!",
     "newMultipleTitle": "¡Has conseguido {{count}} nuevas insignias!",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nElígela en Ajustes > Títulos para mostrarla en la pantalla de inicio.",
-    "newMultipleBody": "{{list}}\n\nElige uno en Ajustes > Títulos para mostrarlo en la pantalla de inicio."
+    "newMultipleBody": "{{list}}\n\nElige uno en Ajustes > Títulos para mostrarlo en la pantalla de inicio.",
+    "tier": {
+      "condition": "{{count}}+ países visitados",
+      "conditionAll": "Todos los {{count}} países del mundo visitados"
+    }
   },
   "settings": {
     "heading": "Ajustes",

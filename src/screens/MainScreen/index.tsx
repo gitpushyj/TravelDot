@@ -34,7 +34,7 @@ import YearPickerModal from "../../components/YearPickerModal";
 import ArrivalToast from "../../features/flight/ArrivalToast";
 import { runIncrementalSync } from "../../features/photoSync/syncService";
 import {
-  localizedBadgeDescription,
+  localizedBadgeObjective,
   localizedBadgeTitle,
 } from "../../features/badges/badgeI18n";
 import { badgeFromId } from "../../features/badges/badges";
@@ -306,7 +306,7 @@ export default function MainScreen({ navigation }: Props) {
   const shareBadgeDescription = useMemo(
     () =>
       activeBadge
-        ? localizedBadgeDescription(activeBadge, t, getCurrentLocale())
+        ? localizedBadgeObjective(activeBadge, t, getCurrentLocale())
         : null,
     [activeBadge, t]
   );
@@ -321,7 +321,7 @@ export default function MainScreen({ navigation }: Props) {
       .map((id) => badgeFromId(id, BADGE_KO_NAMES))
       .filter((b): b is NonNullable<typeof b> => b != null);
     return sortBadges(defs).map((b) =>
-      localizedBadgeDescription(b, t, locale)
+      localizedBadgeObjective(b, t, locale)
     );
   }, [unlockedBadgeIds, activeBadge?.id, t]);
 

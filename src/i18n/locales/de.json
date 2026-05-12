@@ -419,7 +419,11 @@
     "newSingleTitle": "Du hast ein neues Abzeichen erhalten!",
     "newMultipleTitle": "Du hast {{count}} neue Abzeichen erhalten!",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nWähle es unter Einstellungen > Titel aus, um es auf dem Startbildschirm anzuzeigen.",
-    "newMultipleBody": "{{list}}\n\nWähle eines unter Einstellungen > Titel aus, um es auf dem Startbildschirm anzuzeigen."
+    "newMultipleBody": "{{list}}\n\nWähle eines unter Einstellungen > Titel aus, um es auf dem Startbildschirm anzuzeigen.",
+    "tier": {
+      "condition": "{{count}}+ Länder besucht",
+      "conditionAll": "Alle {{count}} Länder der Welt besucht"
+    }
   },
   "settings": {
     "heading": "Einstellungen",

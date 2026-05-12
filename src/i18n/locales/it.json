@@ -419,7 +419,11 @@
     "newSingleTitle": "Hai ottenuto un nuovo badge!",
     "newMultipleTitle": "Hai ottenuto {{count}} nuovi badge!",
     "newSingleBody": "{{emoji}}  {{title}}\n\n{{description}}\n\nScegli il badge da Impostazioni > Titoli per mostrarlo nella schermata principale.",
-    "newMultipleBody": "{{list}}\n\nScegline uno da Impostazioni > Titoli per mostrarlo nella schermata principale."
+    "newMultipleBody": "{{list}}\n\nScegline uno da Impostazioni > Titoli per mostrarlo nella schermata principale.",
+    "tier": {
+      "condition": "{{count}}+ paesi visitati",
+      "conditionAll": "Tutti i {{count}} paesi del mondo visitati"
+    }
   },
   "settings": {
     "heading": "Impostazioni",
