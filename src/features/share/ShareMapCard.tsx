@@ -28,6 +28,9 @@ type Props = {
   visitCounts: Record<string, number>;
   badgeEmoji: string | null;
   badgeTitle: string | null;
+  badgeDescription: string | null;
+  /** 활성 호칭을 제외한 잠금 해제 호칭들의 설명. 위에서부터 rank 내림차순 정렬됨. */
+  milestoneCredits: string[];
   countries: number;
   days: number;
   yearLabel: string;
@@ -38,12 +41,20 @@ type Props = {
   enableMapZoom?: boolean;
 };
 
+// 영화 엔딩 크레딧처럼 위→아래로 폰트가 작아진다. 최대 5줄.
+const MAX_CREDIT_LINES = 5;
+const CREDIT_FONT_SIZES = [50, 44, 38, 34, 30];
+const CREDIT_OPACITIES = [1.0, 0.9, 0.8, 0.72, 0.65];
+const CREDIT_FONT_WEIGHTS = ["700", "600", "600", "500", "500"] as const;
+
 const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
   {
     palette,
     visitCounts,
     badgeEmoji,
     badgeTitle,
+    badgeDescription,
+    milestoneCredits,
     countries,
     days,
     yearLabel,
@@ -54,18 +65,27 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
   ref
 ) {
   const styles = makeStyles(palette);
+  const visibleCredits = milestoneCredits.slice(0, MAX_CREDIT_LINES);
+  const hasMoreCredits = milestoneCredits.length > MAX_CREDIT_LINES;
   return (
     <View ref={ref} collapsable={false} style={styles.frame}>
       <View style={styles.card}>
         {/* 호칭 */}
         <View style={styles.titleSection}>
           {badgeTitle ? (
-            <View style={styles.badgeChip}>
-              <Text style={styles.badgeText}>
-                {badgeEmoji ? `${badgeEmoji} ` : ""}
-                {badgeTitle}
-              </Text>
-            </View>
+            <>
+              <View style={styles.badgeChip}>
+                <Text style={styles.badgeText}>
+                  {badgeEmoji ? `${badgeEmoji} ` : ""}
+                  {badgeTitle}
+                </Text>
+              </View>
+              {badgeDescription ? (
+                <Text style={styles.badgeDescription} numberOfLines={2}>
+                  {badgeDescription}
+                </Text>
+              ) : null}
+            </>
           ) : null}
         </View>
 
@@ -76,6 +96,7 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
             enableZoom={enableMapZoom}
             playIntro={false}
             mapAreaStyle={styles.mapInner}
+            showLegend={false}
           />
         </View>
 
@@ -94,6 +115,31 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
         <View style={styles.yearSection}>
           {yearLabel ? <Text style={styles.yearLabel}>{yearLabel}</Text> : null}
         </View>
+
+        {/* 획득한 호칭 크레딧 — 영화 엔딩 크레딧처럼 위→아래로 작아진다. */}
+        {visibleCredits.length > 0 ? (
+          <View style={styles.creditsSection}>
+            {visibleCredits.map((line, i) => (
+              <Text
+                key={`${i}-${line}`}
+                numberOfLines={1}
+                style={[
+                  styles.creditLine,
+                  {
+                    fontSize: CREDIT_FONT_SIZES[i],
+                    opacity: CREDIT_OPACITIES[i],
+                    fontWeight: CREDIT_FONT_WEIGHTS[i],
+                  },
+                ]}
+              >
+                {line}
+              </Text>
+            ))}
+            {hasMoreCredits ? (
+              <Text style={styles.creditEllipsis}>…</Text>
+            ) : null}
+          </View>
+        ) : null}
 
         {/* 워터마크는 카드 맨 아래에 붙는다. */}
         <View style={styles.footer}>
@@ -141,6 +187,15 @@ function makeStyles(palette: SharePalette) {
       fontSize: 72,
       fontWeight: "800",
     },
+    badgeDescription: {
+      color: palette.textSecondary,
+      fontSize: 36,
+      fontWeight: "500",
+      textAlign: "center",
+      marginTop: 22,
+      paddingHorizontal: 40,
+      lineHeight: 46,
+    },
     mapSlot: {
       width: MAP_SLOT_WIDTH,
       height: MAP_SLOT_HEIGHT,
@@ -183,6 +238,25 @@ function makeStyles(palette: SharePalette) {
       fontSize: 56,
       fontWeight: "600",
       letterSpacing: 2,
+    },
+    creditsSection: {
+      marginTop: 60,
+      alignItems: "center",
+      paddingHorizontal: 40,
+      alignSelf: "stretch",
+    },
+    creditLine: {
+      color: palette.textSecondary,
+      textAlign: "center",
+      marginBottom: 14,
+      letterSpacing: 0.5,
+    },
+    creditEllipsis: {
+      color: palette.textMuted,
+      fontSize: 44,
+      fontWeight: "700",
+      marginTop: 2,
+      letterSpacing: 4,
     },
     footer: {
       flex: 1,

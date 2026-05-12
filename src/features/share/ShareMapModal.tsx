@@ -27,6 +27,8 @@ type Props = {
   visitCounts: Record<string, number>;
   badgeEmoji: string | null;
   badgeTitle: string | null;
+  badgeDescription: string | null;
+  milestoneCredits: string[];
   countries: number;
   days: number;
   yearLabel: string;
@@ -41,6 +43,8 @@ export default function ShareMapModal({
   visitCounts,
   badgeEmoji,
   badgeTitle,
+  badgeDescription,
+  milestoneCredits,
   countries,
   days,
   yearLabel,
@@ -149,6 +153,8 @@ export default function ShareMapModal({
                 visitCounts={visitCounts}
                 badgeEmoji={badgeEmoji}
                 badgeTitle={badgeTitle}
+                badgeDescription={badgeDescription}
+                milestoneCredits={milestoneCredits}
                 countries={countries}
                 days={days}
                 yearLabel={yearLabel}

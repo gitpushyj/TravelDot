@@ -33,10 +33,17 @@ import DotMap from "../../components/DotMap";
 import YearPickerModal from "../../components/YearPickerModal";
 import ArrivalToast from "../../features/flight/ArrivalToast";
 import { runIncrementalSync } from "../../features/photoSync/syncService";
-import { localizedBadgeTitle } from "../../features/badges/badgeI18n";
+import {
+  localizedBadgeDescription,
+  localizedBadgeTitle,
+} from "../../features/badges/badgeI18n";
 import { badgeFromId } from "../../features/badges/badges";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "../../features/badges/countryNames";
-import { pickActiveBadge, useBadgeStore } from "../../features/badges/badgeStore";
+import {
+  pickActiveBadge,
+  sortBadges,
+  useBadgeStore,
+} from "../../features/badges/badgeStore";
 import ShareMapModal from "../../features/share/ShareMapModal";
 import { formatShareYearLabel } from "../../features/share/yearLabel";
 import { getTierByCount } from "../../features/travel/tierTitles";
@@ -90,6 +97,7 @@ export default function MainScreen({ navigation }: Props) {
   const availableYears = useVisitStore((s) => s.availableYears);
   const setSelectedCountry = useVisitStore((s) => s.setSelectedCountry);
   const activeBadgeId = useBadgeStore((s) => s.activeId);
+  const unlockedBadgeIds = useBadgeStore((s) => s.unlocked);
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const [yearPickerOpen, setYearPickerOpen] = useState(false);
@@ -295,6 +303,27 @@ export default function MainScreen({ navigation }: Props) {
         : null,
     [activeBadge, t]
   );
+  const shareBadgeDescription = useMemo(
+    () =>
+      activeBadge
+        ? localizedBadgeDescription(activeBadge, t, getCurrentLocale())
+        : null,
+    [activeBadge, t]
+  );
+
+  // 공유 카드 하단 크레딧 — 활성 호칭(이미 상단에 큼지막하게 표시됨)을 제외하고
+  // 사용자가 잠금 해제한 모든 호칭의 설명을 rank 내림차순으로 정렬.
+  const shareMilestoneCredits = useMemo(() => {
+    const locale = getCurrentLocale();
+    const activeId = activeBadge?.id;
+    const defs = unlockedBadgeIds
+      .filter((id) => id !== activeId)
+      .map((id) => badgeFromId(id, BADGE_KO_NAMES))
+      .filter((b): b is NonNullable<typeof b> => b != null);
+    return sortBadges(defs).map((b) =>
+      localizedBadgeDescription(b, t, locale)
+    );
+  }, [unlockedBadgeIds, activeBadge?.id, t]);
 
   // 다음 목표 호칭 라벨 (예: "아시아 전문가")
   const nextTitleLabel = useMemo(() => {
@@ -549,6 +578,8 @@ export default function MainScreen({ navigation }: Props) {
         visitCounts={activeCounts}
         badgeEmoji={activeBadge?.emoji ?? null}
         badgeTitle={shareBadgeTitle}
+        badgeDescription={shareBadgeDescription}
+        milestoneCredits={shareMilestoneCredits}
         countries={totals.countries}
         days={totals.days}
         yearLabel={shareYearLabel}
