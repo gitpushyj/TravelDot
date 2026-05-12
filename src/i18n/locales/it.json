@@ -315,15 +315,15 @@
     "visitedDays": "{{days}} giorni di permanenza",
     "isHome": "Paese di residenza",
     "milestoneFooter": {
-      "countries": "{{count}} paesi a {{title}}",
-      "days": "{{count}} giorni a {{title}}",
+      "countries": "Mancano {{count}} paesi a {{title}}",
+      "days": "Mancano {{count}} giorni all'estero a {{title}}",
       "completed": "Massimo livello raggiunto 🎉",
-      "months": "{{count}} more months to {{title}}",
-      "colors": "{{count}} more colors to {{title}}",
-      "languages": "{{count}} more UN languages to {{title}}",
-      "percent": "{{count}}% more to {{title}}",
-      "hours": "{{count}} more hours of timezone spread to {{title}}",
-      "needsHomeCountry": "Set your home country"
+      "months": "Mancano {{count}} mesi a {{title}}",
+      "colors": "Mancano {{count}} colori delle bandiere a {{title}}",
+      "languages": "Mancano {{count}} lingue ONU a {{title}}",
+      "percent": "Manca {{count}}% a {{title}}",
+      "hours": "Mancano {{count}} h di differenza oraria a {{title}}",
+      "needsHomeCountry": "Imposta il tuo paese di residenza"
     },
     "recentTitle": "Viaggi recenti",
     "viewAll": "Vedi tutto →",
@@ -562,12 +562,15 @@
       "premium_round_the_clock": "Round the Clock"
     },
     "activeNext": {
-      "months": "Reach {{count}} months to earn the <b>{{title}}</b> title",
-      "colors": "Reach {{count}} colors to earn the <b>{{title}}</b> title",
-      "languages": "Reach {{count}} UN languages to earn the <b>{{title}}</b> title",
-      "percent": "Reach {{count}}% to earn the <b>{{title}}</b> title",
-      "hours": "Reach {{count}} hours of timezone spread to earn the <b>{{title}}</b> title",
-      "needsHomeCountry": "Set your home country to see progress"
+      "countries": "Visita {{count}} paesi per ottenere il titolo <b>{{title}}</b>",
+      "days": "Trascorri {{count}} giorni all'estero per ottenere il titolo <b>{{title}}</b>",
+      "completed": "Massimo livello raggiunto — tutti i titoli sbloccati",
+      "months": "Copri {{count}} mesi su 12 per ottenere il titolo <b>{{title}}</b>",
+      "colors": "Raccogli {{count}} colori delle bandiere per ottenere il titolo <b>{{title}}</b>",
+      "languages": "Copri {{count}} lingue ONU per ottenere il titolo <b>{{title}}</b>",
+      "percent": "Raggiungi il {{count}}% per ottenere il titolo <b>{{title}}</b>",
+      "hours": "Raggiungi {{count}} ore di differenza oraria per ottenere il titolo <b>{{title}}</b>",
+      "needsHomeCountry": "Imposta il tuo paese di residenza per vedere il progresso"
     },
     "premium": {}
   },

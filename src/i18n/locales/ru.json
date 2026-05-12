@@ -315,15 +315,15 @@
     "visitedDays": "{{days}} дн. в стране",
     "isHome": "Родная страна",
     "milestoneFooter": {
-      "countries": "До «{{title}}» {{count}} стран",
-      "days": "До «{{title}}» {{count}} дней",
+      "countries": "До «{{title}}» осталось {{count}} стран",
+      "days": "До «{{title}}» осталось {{count}} дней за границей",
       "completed": "Высший уровень достигнут 🎉",
-      "months": "{{count}} more months to {{title}}",
-      "colors": "{{count}} more colors to {{title}}",
-      "languages": "{{count}} more UN languages to {{title}}",
-      "percent": "{{count}}% more to {{title}}",
-      "hours": "{{count}} more hours of timezone spread to {{title}}",
-      "needsHomeCountry": "Set your home country"
+      "months": "До «{{title}}» осталось {{count}} мес.",
+      "colors": "До «{{title}}» осталось {{count}} цветов флагов",
+      "languages": "До «{{title}}» осталось {{count}} языков ООН",
+      "percent": "До «{{title}}» осталось {{count}}%",
+      "hours": "До «{{title}}» осталось {{count}} ч разницы поясов",
+      "needsHomeCountry": "Укажите родную страну"
     },
     "recentTitle": "Недавние поездки",
     "viewAll": "Все →",
@@ -562,12 +562,15 @@
       "premium_round_the_clock": "Round the Clock"
     },
     "activeNext": {
-      "months": "Reach {{count}} months to earn the <b>{{title}}</b> title",
-      "colors": "Reach {{count}} colors to earn the <b>{{title}}</b> title",
-      "languages": "Reach {{count}} UN languages to earn the <b>{{title}}</b> title",
-      "percent": "Reach {{count}}% to earn the <b>{{title}}</b> title",
-      "hours": "Reach {{count}} hours of timezone spread to earn the <b>{{title}}</b> title",
-      "needsHomeCountry": "Set your home country to see progress"
+      "countries": "Посетите {{count}} стран, чтобы получить титул <b>{{title}}</b>",
+      "days": "Проведите {{count}} дней за границей, чтобы получить титул <b>{{title}}</b>",
+      "completed": "Высший уровень достигнут — все титулы получены",
+      "months": "Закройте {{count}} из 12 месяцев, чтобы получить титул <b>{{title}}</b>",
+      "colors": "Соберите {{count}} цветов флагов, чтобы получить титул <b>{{title}}</b>",
+      "languages": "Охватите {{count}} языков ООН, чтобы получить титул <b>{{title}}</b>",
+      "percent": "Достигните {{count}}%, чтобы получить титул <b>{{title}}</b>",
+      "hours": "Достигните разницы часовых поясов в {{count}} ч, чтобы получить титул <b>{{title}}</b>",
+      "needsHomeCountry": "Укажите родную страну, чтобы видеть прогресс"
     },
     "premium": {}
   },

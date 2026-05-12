@@ -242,15 +242,15 @@
       "completed": "달성"
     },
     "activeNext": {
-      "countries": "{{count}}개국을 여행하면 <b>{{title}}</b> 호칭을 얻습니다",
-      "days": "{{count}}일을 여행하면 <b>{{title}}</b> 호칭을 얻습니다",
+      "countries": "{{count}}개국 방문하면 <b>{{title}}</b> 호칭을 얻어요",
+      "days": "해외 체류 {{count}}일을 채우면 <b>{{title}}</b> 호칭을 얻어요",
       "completed": "최고 단계 달성! 모든 호칭을 얻었어요",
-      "months": "{{count}}개월에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
-      "colors": "{{count}}색에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
-      "languages": "공용어 {{count}}개에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
-      "percent": "{{count}}%에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
-      "hours": "시차 {{count}}시간에 도달하면 <b>{{title}}</b> 호칭을 얻습니다",
-      "needsHomeCountry": "본국이 설정되어야 진행률이 계산됩니다"
+      "months": "12개월 중 {{count}}개월을 채우면 <b>{{title}}</b> 호칭을 얻어요",
+      "colors": "국기 색 {{count}}가지를 모으면 <b>{{title}}</b> 호칭을 얻어요",
+      "languages": "UN 공용어 {{count}}개 권역을 채우면 <b>{{title}}</b> 호칭을 얻어요",
+      "percent": "비중 {{count}}%를 채우면 <b>{{title}}</b> 호칭을 얻어요",
+      "hours": "방문국 간 시차가 {{count}}시간이 되면 <b>{{title}}</b> 호칭을 얻어요",
+      "needsHomeCountry": "본국을 설정해야 진행률이 계산돼요"
     },
     "footnote": "모든 목표 마일스톤은 조건이 충족되면 자동으로 달성됩니다. 선택한 마일스톤은 홈 화면에 보일 대표 마일스톤이 됩니다.",
     "premium": {
@@ -418,14 +418,14 @@
     "visitedDays": "{{days}}일 방문",
     "isHome": "본국",
     "milestoneFooter": {
-      "countries": "{{title}} 호칭 획득까지 {{count}}개국",
-      "days": "{{title}} 호칭 획득까지 {{count}}일",
+      "countries": "{{count}}개국 더 가면 {{title}} 호칭",
+      "days": "{{count}}일 더 머물면 {{title}} 호칭",
       "completed": "최고 단계 달성 🎉",
-      "months": "{{title}} 호칭 획득까지 {{count}}개월",
-      "colors": "{{title}} 호칭 획득까지 {{count}}색",
-      "languages": "{{title}} 호칭 획득까지 공용어 {{count}}개",
-      "percent": "{{title}} 호칭 획득까지 {{count}}%",
-      "hours": "{{title}} 호칭 획득까지 시차 {{count}}시간",
+      "months": "{{count}}개월 더 채우면 {{title}} 호칭",
+      "colors": "국기 색 {{count}}가지 더 모으면 {{title}} 호칭",
+      "languages": "UN 공용어 {{count}}개 더 채우면 {{title}} 호칭",
+      "percent": "{{count}}% 더 채우면 {{title}} 호칭",
+      "hours": "시차 {{count}}시간 더 벌리면 {{title}} 호칭",
       "needsHomeCountry": "본국을 설정해주세요"
     },
     "recentTitle": "최근 방문",

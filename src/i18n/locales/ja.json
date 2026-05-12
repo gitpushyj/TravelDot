@@ -316,14 +316,14 @@
     "isHome": "母国",
     "milestoneFooter": {
       "countries": "{{title}}まであと{{count}}カ国",
-      "days": "{{title}}まであと{{count}}日",
+      "days": "{{title}}まで海外であと{{count}}日",
       "completed": "最高ランク達成 🎉",
-      "months": "{{count}} more months to {{title}}",
-      "colors": "{{count}} more colors to {{title}}",
-      "languages": "{{count}} more UN languages to {{title}}",
-      "percent": "{{count}}% more to {{title}}",
-      "hours": "{{count}} more hours of timezone spread to {{title}}",
-      "needsHomeCountry": "Set your home country"
+      "months": "{{title}}まであと{{count}}ヶ月",
+      "colors": "{{title}}まで国旗の色あと{{count}}色",
+      "languages": "{{title}}まで国連公用語あと{{count}}言語",
+      "percent": "{{title}}まであと{{count}}%",
+      "hours": "{{title}}まで時差あと{{count}}時間",
+      "needsHomeCountry": "母国を設定してください"
     },
     "recentTitle": "最近の旅",
     "viewAll": "すべて見る →",
@@ -562,12 +562,15 @@
       "premium_round_the_clock": "Round the Clock"
     },
     "activeNext": {
-      "months": "Reach {{count}} months to earn the <b>{{title}}</b> title",
-      "colors": "Reach {{count}} colors to earn the <b>{{title}}</b> title",
-      "languages": "Reach {{count}} UN languages to earn the <b>{{title}}</b> title",
-      "percent": "Reach {{count}}% to earn the <b>{{title}}</b> title",
-      "hours": "Reach {{count}} hours of timezone spread to earn the <b>{{title}}</b> title",
-      "needsHomeCountry": "Set your home country to see progress"
+      "countries": "{{count}}カ国を訪れると<b>{{title}}</b>の称号を獲得します",
+      "days": "海外で{{count}}日を過ごすと<b>{{title}}</b>の称号を獲得します",
+      "completed": "最高ランク達成 — すべての称号を獲得しました",
+      "months": "12ヶ月のうち{{count}}ヶ月を埋めると<b>{{title}}</b>の称号を獲得します",
+      "colors": "国旗の色を{{count}}色集めると<b>{{title}}</b>の称号を獲得します",
+      "languages": "国連公用語{{count}}言語をカバーすると<b>{{title}}</b>の称号を獲得します",
+      "percent": "{{count}}%に到達すると<b>{{title}}</b>の称号を獲得します",
+      "hours": "訪問国間の時差が{{count}}時間に達すると<b>{{title}}</b>の称号を獲得します",
+      "needsHomeCountry": "母国を設定すると進捗が表示されます"
     },
     "premium": {}
   },

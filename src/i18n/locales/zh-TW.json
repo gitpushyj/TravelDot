@@ -316,14 +316,14 @@
     "isHome": "母國",
     "milestoneFooter": {
       "countries": "距「{{title}}」還有 {{count}} 國",
-      "days": "距「{{title}}」還有 {{count}} 天",
+      "days": "距「{{title}}」海外還差 {{count}} 天",
       "completed": "已達最高等級 🎉",
-      "months": "{{count}} more months to {{title}}",
-      "colors": "{{count}} more colors to {{title}}",
-      "languages": "{{count}} more UN languages to {{title}}",
-      "percent": "{{count}}% more to {{title}}",
-      "hours": "{{count}} more hours of timezone spread to {{title}}",
-      "needsHomeCountry": "Set your home country"
+      "months": "距「{{title}}」還差 {{count}} 個月",
+      "colors": "距「{{title}}」還差 {{count}} 種國旗顏色",
+      "languages": "距「{{title}}」還差 {{count}} 種聯合國官方語言",
+      "percent": "距「{{title}}」還差 {{count}}%",
+      "hours": "距「{{title}}」時區還差 {{count}} 小時",
+      "needsHomeCountry": "請設定母國"
     },
     "recentTitle": "最近的旅行",
     "viewAll": "查看全部 →",
@@ -562,12 +562,15 @@
       "premium_round_the_clock": "Round the Clock"
     },
     "activeNext": {
-      "months": "Reach {{count}} months to earn the <b>{{title}}</b> title",
-      "colors": "Reach {{count}} colors to earn the <b>{{title}}</b> title",
-      "languages": "Reach {{count}} UN languages to earn the <b>{{title}}</b> title",
-      "percent": "Reach {{count}}% to earn the <b>{{title}}</b> title",
-      "hours": "Reach {{count}} hours of timezone spread to earn the <b>{{title}}</b> title",
-      "needsHomeCountry": "Set your home country to see progress"
+      "countries": "造訪 {{count}} 個國家即可獲得 <b>{{title}}</b> 稱號",
+      "days": "在海外停留 {{count}} 天即可獲得 <b>{{title}}</b> 稱號",
+      "completed": "已達最高等級 — 所有稱號已解鎖",
+      "months": "在 12 個月中涵蓋 {{count}} 個月即可獲得 <b>{{title}}</b> 稱號",
+      "colors": "蒐集 {{count}} 種國旗顏色即可獲得 <b>{{title}}</b> 稱號",
+      "languages": "涵蓋 {{count}} 種聯合國官方語言即可獲得 <b>{{title}}</b> 稱號",
+      "percent": "達到 {{count}}% 即可獲得 <b>{{title}}</b> 稱號",
+      "hours": "時區跨度達到 {{count}} 小時即可獲得 <b>{{title}}</b> 稱號",
+      "needsHomeCountry": "設定母國後即可查看進度"
     },
     "premium": {}
   },
