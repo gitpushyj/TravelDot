@@ -119,6 +119,7 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
         {/* 획득한 호칭 크레딧 — 영화 엔딩 크레딧처럼 위→아래로 작아진다. */}
         {visibleCredits.length > 0 ? (
           <View style={styles.creditsSection}>
+            <View style={styles.creditsDivider} />
             {visibleCredits.map((line, i) => (
               <Text
                 key={`${i}-${line}`}
@@ -166,7 +167,7 @@ function makeStyles(palette: SharePalette) {
       width: "100%",
       backgroundColor: palette.bg,
       borderRadius: CARD_RADIUS,
-      paddingTop: 180,
+      paddingTop: 140,
       paddingBottom: 60,
       paddingHorizontal: HORIZONTAL_PADDING,
       alignItems: "center",
@@ -240,10 +241,17 @@ function makeStyles(palette: SharePalette) {
       letterSpacing: 2,
     },
     creditsSection: {
-      marginTop: 60,
+      marginTop: 48,
       alignItems: "center",
       paddingHorizontal: 40,
       alignSelf: "stretch",
+    },
+    creditsDivider: {
+      width: 220,
+      height: 2,
+      backgroundColor: palette.textMuted,
+      opacity: 0.5,
+      marginBottom: 36,
     },
     creditLine: {
       color: palette.textSecondary,

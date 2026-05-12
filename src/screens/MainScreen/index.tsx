@@ -38,6 +38,7 @@ import {
   localizedBadgeTitle,
 } from "../../features/badges/badgeI18n";
 import { badgeFromId } from "../../features/badges/badges";
+import { badgeSeriesKey } from "../../features/badges/badgeSeriesKey";
 import { COUNTRY_NAME_KO_BY_CODE as BADGE_KO_NAMES } from "../../features/badges/countryNames";
 import {
   pickActiveBadge,
@@ -311,16 +312,25 @@ export default function MainScreen({ navigation }: Props) {
     [activeBadge, t]
   );
 
-  // 공유 카드 하단 크레딧 — 활성 호칭(이미 상단에 큼지막하게 표시됨)을 제외하고
-  // 사용자가 잠금 해제한 모든 호칭의 설명을 rank 내림차순으로 정렬.
+  // 공유 카드 하단 크레딧 — 활성 호칭이 속한 시리즈는 통째로 제외하고,
+  // 같은 시리즈(예: tier 전체 / 같은 대륙 / 같은 국가 / 같은 premium 패밀리) 안에서는
+  // rank 가장 높은 호칭 하나만 남긴다. 마지막에 rank 내림차순으로 정렬.
   const shareMilestoneCredits = useMemo(() => {
     const locale = getCurrentLocale();
-    const activeId = activeBadge?.id;
-    const defs = unlockedBadgeIds
-      .filter((id) => id !== activeId)
-      .map((id) => badgeFromId(id, BADGE_KO_NAMES))
-      .filter((b): b is NonNullable<typeof b> => b != null);
-    return sortBadges(defs).map((b) =>
+    const activeGroup = activeBadge ? badgeSeriesKey(activeBadge.id) : null;
+    const byGroup = new Map<string, ReturnType<typeof badgeFromId>>();
+    for (const id of unlockedBadgeIds) {
+      const badge = badgeFromId(id, BADGE_KO_NAMES);
+      if (!badge) continue;
+      const group = badgeSeriesKey(badge.id);
+      if (group === activeGroup) continue;
+      const existing = byGroup.get(group);
+      if (!existing || badge.rank > existing.rank) byGroup.set(group, badge);
+    }
+    const top = Array.from(byGroup.values()).filter(
+      (b): b is NonNullable<typeof b> => b != null
+    );
+    return sortBadges(top).map((b) =>
       localizedBadgeObjective(b, t, locale)
     );
   }, [unlockedBadgeIds, activeBadge?.id, t]);
