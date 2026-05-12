@@ -323,7 +323,9 @@
     "yearMeta": "{{days}} days · {{countries}} dots"
   },
   "dotMap": {
-    "highlightPrompt": "Which country's dots should be highlighted?"
+    "highlightPrompt": "Which country's dots should be highlighted?",
+    "legendLow": "Less",
+    "legendHigh": "More"
   },
   "countryPicker": {
     "searchPlaceholder": "Search countries",

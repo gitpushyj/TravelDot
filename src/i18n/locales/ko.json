@@ -323,7 +323,9 @@
     "yearMeta": "{{days}}일 · {{countries}} 도트"
   },
   "dotMap": {
-    "highlightPrompt": "어느 나라의 도트를 강조할까요?"
+    "highlightPrompt": "어느 나라의 도트를 강조할까요?",
+    "legendLow": "적음",
+    "legendHigh": "많음"
   },
   "countryPicker": {
     "searchPlaceholder": "국가 검색",

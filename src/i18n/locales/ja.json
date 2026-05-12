@@ -222,7 +222,9 @@
     "yearMeta": "{{days}}日・{{countries}}ドット"
   },
   "dotMap": {
-    "highlightPrompt": "どの国のドットを強調しますか？"
+    "highlightPrompt": "どの国のドットを強調しますか？",
+    "legendLow": "少",
+    "legendHigh": "多"
   },
   "countryPicker": {
     "searchPlaceholder": "国を検索"

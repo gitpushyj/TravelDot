@@ -222,7 +222,9 @@
     "yearMeta": "{{days}} дн. · {{countries}} точек"
   },
   "dotMap": {
-    "highlightPrompt": "Какие точки страны выделить?"
+    "highlightPrompt": "Какие точки страны выделить?",
+    "legendLow": "Мало",
+    "legendHigh": "Много"
   },
   "countryPicker": {
     "searchPlaceholder": "Поиск страны"

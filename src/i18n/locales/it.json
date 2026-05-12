@@ -222,7 +222,9 @@
     "yearMeta": "{{days}} giorni · {{countries}} punti"
   },
   "dotMap": {
-    "highlightPrompt": "Quali punti del paese vuoi evidenziare?"
+    "highlightPrompt": "Quali punti del paese vuoi evidenziare?",
+    "legendLow": "Poche",
+    "legendHigh": "Molte"
   },
   "countryPicker": {
     "searchPlaceholder": "Cerca paese"

@@ -222,7 +222,9 @@
     "yearMeta": "{{days}} jours · {{countries}} points"
   },
   "dotMap": {
-    "highlightPrompt": "Quels points de pays mettre en avant ?"
+    "highlightPrompt": "Quels points de pays mettre en avant ?",
+    "legendLow": "Peu",
+    "legendHigh": "Beaucoup"
   },
   "countryPicker": {
     "searchPlaceholder": "Rechercher un pays"

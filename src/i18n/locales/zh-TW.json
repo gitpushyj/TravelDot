@@ -222,7 +222,9 @@
     "yearMeta": "{{days}} 天 · {{countries}} 個點"
   },
   "dotMap": {
-    "highlightPrompt": "要強調哪一個國家的點?"
+    "highlightPrompt": "要強調哪一個國家的點?",
+    "legendLow": "少",
+    "legendHigh": "多"
   },
   "countryPicker": {
     "searchPlaceholder": "搜尋國家"

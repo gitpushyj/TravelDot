@@ -33,6 +33,7 @@ import { homeDotColor } from "../utils/countryColors";
 import type { CountryRef, DotData } from "../types";
 
 import { clamp, clampJs, clampPanX, clampPanY } from "./DotMap/clamps";
+import Legend from "./DotMap/Legend";
 import { styles } from "./DotMap/styles";
 
 const FILL_RATIO = 0.6;
@@ -73,6 +74,10 @@ type Props = {
   // 메인 화면에만 true. MapZoomScreen 등 다른 instance에서는 false로 두어 사용자의
   // 자유 줌/팬을 방해하지 않는다.
   flightAutoZoom?: boolean;
+  // 방문 횟수에 따라 색이 진해진다는 사실을 알려주는 작은 범례를 좌하단에
+  // 띄울지 여부. 캡처용(ShareMapCard)이나 회전된 컨테이너(MapZoomScreen)에서는
+  // false로 끈다.
+  showLegend?: boolean;
 };
 
 export default function DotMap({
@@ -85,6 +90,7 @@ export default function DotMap({
   playIntro = true,
   parentRotated90 = false,
   flightAutoZoom = false,
+  showLegend = true,
 }: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const viewBoxW = 360;
@@ -689,6 +695,9 @@ export default function DotMap({
               </Group>
             </Canvas>
           </GestureDetector>
+        )}
+        {showLegend && !parentRotated90 && size.width > 0 && (
+          <Legend theme={theme} />
         )}
       </View>
       {pending && pending.length > 0 && (

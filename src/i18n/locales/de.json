@@ -222,7 +222,9 @@
     "yearMeta": "{{days}} Tage · {{countries}} Punkte"
   },
   "dotMap": {
-    "highlightPrompt": "Welches Land soll hervorgehoben werden?"
+    "highlightPrompt": "Welches Land soll hervorgehoben werden?",
+    "legendLow": "Wenig",
+    "legendHigh": "Viel"
   },
   "countryPicker": {
     "searchPlaceholder": "Land suchen"
