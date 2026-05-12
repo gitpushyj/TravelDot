@@ -8,7 +8,7 @@ import { makeStyles } from "./styles";
 type Props = {
   theme: Theme;
   label: string;
-  sub: string;
+  sub?: string;
   onPress: () => void;
   divider?: boolean;
   disabled?: boolean;
@@ -35,9 +35,11 @@ export default function ActionRow({
     >
       <View style={{ flex: 1 }}>
         <Text style={styles.rowLabel}>{label}</Text>
-        <Text style={styles.rowSub} numberOfLines={1}>
-          {sub}
-        </Text>
+        {sub ? (
+          <Text style={styles.rowSub} numberOfLines={1}>
+            {sub}
+          </Text>
+        ) : null}
       </View>
       {!disabled && <Text style={styles.chev}>›</Text>}
     </Pressable>

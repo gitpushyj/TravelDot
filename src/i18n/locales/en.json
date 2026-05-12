@@ -611,7 +611,8 @@
       "title": "Title",
       "milestone": "Featured Milestone",
       "theme": "Theme",
-      "language": "Language"
+      "language": "Language",
+      "legal": "Legal"
     },
     "account": {
       "google": "Google Account",
@@ -833,6 +834,10 @@
       "label": "Restore Purchases",
       "success": "Subscription restored",
       "notFound": "No active subscription to restore"
+    },
+    "legal": {
+      "privacyPolicy": "Privacy Policy",
+      "termsOfUse": "Terms of Use"
     }
   },
   "flight": {

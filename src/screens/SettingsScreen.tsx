@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useAuthStore } from "../features/auth/authStore";
@@ -11,6 +11,7 @@ import { evaluateMilestone } from "../features/milestone/milestoneEvaluator";
 import { openStoreSubscriptionManagement } from "../features/subscription/storeSubscriptionLink";
 import { useSubscription } from "../features/subscription/useSubscription";
 import { useMilestoneStore } from "../features/milestone/milestoneStore";
+import { LEGAL_URLS } from "../lib/legal";
 import {
   runFullSync,
   runIncrementalSync,
@@ -429,6 +430,27 @@ export default function SettingsScreen({
             />
           </View>
         )}
+
+        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
+          {t("settings.section.legal")}
+        </Text>
+        <View style={styles.card}>
+          <ActionRow
+            theme={theme}
+            label={t("subscription.legal.privacyPolicy")}
+            onPress={() => {
+              Linking.openURL(LEGAL_URLS.privacyPolicy).catch(() => {});
+            }}
+          />
+          <ActionRow
+            theme={theme}
+            label={t("subscription.legal.termsOfUse")}
+            onPress={() => {
+              Linking.openURL(LEGAL_URLS.termsOfUse).catch(() => {});
+            }}
+            divider
+          />
+        </View>
 
         <View style={styles.deleteAccountWrap}>
           <Pressable onPress={handleDeleteAccount} hitSlop={8}>

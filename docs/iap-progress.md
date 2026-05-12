@@ -1,6 +1,6 @@
 # IAP(인앱결제) 통합 진행 상황 — RevenueCat
 
-**마지막 업데이트:** 2026-05-10
+**마지막 업데이트:** 2026-05-12
 **대상 앱:** PixelTravel (Bundle ID: `com.gitpush.visitgrid`)
 
 > 이 문서는 RC 결제 통합 작업이 어디까지 됐고, **본인이 직접 해야 하는 일이 뭔지**를 정리한 진행 상황 doc입니다. 변경이 있으면 이 doc도 갱신하세요.
@@ -36,7 +36,11 @@
 
 ---
 
-## ⏳ 본인이 직접 해야 할 일 — iOS critical path (1.5~2시간)
+## ✅ iOS critical path — 완료 (2026-05-12)
+
+> A~D 모든 단계 처리됨. 아래는 참고용 원본.
+
+
 
 ### A. App Store Connect에서 (30~60분)
 
@@ -118,7 +122,7 @@ cd ~/dev/VisitGrid && npx expo run:ios --device
 ## 🏁 출시 전 마지막 단계
 
 - App Store Connect에 **첫 앱 빌드 제출** (TestFlight 우선 → 외부 테스트 → 정식 심사)
-- Privacy Policy / Terms of Use에 **자동갱신 / 취소 / 요금** 명시 (Apple 심사 거절 사유 1순위) — `PixelTravel` 이름으로 갱신
+- ✅ Privacy Policy / Terms of Use URL 등록 (2026-05-12). **단, 앱 내 링크 노출은 미완 — 결제 화면 + Settings에 두 링크 버튼 추가 필요** (Apple 3.1.2, 심사 거절 사유 1순위)
 - App Store Connect **한국 세금 양식 활성화** (현재 "대기 중" — 결제 동작은 OK, payout 받기 전 활성화 필요)
 
 ---

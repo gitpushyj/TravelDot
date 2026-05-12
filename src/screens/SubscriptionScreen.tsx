@@ -12,6 +12,7 @@ import ContinueButton from "./SubscriptionScreen/ContinueButton";
 import FeatureGrid from "./SubscriptionScreen/FeatureGrid";
 import FooterDisclaimer from "./SubscriptionScreen/FooterDisclaimer";
 import HeroDotMap from "./SubscriptionScreen/HeroDotMap";
+import LegalLinks from "./SubscriptionScreen/LegalLinks";
 import PlanCard from "./SubscriptionScreen/PlanCard";
 import RestoreLink from "./SubscriptionScreen/RestoreLink";
 import { makeStyles } from "./SubscriptionScreen/styles";
@@ -149,6 +150,12 @@ export default function SubscriptionScreen({ onClose }: Props) {
           }
         />
         <View style={{ height: 8 }} />
+        <LegalLinks
+          theme={theme}
+          privacyLabel={t("subscription.legal.privacyPolicy")}
+          termsLabel={t("subscription.legal.termsOfUse")}
+        />
+        <View style={{ height: 6 }} />
         <RestoreLink
           theme={theme}
           label={t("subscription.restore.label")}
