@@ -2,9 +2,16 @@ import { create } from "zustand";
 
 import { fetchUserTier } from "../auth/userTier";
 import type { TierName } from "../aiChat/types";
+import { setUserProperty } from "../../lib/tracking";
 
 import type { PlanId } from "./plans";
 import { activateSubscription, restoreSubscription } from "./subscriptionService";
+
+// Firebase Analytics에서 free/premium 별 사용 패턴을 슬라이스해 보기 위한 user property.
+// tier 값이 바뀔 때마다 동기로 호출. 호출 실패는 wrapper 내부에서 swallow된다.
+function syncTierToAnalytics(tier: TierName | null) {
+  setUserProperty("tier", tier);
+}
 
 type State = {
   tier: TierName | null; // null = 아직 모름
@@ -27,10 +34,12 @@ export const useSubscriptionStore = create<State>((set) => ({
   refresh: async (userId) => {
     if (!userId) {
       set({ tier: null });
+      syncTierToAnalytics(null);
       return;
     }
     const next = await fetchUserTier(userId);
     set({ tier: next });
+    syncTierToAnalytics(next);
   },
   subscribe: async (userId, plan) => {
     set({ loading: true });
@@ -40,6 +49,7 @@ export const useSubscriptionStore = create<State>((set) => ({
       // DB는 아직 tier=0이라 낙관적 "premium"을 free로 되돌려버린다.
       // RC customerInfo listener(useTierAutoSync)가 webhook 도착 후 자동 sync.
       set({ tier: "premium" });
+      syncTierToAnalytics("premium");
     } finally {
       set({ loading: false });
     }
@@ -50,6 +60,7 @@ export const useSubscriptionStore = create<State>((set) => ({
       const restored = await restoreSubscription();
       if (restored) {
         set({ tier: "premium" });
+        syncTierToAnalytics("premium");
       }
       return restored;
     } finally {

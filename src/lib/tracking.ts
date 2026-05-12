@@ -3,6 +3,7 @@ import {
   getTrackingPermissionsAsync,
   requestTrackingPermissionsAsync,
 } from "expo-tracking-transparency";
+import analytics from "@react-native-firebase/analytics";
 
 let promptedThisSession = false;
 
@@ -21,4 +22,21 @@ export async function requestTrackingPermissionIfNeeded() {
   } catch {
     // 권한 모듈 호출 실패는 무시. 분석은 계속 동작한다.
   }
+}
+
+// Firebase Analytics 이벤트 로깅. 실패해도 앱 흐름엔 영향 없게 fire-and-forget.
+// param 값은 string/number/boolean만 가능 (Firebase 제약). 객체/배열은 평탄화하거나
+// 미리 string으로 직렬화해서 전달.
+export function track(event: string, params?: Record<string, unknown>) {
+  analytics()
+    .logEvent(event, params as Record<string, unknown> | undefined)
+    .catch(() => {});
+}
+
+// 사용자 속성. 결제 tier 같은 "유저의 항구적 속성"을 설정해두면 Firebase Console에서
+// 이벤트 데이터를 그 속성으로 슬라이스해 볼 수 있다. null이면 속성 제거.
+export function setUserProperty(key: string, value: string | null) {
+  analytics()
+    .setUserProperty(key, value)
+    .catch(() => {});
 }

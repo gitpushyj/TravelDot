@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { useTheme } from "../../theme/themeStore";
 import type { Theme } from "../../theme/theme";
+import { track } from "../../lib/tracking";
 
 import FlightDetailSheet from "./FlightDetailSheet";
 import FlightInputModal from "./FlightInputModal";
@@ -74,7 +75,10 @@ export default function FlightButton() {
   return (
     <>
       <Pressable
-        onPress={() => setInputOpen(true)}
+        onPress={() => {
+          track("flight_start_opened");
+          setInputOpen(true);
+        }}
         hitSlop={8}
         accessibilityRole="button"
         accessibilityLabel={t("flight.startA11y")}

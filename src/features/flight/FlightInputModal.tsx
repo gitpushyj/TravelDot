@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 
 import { useTheme } from "../../theme/themeStore";
 import type { Theme } from "../../theme/theme";
+import { track } from "../../lib/tracking";
 
 import AirportPicker from "./AirportPicker";
 import type { Airport } from "./airports";
@@ -91,6 +92,13 @@ export default function FlightInputModal({ visible, onClose }: Props) {
     if (!validation.ok || !origin || !destination) return;
     const departAt = Date.now();
     const arriveAt = departAt + totalMinutes * 60_000;
+    track("flight_start_submitted", {
+      origin: origin.iata,
+      destination: destination.iata,
+      duration_min: totalMinutes,
+      // 자동 추정값을 그대로 썼는지 vs 사용자가 직접 휠을 돌렸는지
+      duration_edited: durationDirty,
+    });
     // store를 즉시 set하고 modal을 닫는다. 자동 줌 시퀀스는 DotMap에서 setTimeout으로
     // modal slide-down 시간만큼 기다린 뒤 시작되므로, 여기서 별도 sequencing이 필요 없다.
     void start(origin, destination, departAt, arriveAt);

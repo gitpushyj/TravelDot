@@ -1,7 +1,20 @@
 import { create } from "zustand";
 
+import { track } from "../../lib/tracking";
+
 import type { AirportRef, ActiveFlight } from "./flightTypes";
 import { loadActiveFlight, saveActiveFlight } from "./flightStorage";
+
+// 도착 이벤트 로깅 공통 헬퍼. background는 앱이 닫혀 있는 동안 도착 시각이 지난 경우,
+// foreground는 앱이 켜져 있는 동안 tick에서 도착을 감지한 경우.
+function logArrived(f: ActiveFlight, path: "background" | "foreground") {
+  track("flight_arrived", {
+    origin: f.origin.iata,
+    destination: f.destination.iata,
+    duration_min: Math.round((f.arriveAt - f.departAt) / 60_000),
+    arrival_path: path,
+  });
+}
 
 type State = {
   active: ActiveFlight | null;
@@ -38,6 +51,7 @@ export const useFlightStore = create<State>((set, get) => ({
     if (loaded && Date.now() >= loaded.arriveAt) {
       // 앱이 닫혀 있는 동안 비행이 끝났다 — 도착 토스트는 한 번 띄워준다.
       await saveActiveFlight(null);
+      logArrived(loaded, "background");
       set({ active: null, arrived: loaded, hydrated: true });
       return;
     }
@@ -73,6 +87,7 @@ export const useFlightStore = create<State>((set, get) => ({
     if (!a) return;
     if (now < a.arriveAt) return;
     await saveActiveFlight(null);
+    logArrived(a, "foreground");
     set({ active: null, arrived: a });
   },
 
