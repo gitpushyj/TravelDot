@@ -117,10 +117,22 @@ export default function SyncStep({ onNext }: Props) {
               title: t("onboarding.sync.analyzingStep2.title"),
               desc: t("onboarding.sync.analyzingStep2.desc"),
             }}
-            step3={{
-              title: t("onboarding.sync.analyzingStep3.title"),
-              desc: t("onboarding.sync.analyzingStep3.desc"),
-            }}
+            step1Progress={
+              syncStatus.phase === "scanning"
+                ? {
+                    processed: syncStatus.phaseProcessed ?? 0,
+                    total: syncStatus.phaseTotal ?? 0,
+                  }
+                : null
+            }
+            step2Progress={
+              syncStatus.phase === "saving"
+                ? {
+                    processed: syncStatus.phaseProcessed ?? 0,
+                    total: syncStatus.phaseTotal ?? 0,
+                  }
+                : null
+            }
           />
         </View>
         <View style={localStyles.syncingNotice}>

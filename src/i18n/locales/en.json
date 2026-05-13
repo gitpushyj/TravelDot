@@ -767,12 +767,12 @@
       "analyzingTitleHighlight": "on your device",
       "analyzingSubtitle": "We're reading dates and getting ready to paint your map.\nThis only takes a moment!",
       "analyzingStep1": {
-        "title": "Reading photo metadata",
-        "desc": "Extracting dates and locations"
+        "title": "Analyzing photo locations",
+        "desc": "Reading location data from your photos and matching countries"
       },
       "analyzingStep2": {
-        "title": "Sorting trip records",
-        "desc": "Organizing destinations and timelines"
+        "title": "Saving trip records",
+        "desc": "Building visit records from the matched photos"
       },
       "analyzingStep3": {
         "title": "Preparing your map",
@@ -790,6 +790,17 @@
       "allClearedTitle": "Your trips are all set",
       "allClearedBody": "Nothing needs review. You're ready to explore your map.",
       "acceptAll": "Keep all remaining",
+      "goHome": "Go to home"
+    },
+    "allTrips": {
+      "title": "Review your trips",
+      "subtitle": "We found {{count}} trips from your photos. Remove any that aren't yours.",
+      "emptyTitle": "Your trips are all set",
+      "emptyBody": "We didn't find any trips in your photos. You're ready to explore your map.",
+      "rowMeta": "{{range}} · {{days}} days",
+      "rowPhotoLine": "{{count}} photos",
+      "actionReject": "Not my trip",
+      "confirmAll": "All correct, get started",
       "goHome": "Go to home"
     }
   },

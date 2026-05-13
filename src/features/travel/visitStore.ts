@@ -13,6 +13,7 @@ import {
   removeAutoVisitsForCountry,
   softDeleteEmptyTripsForCountry,
   softDeletePhotosByIds,
+  softDeletePhotosInRange,
   wipeAllVisits,
 } from "./visitRepository";
 import { SuspectTrip } from "../photoSync/deviceVerification";
@@ -33,12 +34,16 @@ import { markHomeCountryChangedInDb } from "../onboarding/saveUserProfile";
 
 const HOME_AUTO_CLEANUP_FLAG = "visitgrid:migration:autoHomeCleanup_v1";
 
-// phase: scanning(라이브러리 순회) → saving(DB 적재) → verifying(기기 검증).
-// processed는 scanning 단계에서만 의미가 있고 이후 단계에서는 마지막 값을 그대로 들고 간다.
+// phase: scanning(라이브러리 순회) → saving(DB 적재).
+// processed는 누적 스캔 장수. phaseProcessed/phaseTotal은 현재 phase 내부
+// 진행률을 UI에 표시하기 위한 값. saving phase는 짧아 phaseTotal이 0일 수
+// 있으며 그 경우 UI는 indeterminate로 표시한다.
 type SyncStatus = {
   running: boolean;
   processed: number;
-  phase?: "scanning" | "saving" | "verifying";
+  phase?: "scanning" | "saving";
+  phaseProcessed?: number;
+  phaseTotal?: number;
 };
 
 export type SyncReport = {
@@ -101,6 +106,16 @@ type State = {
   setLastSync: (r: SyncReport | null) => void;
   setHomeCleanupReport: (r: HomeCleanupReport | null) => void;
   setSuspectTrips: (trips: SuspectTrip[]) => void;
+  /**
+   * 일반 trip 거부 — (country, startDate~endDate) 범위의 사진을 soft-delete하고
+   * 그로 인해 빈 trip을 같이 soft-delete한다. 온보딩의 "모든 여행 검토" 단계와
+   * 향후 trip 상세에서의 직접 삭제에 사용한다.
+   */
+  rejectTrip: (params: {
+    countryCode: string;
+    startDate: string;
+    endDate: string;
+  }) => Promise<void>;
   /** 의심 여행 거부 — 해당 사진들을 soft-delete하고 visit 통계 재로드. */
   rejectSuspectTrip: (trip: SuspectTrip) => Promise<void>;
   /** 단건 인정 — 한 묶음만 user_reviewed로 표시하고 목록에서 제거. */
@@ -276,6 +291,14 @@ export const useVisitStore = create<State>((set, get) => ({
   setLastSync: (r) => set({ lastSync: r }),
   setHomeCleanupReport: (r) => set({ homeCleanupReport: r }),
   setSuspectTrips: (trips) => set({ suspectTrips: trips }),
+  rejectTrip: async ({ countryCode, startDate, endDate }) => {
+    // (country, date range)의 사진을 한 번에 soft-delete하고 빈 trip을 정리한다.
+    // 온보딩의 "모든 여행 검토" 단계에서 사용자가 "내 여행 아님"을 누른 trip을
+    // 그대로 제거한다.
+    await softDeletePhotosInRange(countryCode, startDate, endDate);
+    await softDeleteEmptyTripsForCountry(countryCode);
+    await get().refreshVisits();
+  },
   rejectSuspectTrip: async (trip) => {
     // 사진을 soft-delete하고, 그 결과 사진/노트가 모두 비어버린 트립을
     // 같이 soft-delete한다. trips.deleted_at은 sync push로 전파되어

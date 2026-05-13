@@ -14,6 +14,7 @@ export {
   loadPhotoUrisByIds,
   markPhotosUserReviewed,
   softDeletePhotosByIds,
+  softDeletePhotosInRange,
   updatePhotoDevices,
 } from "./trip/tripPhotos";
 

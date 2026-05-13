@@ -10,12 +10,12 @@ import { useVisitStore } from "../../features/travel/visitStore";
 import { useScreenBottomInset } from "../../hooks/useScreenInsets";
 import { useTheme } from "../../theme/themeStore";
 
+import AllTripsStep from "./AllTripsStep";
 import BirthGenderStep from "./BirthGenderStep";
 import HomeCountryStep from "./HomeCountryStep";
 import LoginStep from "./LoginStep";
 import OnboardingProgress from "./OnboardingProgress";
 import { makeOnboardingStyles } from "./styles";
-import SuspectTripsStep from "./SuspectTripsStep";
 import SyncStep from "./SyncStep";
 
 const TOTAL_STEPS = 5;
@@ -119,7 +119,7 @@ export default function OnboardingFlow() {
       {step === 2 && <HomeCountryStep onNext={() => goTo(3)} />}
       {step === 3 && <BirthGenderStep onNext={() => goTo(4)} />}
       {step === 4 && <SyncStep onNext={() => goTo(5)} />}
-      {step === 5 && <SuspectTripsStep onFinish={() => void finish()} />}
+      {step === 5 && <AllTripsStep onFinish={() => void finish()} />}
     </View>
   );
 }

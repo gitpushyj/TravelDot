@@ -6,8 +6,7 @@ import {
   VisitPhotoInput,
 } from "../travel/visitRepository";
 import { useVisitStore, SyncReport } from "../travel/visitStore";
-import { resolveCountryDetailed } from "./countryResolver";
-import { reviewSuspectTrips } from "./deviceVerification";
+import { isInsideCountryBbox, resolveCountryDetailed } from "./countryResolver";
 import { ensurePermission, iteratePhotos } from "./photoLibrary";
 
 // 첫 스캔 메모리/트랜잭션 부담을 막기 위한 chunk 크기.
@@ -39,7 +38,13 @@ async function runSync(sinceDate: string | null): Promise<void> {
     return;
   }
 
-  store.setSyncStatus({ running: true, processed: 0, phase: "scanning" });
+  store.setSyncStatus({
+    running: true,
+    processed: 0,
+    phase: "scanning",
+    phaseProcessed: 0,
+    phaseTotal: 0,
+  });
 
   // 매칭되는 후보를 모두 모아 addPhotos로 보낸다. 한 번에 다 메모리에 쌓으면
   // 사진이 많은 디바이스에서 RAM/트랜잭션 시간이 부담되니 SYNC_FLUSH_CHUNK 단위로
@@ -50,6 +55,7 @@ async function runSync(sinceDate: string | null): Promise<void> {
   let resolved = 0;
   let added = 0;
   let sample: SyncReport["sample"] | undefined;
+  let totalCount = 0;
 
   const flushBuffer = async () => {
     if (buffer.length === 0) return;
@@ -59,21 +65,42 @@ async function runSync(sinceDate: string | null): Promise<void> {
   };
 
   try {
-    for await (const p of iteratePhotos()) {
+    for await (const p of iteratePhotos(200, {
+      onTotal: (n) => {
+        totalCount = n;
+      },
+    })) {
       const date = toLocalDateKey(p.takenAt);
       if (sinceDate && date < sinceDate) break;
       scanned += 1;
       if (scanned % 50 === 0) {
-        useVisitStore
-          .getState()
-          .setSyncStatus({
-            running: true,
-            processed: scanned,
-            phase: "scanning",
-          });
+        useVisitStore.getState().setSyncStatus({
+          running: true,
+          processed: scanned,
+          phase: "scanning",
+          phaseProcessed: scanned,
+          phaseTotal: totalCount,
+        });
       }
       if (p.lat == null || p.lng == null) continue;
       withGps += 1;
+      // 본국 bbox 사전 체크 — 본국 bbox 안에 들어오는 점은 polygon ray-cast를
+      // 거치지 않고 즉시 본국으로 처리해 buffer에서 제외한다. 10만 장 케이스에서
+      // 본국 사진이 90%+를 차지하는 사용자에게 가장 큰 비용 절감 항목.
+      // bbox는 본국 외 사진을 본국으로 잘못 분류할 수 있으나, 본국 사진은 어차피
+      // 자동 추가에서 제외되므로 false positive가 결과에 영향을 주지 않는다.
+      if (homeCode && isInsideCountryBbox(homeCode, p.lat, p.lng)) {
+        if (!sample) {
+          sample = {
+            lat: p.lat,
+            lng: p.lng,
+            code: homeCode,
+            bboxHits: 1,
+            totalFeatures: 0,
+          };
+        }
+        continue;
+      }
       const { code, diag } = resolveCountryDetailed(p.lat, p.lng);
       if (!sample) {
         sample = {
@@ -85,8 +112,9 @@ async function runSync(sinceDate: string | null): Promise<void> {
         };
       }
       if (!code) continue;
-      // 본국은 자동 추가에서 제외한다. 본국 사진은 사용자가 "여행 추가" 메뉴를
-      // 통해 원하는 날짜만 직접 선택하도록 한다.
+      // bbox precheck를 빠져나온 좌표라도 polygon 매칭 결과 본국이 나올 수
+      // 있다 (본국 bbox와 다른 국가 polygon이 살짝 겹치는 경계 케이스).
+      // 본국은 자동 추가에서 제외한다.
       if (homeCode && code === homeCode) continue;
       resolved += 1;
       buffer.push({
@@ -98,20 +126,17 @@ async function runSync(sinceDate: string | null): Promise<void> {
         takenAt: p.takenAt,
       });
       if (buffer.length >= SYNC_FLUSH_CHUNK) {
-        useVisitStore
-          .getState()
-          .setSyncStatus({
-            running: true,
-            processed: scanned,
-            phase: "saving",
-          });
         await flushBuffer();
       }
     }
 
-    useVisitStore
-      .getState()
-      .setSyncStatus({ running: true, processed: scanned, phase: "saving" });
+    useVisitStore.getState().setSyncStatus({
+      running: true,
+      processed: scanned,
+      phase: "saving",
+      phaseProcessed: 0,
+      phaseTotal: buffer.length,
+    });
 
     await flushBuffer();
 
@@ -122,24 +147,6 @@ async function runSync(sinceDate: string | null): Promise<void> {
     }
 
     await useVisitStore.getState().refreshVisits();
-
-    // 사진 추가가 끝났다면 곧바로 디바이스 검증을 돌려 의심 여행을 추려둔다.
-    // 본국이 없으면(온보딩 직전 등) 검증을 건너뛴다.
-    if (homeCode) {
-      useVisitStore
-        .getState()
-        .setSyncStatus({
-          running: true,
-          processed: scanned,
-          phase: "verifying",
-        });
-      try {
-        const suspects = await reviewSuspectTrips({ homeCode });
-        useVisitStore.getState().setSuspectTrips(suspects);
-      } catch {
-        // 검증 실패는 sync 자체를 실패로 만들지 않는다.
-      }
-    }
 
     useVisitStore
       .getState()

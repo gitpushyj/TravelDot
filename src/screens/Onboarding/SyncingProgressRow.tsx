@@ -16,6 +16,9 @@ type Props = {
   title: string;
   desc: string;
   state: RowState;
+  // active 상태일 때 desc 아래에 진행률을 표시한다. total이 0이면 카운트만 보여주고,
+  // total이 양수면 "N / total (P%)" 형식으로 표시한다.
+  progress?: { processed: number; total: number } | null;
 };
 
 export default function SyncingProgressRow({
@@ -26,6 +29,7 @@ export default function SyncingProgressRow({
   title,
   desc,
   state,
+  progress,
 }: Props) {
   return (
     <View style={styles.row}>
@@ -35,6 +39,14 @@ export default function SyncingProgressRow({
       <View style={styles.text}>
         <Text style={[styles.title, { color: theme.textPrimary }]}>{title}</Text>
         <Text style={[styles.desc, { color: theme.textSecondary }]}>{desc}</Text>
+        {state === "active" && progress && (
+          <Text
+            style={[styles.progress, { color: theme.textSecondary }]}
+            numberOfLines={1}
+          >
+            {formatProgress(progress)}
+          </Text>
+        )}
       </View>
       <View
         style={[
@@ -55,6 +67,19 @@ export default function SyncingProgressRow({
       </View>
     </View>
   );
+}
+
+function formatProgress({
+  processed,
+  total,
+}: {
+  processed: number;
+  total: number;
+}): string {
+  const p = processed.toLocaleString();
+  if (total <= 0) return p;
+  const pct = Math.min(100, Math.floor((processed / total) * 100));
+  return `${p} / ${total.toLocaleString()} (${pct}%)`;
 }
 
 function CheckIcon({ color }: { color: string }) {
@@ -96,6 +121,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
     marginTop: 3,
+  },
+  progress: {
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 4,
+    fontVariant: ["tabular-nums"],
   },
   statusWrap: {
     width: 28,

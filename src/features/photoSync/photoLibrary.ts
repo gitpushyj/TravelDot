@@ -85,9 +85,17 @@ export async function resolveDisplayUris(
 
 export async function* iteratePhotos(
   pageSize = 200,
-  options?: { createdAfter?: number; createdBefore?: number }
+  options?: {
+    createdAfter?: number;
+    createdBefore?: number;
+    // 첫 페이지에서 받은 라이브러리 총 사진 수를 한 번 알려준다. 진행률 UI에서
+    // phaseTotal로 사용한다. createdAfter/before 필터를 쓰면 필터된 값이라
+    // 정확하지 않을 수 있다 (현재 호출은 모두 필터 없이 들어옴).
+    onTotal?: (totalCount: number) => void;
+  }
 ): AsyncGenerator<PhotoMeta, void, void> {
   let after: string | undefined;
+  let isFirstPage = true;
   while (true) {
     const page = await MediaLibrary.getAssetsAsync({
       mediaType: MediaLibrary.MediaType.photo,
@@ -97,6 +105,10 @@ export async function* iteratePhotos(
       createdAfter: options?.createdAfter,
       createdBefore: options?.createdBefore,
     });
+    if (isFirstPage) {
+      isFirstPage = false;
+      options?.onTotal?.(page.totalCount);
+    }
 
     // iOS는 PHAsset.location, Android는 EXIF 헤더를 네이티브에서 한 번에 읽는다.
     // expo-media-library의 getAssetInfoAsync(파일을 열어 EXIF까지 파싱)를 우회해
@@ -120,5 +132,9 @@ export async function* iteratePhotos(
 
     if (!page.hasNextPage) return;
     after = page.endCursor;
+    // 페이지 사이에 macrotask로 양보해 UI/네이티브 스레드가 호흡할 시간을 준다.
+    // 10만 장 스캔에서 페이지 ≈ 500회 yield, 한 번 ≈ 0~수 ms라 총 비용은
+    // 무시할 수준. UI freeze 해소가 목적.
+    await new Promise<void>((resolve) => setImmediate(resolve));
   }
 }

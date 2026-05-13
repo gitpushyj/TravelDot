@@ -767,12 +767,12 @@
       "analyzingTitleHighlight": "분석하고 있어요",
       "analyzingSubtitle": "날짜를 분석하고, 지도에 색칠할 준비를 하고 있어요.\n잠시만 기다려주세요!",
       "analyzingStep1": {
-        "title": "사진 메타데이터 분석 중",
-        "desc": "날짜 및 위치 정보 추출"
+        "title": "사진 위치 분석 중",
+        "desc": "기기에서 사진 위치 정보를 읽어 국가를 매칭하고 있어요"
       },
       "analyzingStep2": {
-        "title": "여행 기록 분류 중",
-        "desc": "여행지 및 일정 정리"
+        "title": "여행 기록 저장 중",
+        "desc": "분석한 사진으로 방문 기록을 만들고 있어요"
       },
       "analyzingStep3": {
         "title": "지도에 색칠할 준비 중",
@@ -790,6 +790,17 @@
       "allClearedTitle": "여행 기록 정리가 끝났어요",
       "allClearedBody": "확인이 필요한 여행은 없어요. 이제 지도에서 여행 기록을 살펴볼 수 있어요.",
       "acceptAll": "남은 여행은 모두 내 여행",
+      "goHome": "홈으로 이동하기"
+    },
+    "allTrips": {
+      "title": "여행 기록을 확인해 주세요",
+      "subtitle": "사진으로 만든 여행 기록 {{count}}개를 찾았어요. 내 여행이 아닌 게 있다면 제거해 주세요.",
+      "emptyTitle": "여행 기록 정리가 끝났어요",
+      "emptyBody": "사진에서 찾은 여행이 없어요. 이제 지도에서 여행을 살펴볼 수 있어요.",
+      "rowMeta": "{{range}} · {{days}}일",
+      "rowPhotoLine": "사진 {{count}}장",
+      "actionReject": "내 여행 아님",
+      "confirmAll": "모두 맞아요, 시작하기",
       "goHome": "홈으로 이동하기"
     }
   },

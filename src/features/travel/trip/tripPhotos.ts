@@ -238,6 +238,30 @@ export async function loadDeletedPhotoIdsForTrip(
   return rows.map((r) => r.id);
 }
 
+// (country, date range)로 일괄 soft-delete. 온보딩의 "내 여행 아님" 흐름에서
+// trip 전체 사진을 한 번에 정리한다.
+export async function softDeletePhotosInRange(
+  countryCode: string,
+  startDate: string,
+  endDate: string
+): Promise<{ photosDeleted: number }> {
+  const db = await getTripDb();
+  const now = Date.now();
+  const r = await db.runAsync(
+    `UPDATE visit_photos
+        SET deleted_at = ?, updated_at = ?
+      WHERE country_code = ?
+        AND date BETWEEN ? AND ?
+        AND deleted_at IS NULL`,
+    now,
+    now,
+    countryCode,
+    startDate,
+    endDate
+  );
+  return { photosDeleted: r.changes };
+}
+
 // 사진만 soft-delete. 트립은 보존 (사진 분실 ≠ 트립 분실).
 // 의심 여행 reject 같은 흐름에서는 호출 측이 트립도 별도로 삭제할 수 있다.
 export async function softDeletePhotosByIds(

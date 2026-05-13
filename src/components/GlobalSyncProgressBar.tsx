@@ -62,7 +62,6 @@ export default function GlobalSyncProgressBar() {
   const message = useMemo(() => {
     const phase = syncStatus.phase ?? "scanning";
     if (phase === "saving") return t("sync.saving");
-    if (phase === "verifying") return t("sync.verifying");
     return t("sync.scanning", { processed: syncStatus.processed });
   }, [syncStatus.phase, syncStatus.processed, t]);
 
