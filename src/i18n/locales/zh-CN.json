@@ -538,6 +538,22 @@
       "feature3": {
         "title": "随时可更改",
         "desc": "您可以随时更改或撤销设置"
+      },
+      "analyzingTitleLine1": "正在分析您设备上",
+      "analyzingTitleHighlight": "的照片信息",
+      "analyzingSubtitle": "正在分析日期，准备绘制地图。\n稍等片刻！",
+      "analyzingStep1": {
+        "title": "正在分析照片位置",
+        "desc": "读取照片位置信息并匹配国家"
+      },
+      "analyzingStep2": {
+        "title": "正在保存旅行记录",
+        "desc": "根据匹配的照片创建访问记录"
+      },
+      "analyzingAutoNext": {
+        "prefix": "分析完成后，将",
+        "highlight": "自动进入下一步",
+        "suffix": "。"
       }
     },
     "suspect": {
@@ -546,6 +562,17 @@
       "allClearedTitle": "旅行记录已整理完毕",
       "allClearedBody": "没有需要确认的旅行。可以前往地图查看你的旅行记录了。",
       "acceptAll": "剩下的都是我的旅行",
+      "goHome": "前往主页"
+    },
+    "allTrips": {
+      "title": "请确认你的旅行",
+      "subtitle": "从你的照片中找到了 {{count}} 段旅行。请移除不属于你的旅行。",
+      "emptyTitle": "旅行记录整理完成",
+      "emptyBody": "照片中没有找到旅行。现在可以查看地图了。",
+      "rowMeta": "{{range}} · {{days}} 天",
+      "rowPhotoLine": "{{count}} 张照片",
+      "actionReject": "不是我的旅行",
+      "confirmAll": "全部正确，开始",
       "goHome": "前往主页"
     }
   },

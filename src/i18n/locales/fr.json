@@ -538,6 +538,22 @@
       "feature3": {
         "title": "Modifiable à tout moment",
         "desc": "Tu peux révoquer ou modifier les autorisations quand tu veux"
+      },
+      "analyzingTitleLine1": "Nous analysons les photos",
+      "analyzingTitleHighlight": "de votre appareil",
+      "analyzingSubtitle": "Nous lisons les dates et préparons votre carte.\nCela ne prend qu'un instant !",
+      "analyzingStep1": {
+        "title": "Analyse des lieux des photos",
+        "desc": "Lecture des données de localisation et association des pays"
+      },
+      "analyzingStep2": {
+        "title": "Enregistrement des voyages",
+        "desc": "Création des enregistrements de visite à partir des photos analysées"
+      },
+      "analyzingAutoNext": {
+        "prefix": "Une fois l'analyse terminée, vous passerez ",
+        "highlight": "automatiquement à l'étape suivante",
+        "suffix": "."
       }
     },
     "suspect": {
@@ -546,6 +562,17 @@
       "allClearedTitle": "Tes voyages sont prêts",
       "allClearedBody": "Plus rien à vérifier. Tu peux explorer ta carte.",
       "acceptAll": "Tout garder",
+      "goHome": "Aller à l'accueil"
+    },
+    "allTrips": {
+      "title": "Vérifiez vos voyages",
+      "subtitle": "Nous avons trouvé {{count}} voyages dans vos photos. Supprimez ceux qui ne sont pas les vôtres.",
+      "emptyTitle": "Vos voyages sont prêts",
+      "emptyBody": "Aucun voyage trouvé dans vos photos. Vous pouvez explorer votre carte.",
+      "rowMeta": "{{range}} · {{days}} jours",
+      "rowPhotoLine": "{{count}} photos",
+      "actionReject": "Pas mon voyage",
+      "confirmAll": "Tout est correct, commencer",
       "goHome": "Aller à l'accueil"
     }
   },

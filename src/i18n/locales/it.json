@@ -538,6 +538,22 @@
       "feature3": {
         "title": "Modificabile sempre",
         "desc": "Puoi revocare o cambiare i permessi quando vuoi"
+      },
+      "analyzingTitleLine1": "Stiamo analizzando le foto",
+      "analyzingTitleHighlight": "del tuo dispositivo",
+      "analyzingSubtitle": "Stiamo leggendo le date e preparando la mappa.\nÈ questione di un momento!",
+      "analyzingStep1": {
+        "title": "Analisi dei luoghi delle foto",
+        "desc": "Lettura dei dati di posizione e abbinamento dei paesi"
+      },
+      "analyzingStep2": {
+        "title": "Salvataggio dei viaggi",
+        "desc": "Creazione dei registri di visita dalle foto analizzate"
+      },
+      "analyzingAutoNext": {
+        "prefix": "Al termine dell'analisi, passerai ",
+        "highlight": "automaticamente al passaggio successivo",
+        "suffix": "."
       }
     },
     "suspect": {
@@ -546,6 +562,17 @@
       "allClearedTitle": "I tuoi viaggi sono pronti",
       "allClearedBody": "Non c'è altro da verificare. Ora puoi esplorare la tua mappa.",
       "acceptAll": "Tieni i restanti",
+      "goHome": "Vai alla home"
+    },
+    "allTrips": {
+      "title": "Controlla i tuoi viaggi",
+      "subtitle": "Abbiamo trovato {{count}} viaggi dalle tue foto. Rimuovi quelli che non sono i tuoi.",
+      "emptyTitle": "Tutto pronto",
+      "emptyBody": "Nessun viaggio trovato nelle tue foto. Puoi esplorare la mappa.",
+      "rowMeta": "{{range}} · {{days}} giorni",
+      "rowPhotoLine": "{{count}} foto",
+      "actionReject": "Non è il mio viaggio",
+      "confirmAll": "Tutto corretto, inizia",
       "goHome": "Vai alla home"
     }
   },

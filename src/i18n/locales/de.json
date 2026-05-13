@@ -538,6 +538,22 @@
       "feature3": {
         "title": "Jederzeit änderbar",
         "desc": "Du kannst Berechtigungen jederzeit widerrufen oder ändern"
+      },
+      "analyzingTitleLine1": "Wir analysieren die",
+      "analyzingTitleHighlight": "Fotos auf deinem Gerät",
+      "analyzingSubtitle": "Wir lesen Daten und bereiten deine Karte vor.\nEs dauert nur einen Moment!",
+      "analyzingStep1": {
+        "title": "Foto-Standorte werden analysiert",
+        "desc": "Standortdaten der Fotos werden gelesen und Länder zugeordnet"
+      },
+      "analyzingStep2": {
+        "title": "Reisedaten werden gespeichert",
+        "desc": "Aus den zugeordneten Fotos werden Besuchseinträge erstellt"
+      },
+      "analyzingAutoNext": {
+        "prefix": "Wenn die Analyse fertig ist, geht es ",
+        "highlight": "automatisch zum nächsten Schritt",
+        "suffix": "."
       }
     },
     "suspect": {
@@ -546,6 +562,17 @@
       "allClearedTitle": "Deine Reisen sind bereit",
       "allClearedBody": "Es gibt nichts zu prüfen. Du kannst deine Karte jetzt entdecken.",
       "acceptAll": "Den Rest übernehmen",
+      "goHome": "Zur Startseite"
+    },
+    "allTrips": {
+      "title": "Überprüfe deine Reisen",
+      "subtitle": "Wir haben {{count}} Reisen aus deinen Fotos gefunden. Entferne alle, die nicht deine sind.",
+      "emptyTitle": "Alles erledigt",
+      "emptyBody": "In deinen Fotos wurden keine Reisen gefunden. Du kannst jetzt deine Karte erkunden.",
+      "rowMeta": "{{range}} · {{days}} Tage",
+      "rowPhotoLine": "{{count}} Fotos",
+      "actionReject": "Nicht meine Reise",
+      "confirmAll": "Alles korrekt, los geht's",
       "goHome": "Zur Startseite"
     }
   },

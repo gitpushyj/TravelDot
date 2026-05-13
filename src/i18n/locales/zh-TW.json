@@ -538,6 +538,22 @@
       "feature3": {
         "title": "隨時可變更",
         "desc": "您可以隨時變更或撤回設定"
+      },
+      "analyzingTitleLine1": "正在分析您裝置上",
+      "analyzingTitleHighlight": "的照片資訊",
+      "analyzingSubtitle": "正在分析日期，準備繪製地圖。\n稍等片刻！",
+      "analyzingStep1": {
+        "title": "正在分析照片位置",
+        "desc": "讀取照片位置資訊並比對國家"
+      },
+      "analyzingStep2": {
+        "title": "正在儲存旅行紀錄",
+        "desc": "根據比對結果建立造訪紀錄"
+      },
+      "analyzingAutoNext": {
+        "prefix": "分析完成後，將",
+        "highlight": "自動進入下一步",
+        "suffix": "。"
       }
     },
     "suspect": {
@@ -546,6 +562,17 @@
       "allClearedTitle": "旅行紀錄已整理完畢",
       "allClearedBody": "沒有需要確認的旅行。可以前往地圖查看你的旅行紀錄了。",
       "acceptAll": "剩下的都是我的旅行",
+      "goHome": "前往主畫面"
+    },
+    "allTrips": {
+      "title": "請確認你的旅行",
+      "subtitle": "從你的照片中找到了 {{count}} 段旅行。請移除不屬於你的旅行。",
+      "emptyTitle": "旅行紀錄整理完成",
+      "emptyBody": "照片中沒有找到旅行。現在可以查看地圖了。",
+      "rowMeta": "{{range}} · {{days}} 天",
+      "rowPhotoLine": "{{count}} 張照片",
+      "actionReject": "不是我的旅行",
+      "confirmAll": "全部正確，開始",
       "goHome": "前往主畫面"
     }
   },

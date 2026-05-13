@@ -142,11 +142,12 @@ function makeStyles(theme: Theme) {
       gap: 6,
     },
     thumbWrap: {
-      flex: 1,
-      aspectRatio: 1,
+      width: 60,
+      height: 60,
       borderRadius: 8,
       overflow: "hidden",
       position: "relative",
+      backgroundColor: theme.flagBoxBg,
     },
     thumb: {
       width: "100%",

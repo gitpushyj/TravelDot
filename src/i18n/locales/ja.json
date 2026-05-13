@@ -538,6 +538,22 @@
       "feature3": {
         "title": "いつでも変更可能",
         "desc": "設定はいつでも変更・取り消しできます"
+      },
+      "analyzingTitleLine1": "端末の写真情報を",
+      "analyzingTitleHighlight": "分析しています",
+      "analyzingSubtitle": "日付を分析し、地図を塗る準備をしています。\nしばらくお待ちください！",
+      "analyzingStep1": {
+        "title": "写真の場所を分析中",
+        "desc": "端末から写真の位置情報を読み取り、国を判定しています"
+      },
+      "analyzingStep2": {
+        "title": "旅の記録を保存中",
+        "desc": "分析した写真から訪問記録を作成しています"
+      },
+      "analyzingAutoNext": {
+        "prefix": "分析が完了すると",
+        "highlight": "自動的に次のステップ",
+        "suffix": "へ進みます。"
       }
     },
     "suspect": {
@@ -546,6 +562,17 @@
       "allClearedTitle": "旅の記録の整理が終わりました",
       "allClearedBody": "確認が必要な旅はありません。地図で旅の記録を見てみましょう。",
       "acceptAll": "残りはすべて自分の旅",
+      "goHome": "ホームへ"
+    },
+    "allTrips": {
+      "title": "旅の記録を確認してください",
+      "subtitle": "写真から作成した旅の記録が {{count}} 件見つかりました。自分の旅でないものは削除してください。",
+      "emptyTitle": "旅の記録の整理が終わりました",
+      "emptyBody": "写真から見つかった旅はありません。地図で旅の記録を見てみましょう。",
+      "rowMeta": "{{range}} · {{days}}日",
+      "rowPhotoLine": "写真 {{count}}枚",
+      "actionReject": "自分の旅ではない",
+      "confirmAll": "すべて合っています、始める",
       "goHome": "ホームへ"
     }
   },
