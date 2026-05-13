@@ -723,7 +723,7 @@
     },
     "birth": {
       "title": "Tell us your date of birth",
-      "subtitle": "We use it to refine your travel stats and recommendations.",
+      "subtitle": "We'd love to compare your travel stats with travelers of a similar age and gender.\nThat way we can show you insights like \"How often do people my age travel?\"",
       "cardLabel": "Date of birth",
       "year": "Year",
       "month": "Month",
@@ -735,6 +735,17 @@
       "options": {
         "male": "Male",
         "female": "Female"
+      }
+    },
+    "nickname": {
+      "title": "What should we call you?",
+      "subtitle": "We'd like a nickname so we can recognize you in shared spaces with other travelers later on. You can change it anytime.",
+      "cardLabel": "Nickname",
+      "placeholder": "Please enter a nickname",
+      "next": "Next",
+      "errors": {
+        "tooShort": "Please enter at least 2 characters",
+        "hasWhitespace": "Spaces aren't allowed"
       }
     },
     "sync": {

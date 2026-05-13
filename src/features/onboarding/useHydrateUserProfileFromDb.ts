@@ -52,13 +52,15 @@ export function useHydrateUserProfileFromDb(): void {
             local.birthYear === dbProfile.birthYear &&
             local.birthMonth === dbProfile.birthMonth &&
             local.birthDay === dbProfile.birthDay &&
-            local.gender === dbProfile.gender;
+            local.gender === dbProfile.gender &&
+            local.nickname === dbProfile.nickname;
           if (!same) {
             await useProfileStore.getState().setProfile({
               birthYear: dbProfile.birthYear,
               birthMonth: dbProfile.birthMonth,
               birthDay: dbProfile.birthDay,
               gender: dbProfile.gender,
+              nickname: dbProfile.nickname,
             });
           }
         }

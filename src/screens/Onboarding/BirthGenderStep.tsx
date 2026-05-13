@@ -98,6 +98,9 @@ export default function BirthGenderStep({ onNext }: Props) {
         birthMonth: month,
         birthDay: day,
         gender,
+        // 이미 닉네임을 입력한 사용자가 birth/gender를 다시 저장하더라도
+        // 닉네임이 지워지지 않도록 기존 값을 유지한다.
+        nickname: profile?.nickname ?? null,
       });
       onNext();
     } finally {

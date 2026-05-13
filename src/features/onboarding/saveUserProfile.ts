@@ -18,6 +18,7 @@ export type DbUserProfile = {
   birthMonth: number | null;
   birthDay: number | null;
   gender: Gender | null;
+  nickname: string | null;
 };
 
 // public.users 행은 auth.users 트리거로 자동 생성되므로 update만 사용한다.
@@ -32,6 +33,7 @@ export async function saveUserProfileToDb(input: SaveInput): Promise<void> {
       birth_month: profile.birthMonth,
       birth_day: profile.birthDay,
       gender: profile.gender,
+      nickname: profile.nickname,
       updated_at: new Date().toISOString(),
     })
     .eq("id", userId);
@@ -44,7 +46,7 @@ export async function loadUserProfileFromDb(
   const { data, error } = await supabase
     .from("users")
     .select(
-      "home_country_code, home_country_changed, birth_year, birth_month, birth_day, gender"
+      "home_country_code, home_country_changed, birth_year, birth_month, birth_day, gender, nickname"
     )
     .eq("id", userId)
     .maybeSingle();
@@ -57,6 +59,7 @@ export async function loadUserProfileFromDb(
     birthMonth: data.birth_month ?? null,
     birthDay: data.birth_day ?? null,
     gender: (data.gender as Gender | null) ?? null,
+    nickname: (data.nickname as string | null) ?? null,
   };
 }
 

@@ -514,6 +514,33 @@
       "title": "Elige tu país de origen",
       "subtitle": "El punto de tu país de origen siempre aparece en un color distintivo, independientemente de los días.\nEl resto de países se oscurecen cuanto más tiempo pasas en ellos."
     },
+    "birth": {
+      "title": "Cuéntanos tu fecha de nacimiento",
+      "subtitle": "Nos gustaría comparar tus estadísticas de viaje con las de personas de edad y género similares.\nAsí podremos mostrarte datos como «¿Con qué frecuencia viajan las personas de mi edad?».",
+      "cardLabel": "Fecha de nacimiento",
+      "year": "Año",
+      "month": "Mes",
+      "day": "Día",
+      "next": "Siguiente"
+    },
+    "gender": {
+      "title": "Género",
+      "options": {
+        "male": "Hombre",
+        "female": "Mujer"
+      }
+    },
+    "nickname": {
+      "title": "¿Cómo te llamamos?",
+      "subtitle": "Necesitamos un nombre para poder reconocerte más adelante en los espacios compartidos con otros viajeros. Podrás cambiarlo cuando quieras.",
+      "cardLabel": "Nombre de usuario",
+      "placeholder": "Por favor, introduce un nombre",
+      "next": "Siguiente",
+      "errors": {
+        "tooShort": "Introduce al menos 2 caracteres",
+        "hasWhitespace": "No se permiten espacios"
+      }
+    },
     "sync": {
       "title": "Vamos a sincronizar tus viajes",
       "body": "Revisaremos tus fotos y crearemos los registros de viaje automáticamente.",

@@ -514,6 +514,33 @@
       "title": "Wähle dein Heimatland",
       "subtitle": "Der Punkt deines Heimatlands wird unabhängig von den Tagen in einer eigenen Farbe dargestellt.\nAndere Länder werden umso dunkler, je länger du dort warst."
     },
+    "birth": {
+      "title": "Sag uns dein Geburtsdatum",
+      "subtitle": "Wir möchten deine Reisestatistiken mit Menschen in ähnlichem Alter und gleichem Geschlecht vergleichen.\nSo können wir dir Erkenntnisse zeigen wie „Wie oft reisen Menschen in meinem Alter?\".",
+      "cardLabel": "Geburtsdatum",
+      "year": "Jahr",
+      "month": "Monat",
+      "day": "Tag",
+      "next": "Weiter"
+    },
+    "gender": {
+      "title": "Geschlecht",
+      "options": {
+        "male": "Männlich",
+        "female": "Weiblich"
+      }
+    },
+    "nickname": {
+      "title": "Wie sollen wir dich nennen?",
+      "subtitle": "Wir brauchen einen Nutzernamen, damit wir dich später in geteilten Räumen mit anderen Reisenden wiedererkennen können. Du kannst ihn jederzeit ändern.",
+      "cardLabel": "Nutzername",
+      "placeholder": "Bitte gib einen Nutzernamen ein",
+      "next": "Weiter",
+      "errors": {
+        "tooShort": "Bitte gib mindestens 2 Zeichen ein",
+        "hasWhitespace": "Leerzeichen sind nicht erlaubt"
+      }
+    },
     "sync": {
       "title": "Lass uns deine Reisen synchronisieren",
       "body": "Wir gehen deine Fotos durch und erstellen die Reise-Einträge automatisch.",

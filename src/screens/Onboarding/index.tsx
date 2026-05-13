@@ -14,11 +14,12 @@ import AllTripsStep from "./AllTripsStep";
 import BirthGenderStep from "./BirthGenderStep";
 import HomeCountryStep from "./HomeCountryStep";
 import LoginStep from "./LoginStep";
+import NicknameStep from "./NicknameStep";
 import OnboardingProgress from "./OnboardingProgress";
 import { makeOnboardingStyles } from "./styles";
 import SyncStep from "./SyncStep";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 export default function OnboardingFlow() {
   const theme = useTheme();
@@ -61,11 +62,11 @@ export default function OnboardingFlow() {
 
   // 시스템 back:
   //  - step 1(LoginStep): Android 기본 동작(앱 종료) 허용.
-  //  - step 3(BirthGenderStep), step 4(SyncStep): 본국 재선택을 위해 한 단계씩 이전으로 이동.
-  //  - 그 외 step(2, 5): 진행 데이터/검토 단계 보호를 위해 차단.
+  //  - step 3(BirthGenderStep), step 4(NicknameStep), step 5(SyncStep): 한 단계씩 이전으로 이동.
+  //  - 그 외 step(2, 6): 진행 데이터/검토 단계 보호를 위해 차단.
   useEffect(() => {
     const sub = BackHandler.addEventListener("hardwareBackPress", () => {
-      if (step === 3 || step === 4) {
+      if (step === 3 || step === 4 || step === 5) {
         goBack();
         return true;
       }
@@ -81,12 +82,15 @@ export default function OnboardingFlow() {
 
   // 외부 상태(예: 다른 디바이스에서 세션 복원, 잔존 homeCountry)를 보고
   // step을 앞당긴다. 뒤로 돌리지는 않는다.
+  // profile만 있으면 birth/gender까지는 끝났다는 의미이고,
+  // profile.nickname이 채워졌으면 nickname까지 끝났다는 의미다.
   useEffect(() => {
     setStep((prev) => {
       let next = prev;
       if (next < 2 && authUser) next = 2;
       if (next < 3 && homeCountry) next = 3;
       if (next < 4 && profile) next = 4;
+      if (next < 5 && profile?.nickname) next = 5;
       return next;
     });
   }, [authUser, homeCountry, profile]);
@@ -113,13 +117,14 @@ export default function OnboardingFlow() {
       <OnboardingProgress
         current={step}
         total={TOTAL_STEPS}
-        onBack={step === 3 || step === 4 ? goBack : undefined}
+        onBack={step === 3 || step === 4 || step === 5 ? goBack : undefined}
       />
       {step === 1 && <LoginStep onNext={() => goTo(2)} />}
       {step === 2 && <HomeCountryStep onNext={() => goTo(3)} />}
       {step === 3 && <BirthGenderStep onNext={() => goTo(4)} />}
-      {step === 4 && <SyncStep onNext={() => goTo(5)} />}
-      {step === 5 && <AllTripsStep onFinish={() => void finish()} />}
+      {step === 4 && <NicknameStep onNext={() => goTo(5)} />}
+      {step === 5 && <SyncStep onNext={() => goTo(6)} />}
+      {step === 6 && <AllTripsStep onFinish={() => void finish()} />}
     </View>
   );
 }

@@ -5,11 +5,15 @@ const STORAGE_KEY = "visitgrid:userProfile_v1";
 
 export type Gender = "male" | "female";
 
+// nickname은 온보딩에서 birth/gender 단계 이후의 별도 단계에서 채워진다.
+// birth/gender 단계만 통과한 사용자도 일시적으로 nickname === null인 상태로
+// 머무를 수 있으므로 nullable로 둔다.
 export type UserProfile = {
   birthYear: number;
   birthMonth: number;
   birthDay: number;
   gender: Gender;
+  nickname: string | null;
 };
 
 type State = {
