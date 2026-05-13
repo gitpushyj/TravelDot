@@ -15,6 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.gitpush.visitgrid",
+      "buildNumber": "2",
       "appleTeamId": "27LS459HJ3",
       "usesAppleSignIn": true,
       "googleServicesFile": "./GoogleService-Info.plist",
