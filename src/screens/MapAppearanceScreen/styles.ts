@@ -58,8 +58,11 @@ export function makeStyles(theme: Theme) {
       borderColor: theme.cardBorder,
     },
     mapPreview: {
+      // DotMap은 cover-fit(Math.max(widthFit, heightFit))이라 자연 비율(360:145)보다
+      // 더 높은 컨테이너를 주면 baseScale이 heightFit으로 잡혀 좌우가 잘린다.
+      // 미리보기에선 세계지도 전체가 보여야 하므로 자연 비율을 그대로 쓴다.
       width: "100%",
-      aspectRatio: 360 / 165,
+      aspectRatio: 360 / 145,
     },
   });
 }
