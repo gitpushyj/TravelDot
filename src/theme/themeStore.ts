@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { Appearance, ColorSchemeName } from "react-native";
 import { create } from "zustand";
 
+import { useSubscriptionStore } from "../features/subscription/subscriptionStore";
+
 import {
   DEFAULT_MAP_PALETTE_ID,
   findMapPalette,
@@ -102,19 +104,29 @@ export type MapTheme = {
 export function useMapTheme(): MapTheme {
   const mode = useThemeStore((s) => s.mode);
   const systemScheme = useThemeStore((s) => s.systemScheme);
-  const mapThemeLock = useThemeStore((s) => s.mapThemeLock);
-  const mapPaletteId = useThemeStore((s) => s.mapPaletteId);
+  const storedLock = useThemeStore((s) => s.mapThemeLock);
+  const storedPaletteId = useThemeStore((s) => s.mapPaletteId);
+  // 지도 외형은 유료 전용. 미가입/free로 돌아가면 저장값(이전 선택)을 무시하고
+  // 항상 기본값(green + system)을 적용한다. 저장값 자체는 유지해, 재가입 시
+  // 이전 선택을 다시 가져와 자동 복원한다.
+  const tier = useSubscriptionStore((s) => s.tier);
+  const isSubscribed = tier != null && tier !== "free";
+
+  const effectiveLock = isSubscribed ? storedLock : "system";
+  const effectivePaletteId = isSubscribed
+    ? storedPaletteId
+    : DEFAULT_MAP_PALETTE_ID;
 
   const appEffective = mode === "system" ? systemScheme ?? "light" : mode;
   const effective: "light" | "dark" =
-    mapThemeLock === "system"
+    effectiveLock === "system"
       ? appEffective === "dark"
         ? "dark"
         : "light"
-      : mapThemeLock;
+      : effectiveLock;
 
   const base = effective === "dark" ? DARK_THEME : LIGHT_THEME;
-  const palette = findMapPalette(mapPaletteId);
+  const palette = findMapPalette(effectivePaletteId);
   return {
     heatmap: effective === "dark" ? palette.dark : palette.light,
     homeColor: base.homeColor,
