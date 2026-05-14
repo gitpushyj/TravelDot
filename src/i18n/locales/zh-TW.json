@@ -14,7 +14,7 @@
       "heading": "問問你的旅行搭子",
       "subheading": "我會根據你的旅行資料來回答"
     },
-    "exampleRanking": "在{{country}}人當中，我旅行算多嗎？請告訴我處在前百分之多少。",
+    "exampleRanking": "在我們國家的人當中，我旅行算多嗎？請告訴我處在前百分之多少。",
     "exampleNextDestination": "下次去哪裡好呢？",
     "examplePattern": "我的旅行風格是怎樣的？",
     "error": {

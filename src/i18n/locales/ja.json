@@ -14,7 +14,7 @@
       "heading": "旅の相棒に聞いてみて",
       "subheading": "君の旅データをもとに答えるよ"
     },
-    "exampleRanking": "{{country}}の人の中で、私はどれくらい旅行している方？上位パーセンタイルで教えて。",
+    "exampleRanking": "うちの国の人の中で、私はどれくらい旅行している方？上位パーセンタイルで教えて。",
     "exampleNextDestination": "次はどこに行くのがいい？",
     "examplePattern": "私の旅のスタイルってどんな感じ？",
     "error": {

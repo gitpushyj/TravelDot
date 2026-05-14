@@ -14,7 +14,7 @@
       "heading": "Demande à ton pote de voyage",
       "subheading": "Je te réponds avec tes données de voyage"
     },
-    "exampleRanking": "Parmi les gens de {{country}}, à quel point je voyage ? Dis-moi mon top percentile.",
+    "exampleRanking": "Parmi les gens de mon pays, à quel point je voyage ? Dis-moi mon top percentile.",
     "exampleNextDestination": "Où devrais-je aller la prochaine fois ?",
     "examplePattern": "C'est quoi mon style de voyage ?",
     "error": {

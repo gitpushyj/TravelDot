@@ -14,7 +14,7 @@
       "heading": "Chiedi al tuo compagno di viaggio",
       "subheading": "Ti rispondo usando i tuoi dati di viaggio"
     },
-    "exampleRanking": "Tra le persone di {{country}}, quanto viaggio? Dimmi il mio percentile superiore.",
+    "exampleRanking": "Tra le persone del mio paese, quanto viaggio? Dimmi il mio percentile superiore.",
     "exampleNextDestination": "Dove dovrei andare la prossima volta?",
     "examplePattern": "Com'è il mio stile di viaggio?",
     "error": {

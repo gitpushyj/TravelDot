@@ -14,7 +14,7 @@
       "heading": "Frag deinen Reisekumpel",
       "subheading": "Ich antworte mit deinen Reisedaten"
     },
-    "exampleRanking": "Wie viel reise ich verglichen mit Leuten aus {{country}}? Sag mir mein Top-Perzentil.",
+    "exampleRanking": "Wie viel reise ich verglichen mit Leuten aus meinem Land? Sag mir mein Top-Perzentil.",
     "exampleNextDestination": "Wohin soll's als Nächstes gehen?",
     "examplePattern": "Was sagt mein Reise-Vibe?",
     "error": {

@@ -20,7 +20,7 @@
       "heading": "Ask your travel buddy",
       "subheading": "I'll answer using your travel data"
     },
-    "exampleRanking": "Among people from {{country}}, how much do I travel? Tell me my top percentile.",
+    "exampleRanking": "Among people from my country, how much do I travel? Tell me my top percentile.",
     "exampleNextDestination": "Where should I go next?",
     "examplePattern": "What's my travel vibe?",
     "error": {

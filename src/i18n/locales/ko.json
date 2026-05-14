@@ -20,7 +20,7 @@
       "heading": "여행 친구에게 물어봐",
       "subheading": "네 여행 데이터로 답해줄게"
     },
-    "exampleRanking": "나는 {{country}} 사람중에 여행을 얼마나 많이 가는 사람일까? 상위 퍼센트로 답변해줘",
+    "exampleRanking": "나는 우리나라 사람중에 여행을 얼마나 많이 가는 사람일까? 상위 퍼센트로 답변해줘",
     "exampleNextDestination": "다음 여행지는 어디가 좋을까?",
     "examplePattern": "내 여행 스타일 어떤 거 같아?",
     "error": {

@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useVisitStore } from "../../features/travel/visitStore";
-import { getCurrentLocale } from "../../i18n";
-import { getCountryName } from "../../lib/countryName";
 import { useTheme } from "../../theme/themeStore";
 
 type Props = {
@@ -18,15 +16,14 @@ export default function AiChatEmptyState({ onPickExample }: Props) {
 
   const homeCountry = useVisitStore((s) => s.homeCountry);
 
-  // exampleRanking은 본국 이름 interpolation이 필요하다. 본국이 아직 없으면
-  // chip을 노출하지 않는다 — 빈 placeholder가 들어간 어색한 문장을 피한다.
+  // exampleRanking은 "우리나라 사람과 비교" 질문이라 본국이 설정돼야 의미가
+  // 있다 — 시스템 프롬프트에도 home country가 들어가야 AI가 답할 수 있음.
   const examples = useMemo(() => {
     const list: { key: string; label: string }[] = [];
     if (homeCountry) {
-      const countryName = getCountryName(homeCountry.code, getCurrentLocale());
       list.push({
         key: "aiChat.exampleRanking",
-        label: t("aiChat.exampleRanking", { country: countryName }),
+        label: t("aiChat.exampleRanking"),
       });
     }
     list.push({
