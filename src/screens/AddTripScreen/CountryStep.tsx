@@ -18,7 +18,12 @@ import { flagEmoji } from "../../utils/flag";
 
 import type { AddTripStyles } from "./styles";
 
-type Entry = { code: string; name: string; nameKo: string };
+type Entry = {
+  code: string;
+  name: string;
+  nameKo: string;
+  aliases?: string[];
+};
 
 type Props = {
   styles: AddTripStyles;
@@ -45,7 +50,13 @@ export default function CountryStep({
   const homeCode = useVisitStore((s) => s.homeCountry?.code ?? null);
 
   const locale = getCurrentLocale();
-  const allCountries = countries as Entry[];
+  const allCountries = useMemo(
+    () =>
+      (countries as Entry[])
+        .slice()
+        .sort((a, b) => a.nameKo.localeCompare(b.nameKo, "ko")),
+    []
+  );
 
   const filtered = useMemo(() => {
     if (!q.trim()) return allCountries;
@@ -55,7 +66,9 @@ export default function CountryStep({
         c.code.toLowerCase().includes(needle) ||
         c.name.toLowerCase().includes(needle) ||
         c.nameKo.toLowerCase().includes(needle) ||
-        getCountryName(c.code, locale).toLowerCase().includes(needle)
+        (c.aliases ?? []).some((a) => a.toLowerCase().includes(needle)) ||
+        getCountryName(c.code, locale).toLowerCase().includes(needle) ||
+        getCountryName(c.code, "en").toLowerCase().includes(needle)
     );
   }, [q, allCountries, locale]);
 

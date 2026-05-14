@@ -3,7 +3,12 @@ import countriesJson from "../../assets/data/countries.json";
 // UN 가입국 193개 기준 (NomadMania UN Master와 정렬)
 export const TOTAL_COUNTRIES = 193;
 
-export type CountryEntry = { code: string; name: string; nameKo: string };
+export type CountryEntry = {
+  code: string;
+  name: string;
+  nameKo: string;
+  aliases?: string[];
+};
 
 export const COUNTRY_LIST = countriesJson as CountryEntry[];
 

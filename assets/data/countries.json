@@ -17,12 +17,14 @@
   {
     "code": "GM",
     "name": "The Gambia",
-    "nameKo": "감비아"
+    "nameKo": "감비아",
+    "aliases": ["Gambia"]
   },
   {
     "code": "GG",
     "name": "Guernsey",
-    "nameKo": "건지섬"
+    "nameKo": "건지섬",
+    "aliases": ["건지", "건시"]
   },
   {
     "code": "GT",
@@ -36,23 +38,27 @@
   },
   {
     "code": "GR",
-    "name": "Greece",
-    "nameKo": "그리스"
+    "name": "Ελλάδα",
+    "nameKo": "그리스",
+    "aliases": ["Greece", "Hellas", "Elláda", "Ellada"]
   },
   {
     "code": "GL",
-    "name": "Greenland",
-    "nameKo": "그린란드"
+    "name": "Kalaallit Nunaat",
+    "nameKo": "그린란드",
+    "aliases": ["Greenland"]
   },
   {
     "code": "GN",
-    "name": "Guinea",
-    "nameKo": "기니"
+    "name": "Guinée",
+    "nameKo": "기니",
+    "aliases": ["Guinea"]
   },
   {
     "code": "GW",
-    "name": "Guinea-Bissau",
-    "nameKo": "기니비사우"
+    "name": "Guiné-Bissau",
+    "nameKo": "기니비사우",
+    "aliases": ["Guinea-Bissau"]
   },
   {
     "code": "NA",
@@ -61,8 +67,9 @@
   },
   {
     "code": "NR",
-    "name": "Nauru",
-    "nameKo": "나우루"
+    "name": "Naoero",
+    "nameKo": "나우루",
+    "aliases": ["Nauru"]
   },
   {
     "code": "NG",
@@ -82,32 +89,38 @@
   {
     "code": "ZA",
     "name": "South Africa",
-    "nameKo": "남아프리카 공화국"
+    "nameKo": "남아프리카공화국",
+    "aliases": ["남아공", "남아프리카 공화국"]
   },
   {
     "code": "NL",
-    "name": "Netherlands",
-    "nameKo": "네덜란드"
+    "name": "Nederland",
+    "nameKo": "네덜란드",
+    "aliases": ["Netherlands", "Holland"]
   },
   {
     "code": "NP",
-    "name": "Nepal",
-    "nameKo": "네팔"
+    "name": "नेपाल",
+    "nameKo": "네팔",
+    "aliases": ["Nepal"]
   },
   {
     "code": "NO",
-    "name": "Norway",
-    "nameKo": "노르웨이"
+    "name": "Norge",
+    "nameKo": "노르웨이",
+    "aliases": ["Norway", "Noreg"]
   },
   {
     "code": "NZ",
     "name": "New Zealand",
-    "nameKo": "뉴질랜드"
+    "nameKo": "뉴질랜드",
+    "aliases": ["Aotearoa"]
   },
   {
     "code": "NU",
-    "name": "Niue",
-    "nameKo": "니우에"
+    "name": "Niuē",
+    "nameKo": "니우에",
+    "aliases": ["Niue"]
   },
   {
     "code": "NE",
@@ -121,18 +134,21 @@
   },
   {
     "code": "KR",
-    "name": "South Korea",
-    "nameKo": "대한민국"
+    "name": "한국",
+    "nameKo": "한국",
+    "aliases": ["대한민국", "South Korea", "Korea", "Hanguk"]
   },
   {
     "code": "DK",
-    "name": "Denmark",
-    "nameKo": "덴마크"
+    "name": "Danmark",
+    "nameKo": "덴마크",
+    "aliases": ["Denmark"]
   },
   {
     "code": "DO",
-    "name": "Dominican Republic",
-    "nameKo": "도미니카 공화국"
+    "name": "República Dominicana",
+    "nameKo": "도미니카 공화국",
+    "aliases": ["Dominican Republic"]
   },
   {
     "code": "DM",
@@ -141,18 +157,21 @@
   },
   {
     "code": "DE",
-    "name": "Germany",
-    "nameKo": "독일"
+    "name": "Deutschland",
+    "nameKo": "독일",
+    "aliases": ["Germany"]
   },
   {
     "code": "TL",
-    "name": "East Timor",
-    "nameKo": "동티모르"
+    "name": "Timor-Leste",
+    "nameKo": "동티모르",
+    "aliases": ["East Timor", "Timor Leste"]
   },
   {
     "code": "LA",
-    "name": "Laos",
-    "nameKo": "라오스"
+    "name": "ປະເທດລາວ",
+    "nameKo": "라오스",
+    "aliases": ["Laos", "Lao"]
   },
   {
     "code": "LR",
@@ -161,18 +180,21 @@
   },
   {
     "code": "LV",
-    "name": "Latvia",
-    "nameKo": "라트비아"
+    "name": "Latvija",
+    "nameKo": "라트비아",
+    "aliases": ["Latvia"]
   },
   {
     "code": "RU",
-    "name": "Russia",
-    "nameKo": "러시아"
+    "name": "Россия",
+    "nameKo": "러시아",
+    "aliases": ["Russia", "Rossiya"]
   },
   {
     "code": "LB",
-    "name": "Lebanon",
-    "nameKo": "레바논"
+    "name": "لبنان",
+    "nameKo": "레바논",
+    "aliases": ["Lebanon", "Lubnan"]
   },
   {
     "code": "LS",
@@ -181,13 +203,15 @@
   },
   {
     "code": "RO",
-    "name": "Romania",
-    "nameKo": "루마니아"
+    "name": "România",
+    "nameKo": "루마니아",
+    "aliases": ["Romania"]
   },
   {
     "code": "LU",
-    "name": "Luxembourg",
-    "nameKo": "룩셈부르크"
+    "name": "Lëtzebuerg",
+    "nameKo": "룩셈부르크",
+    "aliases": ["Luxembourg", "Luxemburg"]
   },
   {
     "code": "RW",
@@ -196,13 +220,15 @@
   },
   {
     "code": "LY",
-    "name": "Libya",
-    "nameKo": "리비아"
+    "name": "ليبيا",
+    "nameKo": "리비아",
+    "aliases": ["Libya", "Libiya"]
   },
   {
     "code": "LT",
-    "name": "Lithuania",
-    "nameKo": "리투아니아"
+    "name": "Lietuva",
+    "nameKo": "리투아니아",
+    "aliases": ["Lithuania"]
   },
   {
     "code": "LI",
@@ -211,18 +237,21 @@
   },
   {
     "code": "MG",
-    "name": "Madagascar",
-    "nameKo": "마다가스카르"
+    "name": "Madagasikara",
+    "nameKo": "마다가스카르",
+    "aliases": ["Madagascar"]
   },
   {
     "code": "MH",
     "name": "Marshall Islands",
-    "nameKo": "마셜 제도"
+    "nameKo": "마셜 제도",
+    "aliases": ["마셜제도", "Aolepān Aorōkin Ṃajeḷ"]
   },
   {
     "code": "MO",
-    "name": "Macau",
-    "nameKo": "마카오"
+    "name": "澳門",
+    "nameKo": "마카오",
+    "aliases": ["Macau", "Macao", "Aomen"]
   },
   {
     "code": "MW",
@@ -242,12 +271,14 @@
   {
     "code": "IM",
     "name": "Isle of Man",
-    "nameKo": "맨섬"
+    "nameKo": "맨섬",
+    "aliases": ["Ellan Vannin"]
   },
   {
     "code": "MX",
-    "name": "Mexico",
-    "nameKo": "멕시코"
+    "name": "México",
+    "nameKo": "멕시코",
+    "aliases": ["Mexico"]
   },
   {
     "code": "MC",
@@ -256,28 +287,33 @@
   },
   {
     "code": "MA",
-    "name": "Morocco",
-    "nameKo": "모로코"
+    "name": "المغرب",
+    "nameKo": "모로코",
+    "aliases": ["Morocco", "Maroc", "Al-Maghrib"]
   },
   {
     "code": "MU",
     "name": "Mauritius",
-    "nameKo": "모리셔스"
+    "nameKo": "모리셔스",
+    "aliases": ["Maurice"]
   },
   {
     "code": "MR",
-    "name": "Mauritania",
-    "nameKo": "모리타니"
+    "name": "موريتانيا",
+    "nameKo": "모리타니",
+    "aliases": ["Mauritania", "Muritaniya"]
   },
   {
     "code": "MZ",
-    "name": "Mozambique",
-    "nameKo": "모잠비크"
+    "name": "Moçambique",
+    "nameKo": "모잠비크",
+    "aliases": ["Mozambique"]
   },
   {
     "code": "ME",
-    "name": "Montenegro",
-    "nameKo": "몬테네그로"
+    "name": "Crna Gora",
+    "nameKo": "몬테네그로",
+    "aliases": ["Montenegro"]
   },
   {
     "code": "MD",
@@ -286,8 +322,9 @@
   },
   {
     "code": "MV",
-    "name": "Maldives",
-    "nameKo": "몰디브"
+    "name": "ދިވެހިރާއްޖެ",
+    "nameKo": "몰디브",
+    "aliases": ["Maldives", "Dhivehi Raajje"]
   },
   {
     "code": "MT",
@@ -296,23 +333,27 @@
   },
   {
     "code": "MN",
-    "name": "Mongolia",
-    "nameKo": "몽골"
+    "name": "Монгол улс",
+    "nameKo": "몽골",
+    "aliases": ["Mongolia", "Mongol Uls"]
   },
   {
     "code": "US",
-    "name": "United States of America",
-    "nameKo": "미국"
+    "name": "United States",
+    "nameKo": "미국",
+    "aliases": ["United States of America", "USA", "America"]
   },
   {
     "code": "MM",
-    "name": "Myanmar",
-    "nameKo": "미얀마"
+    "name": "မြန်မာ",
+    "nameKo": "미얀마",
+    "aliases": ["Myanmar", "Burma"]
   },
   {
     "code": "FM",
-    "name": "Federated States of Micronesia",
-    "nameKo": "미크로네시아 연방"
+    "name": "Micronesia",
+    "nameKo": "미크로네시아",
+    "aliases": ["Federated States of Micronesia", "미크로네시아 연방"]
   },
   {
     "code": "VU",
@@ -321,8 +362,9 @@
   },
   {
     "code": "BH",
-    "name": "Bahrain",
-    "nameKo": "바레인"
+    "name": "البحرين",
+    "nameKo": "바레인",
+    "aliases": ["Bahrain", "Al-Bahrayn"]
   },
   {
     "code": "BB",
@@ -331,23 +373,27 @@
   },
   {
     "code": "VA",
-    "name": "Vatican City",
-    "nameKo": "바티칸 시국"
+    "name": "Città del Vaticano",
+    "nameKo": "바티칸",
+    "aliases": ["Vatican", "Vatican City", "바티칸 시국", "Holy See"]
   },
   {
     "code": "BS",
     "name": "The Bahamas",
-    "nameKo": "바하마"
+    "nameKo": "바하마",
+    "aliases": ["Bahamas"]
   },
   {
     "code": "BD",
-    "name": "Bangladesh",
-    "nameKo": "방글라데시"
+    "name": "বাংলাদেশ",
+    "nameKo": "방글라데시",
+    "aliases": ["Bangladesh"]
   },
   {
     "code": "BJ",
-    "name": "Benin",
-    "nameKo": "베냉"
+    "name": "Bénin",
+    "nameKo": "베냉",
+    "aliases": ["Benin"]
   },
   {
     "code": "VE",
@@ -356,18 +402,21 @@
   },
   {
     "code": "VN",
-    "name": "Vietnam",
-    "nameKo": "베트남"
+    "name": "Việt Nam",
+    "nameKo": "베트남",
+    "aliases": ["Vietnam", "Viet Nam"]
   },
   {
     "code": "BE",
-    "name": "Belgium",
-    "nameKo": "벨기에"
+    "name": "België",
+    "nameKo": "벨기에",
+    "aliases": ["Belgium", "Belgique", "Belgien"]
   },
   {
     "code": "BY",
-    "name": "Belarus",
-    "nameKo": "벨라루스"
+    "name": "Беларусь",
+    "nameKo": "벨라루스",
+    "aliases": ["Belarus", "Belarus"]
   },
   {
     "code": "BZ",
@@ -376,8 +425,9 @@
   },
   {
     "code": "BA",
-    "name": "Bosnia and Herzegovina",
-    "nameKo": "보스니아 헤르체고비나"
+    "name": "Bosna i Hercegovina",
+    "nameKo": "보스니아 헤르체고비나",
+    "aliases": ["Bosnia and Herzegovina", "Bosnia"]
   },
   {
     "code": "BW",
@@ -401,38 +451,45 @@
   },
   {
     "code": "BT",
-    "name": "Bhutan",
-    "nameKo": "부탄"
+    "name": "འབྲུག་ཡུལ་",
+    "nameKo": "부탄",
+    "aliases": ["Bhutan", "Druk Yul"]
   },
   {
     "code": "MK",
-    "name": "North Macedonia",
-    "nameKo": "북마케도니아"
+    "name": "Северна Македонија",
+    "nameKo": "북마케도니아",
+    "aliases": ["North Macedonia", "Severna Makedonija"]
   },
   {
     "code": "BG",
-    "name": "Bulgaria",
-    "nameKo": "불가리아"
+    "name": "България",
+    "nameKo": "불가리아",
+    "aliases": ["Bulgaria", "Balgariya"]
   },
   {
     "code": "BR",
-    "name": "Brazil",
-    "nameKo": "브라질"
+    "name": "Brasil",
+    "nameKo": "브라질",
+    "aliases": ["Brazil"]
   },
   {
     "code": "BN",
     "name": "Brunei",
-    "nameKo": "브루나이"
+    "nameKo": "브루나이",
+    "aliases": ["Brunei Darussalam"]
   },
   {
     "code": "WS",
-    "name": "Samoa",
-    "nameKo": "사모아"
+    "name": "Sāmoa",
+    "nameKo": "사모아",
+    "aliases": ["Samoa"]
   },
   {
     "code": "SA",
-    "name": "Saudi Arabia",
-    "nameKo": "사우디아라비아"
+    "name": "المملكة العربية السعودية",
+    "nameKo": "사우디아라비아",
+    "aliases": ["Saudi Arabia", "사우디", "KSA"]
   },
   {
     "code": "SM",
@@ -441,38 +498,45 @@
   },
   {
     "code": "ST",
-    "name": "São Tomé and Príncipe",
-    "nameKo": "상투메 프린시페"
+    "name": "São Tomé e Príncipe",
+    "nameKo": "상투메 프린시페",
+    "aliases": ["São Tomé and Príncipe", "Sao Tome and Principe"]
   },
   {
     "code": "MF",
-    "name": "Saint Martin",
-    "nameKo": "생마르탱"
+    "name": "Saint-Martin",
+    "nameKo": "생마르탱",
+    "aliases": ["Saint Martin"]
   },
   {
     "code": "BL",
-    "name": "Saint Barthélemy",
-    "nameKo": "생바르텔레미"
+    "name": "Saint-Barthélemy",
+    "nameKo": "생바르텔레미",
+    "aliases": ["Saint Barthélemy", "St Barts"]
   },
   {
     "code": "EH",
-    "name": "Western Sahara",
-    "nameKo": "서사하라"
+    "name": "الصحراء الغربية",
+    "nameKo": "서사하라",
+    "aliases": ["Western Sahara", "Sahara Occidental"]
   },
   {
     "code": "SN",
-    "name": "Senegal",
-    "nameKo": "세네갈"
+    "name": "Sénégal",
+    "nameKo": "세네갈",
+    "aliases": ["Senegal"]
   },
   {
     "code": "RS",
-    "name": "Serbia",
-    "nameKo": "세르비아"
+    "name": "Србија",
+    "nameKo": "세르비아",
+    "aliases": ["Serbia", "Srbija"]
   },
   {
     "code": "SC",
     "name": "Seychelles",
-    "nameKo": "세이셸"
+    "nameKo": "세이셸",
+    "aliases": ["Sesel"]
   },
   {
     "code": "LC",
@@ -491,18 +555,21 @@
   },
   {
     "code": "SO",
-    "name": "Somalia",
-    "nameKo": "소말리아"
+    "name": "Soomaaliya",
+    "nameKo": "소말리아",
+    "aliases": ["Somalia"]
   },
   {
     "code": "SB",
     "name": "Solomon Islands",
-    "nameKo": "솔로몬 제도"
+    "nameKo": "솔로몬 제도",
+    "aliases": ["솔로몬제도"]
   },
   {
     "code": "SD",
-    "name": "Sudan",
-    "nameKo": "수단"
+    "name": "السودان",
+    "nameKo": "수단",
+    "aliases": ["Sudan", "As-Sudan"]
   },
   {
     "code": "SR",
@@ -511,38 +578,45 @@
   },
   {
     "code": "LK",
-    "name": "Sri Lanka",
-    "nameKo": "스리랑카"
+    "name": "ශ්‍රී ලංකා",
+    "nameKo": "스리랑카",
+    "aliases": ["Sri Lanka"]
   },
   {
     "code": "SE",
-    "name": "Sweden",
-    "nameKo": "스웨덴"
+    "name": "Sverige",
+    "nameKo": "스웨덴",
+    "aliases": ["Sweden"]
   },
   {
     "code": "CH",
-    "name": "Switzerland",
-    "nameKo": "스위스"
+    "name": "Schweiz",
+    "nameKo": "스위스",
+    "aliases": ["Switzerland", "Suisse", "Svizzera", "Svizra", "Helvetia"]
   },
   {
     "code": "ES",
-    "name": "Spain",
-    "nameKo": "스페인"
+    "name": "España",
+    "nameKo": "스페인",
+    "aliases": ["Spain", "Espana"]
   },
   {
     "code": "SK",
-    "name": "Slovakia",
-    "nameKo": "슬로바키아"
+    "name": "Slovensko",
+    "nameKo": "슬로바키아",
+    "aliases": ["Slovakia"]
   },
   {
     "code": "SI",
-    "name": "Slovenia",
-    "nameKo": "슬로베니아"
+    "name": "Slovenija",
+    "nameKo": "슬로베니아",
+    "aliases": ["Slovenia"]
   },
   {
     "code": "SY",
-    "name": "Syria",
-    "nameKo": "시리아"
+    "name": "سوريا",
+    "nameKo": "시리아",
+    "aliases": ["Syria", "Suriya"]
   },
   {
     "code": "SL",
@@ -557,12 +631,14 @@
   {
     "code": "SG",
     "name": "Singapore",
-    "nameKo": "싱가포르"
+    "nameKo": "싱가포르",
+    "aliases": ["新加坡", "Singapura"]
   },
   {
     "code": "AE",
-    "name": "United Arab Emirates",
-    "nameKo": "아랍에미리트"
+    "name": "الإمارات العربية المتحدة",
+    "nameKo": "아랍에미리트",
+    "aliases": ["United Arab Emirates", "UAE", "Emirates"]
   },
   {
     "code": "AW",
@@ -571,8 +647,9 @@
   },
   {
     "code": "AM",
-    "name": "Armenia",
-    "nameKo": "아르메니아"
+    "name": "Հայաստան",
+    "nameKo": "아르메니아",
+    "aliases": ["Armenia", "Hayastan"]
   },
   {
     "code": "AR",
@@ -581,28 +658,33 @@
   },
   {
     "code": "IS",
-    "name": "Iceland",
-    "nameKo": "아이슬란드"
+    "name": "Ísland",
+    "nameKo": "아이슬란드",
+    "aliases": ["Iceland"]
   },
   {
     "code": "HT",
-    "name": "Haiti",
-    "nameKo": "아이티"
+    "name": "Haïti",
+    "nameKo": "아이티",
+    "aliases": ["Haiti", "Ayiti"]
   },
   {
     "code": "IE",
-    "name": "Ireland",
-    "nameKo": "아일랜드"
+    "name": "Éire",
+    "nameKo": "아일랜드",
+    "aliases": ["Ireland", "Eire"]
   },
   {
     "code": "AZ",
-    "name": "Azerbaijan",
-    "nameKo": "아제르바이잔"
+    "name": "Azərbaycan",
+    "nameKo": "아제르바이잔",
+    "aliases": ["Azerbaijan"]
   },
   {
     "code": "AF",
-    "name": "Afghanistan",
-    "nameKo": "아프가니스탄"
+    "name": "افغانستان",
+    "nameKo": "아프가니스탄",
+    "aliases": ["Afghanistan"]
   },
   {
     "code": "AD",
@@ -611,13 +693,15 @@
   },
   {
     "code": "AL",
-    "name": "Albania",
-    "nameKo": "알바니아"
+    "name": "Shqipëria",
+    "nameKo": "알바니아",
+    "aliases": ["Albania"]
   },
   {
     "code": "DZ",
-    "name": "Algeria",
-    "nameKo": "알제리"
+    "name": "الجزائر",
+    "nameKo": "알제리",
+    "aliases": ["Algeria", "Al-Jazair"]
   },
   {
     "code": "AO",
@@ -632,17 +716,20 @@
   {
     "code": "ER",
     "name": "Eritrea",
-    "nameKo": "에리트레아"
+    "nameKo": "에리트레아",
+    "aliases": ["ኤርትራ"]
   },
   {
     "code": "SZ",
-    "name": "Eswatini",
-    "nameKo": "에스와티니"
+    "name": "eSwatini",
+    "nameKo": "에스와티니",
+    "aliases": ["Eswatini", "Swaziland"]
   },
   {
     "code": "EE",
-    "name": "Estonia",
-    "nameKo": "에스토니아"
+    "name": "Eesti",
+    "nameKo": "에스토니아",
+    "aliases": ["Estonia"]
   },
   {
     "code": "EC",
@@ -651,8 +738,9 @@
   },
   {
     "code": "ET",
-    "name": "Ethiopia",
-    "nameKo": "에티오피아"
+    "name": "ኢትዮጵያ",
+    "nameKo": "에티오피아",
+    "aliases": ["Ethiopia", "Ityopia"]
   },
   {
     "code": "SV",
@@ -662,27 +750,26 @@
   {
     "code": "GB",
     "name": "United Kingdom",
-    "nameKo": "영국"
+    "nameKo": "영국",
+    "aliases": ["UK", "Great Britain", "Britain"]
   },
   {
     "code": "YE",
-    "name": "Yemen",
-    "nameKo": "예멘"
+    "name": "اليمن",
+    "nameKo": "예멘",
+    "aliases": ["Yemen"]
   },
   {
     "code": "OM",
-    "name": "Oman",
-    "nameKo": "오만"
-  },
-  {
-    "code": "AU",
-    "name": "Australia",
-    "nameKo": "오스트레일리아"
+    "name": "عُمان",
+    "nameKo": "오만",
+    "aliases": ["Oman"]
   },
   {
     "code": "AT",
-    "name": "Austria",
-    "nameKo": "오스트리아"
+    "name": "Österreich",
+    "nameKo": "오스트리아",
+    "aliases": ["Austria", "Osterreich"]
   },
   {
     "code": "HN",
@@ -692,12 +779,14 @@
   {
     "code": "AX",
     "name": "Åland",
-    "nameKo": "올란드 제도"
+    "nameKo": "올란드 제도",
+    "aliases": ["Aland", "올란드"]
   },
   {
     "code": "JO",
-    "name": "Jordan",
-    "nameKo": "요르단"
+    "name": "الأردن",
+    "nameKo": "요르단",
+    "aliases": ["Jordan", "Al-Urdun"]
   },
   {
     "code": "UG",
@@ -711,43 +800,51 @@
   },
   {
     "code": "UZ",
-    "name": "Uzbekistan",
-    "nameKo": "우즈베키스탄"
+    "name": "Oʻzbekiston",
+    "nameKo": "우즈베키스탄",
+    "aliases": ["Uzbekistan", "Ozbekiston"]
   },
   {
     "code": "UA",
-    "name": "Ukraine",
-    "nameKo": "우크라이나"
+    "name": "Україна",
+    "nameKo": "우크라이나",
+    "aliases": ["Ukraine", "Ukrayina"]
   },
   {
     "code": "IQ",
-    "name": "Iraq",
-    "nameKo": "이라크"
+    "name": "العراق",
+    "nameKo": "이라크",
+    "aliases": ["Iraq", "Al-Iraq"]
   },
   {
     "code": "IR",
-    "name": "Iran",
-    "nameKo": "이란"
+    "name": "ایران",
+    "nameKo": "이란",
+    "aliases": ["Iran"]
   },
   {
     "code": "IL",
-    "name": "Israel",
-    "nameKo": "이스라엘"
+    "name": "ישראל",
+    "nameKo": "이스라엘",
+    "aliases": ["Israel", "Yisrael"]
   },
   {
     "code": "EG",
-    "name": "Egypt",
-    "nameKo": "이집트"
+    "name": "مصر",
+    "nameKo": "이집트",
+    "aliases": ["Egypt", "Misr"]
   },
   {
     "code": "IT",
-    "name": "Italy",
-    "nameKo": "이탈리아"
+    "name": "Italia",
+    "nameKo": "이탈리아",
+    "aliases": ["Italy"]
   },
   {
     "code": "IN",
-    "name": "India",
-    "nameKo": "인도"
+    "name": "भारत",
+    "nameKo": "인도",
+    "aliases": ["India", "Bharat"]
   },
   {
     "code": "ID",
@@ -756,8 +853,9 @@
   },
   {
     "code": "JP",
-    "name": "Japan",
-    "nameKo": "일본"
+    "name": "日本",
+    "nameKo": "일본",
+    "aliases": ["Japan", "Nihon", "Nippon"]
   },
   {
     "code": "JM",
@@ -772,42 +870,38 @@
   {
     "code": "JE",
     "name": "Jersey",
-    "nameKo": "저지섬"
+    "nameKo": "저지섬",
+    "aliases": ["저지"]
   },
   {
     "code": "GQ",
-    "name": "Equatorial Guinea",
-    "nameKo": "적도 기니"
-  },
-  {
-    "code": "KP",
-    "name": "North Korea",
-    "nameKo": "조선민주주의인민공화국"
+    "name": "Guinea Ecuatorial",
+    "nameKo": "적도 기니",
+    "aliases": ["Equatorial Guinea", "적도기니"]
   },
   {
     "code": "GE",
-    "name": "Georgia",
-    "nameKo": "조지아"
+    "name": "საქართველო",
+    "nameKo": "조지아",
+    "aliases": ["Georgia", "Sakartvelo"]
   },
   {
     "code": "CF",
-    "name": "Central African Republic",
-    "nameKo": "중앙아프리카 공화국"
-  },
-  {
-    "code": "TW",
-    "name": "Taiwan",
-    "nameKo": "중화민국"
+    "name": "République centrafricaine",
+    "nameKo": "중앙아프리카공화국",
+    "aliases": ["Central African Republic", "중앙아프리카 공화국", "CAR"]
   },
   {
     "code": "CN",
-    "name": "People's Republic of China",
-    "nameKo": "중화인민공화국"
+    "name": "中国",
+    "nameKo": "중국",
+    "aliases": ["China", "중화인민공화국", "Zhongguo", "People's Republic of China", "PRC"]
   },
   {
     "code": "DJ",
     "name": "Djibouti",
-    "nameKo": "지부티"
+    "nameKo": "지부티",
+    "aliases": ["جيبوتي"]
   },
   {
     "code": "ZW",
@@ -816,13 +910,15 @@
   },
   {
     "code": "TD",
-    "name": "Chad",
-    "nameKo": "차드"
+    "name": "Tchad",
+    "nameKo": "차드",
+    "aliases": ["Chad", "تشاد"]
   },
   {
     "code": "CZ",
-    "name": "Czech Republic",
-    "nameKo": "체코"
+    "name": "Česko",
+    "nameKo": "체코",
+    "aliases": ["Czech Republic", "Czechia", "Cesko"]
   },
   {
     "code": "CL",
@@ -831,28 +927,33 @@
   },
   {
     "code": "CM",
-    "name": "Cameroon",
-    "nameKo": "카메룬"
+    "name": "Cameroun",
+    "nameKo": "카메룬",
+    "aliases": ["Cameroon"]
   },
   {
     "code": "CV",
-    "name": "Cape Verde",
-    "nameKo": "카보베르데"
+    "name": "Cabo Verde",
+    "nameKo": "카보베르데",
+    "aliases": ["Cape Verde"]
   },
   {
     "code": "KZ",
-    "name": "Kazakhstan",
-    "nameKo": "카자흐스탄"
+    "name": "Қазақстан",
+    "nameKo": "카자흐스탄",
+    "aliases": ["Kazakhstan", "Qazaqstan"]
   },
   {
     "code": "QA",
-    "name": "Qatar",
-    "nameKo": "카타르"
+    "name": "قطر",
+    "nameKo": "카타르",
+    "aliases": ["Qatar"]
   },
   {
     "code": "KH",
-    "name": "Cambodia",
-    "nameKo": "캄보디아"
+    "name": "កម្ពុជា",
+    "nameKo": "캄보디아",
+    "aliases": ["Cambodia", "Kampuchea"]
   },
   {
     "code": "CA",
@@ -867,17 +968,20 @@
   {
     "code": "KY",
     "name": "Cayman Islands",
-    "nameKo": "케이맨 제도"
+    "nameKo": "케이맨 제도",
+    "aliases": ["케이맨제도"]
   },
   {
     "code": "KM",
-    "name": "Comoros",
-    "nameKo": "코모로"
+    "name": "Komori",
+    "nameKo": "코모로",
+    "aliases": ["Comoros", "جزر القمر"]
   },
   {
     "code": "XK",
-    "name": "Kosovo",
-    "nameKo": "코소보"
+    "name": "Kosova",
+    "nameKo": "코소보",
+    "aliases": ["Kosovo", "Косово"]
   },
   {
     "code": "CR",
@@ -886,8 +990,9 @@
   },
   {
     "code": "CI",
-    "name": "Ivory Coast",
-    "nameKo": "코트디부아르"
+    "name": "Côte d'Ivoire",
+    "nameKo": "코트디부아르",
+    "aliases": ["Ivory Coast", "Cote d'Ivoire"]
   },
   {
     "code": "CO",
@@ -896,13 +1001,15 @@
   },
   {
     "code": "CG",
-    "name": "Republic of the Congo",
-    "nameKo": "콩고 공화국"
+    "name": "République du Congo",
+    "nameKo": "콩고 공화국",
+    "aliases": ["Republic of the Congo", "Congo", "Congo-Brazzaville"]
   },
   {
     "code": "CD",
-    "name": "Democratic Republic of the Congo",
-    "nameKo": "콩고 민주 공화국"
+    "name": "République démocratique du Congo",
+    "nameKo": "콩고민주공화국",
+    "aliases": ["Democratic Republic of the Congo", "DR Congo", "DRC", "콩고 민주 공화국", "민주콩고"]
   },
   {
     "code": "CU",
@@ -911,28 +1018,33 @@
   },
   {
     "code": "KW",
-    "name": "Kuwait",
-    "nameKo": "쿠웨이트"
+    "name": "الكويت",
+    "nameKo": "쿠웨이트",
+    "aliases": ["Kuwait", "Al-Kuwait"]
   },
   {
     "code": "CK",
     "name": "Cook Islands",
-    "nameKo": "쿡 제도"
+    "nameKo": "쿡 제도",
+    "aliases": ["Kūki ʻĀirani", "쿡제도"]
   },
   {
     "code": "CW",
     "name": "Curaçao",
-    "nameKo": "퀴라소"
+    "nameKo": "퀴라소",
+    "aliases": ["Curacao"]
   },
   {
     "code": "HR",
-    "name": "Croatia",
-    "nameKo": "크로아티아"
+    "name": "Hrvatska",
+    "nameKo": "크로아티아",
+    "aliases": ["Croatia"]
   },
   {
     "code": "KG",
-    "name": "Kyrgyzstan",
-    "nameKo": "키르기스스탄"
+    "name": "Кыргызстан",
+    "nameKo": "키르기스스탄",
+    "aliases": ["Kyrgyzstan", "Kyrgyz Republic"]
   },
   {
     "code": "KI",
@@ -941,13 +1053,21 @@
   },
   {
     "code": "CY",
-    "name": "Cyprus",
-    "nameKo": "키프로스"
+    "name": "Κύπρος",
+    "nameKo": "키프로스",
+    "aliases": ["Cyprus", "Kypros", "Kıbrıs"]
+  },
+  {
+    "code": "TW",
+    "name": "中華民國",
+    "nameKo": "대만",
+    "aliases": ["Taiwan", "중화민국", "타이완", "臺灣", "台灣"]
   },
   {
     "code": "TJ",
-    "name": "Tajikistan",
-    "nameKo": "타지키스탄"
+    "name": "Тоҷикистон",
+    "nameKo": "타지키스탄",
+    "aliases": ["Tajikistan", "Tojikiston"]
   },
   {
     "code": "TZ",
@@ -956,13 +1076,15 @@
   },
   {
     "code": "TH",
-    "name": "Thailand",
-    "nameKo": "태국"
+    "name": "ประเทศไทย",
+    "nameKo": "태국",
+    "aliases": ["Thailand", "Prathet Thai"]
   },
   {
     "code": "TR",
-    "name": "Turkey",
-    "nameKo": "터키"
+    "name": "Türkiye",
+    "nameKo": "터키",
+    "aliases": ["Turkey", "튀르키예", "Turkiye"]
   },
   {
     "code": "TG",
@@ -976,8 +1098,9 @@
   },
   {
     "code": "TM",
-    "name": "Turkmenistan",
-    "nameKo": "투르크메니스탄"
+    "name": "Türkmenistan",
+    "nameKo": "투르크메니스탄",
+    "aliases": ["Turkmenistan"]
   },
   {
     "code": "TV",
@@ -986,18 +1109,21 @@
   },
   {
     "code": "TN",
-    "name": "Tunisia",
-    "nameKo": "튀니지"
+    "name": "تونس",
+    "nameKo": "튀니지",
+    "aliases": ["Tunisia", "Tunis"]
   },
   {
     "code": "TT",
     "name": "Trinidad and Tobago",
-    "nameKo": "트리니다드 토바고"
+    "nameKo": "트리니다드 토바고",
+    "aliases": ["트리니다드토바고"]
   },
   {
     "code": "PA",
-    "name": "Panama",
-    "nameKo": "파나마"
+    "name": "Panamá",
+    "nameKo": "파나마",
+    "aliases": ["Panama"]
   },
   {
     "code": "PY",
@@ -1006,8 +1132,9 @@
   },
   {
     "code": "PK",
-    "name": "Pakistan",
-    "nameKo": "파키스탄"
+    "name": "پاکستان",
+    "nameKo": "파키스탄",
+    "aliases": ["Pakistan"]
   },
   {
     "code": "PG",
@@ -1016,23 +1143,27 @@
   },
   {
     "code": "PW",
-    "name": "Palau",
-    "nameKo": "팔라우"
+    "name": "Belau",
+    "nameKo": "팔라우",
+    "aliases": ["Palau"]
   },
   {
     "code": "PS",
-    "name": "Palestine",
-    "nameKo": "팔레스타인"
+    "name": "فلسطين",
+    "nameKo": "팔레스타인",
+    "aliases": ["Palestine", "Falastin"]
   },
   {
     "code": "FO",
-    "name": "Faroe Islands",
-    "nameKo": "페로 제도"
+    "name": "Føroyar",
+    "nameKo": "페로 제도",
+    "aliases": ["Faroe Islands", "페로제도"]
   },
   {
     "code": "PE",
-    "name": "Peru",
-    "nameKo": "페루"
+    "name": "Perú",
+    "nameKo": "페루",
+    "aliases": ["Peru"]
   },
   {
     "code": "PT",
@@ -1041,8 +1172,9 @@
   },
   {
     "code": "PL",
-    "name": "Poland",
-    "nameKo": "폴란드"
+    "name": "Polska",
+    "nameKo": "폴란드",
+    "aliases": ["Poland"]
   },
   {
     "code": "FR",
@@ -1052,26 +1184,43 @@
   {
     "code": "FJ",
     "name": "Fiji",
-    "nameKo": "피지"
+    "nameKo": "피지",
+    "aliases": ["Viti"]
   },
   {
     "code": "FI",
-    "name": "Finland",
-    "nameKo": "핀란드"
+    "name": "Suomi",
+    "nameKo": "핀란드",
+    "aliases": ["Finland"]
   },
   {
     "code": "PH",
-    "name": "Philippines",
-    "nameKo": "필리핀"
+    "name": "Pilipinas",
+    "nameKo": "필리핀",
+    "aliases": ["Philippines"]
+  },
+  {
+    "code": "KP",
+    "name": "조선",
+    "nameKo": "북한",
+    "aliases": ["North Korea", "조선민주주의인민공화국", "DPRK", "Chosŏn"]
+  },
+  {
+    "code": "AU",
+    "name": "Australia",
+    "nameKo": "호주",
+    "aliases": ["오스트레일리아"]
   },
   {
     "code": "HU",
-    "name": "Hungary",
-    "nameKo": "헝가리"
+    "name": "Magyarország",
+    "nameKo": "헝가리",
+    "aliases": ["Hungary", "Magyarorszag"]
   },
   {
     "code": "HK",
-    "name": "Hong Kong",
-    "nameKo": "홍콩"
+    "name": "香港",
+    "nameKo": "홍콩",
+    "aliases": ["Hong Kong", "Xianggang"]
   }
 ]

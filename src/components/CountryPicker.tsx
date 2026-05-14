@@ -15,7 +15,12 @@ import { getCountryName } from "../lib/countryName";
 import type { Theme } from "../theme/theme";
 import { useTheme } from "../theme/themeStore";
 
-type Entry = { code: string; name: string; nameKo: string };
+type Entry = {
+  code: string;
+  name: string;
+  nameKo: string;
+  aliases?: string[];
+};
 
 type Props = {
   onSelect: (entry: Entry) => void;
@@ -33,7 +38,9 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
 
   const locale = getCurrentLocale();
   const sections = useMemo(() => {
-    const list = countries as Entry[];
+    const list = (countries as Entry[])
+      .slice()
+      .sort((a, b) => a.nameKo.localeCompare(b.nameKo, "ko"));
     const needle = q.trim().toLowerCase();
 
     if (needle) {
@@ -42,7 +49,9 @@ export default function CountryPicker({ onSelect, selectedCode }: Props) {
           c.code.toLowerCase().includes(needle) ||
           c.name.toLowerCase().includes(needle) ||
           c.nameKo.toLowerCase().includes(needle) ||
-          getCountryName(c.code, locale).toLowerCase().includes(needle)
+          (c.aliases ?? []).some((a) => a.toLowerCase().includes(needle)) ||
+          getCountryName(c.code, locale).toLowerCase().includes(needle) ||
+          getCountryName(c.code, "en").toLowerCase().includes(needle)
       );
       return [{ key: "search", title: "", data: filtered }];
     }
