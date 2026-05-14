@@ -14,8 +14,8 @@
       "heading": "問問你的旅行搭子",
       "subheading": "我會根據你的旅行資料來回答"
     },
+    "exampleRanking": "在{{country}}人當中，我旅行算多嗎？請告訴我處在前百分之多少。",
     "exampleNextDestination": "下次去哪裡好呢？",
-    "exampleSafety": "現在哪裡旅行最安全？",
     "examplePattern": "我的旅行風格是怎樣的？",
     "error": {
       "generic": "出了點意外的小問題 🥲 再試一次,如果還不行,過一陣子再來。",
@@ -438,8 +438,6 @@
       "language": "語言"
     },
     "account": {
-      "google": "Google 帳號",
-      "googleSub": "已使用 Google 登入",
       "signOut": "登出",
       "signOutSub": "從此裝置登出",
       "signOutConfirmTitle": "登出",

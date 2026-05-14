@@ -20,8 +20,8 @@
       "heading": "Ask your travel buddy",
       "subheading": "I'll answer using your travel data"
     },
+    "exampleRanking": "Among people from {{country}}, how much do I travel? Tell me my top percentile.",
     "exampleNextDestination": "Where should I go next?",
-    "exampleSafety": "Where's safe to travel right now?",
     "examplePattern": "What's my travel vibe?",
     "error": {
       "generic": "Hit an unexpected snag 🥲 Give it another try — if it keeps happening, come back in a bit.",
@@ -604,8 +604,6 @@
       "legal": "Legal"
     },
     "account": {
-      "google": "Google Account",
-      "googleSub": "Signed in with Google",
       "signOut": "Sign out",
       "signOutSub": "Sign out from this device",
       "signOutConfirmTitle": "Sign out",

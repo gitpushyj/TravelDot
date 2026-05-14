@@ -14,8 +14,8 @@
       "heading": "Frag deinen Reisekumpel",
       "subheading": "Ich antworte mit deinen Reisedaten"
     },
+    "exampleRanking": "Wie viel reise ich verglichen mit Leuten aus {{country}}? Sag mir mein Top-Perzentil.",
     "exampleNextDestination": "Wohin soll's als Nächstes gehen?",
-    "exampleSafety": "Wo ist es gerade sicher zu reisen?",
     "examplePattern": "Was sagt mein Reise-Vibe?",
     "error": {
       "generic": "Da ist was unerwartet schiefgelaufen 🥲 Versuch's nochmal — wenn es bleibt, komm gleich nochmal vorbei.",
@@ -438,8 +438,6 @@
       "language": "Sprache"
     },
     "account": {
-      "google": "Google-Konto",
-      "googleSub": "Mit Google angemeldet",
       "signOut": "Abmelden",
       "signOutSub": "Auf diesem Gerät abmelden",
       "signOutConfirmTitle": "Abmelden",

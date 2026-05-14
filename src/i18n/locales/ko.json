@@ -20,8 +20,8 @@
       "heading": "여행 친구에게 물어봐",
       "subheading": "네 여행 데이터로 답해줄게"
     },
+    "exampleRanking": "나는 {{country}} 사람중에 여행을 얼마나 많이 가는 사람일까? 상위 퍼센트로 답변해줘",
     "exampleNextDestination": "다음 여행지는 어디가 좋을까?",
-    "exampleSafety": "요즘 안전한 여행지 어디야?",
     "examplePattern": "내 여행 스타일 어떤 거 같아?",
     "error": {
       "generic": "예상치 못한 문제가 생겼어 🥲 한 번 더 시도해보고, 그래도 안 되면 잠깐 시간 두고 다시 와줘.",
@@ -604,8 +604,6 @@
       "legal": "약관"
     },
     "account": {
-      "google": "Google 계정",
-      "googleSub": "Google로 로그인됨",
       "signOut": "로그아웃",
       "signOutSub": "이 기기에서 로그아웃합니다",
       "signOutConfirmTitle": "로그아웃",

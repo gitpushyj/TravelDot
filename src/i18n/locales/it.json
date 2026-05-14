@@ -14,8 +14,8 @@
       "heading": "Chiedi al tuo compagno di viaggio",
       "subheading": "Ti rispondo usando i tuoi dati di viaggio"
     },
+    "exampleRanking": "Tra le persone di {{country}}, quanto viaggio? Dimmi il mio percentile superiore.",
     "exampleNextDestination": "Dove dovrei andare la prossima volta?",
-    "exampleSafety": "Dove è sicuro viaggiare adesso?",
     "examplePattern": "Com'è il mio stile di viaggio?",
     "error": {
       "generic": "È saltato fuori un intoppo 🥲 Riprova — se continua, fai un giro tra un po'.",
@@ -438,8 +438,6 @@
       "language": "Lingua"
     },
     "account": {
-      "google": "Account Google",
-      "googleSub": "Accesso effettuato con Google",
       "signOut": "Esci",
       "signOutSub": "Esci da questo dispositivo",
       "signOutConfirmTitle": "Esci",

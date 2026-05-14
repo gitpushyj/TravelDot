@@ -14,8 +14,8 @@
       "heading": "Demande à ton pote de voyage",
       "subheading": "Je te réponds avec tes données de voyage"
     },
+    "exampleRanking": "Parmi les gens de {{country}}, à quel point je voyage ? Dis-moi mon top percentile.",
     "exampleNextDestination": "Où devrais-je aller la prochaine fois ?",
-    "exampleSafety": "Où est-ce qu'il fait sûr de voyager en ce moment ?",
     "examplePattern": "C'est quoi mon style de voyage ?",
     "error": {
       "generic": "Un imprévu est arrivé 🥲 Réessaie — si ça continue, repasse dans un petit moment.",
@@ -438,8 +438,6 @@
       "language": "Langue"
     },
     "account": {
-      "google": "Compte Google",
-      "googleSub": "Connecté avec Google",
       "signOut": "Se déconnecter",
       "signOutSub": "Se déconnecter de cet appareil",
       "signOutConfirmTitle": "Se déconnecter",

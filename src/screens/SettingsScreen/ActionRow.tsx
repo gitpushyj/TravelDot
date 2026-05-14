@@ -18,6 +18,8 @@ type Props = {
   locked?: boolean;
   // 우측 작은 뱃지 (예: "PRO 🔒").
   trailingBadge?: string;
+  /** 우측 chevron 자리에 노출할 커스텀 노드. 지정 시 chevron 대신 렌더한다. */
+  rightSlot?: React.ReactNode;
 };
 
 export default function ActionRow({
@@ -29,6 +31,7 @@ export default function ActionRow({
   disabled,
   locked,
   trailingBadge,
+  rightSlot,
 }: Props) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const muted = disabled || locked;
@@ -57,7 +60,7 @@ export default function ActionRow({
           <Text style={styles.badgeText}>{trailingBadge}</Text>
         </View>
       )}
-      {!disabled && !locked && <Text style={styles.chev}>›</Text>}
+      {rightSlot ?? (!disabled && !locked && <Text style={styles.chev}>›</Text>)}
     </Pressable>
   );
 }

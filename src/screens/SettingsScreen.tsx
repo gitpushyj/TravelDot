@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import { Alert, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import AppleLogoIcon from "../components/auth/AppleLogoIcon";
+import GoogleGIcon from "../components/auth/GoogleGIcon";
 import { useAuthStore } from "../features/auth/authStore";
 import { deleteAccount } from "../features/auth/deleteAccount";
 import { localizedBadgeTitle } from "../features/badges/badgeI18n";
@@ -135,11 +137,16 @@ export default function SettingsScreen({
     );
   };
   // 로그인은 필수이므로 SettingsScreen 진입 시 user는 항상 존재한다.
-  const accountLabel =
-    (authUser?.user_metadata?.full_name as string | undefined) ??
-    authUser?.email ??
-    t("settings.account.google");
-  const accountSub = authUser?.email ?? t("settings.account.googleSub");
+  // 계정 라벨은 사용자의 인앱 닉네임(활성 호칭)을 보여주고, 우측에 소셜 provider
+  // 아이콘을 렌더한다. 소셜 로그인 이름(full_name)은 더 이상 노출하지 않는다.
+  const provider = (authUser?.app_metadata?.provider as string | undefined) ?? null;
+  const providerIcon = useMemo(() => {
+    if (provider === "google") return <GoogleGIcon size={22} />;
+    if (provider === "apple") {
+      return <AppleLogoIcon size={20} color={theme.textPrimary} />;
+    }
+    return null;
+  }, [provider, theme.textPrimary]);
 
   // 두 번째 단계: "그래도 삭제"를 누른 사용자에게 마지막 confirm을 띄운 뒤 실제 삭제.
   const confirmAndDelete = () => {
@@ -240,6 +247,12 @@ export default function SettingsScreen({
         })
     : t("settings.title.none");
 
+  // 계정 행 라벨: 활성 호칭(이모지 + 한글/현지화된 호칭). 호칭이 없으면 이메일로 fallback.
+  const accountLabel = activeBadge
+    ? `${activeBadge.emoji} ${localizedBadgeTitle(activeBadge, t, getCurrentLocale())}`
+    : authUser?.email ?? "";
+  const accountSub = authUser?.email ?? "";
+
   const milestoneKind = useMilestoneStore((s) => s.kind);
   const premiumContext = useVisitStore((s) => s.premiumContext);
   const milestoneProgress = useMemo(
@@ -303,6 +316,11 @@ export default function SettingsScreen({
             sub={accountSub}
             onPress={() => {}}
             disabled
+            rightSlot={
+              providerIcon ? (
+                <View style={styles.providerIconWrap}>{providerIcon}</View>
+              ) : undefined
+            }
           />
           <ActionRow
             theme={theme}

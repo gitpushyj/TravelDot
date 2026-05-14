@@ -112,6 +112,12 @@ export function makeStyles(theme: Theme) {
       fontWeight: "800",
       letterSpacing: 0.4,
     },
+    providerIconWrap: {
+      width: 24,
+      height: 24,
+      alignItems: "center",
+      justifyContent: "center",
+    },
     deleteAccountWrap: {
       alignItems: "center",
       marginTop: 32,

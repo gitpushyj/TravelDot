@@ -14,8 +14,8 @@
       "heading": "Pregúntale a tu compi de viaje",
       "subheading": "Te contesto usando tus datos de viaje"
     },
+    "exampleRanking": "Entre la gente de {{country}}, ¿cuánto viajo? Dime mi percentil superior.",
     "exampleNextDestination": "¿A dónde voy la próxima vez?",
-    "exampleSafety": "¿Dónde es seguro viajar ahora mismo?",
     "examplePattern": "¿Cómo es mi estilo de viaje?",
     "error": {
       "generic": "Surgió un imprevisto 🥲 Inténtalo otra vez — si sigue pasando, vuelve en un rato.",
@@ -438,8 +438,6 @@
       "language": "Idioma"
     },
     "account": {
-      "google": "Cuenta de Google",
-      "googleSub": "Sesión iniciada con Google",
       "signOut": "Cerrar sesión",
       "signOutSub": "Cerrar sesión en este dispositivo",
       "signOutConfirmTitle": "Cerrar sesión",
