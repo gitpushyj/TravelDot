@@ -864,10 +864,10 @@
       "aiChat": {
         "title": "AI travel chat",
         "desc": "Ask an AI that knows your travel history. Stats and suggestions, all in chat.",
-        "q1": "How many countries this year?",
-        "a1": "7 countries so far 🌍 Most recently Japan.",
-        "q2": "Suggest where to go next",
-        "a2": "Your map is light on Southeast Asia — how about Vietnam?"
+        "q1": "Have I traveled a lot compared to people my age?",
+        "a1": "I analyzed your last 3 years — **12 countries, 48 days total**. The average for people in their 20s is about 1.2 countries a year, so you're in the **top 9%** of your age group ✈️",
+        "q2": "Where should I go next?",
+        "a2": "Your pattern is strong in Southeast Asia and Europe, but South America is empty. For someone who enjoys 7–10 day city trips, **Peru (Lima + Cusco)** is a great fit 🇵🇪"
       },
       "deviceSync": {
         "title": "Device sync",
