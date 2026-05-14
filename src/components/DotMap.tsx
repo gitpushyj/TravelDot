@@ -697,7 +697,7 @@ export default function DotMap({
           </GestureDetector>
         )}
         {showLegend && !parentRotated90 && size.width > 0 && (
-          <Legend theme={theme} />
+          <Legend heatmap={mapTheme.heatmap} mode={mapTheme.mode} />
         )}
       </View>
       {pending && pending.length > 0 && (
