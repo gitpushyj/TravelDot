@@ -31,9 +31,12 @@ struct FlightActivityWidget: Widget {
       } compactLeading: {
         Image(systemName: "airplane")
       } compactTrailing: {
+        // 폭 제약이 없으면 Text(timerInterval:)가 과도한 폭을 요구해 알약이 화면을
+        // 가득 채운다. "HH:MM:SS"(최장 8자, monospaced) 기준 고정 폭으로 묶는다.
         Text(timerInterval: context.attributes.departAt...context.attributes.arriveAt,
              countsDown: true)
           .monospacedDigit()
+          .frame(width: 80)
       } minimal: {
         Image(systemName: "airplane")
       }
