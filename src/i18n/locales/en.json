@@ -878,13 +878,7 @@
       },
       "titles": {
         "title": "Unlock titles & milestones",
-        "desc": "Over 10 titles and milestone badges get unlocked.",
-        "b1": "Continent Conqueror",
-        "b2": "100 Flights",
-        "b3": "Explorer",
-        "b4": "Around the World",
-        "b5": "High Altitude",
-        "b6": "Veteran"
+        "desc": "Over 10 titles and milestone badges get unlocked."
       },
       "mapStyle": {
         "title": "Map style",

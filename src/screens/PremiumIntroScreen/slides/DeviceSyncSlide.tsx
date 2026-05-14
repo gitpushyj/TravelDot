@@ -1,27 +1,36 @@
-import React, { useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useMemo, useState } from "react";
+import { LayoutChangeEvent, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { CloudUpload } from "lucide-react-native";
 
 import type { Theme } from "../../../theme/theme";
 import { useTheme } from "../../../theme/themeStore";
+import MiniDotMap from "./MiniDotMap";
 import SlideFrame from "./SlideFrame";
 
-// 기기 동기화 소개 슬라이드. 두 기기 카드 + 동기화 화살표를 양식화된 목업으로 그린다.
+// 기기 동기화 소개 슬라이드. 두 기기 카드 각각에 실제 dot 좌표로 만든
+// 미니 월드맵을 띄워, 같은 여행 지도가 기기 간 공유됨을 보여준다.
 function DeviceCard({
   label,
   styles,
+  mapColor,
 }: {
   label: string;
   styles: ReturnType<typeof makeStyles>;
+  mapColor: string;
 }) {
+  const [mapWidth, setMapWidth] = useState(0);
+
+  const onLayout = (e: LayoutChangeEvent) => {
+    const w = e.nativeEvent.layout.width;
+    if (w !== mapWidth) setMapWidth(w);
+  };
+
   return (
     <View style={styles.device}>
       <Text style={styles.deviceLabel}>{label}</Text>
-      <View style={styles.deviceScreen}>
-        {Array.from({ length: 12 }).map((_, i) => (
-          <View key={i} style={styles.deviceDot} />
-        ))}
+      <View style={styles.deviceScreen} onLayout={onLayout}>
+        {mapWidth > 0 ? <MiniDotMap width={mapWidth} soloColor={mapColor} /> : null}
       </View>
     </View>
   );
@@ -41,9 +50,17 @@ export default function DeviceSyncSlide() {
     >
       <View style={styles.wrap}>
         <View style={styles.devicesRow}>
-          <DeviceCard label={t("premiumIntro.slides.deviceSync.devicePhone")} styles={styles} />
+          <DeviceCard
+            label={t("premiumIntro.slides.deviceSync.devicePhone")}
+            styles={styles}
+            mapColor={theme.accent}
+          />
           <Text style={styles.arrow}>⇄</Text>
-          <DeviceCard label={t("premiumIntro.slides.deviceSync.deviceTablet")} styles={styles} />
+          <DeviceCard
+            label={t("premiumIntro.slides.deviceSync.deviceTablet")}
+            styles={styles}
+            mapColor={theme.accent}
+          />
         </View>
         <View style={styles.noteRow}>
           <CloudUpload size={14} color={theme.textSecondary} strokeWidth={2.2} />
@@ -56,12 +73,12 @@ export default function DeviceSyncSlide() {
 
 function makeStyles(theme: Theme) {
   return StyleSheet.create({
-    wrap: { gap: 16 },
+    wrap: { gap: 18 },
     devicesRow: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      gap: 12,
+      gap: 10,
     },
     device: {
       flex: 1,
@@ -69,32 +86,23 @@ function makeStyles(theme: Theme) {
       borderRadius: 12,
       borderWidth: 1,
       borderColor: theme.cardBorder,
-      padding: 10,
-      alignItems: "center",
+      paddingHorizontal: 10,
+      paddingTop: 8,
+      paddingBottom: 12,
       gap: 8,
     },
     deviceLabel: {
       color: theme.textSecondary,
       fontSize: 12,
       fontWeight: "600",
+      textAlign: "center",
     },
     deviceScreen: {
       width: "100%",
-      flexDirection: "row",
-      flexWrap: "wrap",
-      gap: 4,
-      justifyContent: "center",
-    },
-    deviceDot: {
-      width: 14,
-      height: 14,
-      borderRadius: 3,
-      backgroundColor: theme.accent,
-      opacity: 0.85,
     },
     arrow: {
       color: theme.accent,
-      fontSize: 22,
+      fontSize: 20,
       fontWeight: "700",
     },
     noteRow: {

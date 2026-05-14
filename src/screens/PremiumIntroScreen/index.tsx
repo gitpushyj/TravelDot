@@ -6,6 +6,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { usePremiumIntroStore } from "../../features/premiumIntro/premiumIntroStore";
 import { useScreenBottomInset } from "../../hooks/useScreenInsets";
@@ -33,6 +34,7 @@ export default function PremiumIntroScreen({ onGoToSubscription, onDismiss }: Pr
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const bottomInset = useScreenBottomInset();
   const markSeen = usePremiumIntroStore((s) => s.markSeen);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -48,7 +50,7 @@ export default function PremiumIntroScreen({ onGoToSubscription, onDismiss }: Pr
   };
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingTop: insets.top + 8 }]}>
       <ScrollView
         style={styles.carousel}
         horizontal
