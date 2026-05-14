@@ -1,5 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Animated,
+  Easing,
+  LayoutChangeEvent,
   Modal,
   Platform,
   Pressable,
@@ -25,6 +28,9 @@ type Props = {
   onCancel: () => void;
   onConfirm: (value: string) => void;
 };
+
+const OPEN_DURATION = 240;
+const CLOSE_DURATION = 200;
 
 function pad2(n: number): string {
   return n < 10 ? `0${n}` : `${n}`;
@@ -73,6 +79,35 @@ export default function DatePickerSheet({
   const [month, setMonth] = useState<number>(today.m);
   const [day, setDay] = useState<number>(today.d);
 
+  // 시트의 슬라이드/페이드 애니메이션은 백드롭과 시트를 분리해서 처리한다.
+  // animationType="slide"를 그대로 쓰면 Modal 컨테이너 전체가 함께 슬라이드되어
+  // 백드롭(dim)까지 같이 올라와 보이기 때문이다.
+  const [mounted, setMounted] = useState(visible);
+  const progress = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  // 시트 높이는 onLayout 후 확정되므로 state로 관리해 interpolate가 갱신되게 한다.
+  const [sheetHeight, setSheetHeight] = useState(800);
+
+  useEffect(() => {
+    if (visible) {
+      setMounted(true);
+      Animated.timing(progress, {
+        toValue: 1,
+        duration: OPEN_DURATION,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }).start();
+    } else if (mounted) {
+      Animated.timing(progress, {
+        toValue: 0,
+        duration: CLOSE_DURATION,
+        easing: Easing.in(Easing.cubic),
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        if (finished) setMounted(false);
+      });
+    }
+  }, [visible, mounted, progress]);
+
   // 시트가 열릴 때마다 외부 value로부터 내부 상태를 초기화한다.
   useEffect(() => {
     if (!visible) return;
@@ -118,24 +153,50 @@ export default function DatePickerSheet({
     onConfirm(next);
   };
 
+  const onSheetLayout = (e: LayoutChangeEvent) => {
+    const h = e.nativeEvent.layout.height;
+    if (h > 0 && Math.abs(h - sheetHeight) > 0.5) setSheetHeight(h);
+  };
+
+  const backdropStyle = { opacity: progress };
+  const sheetStyle = useMemo(
+    () => ({
+      transform: [
+        {
+          translateY: progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [sheetHeight, 0],
+          }),
+        },
+      ],
+    }),
+    [progress, sheetHeight]
+  );
+
+  if (!mounted) return null;
+
   return (
     <Modal
-      visible={visible}
+      visible
       transparent
-      animationType="slide"
+      animationType="none"
       onRequestClose={onCancel}
       statusBarTranslucent
     >
       <View style={styles.root}>
-        <Pressable style={styles.backdrop} onPress={onCancel} />
-        <View
+        <Animated.View style={[styles.backdrop, backdropStyle]}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
+        </Animated.View>
+        <Animated.View
           style={[
             styles.sheet,
+            sheetStyle,
             {
               paddingBottom:
                 (Platform.OS === "ios" ? 24 : 16) + bottomInset,
             },
           ]}
+          onLayout={onSheetLayout}
         >
           <View style={styles.handleWrap}>
             <View style={styles.handle} />
@@ -174,7 +235,7 @@ export default function DatePickerSheet({
               />
             </View>
           </View>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
