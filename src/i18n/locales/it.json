@@ -681,11 +681,17 @@
       "deviceSync": {
         "title": "Sincronizzazione dei dispositivi",
         "desc": "La tua mappa di viaggio resta uguale su ogni dispositivo. Anche su un nuovo telefono.",
-        "myDevice": "Il mio dispositivo",
-        "deviceA": "Dispositivo A",
-        "deviceB": "Dispositivo B",
-        "deviceC": "Dispositivo C",
-        "deviceD": "Dispositivo D",
+        "titleMain": "Il tuo viaggio resta sincronizzato",
+        "titleAccent": "ovunque",
+        "subtitle": "Su un nuovo telefono la tua mappa dot torna identica",
+        "feature": {
+          "backupLabel": "Backup automatico",
+          "backupSub": "I tuoi viaggi vengono salvati in sicurezza, in tempo reale.",
+          "syncLabel": "Sincronizzazione",
+          "syncSub": "La mappa dot aggiornata su qualunque dispositivo.",
+          "restoreLabel": "Ripristino",
+          "restoreSub": "Cambia telefono: la mappa torna con un tocco."
+        },
         "note": "Backup cloud automatico · foto escluse"
       },
       "titles": {

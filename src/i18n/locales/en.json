@@ -872,11 +872,17 @@
       "deviceSync": {
         "title": "Device sync",
         "desc": "Your travel map stays the same across every device. Even on a new phone.",
-        "myDevice": "My device",
-        "deviceA": "Device A",
-        "deviceB": "Device B",
-        "deviceC": "Device C",
-        "deviceD": "Device D",
+        "titleMain": "Your travel log stays in sync",
+        "titleAccent": "everywhere",
+        "subtitle": "Your dot map is restored as-is on any new phone",
+        "feature": {
+          "backupLabel": "Auto backup",
+          "backupSub": "Your trips are saved safely in real time.",
+          "syncLabel": "Device sync",
+          "syncSub": "See the latest dot map on any device, anytime.",
+          "restoreLabel": "New-device restore",
+          "restoreSub": "Switch phones and your map comes back in one step."
+        },
         "note": "Automatic cloud backup · photos excluded"
       },
       "titles": {

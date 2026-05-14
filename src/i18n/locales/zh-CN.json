@@ -681,11 +681,17 @@
       "deviceSync": {
         "title": "设备同步",
         "desc": "旅行记录(dot 地图)在每台设备上完全一致。换新手机也不丢。",
-        "myDevice": "我的设备",
-        "deviceA": "设备 A",
-        "deviceB": "设备 B",
-        "deviceC": "设备 C",
-        "deviceD": "设备 D",
+        "titleMain": "旅行记录在每台设备",
+        "titleAccent": "保持同步",
+        "subtitle": "换新手机,dot 地图也会原样恢复",
+        "feature": {
+          "backupLabel": "自动备份",
+          "backupSub": "旅行记录实时安全保存。",
+          "syncLabel": "设备同步",
+          "syncSub": "随时随地查看最新的 dot 地图。",
+          "restoreLabel": "新设备恢复",
+          "restoreSub": "换手机也能一键带回原来的地图。"
+        },
         "note": "自动云端备份 · 不含照片"
       },
       "titles": {

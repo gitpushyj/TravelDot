@@ -681,11 +681,17 @@
       "deviceSync": {
         "title": "Synchronisation des appareils",
         "desc": "Ta carte de voyages reste identique sur tous tes appareils. Même sur un nouveau téléphone.",
-        "myDevice": "Mon appareil",
-        "deviceA": "Appareil A",
-        "deviceB": "Appareil B",
-        "deviceC": "Appareil C",
-        "deviceD": "Appareil D",
+        "titleMain": "Ton voyage te suit sur",
+        "titleAccent": "tous tes appareils",
+        "subtitle": "Sur un nouveau téléphone, ta carte dot revient telle quelle",
+        "feature": {
+          "backupLabel": "Sauvegarde auto",
+          "backupSub": "Tes voyages sont enregistrés en temps réel, en sécurité.",
+          "syncLabel": "Synchronisation",
+          "syncSub": "Ta carte dot à jour sur n'importe quel appareil.",
+          "restoreLabel": "Restauration",
+          "restoreSub": "Change de téléphone : ta carte revient en un tap."
+        },
         "note": "Sauvegarde cloud automatique · photos exclues"
       },
       "titles": {

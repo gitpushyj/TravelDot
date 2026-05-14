@@ -872,11 +872,17 @@
       "deviceSync": {
         "title": "기기 동기화",
         "desc": "여행 기록(dot 지도)이 모든 기기에서 똑같이. 새 폰에서도 그대로예요.",
-        "myDevice": "내 기기",
-        "deviceA": "기기 A",
-        "deviceB": "기기 B",
-        "deviceC": "기기 C",
-        "deviceD": "기기 D",
+        "titleMain": "여행 기록이 모든 기기에서",
+        "titleAccent": "이어져요",
+        "subtitle": "새 폰에서도 dot 지도가 그대로 복원돼요",
+        "feature": {
+          "backupLabel": "자동 백업",
+          "backupSub": "여행 기록이 실시간으로 안전하게 저장돼요.",
+          "syncLabel": "기기 동기화",
+          "syncSub": "어디서든 최신 상태로 dot 지도를 확인할 수 있어요.",
+          "restoreLabel": "새 기기 복원",
+          "restoreSub": "새 폰으로 바꿔도, 언제든 한 번에 복원돼요."
+        },
         "note": "클라우드 자동 백업 · 사진은 제외"
       },
       "titles": {

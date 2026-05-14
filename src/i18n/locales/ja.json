@@ -681,11 +681,17 @@
       "deviceSync": {
         "title": "デバイス同期",
         "desc": "旅行の記録(dotマップ)はどのデバイスでも同じ。新しいスマホでもそのまま。",
-        "myDevice": "自分のデバイス",
-        "deviceA": "デバイスA",
-        "deviceB": "デバイスB",
-        "deviceC": "デバイスC",
-        "deviceD": "デバイスD",
+        "titleMain": "旅行の記録はどのデバイスでも",
+        "titleAccent": "つながる",
+        "subtitle": "新しいスマホでも dot マップはそのまま復元",
+        "feature": {
+          "backupLabel": "自動バックアップ",
+          "backupSub": "旅の記録はリアルタイムで安全に保存されます。",
+          "syncLabel": "デバイス同期",
+          "syncSub": "どこからでも最新の dot マップをすぐ確認。",
+          "restoreLabel": "新端末で復元",
+          "restoreSub": "機種変更しても、ワンタップで元通り。"
+        },
         "note": "クラウド自動バックアップ · 写真は対象外"
       },
       "titles": {

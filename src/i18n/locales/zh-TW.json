@@ -681,11 +681,17 @@
       "deviceSync": {
         "title": "裝置同步",
         "desc": "旅行紀錄(dot 地圖)在每一台裝置上完全相同。換新手機也照樣留著。",
-        "myDevice": "我的裝置",
-        "deviceA": "裝置 A",
-        "deviceB": "裝置 B",
-        "deviceC": "裝置 C",
-        "deviceD": "裝置 D",
+        "titleMain": "旅行紀錄在每一台裝置",
+        "titleAccent": "都會同步",
+        "subtitle": "換新手機,dot 地圖也照樣回來",
+        "feature": {
+          "backupLabel": "自動備份",
+          "backupSub": "旅行紀錄即時安全儲存。",
+          "syncLabel": "裝置同步",
+          "syncSub": "任何裝置都能看到最新的 dot 地圖。",
+          "restoreLabel": "新裝置還原",
+          "restoreSub": "換手機也能一鍵把地圖帶回來。"
+        },
         "note": "自動雲端備份 · 不含照片"
       },
       "titles": {

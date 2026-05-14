@@ -681,11 +681,17 @@
       "deviceSync": {
         "title": "Gerätesynchronisation",
         "desc": "Deine Reisekarte bleibt auf jedem Gerät gleich. Auch auf einem neuen Handy.",
-        "myDevice": "Mein Gerät",
-        "deviceA": "Gerät A",
-        "deviceB": "Gerät B",
-        "deviceC": "Gerät C",
-        "deviceD": "Gerät D",
+        "titleMain": "Deine Reise bleibt synchron",
+        "titleAccent": "überall",
+        "subtitle": "Auch auf einem neuen Handy ist deine Dot-Karte wieder da",
+        "feature": {
+          "backupLabel": "Auto-Backup",
+          "backupSub": "Deine Reisen werden in Echtzeit sicher gespeichert.",
+          "syncLabel": "Gerätesync",
+          "syncSub": "Die aktuelle Dot-Karte auf jedem Gerät, jederzeit.",
+          "restoreLabel": "Neugeräte-Restore",
+          "restoreSub": "Neues Handy? Deine Karte ist mit einem Tipp zurück."
+        },
         "note": "Automatisches Cloud-Backup · Fotos ausgenommen"
       },
       "titles": {
