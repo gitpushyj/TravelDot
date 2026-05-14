@@ -605,9 +605,9 @@
     },
     "account": {
       "signOut": "Sign out",
-      "signOutSub": "Sign out from this device",
+      "signOutSub": "Signing out clears this device's local data",
       "signOutConfirmTitle": "Sign out",
-      "signOutConfirmBody": "Sign out of your account?",
+      "signOutConfirmBody": "Signing out clears all travel records and settings stored on this device. Continue?",
       "signOutFailed": "Sign-out failed",
       "deleteLink": "Delete account",
       "deleteConfirmTitle": "Delete account",

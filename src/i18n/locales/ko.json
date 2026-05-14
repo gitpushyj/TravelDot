@@ -605,9 +605,9 @@
     },
     "account": {
       "signOut": "로그아웃",
-      "signOutSub": "이 기기에서 로그아웃합니다",
+      "signOutSub": "로그아웃하면 이 기기의 로컬 데이터가 지워집니다",
       "signOutConfirmTitle": "로그아웃",
-      "signOutConfirmBody": "로그아웃하시겠어요?",
+      "signOutConfirmBody": "로그아웃하면 이 기기에 저장된 여행 기록·설정이 모두 지워져요. 계속할까요?",
       "signOutFailed": "로그아웃 실패",
       "deleteLink": "계정 삭제",
       "deleteConfirmTitle": "계정 삭제",

@@ -6,6 +6,7 @@ import AppleLogoIcon from "../components/auth/AppleLogoIcon";
 import GoogleGIcon from "../components/auth/GoogleGIcon";
 import { useAuthStore } from "../features/auth/authStore";
 import { deleteAccount } from "../features/auth/deleteAccount";
+import { logOutAndWipeLocal } from "../features/auth/logOut";
 import { useProfileStore } from "../features/onboarding/profileStore";
 import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
@@ -72,7 +73,6 @@ export default function SettingsScreen({
   const suspectTrips = useVisitStore((s) => s.suspectTrips);
 
   const authUser = useAuthStore((s) => s.user);
-  const authSignOut = useAuthStore((s) => s.signOut);
   const profileNickname = useProfileStore((s) => s.profile?.nickname ?? null);
 
   const { isSubscribed } = useSubscription();
@@ -130,7 +130,7 @@ export default function SettingsScreen({
           text: t("settings.account.signOut"),
           style: "destructive",
           onPress: () => {
-            authSignOut().catch((e) =>
+            logOutAndWipeLocal().catch((e) =>
               Alert.alert(t("settings.account.signOutFailed"), String(e))
             );
           },
