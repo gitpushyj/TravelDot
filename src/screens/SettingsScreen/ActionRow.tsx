@@ -34,7 +34,8 @@ export default function ActionRow({
   rightSlot,
 }: Props) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
-  const muted = disabled || locked;
+  // disabled 행은 정보 표시용일 뿐이므로 텍스트는 일반 색상으로 둔다. locked(유료 잠금)일 때만 muted 톤.
+  const muted = locked;
   return (
     <Pressable
       onPress={onPress}
