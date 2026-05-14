@@ -6,6 +6,7 @@ import AppleLogoIcon from "../components/auth/AppleLogoIcon";
 import GoogleGIcon from "../components/auth/GoogleGIcon";
 import { useAuthStore } from "../features/auth/authStore";
 import { deleteAccount } from "../features/auth/deleteAccount";
+import { useProfileStore } from "../features/onboarding/profileStore";
 import { localizedBadgeTitle } from "../features/badges/badgeI18n";
 import { pickActiveBadge, useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
@@ -72,6 +73,7 @@ export default function SettingsScreen({
 
   const authUser = useAuthStore((s) => s.user);
   const authSignOut = useAuthStore((s) => s.signOut);
+  const profileNickname = useProfileStore((s) => s.profile?.nickname ?? null);
 
   const { isSubscribed } = useSubscription();
 
@@ -136,8 +138,7 @@ export default function SettingsScreen({
       ]
     );
   };
-  // 로그인은 필수이므로 SettingsScreen 진입 시 user는 항상 존재한다.
-  // 계정 라벨은 사용자의 인앱 닉네임(활성 호칭)을 보여주고, 우측에 소셜 provider
+  // 계정 라벨은 사용자가 온보딩에서 입력한 닉네임을 보여주고, 우측에 소셜 provider
   // 아이콘을 렌더한다. 소셜 로그인 이름(full_name)은 더 이상 노출하지 않는다.
   const provider = (authUser?.app_metadata?.provider as string | undefined) ?? null;
   const providerIcon = useMemo(() => {
@@ -247,10 +248,8 @@ export default function SettingsScreen({
         })
     : t("settings.title.none");
 
-  // 계정 행 라벨: 활성 호칭(이모지 + 한글/현지화된 호칭). 호칭이 없으면 이메일로 fallback.
-  const accountLabel = activeBadge
-    ? `${activeBadge.emoji} ${localizedBadgeTitle(activeBadge, t, getCurrentLocale())}`
-    : authUser?.email ?? "";
+  // 계정 행 라벨: 온보딩에서 사용자가 입력한 닉네임. 아직 없으면 이메일로 fallback.
+  const accountLabel = profileNickname ?? authUser?.email ?? "";
   const accountSub = authUser?.email ?? "";
 
   const milestoneKind = useMilestoneStore((s) => s.kind);
