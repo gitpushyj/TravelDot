@@ -128,13 +128,19 @@ export async function* iteratePhotos(
         lng: toFiniteNumber(loc?.lng),
         takenAt: asset.creationTime,
       };
+      // 페이지가 큰 경우(예: sync에서 2000장) 페이지 안쪽 처리만으로도 본
+      // 스레드를 수백 ms 단위로 블록할 수 있다. 256장마다 한 번 macrotask로
+      // 양보해 UI/애니메이션이 끊기지 않게 한다. 256보다 작은 페이지에서는
+      // 이 분기가 한 번도 안 걸려 비용이 0.
+      if ((i & 0xff) === 0xff) {
+        await new Promise<void>((resolve) => setImmediate(resolve));
+      }
     }
 
     if (!page.hasNextPage) return;
     after = page.endCursor;
-    // 페이지 사이에 macrotask로 양보해 UI/네이티브 스레드가 호흡할 시간을 준다.
-    // 10만 장 스캔에서 페이지 ≈ 500회 yield, 한 번 ≈ 0~수 ms라 총 비용은
-    // 무시할 수준. UI freeze 해소가 목적.
+    // 페이지 사이에도 한 번 양보. 페이지 내부 yield와 합쳐 큰 페이지에서도
+    // UI freeze가 안 생기도록 한다.
     await new Promise<void>((resolve) => setImmediate(resolve));
   }
 }

@@ -68,7 +68,7 @@ async function runSync(sinceDate: string | null): Promise<void> {
   };
 
   try {
-    for await (const p of iteratePhotos(200, {
+    for await (const p of iteratePhotos(2000, {
       onTotal: (n) => {
         totalCount = n;
       },
