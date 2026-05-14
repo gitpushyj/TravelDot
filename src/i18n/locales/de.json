@@ -701,8 +701,7 @@
       },
       "mapStyle": {
         "title": "Kartenstil",
-        "desc": "Wähle aus 10 Dot-Farbpaletten und gestalte die Karte ganz nach deinem Geschmack.",
-        "premiumOnly": "Nur Premium"
+        "desc": "Wähle aus 10 Dot-Farbpaletten und gestalte die Karte ganz nach deinem Geschmack."
       }
     }
   }

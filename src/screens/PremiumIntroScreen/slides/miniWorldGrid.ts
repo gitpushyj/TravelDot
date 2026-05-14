@@ -11,54 +11,67 @@ export const GRID_ROWS = 14;
 const MIN_LAT = -60;
 const MAX_LAT = 85;
 
+// 색칠할 영역(ISO2 country code) — 한 셀에 visited country 도트가 하나라도
+// 들어 있으면 그 셀은 visited로 표기되어 팔레트 색으로 칠해진다. 직사각형
+// 박스가 아닌 실제 국가 경계 기준이라 가장자리가 인위적으로 보이지 않는다.
+const VISITED_COUNTRIES = new Set<string>([
+  // 유럽 (러시아·터키는 시각적 부담을 줄이려 제외)
+  "GB", "IE", "FR", "DE", "NL", "BE", "LU", "CH", "AT", "IT", "ES", "PT",
+  "DK", "SE", "NO", "FI", "IS", "PL", "CZ", "SK", "HU", "RO", "BG", "GR",
+  "HR", "SI", "RS", "BA", "ME", "MK", "AL", "EE", "LV", "LT", "BY", "UA",
+  "MD", "CY", "MT", "AD", "MC", "SM", "VA", "LI", "XK",
+  // 미국
+  "US",
+  // 호주
+  "AU",
+  // 북아프리카 — 이집트
+  "EG",
+  // 남아프리카
+  "ZA",
+]);
+
 export type LandCell = {
   row: number;
   col: number;
   level: 1 | 2 | 3 | 4;
-  // 데모용 "사용자가 방문한 셀" 플래그. 실제 여행 패턴처럼 보이도록
-  // 일부 지역(유럽 전역, 동남/동아시아 일부, 미 동부 일부, 남미 일부 등)만 true.
+  // 데모용 "사용자가 방문한 셀" 플래그. visited country 도트가 비닝된 셀만 true.
   visited: boolean;
 };
 
-// (row, col)이 데모 방문 지역(유럽·동아시아·미국·브라질·동남아 일부)에 속하는지.
-// 32×14 equirectangular grid 기준 — 대륙이 보이는 칸을 손으로 지정한다.
-function isVisitedRegion(row: number, col: number): boolean {
-  // 유럽 (전역)
-  if (col >= 15 && col <= 19 && row >= 2 && row <= 5) return true;
-  // 동아시아 (한국·일본·중국 동부)
-  if (col >= 24 && col <= 27 && row >= 3 && row <= 5) return true;
-  // 동남아시아 (베트남·태국·필리핀 일대)
-  if (col >= 23 && col <= 26 && row >= 6 && row <= 7) return true;
-  // 미국 동부
-  if (col >= 8 && col <= 11 && row >= 3 && row <= 4) return true;
-  // 남미 동부 (브라질)
-  if (col >= 10 && col <= 12 && row >= 8 && row <= 9) return true;
-  return false;
+type Dot = { lat: number; lng: number; country?: string };
+
+function cellOf(d: Dot): { row: number; col: number } {
+  const col = Math.min(
+    GRID_COLS - 1,
+    Math.max(0, Math.floor(((d.lng + 180) / 360) * GRID_COLS))
+  );
+  const row = Math.min(
+    GRID_ROWS - 1,
+    Math.max(
+      0,
+      Math.floor(((MAX_LAT - d.lat) / (MAX_LAT - MIN_LAT)) * GRID_ROWS)
+    )
+  );
+  return { row, col };
 }
 
 function buildLandCells(): LandCell[] {
-  const seen = new Set<string>();
-  const dots = (dotData as { dots: { lat: number; lng: number }[] }).dots;
+  const dots = (dotData as { dots: Dot[] }).dots;
+  const land = new Set<string>();
+  const visited = new Set<string>();
   for (const d of dots) {
-    const col = Math.min(
-      GRID_COLS - 1,
-      Math.max(0, Math.floor(((d.lng + 180) / 360) * GRID_COLS))
-    );
-    const row = Math.min(
-      GRID_ROWS - 1,
-      Math.max(
-        0,
-        Math.floor(((MAX_LAT - d.lat) / (MAX_LAT - MIN_LAT)) * GRID_ROWS)
-      )
-    );
-    seen.add(`${row},${col}`);
+    const { row, col } = cellOf(d);
+    const key = `${row},${col}`;
+    land.add(key);
+    if (d.country && VISITED_COUNTRIES.has(d.country)) {
+      visited.add(key);
+    }
   }
-  return [...seen].map((key) => {
+  return [...land].map((key) => {
     const [row, col] = key.split(",").map(Number);
     // 셀마다 고정된 1~4 레벨 — 팔레트 모드에서 heatmap gradient를 흉내낸다.
     const level = (((row * 31 + col * 17) % 4) + 1) as 1 | 2 | 3 | 4;
-    const visited = isVisitedRegion(row, col);
-    return { row, col, level, visited };
+    return { row, col, level, visited: visited.has(key) };
   });
 }
 

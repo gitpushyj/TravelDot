@@ -892,8 +892,7 @@
       },
       "mapStyle": {
         "title": "Map style",
-        "desc": "Pick from 10 dot color palettes to make the map your own.",
-        "premiumOnly": "Premium only"
+        "desc": "Pick from 10 dot color palettes to make the map your own."
       }
     }
   },

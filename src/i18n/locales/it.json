@@ -701,8 +701,7 @@
       },
       "mapStyle": {
         "title": "Stile mappa",
-        "desc": "Scegli tra 10 palette di colori dei punti per personalizzare la mappa a tuo gusto.",
-        "premiumOnly": "Solo Premium"
+        "desc": "Scegli tra 10 palette di colori dei punti per personalizzare la mappa a tuo gusto."
       }
     }
   }
