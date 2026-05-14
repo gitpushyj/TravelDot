@@ -35,7 +35,7 @@ import { useTheme } from "../theme/themeStore";
 import { isValidDateKey, toLocalDateKey } from "../utils/date";
 import { flagEmoji } from "../utils/flag";
 
-import DateField from "./EditTripScreen/DateField";
+import DateField from "../components/DateField";
 import { dayCount, exifTakenAt } from "./EditTripScreen/exif";
 import { makeStyles } from "./EditTripScreen/styles";
 
@@ -327,14 +327,12 @@ export default function EditTripScreen({ trip, onClose }: Props) {
           <Text style={styles.sectionLabel}>{t("editTrip.sectionDates")}</Text>
           <View style={styles.dateRow}>
             <DateField
-              theme={theme}
               label={t("editTrip.dateLabelStart")}
               value={startDate}
               onChange={setStartDate}
             />
             <Text style={styles.dateSeparator}>—</Text>
             <DateField
-              theme={theme}
               label={t("editTrip.dateLabelEnd")}
               value={endDate}
               onChange={setEndDate}

@@ -270,23 +270,6 @@ export function makeStyles(theme: Theme) {
       alignItems: "flex-end",
       gap: 8,
     },
-    dateField: { flex: 1, gap: 4 },
-    dateLabel: {
-      color: theme.textMuted,
-      fontSize: 11,
-      fontWeight: "700",
-    },
-    dateInput: {
-      backgroundColor: theme.cardBg,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      borderRadius: 10,
-      paddingHorizontal: 12,
-      paddingVertical: 12,
-      color: theme.textPrimary,
-      fontSize: 15,
-      fontWeight: "600",
-    },
     dateSeparator: {
       color: theme.textMuted,
       fontSize: 18,

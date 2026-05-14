@@ -6,11 +6,11 @@ import {
   Pressable,
   ScrollView,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import DateField from "../../components/DateField";
 import type { Theme } from "../../theme/theme";
 import { isValidDateKey, toLocalDateKey } from "../../utils/date";
 import { dayCount, exifTakenAt } from "./exif";
@@ -127,35 +127,17 @@ export default function PhotosStep({
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t("addTrip.dateSection")}</Text>
         <View style={styles.dateRow}>
-          <View style={styles.dateField}>
-            <Text style={styles.dateLabel}>{t("editTrip.dateLabelStart")}</Text>
-            <TextInput
-              style={styles.dateInput}
-              value={startDate}
-              onChangeText={onChangeStart}
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor={theme.textMuted}
-              maxLength={10}
-              keyboardType="numbers-and-punctuation"
-              autoCorrect={false}
-              autoCapitalize="none"
-            />
-          </View>
+          <DateField
+            label={t("editTrip.dateLabelStart")}
+            value={startDate}
+            onChange={onChangeStart}
+          />
           <Text style={styles.dateSeparator}>—</Text>
-          <View style={styles.dateField}>
-            <Text style={styles.dateLabel}>{t("editTrip.dateLabelEnd")}</Text>
-            <TextInput
-              style={styles.dateInput}
-              value={endDate}
-              onChangeText={onChangeEnd}
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor={theme.textMuted}
-              maxLength={10}
-              keyboardType="numbers-and-punctuation"
-              autoCorrect={false}
-              autoCapitalize="none"
-            />
-          </View>
+          <DateField
+            label={t("editTrip.dateLabelEnd")}
+            value={endDate}
+            onChange={onChangeEnd}
+          />
         </View>
 
         <View style={styles.presetRow}>
