@@ -6,11 +6,11 @@ struct LockScreenView: View {
   var body: some View {
     VStack(spacing: 10) {
       HStack {
-        Text(attributes.originName)
+        Text(attributes.originIata)
           .font(.caption).fontWeight(.semibold)
           .lineLimit(1)
         Spacer(minLength: 12)
-        Text(attributes.destName)
+        Text(attributes.destIata)
           .font(.caption).fontWeight(.semibold)
           .lineLimit(1)
       }

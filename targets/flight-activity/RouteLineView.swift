@@ -13,7 +13,7 @@ struct RouteLineView: View {
         // 전체 경로: 점선
         Rectangle()
           .fill(.secondary.opacity(0.4))
-          .frame(height: 2)
+          .frame(height: 3)
           .frame(maxHeight: .infinity, alignment: .center)
 
         // 지나온 경로 + 비행기
@@ -46,7 +46,7 @@ struct FlightProgressStyle: ProgressViewStyle {
     return ZStack(alignment: .leading) {
       Capsule()
         .fill(.tint)
-        .frame(width: x, height: 2)
+        .frame(width: x, height: 3)
         .frame(maxHeight: .infinity, alignment: .center)
       Image(systemName: "airplane")
         .font(.system(size: 13))
