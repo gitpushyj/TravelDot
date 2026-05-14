@@ -206,17 +206,6 @@
       "all": "전체",
       "unlocked": "획득",
       "emptyUnlocked": "아직 획득한 호칭이 없어요."
-    },
-    "premium": {
-      "lockedTitle": "?????",
-      "lockedHint": "Premium 가입 시 잠금 해제",
-      "ctaUnlock": "Premium 가입하면 모두 잠금 해제 →",
-      "slotCounts": {
-        "premium_time": 2,
-        "premium_culture": 4,
-        "premium_share": 6,
-        "premium_special": 1
-      }
     }
   },
   "milestones": {

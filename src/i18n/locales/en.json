@@ -206,17 +206,6 @@
       "all": "All",
       "unlocked": "Earned",
       "emptyUnlocked": "You haven't earned any titles yet."
-    },
-    "premium": {
-      "lockedTitle": "?????",
-      "lockedHint": "Unlock with Premium",
-      "ctaUnlock": "Unlock all with Premium →",
-      "slotCounts": {
-        "premium_time": 2,
-        "premium_culture": 4,
-        "premium_share": 6,
-        "premium_special": 1
-      }
     }
   },
   "milestones": {

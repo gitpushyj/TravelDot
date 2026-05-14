@@ -13,14 +13,12 @@ import {
 } from "../features/badges/badges";
 import { useBadgeStore } from "../features/badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../features/badges/countryNames";
-import { useEntitlementStore } from "../features/entitlement/entitlementStore";
 import { getTierByCount } from "../features/travel/tierTitles";
 import { useVisitStore } from "../features/travel/visitStore";
 import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { useTheme } from "../theme/themeStore";
 
 import BadgeCard from "./TitlesScreen/BadgeCard";
-import PremiumCategorySection from "./TitlesScreen/PremiumCategorySection";
 import TitleFilterTabs, {
   TitleFilter,
 } from "./TitlesScreen/TitleFilterTabs";
@@ -38,9 +36,6 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
   const activeId = useBadgeStore((s) => s.activeId);
   const setActive = useBadgeStore((s) => s.setActive);
   const visitCounts = useVisitStore((s) => s.visitCounts);
-  const isAllMilestoneVisible = useEntitlementStore(
-    (s) => s.isAllMilestoneVisible
-  );
 
   const [filter, setFilter] = useState<TitleFilter>("all");
   const isUnlockedFilter = filter === "unlocked";
@@ -147,18 +142,10 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
         {(() => {
           const renderedSections = sections
             .map((section) => {
-              const isPremiumCat = section.category.startsWith("premium_");
-              const showLocked = isPremiumCat && !isAllMilestoneVisible;
               const unlockedCount = section.items.filter((b) =>
                 unlockedSet.has(b.id)
               ).length;
-              const lockedSlotCount = showLocked
-                ? Number(
-                    t(`titles.premium.slotCounts.${section.category}`, {
-                      defaultValue: "1",
-                    })
-                  ) || 1
-                : section.items.length;
+              const totalCount = section.items.length;
 
               if (isUnlockedFilter) {
                 if (unlockedCount === 0) return null;
@@ -170,7 +157,7 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
                     <View style={styles.sectionHeader}>
                       <Text style={styles.sectionLabel}>{section.label}</Text>
                       <Text style={styles.sectionCount}>
-                        {unlockedCount} / {lockedSlotCount}
+                        {unlockedCount} / {totalCount}
                       </Text>
                     </View>
                     <View style={styles.grid}>
@@ -194,16 +181,10 @@ export default function TitlesScreen({ onClose, onOpenMilestones }: Props) {
                   <View style={styles.sectionHeader}>
                     <Text style={styles.sectionLabel}>{section.label}</Text>
                     <Text style={styles.sectionCount}>
-                      {unlockedCount} / {lockedSlotCount}
+                      {unlockedCount} / {totalCount}
                     </Text>
                   </View>
-                  {showLocked ? (
-                    <PremiumCategorySection
-                      category={section.category}
-                      theme={theme}
-                      styles={styles}
-                    />
-                  ) : section.items.length === 0 ? (
+                  {section.items.length === 0 ? (
                     <Text style={styles.emptyText}>
                       {section.category === "country"
                         ? t("titles.noCountryHint")
