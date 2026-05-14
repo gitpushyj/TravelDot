@@ -7,11 +7,17 @@ import {
   View,
 } from "react-native";
 import { useTranslation } from "react-i18next";
+import {
+  activateKeepAwakeAsync,
+  deactivateKeepAwake,
+} from "expo-keep-awake";
 
 import { ensurePermission } from "../../features/photoSync/photoLibrary";
 import { runFullSync } from "../../features/photoSync/syncService";
 import { useVisitStore } from "../../features/travel/visitStore";
 import { useTheme } from "../../theme/themeStore";
+
+const KEEP_AWAKE_TAG = "onboarding-sync";
 
 import { makeOnboardingStyles } from "./styles";
 import SyncFeatureRows from "./SyncFeatureRows";
@@ -49,6 +55,16 @@ export default function SyncStep({ onNext }: Props) {
     }
     onNext();
   }, [phase, lastSync, onNext]);
+
+  // 동기화 진행 중에는 화면이 꺼지지 않도록 유지.
+  // 사진 라이브러리 전수 스캔이 길어질 수 있어 자동 잠금으로 진행이 끊기는 것을 막는다.
+  useEffect(() => {
+    if (phase !== "syncing") return;
+    void activateKeepAwakeAsync(KEEP_AWAKE_TAG);
+    return () => {
+      deactivateKeepAwake(KEEP_AWAKE_TAG);
+    };
+  }, [phase]);
 
   const startSync = async () => {
     if (phase === "syncing") return;
