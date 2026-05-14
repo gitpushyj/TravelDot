@@ -51,3 +51,6 @@ modules/*/android/.cxx/
 
 # Supabase CLI가 link/deploy 중 만드는 로컬 캐시 (project-ref 등 머신 로컬 정보)
 supabase/.temp/
+
+# superpowers brainstorming companion
+.superpowers/

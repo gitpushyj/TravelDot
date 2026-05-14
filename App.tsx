@@ -18,6 +18,7 @@ import { useEntitlementStore } from "./src/features/entitlement/entitlementStore
 import { useFlightStore } from "./src/features/flight/flightStore";
 import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrateUserProfileFromDb";
 import { useOnboardingStore } from "./src/features/onboarding/onboardingStore";
+import { usePremiumIntroStore } from "./src/features/premiumIntro/premiumIntroStore";
 import { useMilestoneStore } from "./src/features/milestone/milestoneStore";
 import { useTierAutoSync } from "./src/features/subscription/useTierAutoSync";
 import { useSyncStore } from "./src/features/travelSync/syncStore";
@@ -58,6 +59,8 @@ export default function App() {
   const onboardingCompleted = useOnboardingStore((s) => s.completed);
   const onboardingMarkCompleted = useOnboardingStore((s) => s.markCompleted);
   const onboardingLastStep = useOnboardingStore((s) => s.lastStep);
+  const premiumIntroHydrate = usePremiumIntroStore((s) => s.hydrate);
+  const premiumIntroHydrated = usePremiumIntroStore((s) => s.hydrated);
   const milestoneHydrate = useMilestoneStore((s) => s.hydrate);
   const milestoneHydrated = useMilestoneStore((s) => s.hydrated);
   const syncHydrate = useSyncStore((s) => s.hydrate);
@@ -80,6 +83,7 @@ export default function App() {
     void themeHydrate();
     void authHydrate();
     void onboardingHydrate();
+    void premiumIntroHydrate();
     void milestoneHydrate();
     void syncHydrate();
     void entitlementHydrate();
@@ -91,6 +95,7 @@ export default function App() {
     themeHydrate,
     authHydrate,
     onboardingHydrate,
+    premiumIntroHydrate,
     milestoneHydrate,
     syncHydrate,
     entitlementHydrate,
@@ -175,6 +180,7 @@ export default function App() {
     themeHydrated &&
     authHydrated &&
     onboardingHydrated &&
+    premiumIntroHydrated &&
     milestoneHydrated &&
     entitlementHydrated &&
     i18nReady;

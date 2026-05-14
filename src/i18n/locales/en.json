@@ -855,6 +855,44 @@
       "termsOfUse": "Terms of Use"
     }
   },
+  "premiumIntro": {
+    "footer": {
+      "cta": "See subscription plans",
+      "later": "Maybe later"
+    },
+    "slides": {
+      "aiChat": {
+        "title": "AI travel chat",
+        "desc": "Ask an AI that knows your travel history. Stats and suggestions, all in chat.",
+        "q1": "How many countries this year?",
+        "a1": "7 countries so far 🌍 Most recently Japan.",
+        "q2": "Suggest where to go next",
+        "a2": "Your map is light on Southeast Asia — how about Vietnam?"
+      },
+      "deviceSync": {
+        "title": "Device sync",
+        "desc": "Your travel map stays the same across every device. Even on a new phone.",
+        "devicePhone": "Phone",
+        "deviceTablet": "Tablet",
+        "note": "Automatic cloud backup · photos excluded"
+      },
+      "titles": {
+        "title": "Unlock titles & milestones",
+        "desc": "Over 10 titles and milestone badges get unlocked.",
+        "b1": "Continent Conqueror",
+        "b2": "100 Flights",
+        "b3": "Explorer",
+        "b4": "Around the World",
+        "b5": "High Altitude",
+        "b6": "Veteran"
+      },
+      "mapStyle": {
+        "title": "Map style",
+        "desc": "Pick from 10 dot color palettes to make the map your own.",
+        "premiumOnly": "Premium only"
+      }
+    }
+  },
   "mapAppearance": {
     "title": "Map dot color",
     "section": {

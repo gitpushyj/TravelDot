@@ -16,6 +16,7 @@ import MapAppearanceScreenNav from "./screens/MapAppearanceScreenNav";
 import MapZoomScreenNav from "./screens/MapZoomScreenNav";
 import ReviewSuspectScreenNav from "./screens/ReviewSuspectScreenNav";
 import MilestonesScreenNav from "./screens/MilestonesScreenNav";
+import PremiumIntroScreenNav from "./screens/PremiumIntroScreenNav";
 import SubscriptionScreenNav from "./screens/SubscriptionScreenNav";
 import TitlesScreenNav from "./screens/TitlesScreenNav";
 import TripDetailScreenNav from "./screens/TripDetailScreenNav";
@@ -52,6 +53,11 @@ export default function RootNavigator() {
           component={MapAppearanceScreenNav}
         />
         <Stack.Screen name="Subscription" component={SubscriptionScreenNav} />
+        <Stack.Screen
+          name="PremiumIntro"
+          component={PremiumIntroScreenNav}
+          options={{ animation: "slide_from_bottom" }}
+        />
         <Stack.Screen
           name="ImageDetail"
           component={ImageDetailScreenNav}

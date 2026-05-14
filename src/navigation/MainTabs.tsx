@@ -7,6 +7,8 @@ import {
 } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
 
+import { usePremiumIntroStore } from "../features/premiumIntro/premiumIntroStore";
+import { useSubscriptionStore } from "../features/subscription/subscriptionStore";
 import MainScreen from "../screens/MainScreen";
 import { useTheme } from "../theme/themeStore";
 import AiScreenNav from "./screens/AiScreenNav";
@@ -56,6 +58,17 @@ export default function MainTabs() {
             <BotMessageSquare color={color} size={size} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // 무료 + 아직 안 본 사용자만: 채팅 진입을 막고 프리미엄 안내로 보낸다.
+            const { hydrated, seen } = usePremiumIntroStore.getState();
+            const tier = useSubscriptionStore.getState().tier;
+            if (hydrated && !seen && tier === "free") {
+              e.preventDefault();
+              navigation.getParent()?.navigate("PremiumIntro");
+            }
+          },
+        })}
       />
       <Tab.Screen
         name="Settings"

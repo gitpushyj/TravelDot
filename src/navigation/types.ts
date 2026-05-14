@@ -1,3 +1,5 @@
+import type { NavigatorScreenParams } from "@react-navigation/native";
+
 import type { RecentTrip } from "../features/travel/visitRepository";
 
 export type YearMode = { kind: "all" } | { kind: "year"; year: number };
@@ -19,7 +21,7 @@ export type MainTabParamList = {
 };
 
 export type RootStackParamList = {
-  Main: undefined;
+  Main: NavigatorScreenParams<MainTabParamList> | undefined;
   AddTrip: { prefilledCountry?: { code: string; name: string } } | undefined;
   ChangeHome: undefined;
   Titles: undefined;
@@ -33,6 +35,7 @@ export type RootStackParamList = {
   Language: undefined;
   MapAppearance: undefined;
   Subscription: undefined;
+  PremiumIntro: undefined;
   CountryMerge: { countryCode: string };
   ImageDetail: {
     photos: ImageDetailPhoto[];
