@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -30,6 +30,9 @@ export default function MapAppearanceScreen({ onClose }: Props) {
   const styles = useMemo(() => makeStyles(theme), [theme]);
   const bottomInset = useScreenBottomInset();
 
+  // 도트맵 핀치/팬 중에는 부모 ScrollView 세로 스크롤을 잠가 손가락 충돌을 막는다.
+  const [mapInteracting, setMapInteracting] = useState(false);
+
   const mapThemeLock = useThemeStore((s) => s.mapThemeLock);
   const mapPaletteId = useThemeStore((s) => s.mapPaletteId);
   const setMapThemeLock = useThemeStore((s) => s.setMapThemeLock);
@@ -60,7 +63,10 @@ export default function MapAppearanceScreen({ onClose }: Props) {
         <View style={{ minWidth: 40 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        scrollEnabled={!mapInteracting}
+      >
         {/* 미리보기. 지도 area 뒤에 mapTheme.bgColor를 깔아 잠금 효과를 즉시 확인 */}
         <View
           style={[
@@ -69,9 +75,10 @@ export default function MapAppearanceScreen({ onClose }: Props) {
           ]}
         >
           <DotMap
-            enableZoom={false}
+            enableZoom
             playIntro={false}
             mapAreaStyle={styles.mapPreview}
+            onInteractingChange={setMapInteracting}
           />
         </View>
 
