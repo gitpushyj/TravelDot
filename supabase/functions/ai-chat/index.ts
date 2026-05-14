@@ -10,7 +10,7 @@ import { createClient } from "supabase";
 import { aggregateCountryStats, sortTripsForPrompt, type TripRow } from "./tripStats.ts";
 import { buildSystemPrompt, type Gender } from "./systemPrompt.ts";
 
-type TierName = "free" | "premium" | "power";
+type TierName = "free" | "premium";
 
 type IncomingMessage = { role: "user" | "assistant"; text: string };
 type IncomingBody = { messages: IncomingMessage[] };
@@ -18,10 +18,9 @@ type IncomingBody = { messages: IncomingMessage[] };
 const TIER_LIMITS: Record<TierName, number> = {
   free: 1,
   premium: 10,
-  power: 30,
 };
 
-const TIER_NAMES: Record<number, TierName> = { 0: "free", 1: "premium", 2: "power" };
+const TIER_NAMES: Record<number, TierName> = { 0: "free", 1: "premium" };
 
 const OPENAI_MODEL = Deno.env.get("OPENAI_MODEL") ?? "gpt-5.4-mini";
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
@@ -117,8 +116,8 @@ Deno.serve(async (req) => {
     return json({ error: "invalid_input", reason: "bad_json" });
   }
   const messages = Array.isArray(body?.messages) ? body.messages : [];
-  // max = 가장 큰 tier(power=30) sliding window + 신규 1 = 31.
-  if (messages.length < 1 || messages.length > 31) {
+  // max = 가장 큰 tier(premium=10) sliding window + 신규 1 = 11.
+  if (messages.length < 1 || messages.length > 11) {
     return json({ error: "invalid_input", reason: "messages_count" });
   }
   for (const m of messages) {

@@ -23,21 +23,13 @@
       "invalidInput": "这条没发出去 — 确保在 150 字以内再试试。",
       "upstream": "AI 服务现在不太给力 🥲 一两分钟后再试,可以再发一次相同的消息。",
       "imageLoadFailed": "图片加载失败",
-      "rateLimited": {
-        "free": "今天的免费额度(1 次)用完了 🥲 升级套餐可以聊更多 — 高级版每天 10 次,旗舰版每天 30 次。{{resetAt}}重置。",
-        "premium": "今天的高级额度(10 次)用完了 🥲 升级到旗舰版每天 30 次。{{resetAt}}重置。",
-        "power": "今天的旗舰额度(30 次)用完了 🥲 {{resetAt}}重置。"
-      }
+      "rateLimited": "今天的 10 次聊天额度已用完。"
     },
     "confirmClear": {
       "title": "清空对话",
       "body": "把目前的对话全部清空吗？",
       "confirm": "清空",
       "cancel": "取消"
-    },
-    "relative": {
-      "todayAt": "今天 {{time}}",
-      "tomorrowAt": "明天 {{time}}"
     }
   },
   "common": {

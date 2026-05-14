@@ -13,7 +13,7 @@ import { useSubscriptionStore } from "./subscriptionStore";
 
 // RC customerInfo가 truth source. DB(public.users.tier)는 webhook delay가 있어
 // 결제 직후 fetch하면 아직 free일 수 있다. RC entitlement가 active면 그것을
-// 신뢰하고, inactive일 때만 DB로 refresh해서 free/power 구분.
+// 신뢰하고, inactive일 때만 DB로 refresh해서 free/premium 구분.
 function applyCustomerInfo(userId: string, info: CustomerInfo | null): void {
   if (info && hasActivePremium(info)) {
     useSubscriptionStore.setState({ tier: "premium" });

@@ -23,21 +23,13 @@
       "invalidInput": "Non sono riuscito a inviarlo — controlla che sia sotto i 150 caratteri e riprova.",
       "upstream": "Il servizio AI ha un attimo di pausa 🥲 Riprova tra un paio di minuti. Puoi reinviare lo stesso messaggio.",
       "imageLoadFailed": "Impossibile caricare l'immagine",
-      "rateLimited": {
-        "free": "Hai esaurito il limite gratuito di oggi (1) 🥲 Passa a un piano superiore per chattare di più — premium ti dà 10/giorno, power 30/giorno. Si ricarica {{resetAt}}.",
-        "premium": "Hai esaurito il limite premium di oggi (10) 🥲 Passa a power per 30/giorno. Si ricarica {{resetAt}}.",
-        "power": "Hai esaurito il limite power di oggi (30) 🥲 Si ricarica {{resetAt}}."
-      }
+      "rateLimited": "Hai esaurito tutte le 10 chat di oggi."
     },
     "confirmClear": {
       "title": "Cancella chat",
       "body": "Cancellare tutto quello che ci siamo detti?",
       "confirm": "Cancella",
       "cancel": "Annulla"
-    },
-    "relative": {
-      "todayAt": "oggi alle {{time}}",
-      "tomorrowAt": "domani alle {{time}}"
     }
   },
   "common": {

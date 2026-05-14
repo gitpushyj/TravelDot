@@ -2,14 +2,13 @@
 
 export type ChatRole = "user" | "assistant";
 
-export type TierName = "free" | "premium" | "power";
+export type TierName = "free" | "premium";
 
 // LLM에 보낼 컨텍스트 sliding window 길이. 일일 한도와 동일하게 둔다.
 // 변경 시 docs/user-tier.md 와 supabase/functions/ai-chat/index.ts의 cap도 같이 본다.
 export const MEMORY_BY_TIER: Record<TierName, number> = {
   free: 1,
   premium: 10,
-  power: 30,
 };
 
 // 화면(채팅 내역)에 보여주는 sliding window 길이.
@@ -17,7 +16,6 @@ export const MEMORY_BY_TIER: Record<TierName, number> = {
 export const UI_MEMORY_BY_TIER: Record<TierName, number> = {
   free: 4,
   premium: 20,
-  power: 60,
 };
 
 export const MAX_MEMORY = Math.max(...Object.values(UI_MEMORY_BY_TIER));

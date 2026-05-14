@@ -16,14 +16,12 @@ function uuid(): string {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
-type RateLimitInfo = { tier: TierName; limit: number };
-
 type State = {
   loadedUserId: string | null;
   tier: TierName;
   messages: ChatMessage[];
   isSending: boolean;
-  rateLimit: RateLimitInfo | null;
+  rateLimit: boolean;
 
   hydrate: (userId: string) => Promise<void>;
   send: (text: string) => Promise<void>;
@@ -50,7 +48,7 @@ export const useAiChatStore = create<State>((set, get) => ({
   tier: "free",
   messages: [],
   isSending: false,
-  rateLimit: null,
+  rateLimit: false,
 
   hydrate: async (userId) => {
     if (get().loadedUserId === userId) return;
@@ -62,7 +60,7 @@ export const useAiChatStore = create<State>((set, get) => ({
       loadedUserId: userId,
       tier,
       messages: trimByTier(messages, tier),
-      rateLimit: null,
+      rateLimit: false,
     });
   },
 
@@ -102,7 +100,7 @@ export const useAiChatStore = create<State>((set, get) => ({
       // 응답에 담긴 tier로 동기화 (서버가 권위 있는 출처).
       const newTier = outcome.tier;
       const next = trimByTier([...after, aiMsg], newTier);
-      set({ messages: next, isSending: false, rateLimit: null, tier: newTier });
+      set({ messages: next, isSending: false, rateLimit: false, tier: newTier });
       await saveMessages(userId, next, uiCapFor(newTier));
       return;
     }
@@ -112,14 +110,14 @@ export const useAiChatStore = create<State>((set, get) => ({
         id: uuid(),
         role: "assistant",
         text: "",
-        error: `aiChat.error.rateLimited.${outcome.tier}`,
+        error: "aiChat.error.rateLimited",
         createdAt: Date.now(),
       };
       const next = trimByTier([...after, aiMsg], outcome.tier);
       set({
         messages: next,
         isSending: false,
-        rateLimit: { tier: outcome.tier, limit: outcome.limit },
+        rateLimit: true,
         tier: outcome.tier,
       });
       await saveMessages(userId, next, uiCapFor(outcome.tier));
@@ -150,6 +148,6 @@ export const useAiChatStore = create<State>((set, get) => ({
     const userId = get().loadedUserId;
     if (!userId) return;
     await clearMessages(userId);
-    set({ messages: [], rateLimit: null });
+    set({ messages: [], rateLimit: false });
   },
 }));

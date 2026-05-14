@@ -129,9 +129,7 @@ export default function AiScreen() {
         </View>
       ) : null}
 
-      {rateLimit && !lockedForUpgrade ? (
-        <UsageLimitBanner tier={rateLimit.tier} limit={rateLimit.limit} />
-      ) : null}
+      {rateLimit && !lockedForUpgrade ? <UsageLimitBanner /> : null}
 
       <AiChatComposer
         ref={composerRef}

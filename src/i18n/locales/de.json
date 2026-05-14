@@ -23,21 +23,13 @@
       "invalidInput": "Konnte das nicht senden — bleib unter 150 Zeichen und versuch's nochmal.",
       "upstream": "Der KI-Dienst hat gerade einen Moment 🥲 Probier's in ein, zwei Minuten nochmal. Du kannst dieselbe Nachricht wieder senden.",
       "imageLoadFailed": "Bild konnte nicht geladen werden",
-      "rateLimited": {
-        "free": "Dein heutiges Gratis-Kontingent (1) ist aufgebraucht 🥲 Upgrade dein Abo, um mehr zu chatten — Premium gibt dir 10/Tag, Power 30/Tag. Lädt um {{resetAt}} wieder auf.",
-        "premium": "Dein heutiges Premium-Kontingent (10) ist aufgebraucht 🥲 Upgrade auf Power für 30/Tag. Lädt um {{resetAt}} wieder auf.",
-        "power": "Dein heutiges Power-Kontingent (30) ist aufgebraucht 🥲 Lädt um {{resetAt}} wieder auf."
-      }
+      "rateLimited": "Du hast heute alle 10 Chats aufgebraucht."
     },
     "confirmClear": {
       "title": "Chat löschen",
       "body": "Alles bisher Gesagte wegwischen?",
       "confirm": "Löschen",
       "cancel": "Abbrechen"
-    },
-    "relative": {
-      "todayAt": "heute um {{time}}",
-      "tomorrowAt": "morgen um {{time}}"
     }
   },
   "common": {

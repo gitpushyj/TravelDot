@@ -23,21 +23,13 @@
       "invalidInput": "No se pudo enviar — asegúrate de que tenga menos de 150 caracteres y vuelve a intentarlo.",
       "upstream": "El servicio de IA está un poco inestable 🥲 Inténtalo en uno o dos minutos. Puedes reenviar el mismo mensaje.",
       "imageLoadFailed": "No se pudo cargar la imagen",
-      "rateLimited": {
-        "free": "Ya usaste el cupo gratis de hoy (1) 🥲 Actualiza tu plan para chatear más — premium te da 10/día y power 30/día. Se recarga {{resetAt}}.",
-        "premium": "Ya usaste el cupo premium de hoy (10) 🥲 Sube a power para tener 30/día. Se recarga {{resetAt}}.",
-        "power": "Ya usaste el cupo power de hoy (30) 🥲 Se recarga {{resetAt}}."
-      }
+      "rateLimited": "Has agotado los 10 chats de hoy."
     },
     "confirmClear": {
       "title": "Borrar chat",
       "body": "¿Borrar todo lo que llevamos dicho?",
       "confirm": "Borrar",
       "cancel": "Cancelar"
-    },
-    "relative": {
-      "todayAt": "hoy a las {{time}}",
-      "tomorrowAt": "mañana a las {{time}}"
     }
   },
   "common": {

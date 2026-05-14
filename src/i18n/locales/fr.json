@@ -23,21 +23,13 @@
       "invalidInput": "Impossible d'envoyer — assure-toi de rester sous 150 caractères et réessaie.",
       "upstream": "Le service d'IA a un petit moment 🥲 Réessaie dans une ou deux minutes. Tu peux renvoyer le même message.",
       "imageLoadFailed": "Impossible de charger l'image",
-      "rateLimited": {
-        "free": "Tu as utilisé ton quota gratuit du jour (1) 🥲 Passe à un forfait supérieur pour discuter plus — premium te donne 10/jour, power 30/jour. Se recharge {{resetAt}}.",
-        "premium": "Tu as utilisé ton quota premium du jour (10) 🥲 Passe à power pour 30/jour. Se recharge {{resetAt}}.",
-        "power": "Tu as utilisé ton quota power du jour (30) 🥲 Se recharge {{resetAt}}."
-      }
+      "rateLimited": "Tu as utilisé tes 10 chats du jour."
     },
     "confirmClear": {
       "title": "Effacer le chat",
       "body": "Tout effacer ce qu'on s'est dit ?",
       "confirm": "Effacer",
       "cancel": "Annuler"
-    },
-    "relative": {
-      "todayAt": "aujourd'hui à {{time}}",
-      "tomorrowAt": "demain à {{time}}"
     }
   },
   "common": {

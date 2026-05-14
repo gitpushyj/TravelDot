@@ -16,7 +16,7 @@ type State = {
   refresh: () => Promise<void>;
 };
 
-// tier 0(free)은 미구독, 1·2(premium·power)는 구독 상태로 본다.
+// tier 0(free)은 미구독, 1(premium)은 구독 상태로 본다.
 // 실제 상태는 useSubscriptionStore(글로벌 zustand)에서 관리하므로 여러 화면이
 // 동시에 mount돼 있어도 subscribe/restore 직후 즉시 함께 갱신된다.
 // 결제/복원은 RevenueCat이 담당하며, 서버 tier는 RC webhook이 갱신한다.
