@@ -680,6 +680,11 @@
       "label": "Language",
       "current": "Current: {{name}}"
     },
+    "mapAppearance": {
+      "label": "Map color & theme",
+      "sub": "Lock map theme · pick a dot palette",
+      "proBadge": "PRO 🔒"
+    },
     "dev": {
       "wipeLabel": "Erase all data",
       "wipeSub": "Wipe local DB and settings, then sign out — for testing from scratch",
@@ -860,6 +865,18 @@
     "legal": {
       "privacyPolicy": "Privacy Policy",
       "termsOfUse": "Terms of Use"
+    }
+  },
+  "mapAppearance": {
+    "title": "Map appearance",
+    "section": {
+      "lock": "Lock map theme",
+      "palette": "Dot color"
+    },
+    "lock": {
+      "system": "Follow app",
+      "light": "Light",
+      "dark": "Dark"
     }
   },
   "flight": {

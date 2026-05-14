@@ -27,8 +27,7 @@ import { useFlightStore } from "../features/flight/flightStore";
 import { useVisitStore } from "../features/travel/visitStore";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
-import { useTheme } from "../theme/themeStore";
-import { colorForVisitWith } from "../theme/theme";
+import { colorForVisitOnMap, useMapTheme, useTheme } from "../theme/themeStore";
 import { homeDotColor } from "../utils/countryColors";
 import type { CountryRef, DotData } from "../types";
 
@@ -104,6 +103,7 @@ export default function DotMap({
   const selectedCountry = useVisitStore((s) => s.selectedCountry);
   const setSelectedCountry = useVisitStore((s) => s.setSelectedCountry);
   const theme = useTheme();
+  const mapTheme = useMapTheme();
   const { t } = useTranslation();
 
   // viewport가 자연 비율(360:viewBoxH)보다 길어지면(예: 사용자가 홈 화면에서
@@ -122,8 +122,8 @@ export default function DotMap({
 
   const homeCode = homeCountry?.code;
   const homeFill = useMemo(
-    () => homeDotColor(homeCode, theme.homeColor),
-    [homeCode, theme.homeColor]
+    () => homeDotColor(homeCode, mapTheme.homeColor),
+    [homeCode, mapTheme.homeColor]
   );
   const positioned = useMemo(
     () =>
@@ -148,10 +148,10 @@ export default function DotMap({
           isHome,
           fill: isHome
             ? homeFill
-            : colorForVisitWith(theme, { count, isHomeCountry: false }),
+            : colorForVisitOnMap(mapTheme, { count, isHomeCountry: false }),
         };
       }),
-    [dots, baseScale, halfDotPx, maxLat, visitCounts, homeCode, theme, homeFill]
+    [dots, baseScale, halfDotPx, maxLat, visitCounts, homeCode, mapTheme, homeFill]
   );
 
   const highlightedIds = useMemo(() => {
@@ -682,7 +682,7 @@ export default function DotMap({
                     r={radius}
                     color={
                       highlightedIds?.has(d.id) && !d.isHome
-                        ? theme.highlightDot
+                        ? mapTheme.highlightDot
                         : d.fill
                     }
                   />

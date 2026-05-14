@@ -31,6 +31,7 @@ export type RootStackParamList = {
   History: undefined;
   ReviewSuspect: undefined;
   Language: undefined;
+  MapAppearance: undefined;
   Subscription: undefined;
   CountryMerge: { countryCode: string };
   ImageDetail: {

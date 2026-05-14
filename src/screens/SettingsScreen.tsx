@@ -39,6 +39,7 @@ type Props = {
   onChangeHome: () => void;
   onReviewSuspect: () => void;
   onOpenLanguage: () => void;
+  onOpenMapAppearance: () => void;
   onOpenSubscription: () => void;
 };
 
@@ -52,6 +53,7 @@ export default function SettingsScreen({
   onChangeHome,
   onReviewSuspect,
   onOpenLanguage,
+  onOpenMapAppearance,
   onOpenSubscription,
 }: Props) {
   const { t, i18n } = useTranslation();
@@ -345,6 +347,23 @@ export default function SettingsScreen({
             label={t("settings.language.label")}
             sub={LOCALE_LABELS[currentLocale]}
             onPress={onOpenLanguage}
+            divider
+          />
+          <ActionRow
+            theme={theme}
+            label={t("settings.mapAppearance.label")}
+            sub={t("settings.mapAppearance.sub")}
+            onPress={
+              isSubscribed
+                ? onOpenMapAppearance
+                : onOpenSubscription
+            }
+            // 무료 사용자는 시각적으로 잠긴 상태 + PRO 뱃지, 누르면 구독 화면으로.
+            // 유료 사용자는 평소처럼 바로 진입.
+            locked={!isSubscribed}
+            trailingBadge={
+              !isSubscribed ? t("settings.mapAppearance.proBadge") : undefined
+            }
             divider
           />
         </View>

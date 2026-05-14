@@ -12,6 +12,7 @@ import EditTripScreenNav from "./screens/EditTripScreenNav";
 import HistoryScreenNav from "./screens/HistoryScreenNav";
 import ImageDetailScreenNav from "./screens/ImageDetailScreenNav";
 import LanguageScreenNav from "./screens/LanguageScreenNav";
+import MapAppearanceScreenNav from "./screens/MapAppearanceScreenNav";
 import MapZoomScreenNav from "./screens/MapZoomScreenNav";
 import ReviewSuspectScreenNav from "./screens/ReviewSuspectScreenNav";
 import MilestonesScreenNav from "./screens/MilestonesScreenNav";
@@ -46,6 +47,10 @@ export default function RootNavigator() {
         <Stack.Screen name="History" component={HistoryScreenNav} />
         <Stack.Screen name="ReviewSuspect" component={ReviewSuspectScreenNav} />
         <Stack.Screen name="Language" component={LanguageScreenNav} />
+        <Stack.Screen
+          name="MapAppearance"
+          component={MapAppearanceScreenNav}
+        />
         <Stack.Screen name="Subscription" component={SubscriptionScreenNav} />
         <Stack.Screen
           name="ImageDetail"

@@ -99,6 +99,19 @@ export function makeStyles(theme: Theme) {
       fontSize: 22,
       fontWeight: "400",
     },
+    badge: {
+      backgroundColor: theme.accentSoftBg,
+      paddingHorizontal: 8,
+      paddingVertical: 3,
+      borderRadius: 999,
+      marginRight: 4,
+    },
+    badgeText: {
+      color: theme.accentSoftText,
+      fontSize: 10,
+      fontWeight: "800",
+      letterSpacing: 0.4,
+    },
     deleteAccountWrap: {
       alignItems: "center",
       marginTop: 32,
