@@ -101,8 +101,8 @@ export default function SubscriptionScreen({ onClose }: Props) {
               periodLabel={t("subscription.plan.yearly.period", {
                 price: yearly.priceLabel,
               })}
-              rightPrimary={yearly.perMonthLabel}
-              rightSecondary={t("subscription.perMonth")}
+              rightPrimary={yearly.perWeekLabel}
+              rightSecondary={t("subscription.perWeek")}
               trialLabel={
                 yearly.freeTrialDays > 0
                   ? t("subscription.freeTrial", {

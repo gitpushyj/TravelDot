@@ -836,6 +836,7 @@
     },
     "save": "Save {{percent}}%",
     "perMonth": "per month",
+    "perWeek": "per week",
     "freeTrial": "{{days}} days free trial",
     "plan": {
       "yearly": {

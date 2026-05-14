@@ -836,6 +836,7 @@
     },
     "save": "{{percent}}% 할인",
     "perMonth": "월당",
+    "perWeek": "주당",
     "freeTrial": "{{days}}일 무료 체험",
     "plan": {
       "yearly": {

@@ -66,7 +66,8 @@ function buildPlans(
   const monthlyPrice = monthlyPkg.product.price;
   const currency = yearlyPkg.product.currencyCode;
 
-  const yearlyPerMonth = yearlyPrice / 12;
+  const yearlyPerWeek = yearlyPrice / 52;
+  const monthlyPerWeek = (monthlyPrice * 12) / 52;
   const monthlyAsYearly = monthlyPrice * 12;
   const savePercent =
     monthlyAsYearly > 0
@@ -77,15 +78,14 @@ function buildPlans(
     yearly: {
       id: "yearly",
       priceLabel: yearlyPkg.product.priceString,
-      perMonthLabel: formatCurrency(yearlyPerMonth, currency),
+      perWeekLabel: formatCurrency(yearlyPerWeek, currency),
       savePercent: Math.max(0, savePercent),
       freeTrialDays: freeTrialDaysOf(yearlyPkg),
     },
     monthly: {
       id: "monthly",
       priceLabel: monthlyPkg.product.priceString,
-      // monthly 자체가 월당 가격이므로 라벨 동일.
-      perMonthLabel: monthlyPkg.product.priceString,
+      perWeekLabel: formatCurrency(monthlyPerWeek, currency),
       savePercent: 0,
       freeTrialDays: freeTrialDaysOf(monthlyPkg),
     },
