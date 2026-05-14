@@ -13,7 +13,10 @@ export default function PremiumIntroScreenNav({
     <>
       <StatusBar style={theme.statusBar} />
       <PremiumIntroScreen
-        onGoToSubscription={() => navigation.replace("Subscription")}
+        onGoToSubscription={() => {
+          navigation.navigate("Main", { screen: "AI" });
+          navigation.replace("Subscription");
+        }}
         onDismiss={() => navigation.navigate("Main", { screen: "AI" })}
       />
     </>
