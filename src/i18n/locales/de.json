@@ -575,6 +575,7 @@
         "title": "Reisedaten werden gespeichert",
         "desc": "Aus den zugeordneten Fotos werden Besuchseinträge erstellt"
       },
+      "scanningPlaceholder": "Fotos werden gescannt",
       "analyzingAutoNext": {
         "prefix": "Wenn die Analyse fertig ist, geht es ",
         "highlight": "automatisch zum nächsten Schritt",

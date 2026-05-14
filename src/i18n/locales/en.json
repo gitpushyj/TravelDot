@@ -781,6 +781,7 @@
         "title": "Preparing your map",
         "desc": "Counting visits per country"
       },
+      "scanningPlaceholder": "Scanning photos",
       "analyzingAutoNext": {
         "prefix": "Once analysis is done, you'll move to the ",
         "highlight": "next step automatically",

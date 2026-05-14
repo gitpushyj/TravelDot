@@ -575,6 +575,7 @@
         "title": "Enregistrement des voyages",
         "desc": "Création des enregistrements de visite à partir des photos analysées"
       },
+      "scanningPlaceholder": "Analyse des photos en cours",
       "analyzingAutoNext": {
         "prefix": "Une fois l'analyse terminée, vous passerez ",
         "highlight": "automatiquement à l'étape suivante",

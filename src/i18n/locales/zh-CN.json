@@ -575,6 +575,7 @@
         "title": "正在保存旅行记录",
         "desc": "根据匹配的照片创建访问记录"
       },
+      "scanningPlaceholder": "正在扫描照片",
       "analyzingAutoNext": {
         "prefix": "分析完成后，将",
         "highlight": "自动进入下一步",

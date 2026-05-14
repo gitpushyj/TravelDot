@@ -781,6 +781,7 @@
         "title": "지도에 색칠할 준비 중",
         "desc": "국가별 방문 횟수 계산"
       },
+      "scanningPlaceholder": "사진을 스캔중입니다",
       "analyzingAutoNext": {
         "prefix": "분석이 완료되면 ",
         "highlight": "자동으로 다음 단계",

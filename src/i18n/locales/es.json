@@ -575,6 +575,7 @@
         "title": "Guardando viajes",
         "desc": "Creando registros de visita desde las fotos analizadas"
       },
+      "scanningPlaceholder": "Escaneando fotos",
       "analyzingAutoNext": {
         "prefix": "Cuando termine el análisis, pasarás ",
         "highlight": "automáticamente al siguiente paso",

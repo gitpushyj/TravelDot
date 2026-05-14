@@ -575,6 +575,7 @@
         "title": "Salvataggio dei viaggi",
         "desc": "Creazione dei registri di visita dalle foto analizzate"
       },
+      "scanningPlaceholder": "Scansione delle foto in corso",
       "analyzingAutoNext": {
         "prefix": "Al termine dell'analisi, passerai ",
         "highlight": "automaticamente al passaggio successivo",

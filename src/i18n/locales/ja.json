@@ -575,6 +575,7 @@
         "title": "旅の記録を保存中",
         "desc": "分析した写真から訪問記録を作成しています"
       },
+      "scanningPlaceholder": "写真をスキャン中です",
       "analyzingAutoNext": {
         "prefix": "分析が完了すると",
         "highlight": "自動的に次のステップ",

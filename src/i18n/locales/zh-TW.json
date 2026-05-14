@@ -575,6 +575,7 @@
         "title": "正在儲存旅行紀錄",
         "desc": "根據比對結果建立造訪紀錄"
       },
+      "scanningPlaceholder": "正在掃描照片",
       "analyzingAutoNext": {
         "prefix": "分析完成後，將",
         "highlight": "自動進入下一步",

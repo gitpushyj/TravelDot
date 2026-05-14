@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import Svg, { Path } from "react-native-svg";
 
 import type { Theme } from "../../theme/theme";
@@ -31,6 +32,7 @@ export default function SyncingProgressRow({
   state,
   progress,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <View style={styles.row}>
       <View style={[styles.iconWrap, { backgroundColor: iconBg }]}>
@@ -44,7 +46,9 @@ export default function SyncingProgressRow({
             style={[styles.progress, { color: theme.textSecondary }]}
             numberOfLines={1}
           >
-            {formatProgress(progress)}
+            {progress.processed === 0
+              ? t("onboarding.sync.scanningPlaceholder")
+              : formatProgress(progress)}
           </Text>
         )}
       </View>
