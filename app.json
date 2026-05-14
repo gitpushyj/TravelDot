@@ -1,12 +1,24 @@
 {
   "expo": {
-    "name": "PixelTravel",
+    "name": "Pixel Travel",
     "slug": "VisitGrid",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "locales": {
+      "en": "./locales/app-name/en.json",
+      "ko": "./locales/app-name/ko.json",
+      "ja": "./locales/app-name/ja.json",
+      "zh-Hans": "./locales/app-name/zh-Hans.json",
+      "zh-Hant": "./locales/app-name/zh-Hant.json",
+      "es": "./locales/app-name/es.json",
+      "de": "./locales/app-name/de.json",
+      "fr": "./locales/app-name/fr.json",
+      "it": "./locales/app-name/it.json",
+      "ru": "./locales/app-name/ru.json"
+    },
     "splash": {
       "image": "./assets/icon.png",
       "resizeMode": "contain",
@@ -51,7 +63,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "PixelTravel needs access to your photo library so you can attach photos to the trips you record.",
+          "photosPermission": "Pixel Travel needs access to your photo library so you can attach photos to the trips you record.",
           "cameraPermission": false,
           "microphonePermission": false
         }
@@ -59,7 +71,7 @@
       [
         "expo-media-library",
         {
-          "photosPermission": "PixelTravel reads dates and location metadata from your photos to automatically detect the countries you've visited. Your photos stay on your device and are never uploaded.",
+          "photosPermission": "Pixel Travel reads dates and location metadata from your photos to automatically detect the countries you've visited. Your photos stay on your device and are never uploaded.",
           "savePhotosPermission": false,
           "isAccessMediaLocationEnabled": true,
           "granularPermissions": [
@@ -77,10 +89,11 @@
         }
       ],
       "./plugins/withPodfileModularHeaders",
+      "./plugins/withAndroidLocalizedAppName",
       [
         "expo-tracking-transparency",
         {
-          "userTrackingPermission": "PixelTravel uses this identifier to measure how features are used so we can improve the app experience."
+          "userTrackingPermission": "Pixel Travel uses this identifier to measure how features are used so we can improve the app experience."
         }
       ]
     ]
