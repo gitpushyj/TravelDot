@@ -91,6 +91,16 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - 작업이 완료되어 push가 필요해 보이는 상황이라도, 먼저 사용자에게 push 여부를 확인하고 명시적 승인을 받은 뒤에만 실행한다.
 - 위 규칙은 main, 피처 브랜치, 태그, 워크트리 브랜치 등 모든 ref에 동일하게 적용된다.
 
+## 8. Always Localize User-Facing Text
+
+**사용자에게 노출되는 모든 텍스트는 항상 지원하는 모든 언어로 번역한다.**
+
+- 지원 locale: `src/i18n/locales/` 아래의 모든 파일 (`de`, `en`, `es`, `fr`, `it`, `ja`, `ko`, `ru`, `zh-CN`, `zh-TW`). 새 키를 추가하거나 기존 키를 수정하면 **10개 언어 전부**에 반영한다. ko/en만 추가하고 끝내지 않는다.
+- 새 화면/슬라이드/카피를 만들 때는 처음부터 `t("...")` 키로 작성하고 모든 locale 파일에 동시에 키를 채운다. 하드코딩 문자열을 남기지 않는다.
+- 기존 locale 파일 중 일부에만 키가 있고 나머지에는 빠져 있는 상태(fallback에 의존)는 발견 즉시 보완한다. fallback은 안전망이지 정상 상태가 아니다.
+- 번역은 단순 직역이 아니라 각 언어 화자에게 자연스럽게 읽히도록 의역한다. 숫자 표기, 인용 부호, 띄어쓰기, 어순은 해당 언어 관습을 따른다.
+- 작업 후에는 모든 locale JSON이 `JSON.parse` 가능한지, 새 키가 전부 존재하는지 검증한다.
+
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.

@@ -874,6 +874,8 @@
         "desc": "여행 기록(dot 지도)이 모든 기기에서 똑같이. 새 폰에서도 그대로예요.",
         "devicePhone": "폰",
         "deviceTablet": "태블릿",
+        "deviceA": "기기 A",
+        "deviceB": "기기 B",
         "note": "클라우드 자동 백업 · 사진은 제외"
       },
       "titles": {

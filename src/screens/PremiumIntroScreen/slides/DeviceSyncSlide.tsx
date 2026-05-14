@@ -49,18 +49,33 @@ export default function DeviceSyncSlide() {
       desc={t("premiumIntro.slides.deviceSync.desc")}
     >
       <View style={styles.wrap}>
-        <View style={styles.devicesRow}>
-          <DeviceCard
-            label={t("premiumIntro.slides.deviceSync.devicePhone")}
-            styles={styles}
-            mapColor={theme.accent}
-          />
-          <Text style={styles.arrow}>⇄</Text>
-          <DeviceCard
-            label={t("premiumIntro.slides.deviceSync.deviceTablet")}
-            styles={styles}
-            mapColor={theme.accent}
-          />
+        <View style={styles.devicesGrid}>
+          <View style={styles.devicesRow}>
+            <DeviceCard
+              label={t("premiumIntro.slides.deviceSync.devicePhone")}
+              styles={styles}
+              mapColor={theme.accent}
+            />
+            <Text style={styles.arrow}>⇄</Text>
+            <DeviceCard
+              label={t("premiumIntro.slides.deviceSync.deviceTablet")}
+              styles={styles}
+              mapColor={theme.accent}
+            />
+          </View>
+          <View style={styles.devicesRow}>
+            <DeviceCard
+              label={t("premiumIntro.slides.deviceSync.deviceA")}
+              styles={styles}
+              mapColor={theme.accent}
+            />
+            <Text style={styles.arrow}>⇄</Text>
+            <DeviceCard
+              label={t("premiumIntro.slides.deviceSync.deviceB")}
+              styles={styles}
+              mapColor={theme.accent}
+            />
+          </View>
         </View>
         <View style={styles.noteRow}>
           <CloudUpload size={14} color={theme.textSecondary} strokeWidth={2.2} />
@@ -74,6 +89,9 @@ export default function DeviceSyncSlide() {
 function makeStyles(theme: Theme) {
   return StyleSheet.create({
     wrap: { gap: 18 },
+    devicesGrid: {
+      gap: 10,
+    },
     devicesRow: {
       flexDirection: "row",
       alignItems: "center",

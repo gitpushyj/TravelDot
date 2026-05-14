@@ -663,5 +663,39 @@
     "startA11y": "Démarrer un vol",
     "liveA11y": "Voir le vol",
     "arrivedToast": "Arrivé · {{iata}} {{city}}"
+  },
+  "premiumIntro": {
+    "footer": {
+      "cta": "Voir les abonnements",
+      "later": "Plus tard"
+    },
+    "slides": {
+      "aiChat": {
+        "title": "Chat voyage IA",
+        "desc": "Pose tes questions à une IA qui connaît ton historique de voyages. Stats et recommandations, tout en discussion.",
+        "q1": "Ai-je beaucoup voyagé par rapport à mon âge ?",
+        "a1": "J'ai analysé tes 3 dernières années — **12 pays, 48 jours au total**. La moyenne pour les 20-30 ans est d'environ 1,2 pays par an, tu es donc dans le **top 9 %** de ta tranche d'âge ✈️",
+        "q2": "Où devrais-je aller ensuite ?",
+        "a2": "Ton profil est solide en Asie du Sud-Est et en Europe, mais l'Amérique du Sud est vide. Pour quelqu'un qui aime les city trips de 7 à 10 jours, **le Pérou (Lima + Cusco)** est parfait 🇵🇪"
+      },
+      "deviceSync": {
+        "title": "Synchronisation des appareils",
+        "desc": "Ta carte de voyages reste identique sur tous tes appareils. Même sur un nouveau téléphone.",
+        "devicePhone": "Téléphone",
+        "deviceTablet": "Tablette",
+        "deviceA": "Appareil A",
+        "deviceB": "Appareil B",
+        "note": "Sauvegarde cloud automatique · photos exclues"
+      },
+      "titles": {
+        "title": "Débloquer titres et jalons",
+        "desc": "Plus de 10 titres et badges de jalons sont débloqués."
+      },
+      "mapStyle": {
+        "title": "Style de carte",
+        "desc": "Choisis parmi 10 palettes de couleurs de points pour personnaliser la carte à ton goût.",
+        "premiumOnly": "Premium uniquement"
+      }
+    }
   }
 }

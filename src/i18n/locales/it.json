@@ -663,5 +663,39 @@
     "startA11y": "Inizia il volo",
     "liveA11y": "Mostra info volo",
     "arrivedToast": "Atterrato · {{iata}} {{city}}"
+  },
+  "premiumIntro": {
+    "footer": {
+      "cta": "Vedi i piani di abbonamento",
+      "later": "Più tardi"
+    },
+    "slides": {
+      "aiChat": {
+        "title": "Chat di viaggio con IA",
+        "desc": "Chiedi a un'IA che conosce la tua cronologia di viaggi. Statistiche e consigli, tutto in chat.",
+        "q1": "Ho viaggiato molto rispetto ai miei coetanei?",
+        "a1": "Ho analizzato gli ultimi 3 anni — **12 paesi, 48 giorni in totale**. La media per i ventenni è di circa 1,2 paesi all'anno, quindi sei nel **top 9%** della tua fascia d'età ✈️",
+        "q2": "Dove dovrei andare la prossima volta?",
+        "a2": "Il tuo profilo è forte nel Sud-Est asiatico e in Europa, ma il Sud America è vuoto. Per chi ama i viaggi cittadini di 7-10 giorni, **il Perù (Lima + Cusco)** è perfetto 🇵🇪"
+      },
+      "deviceSync": {
+        "title": "Sincronizzazione dei dispositivi",
+        "desc": "La tua mappa di viaggio resta uguale su ogni dispositivo. Anche su un nuovo telefono.",
+        "devicePhone": "Telefono",
+        "deviceTablet": "Tablet",
+        "deviceA": "Dispositivo A",
+        "deviceB": "Dispositivo B",
+        "note": "Backup cloud automatico · foto escluse"
+      },
+      "titles": {
+        "title": "Sblocca titoli e traguardi",
+        "desc": "Si sbloccano oltre 10 titoli e badge di traguardo."
+      },
+      "mapStyle": {
+        "title": "Stile mappa",
+        "desc": "Scegli tra 10 palette di colori dei punti per personalizzare la mappa a tuo gusto.",
+        "premiumOnly": "Solo Premium"
+      }
+    }
   }
 }

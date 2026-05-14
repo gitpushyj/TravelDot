@@ -663,5 +663,39 @@
     "startA11y": "Iniciar vuelo",
     "liveA11y": "Ver vuelo en curso",
     "arrivedToast": "Aterrizó · {{iata}} {{city}}"
+  },
+  "premiumIntro": {
+    "footer": {
+      "cta": "Ver planes de suscripción",
+      "later": "Quizás más tarde"
+    },
+    "slides": {
+      "aiChat": {
+        "title": "Chat de viajes con IA",
+        "desc": "Pregunta a una IA que conoce tu historial de viajes. Estadísticas y recomendaciones, todo en el chat.",
+        "q1": "¿He viajado mucho en comparación con la gente de mi edad?",
+        "a1": "Analicé tus últimos 3 años — **12 países, 48 días en total**. La media para los veinteañeros es de unos 1,2 países al año, así que estás en el **top 9 %** de tu grupo de edad ✈️",
+        "q2": "¿A dónde debería ir después?",
+        "a2": "Tu patrón es fuerte en el Sudeste Asiático y Europa, pero Sudamérica está vacía. Para alguien que disfruta viajes urbanos de 7 a 10 días, **Perú (Lima + Cusco)** encaja perfecto 🇵🇪"
+      },
+      "deviceSync": {
+        "title": "Sincronización de dispositivos",
+        "desc": "Tu mapa de viajes se mantiene igual en cada dispositivo. Incluso en un móvil nuevo.",
+        "devicePhone": "Móvil",
+        "deviceTablet": "Tablet",
+        "deviceA": "Dispositivo A",
+        "deviceB": "Dispositivo B",
+        "note": "Copia de seguridad automática en la nube · fotos excluidas"
+      },
+      "titles": {
+        "title": "Desbloquea títulos y logros",
+        "desc": "Se desbloquean más de 10 títulos e insignias de logros."
+      },
+      "mapStyle": {
+        "title": "Estilo del mapa",
+        "desc": "Elige entre 10 paletas de colores de puntos para personalizar el mapa a tu gusto.",
+        "premiumOnly": "Solo Premium"
+      }
+    }
   }
 }

@@ -663,5 +663,39 @@
     "startA11y": "Flug starten",
     "liveA11y": "Fluginfo anzeigen",
     "arrivedToast": "Angekommen · {{iata}} {{city}}"
+  },
+  "premiumIntro": {
+    "footer": {
+      "cta": "Abo-Optionen ansehen",
+      "later": "Vielleicht später"
+    },
+    "slides": {
+      "aiChat": {
+        "title": "KI-Reise-Chat",
+        "desc": "Frag eine KI, die deine Reisehistorie kennt. Statistiken und Empfehlungen direkt im Chat.",
+        "q1": "Bin ich im Vergleich zu meinen Altersgenossen viel gereist?",
+        "a1": "Ich habe deine letzten 3 Jahre analysiert — **12 Länder, insgesamt 48 Tage**. Der Schnitt bei den 20- bis 30-Jährigen liegt bei etwa 1,2 Ländern pro Jahr, du bist also in den **Top 9 %** deiner Altersgruppe ✈️",
+        "q2": "Wohin sollte ich als Nächstes?",
+        "a2": "Dein Muster ist stark in Südostasien und Europa, aber Südamerika ist leer. Für jemanden, der 7–10-Tage-Städtetrips mag, passt **Peru (Lima + Cusco)** perfekt 🇵🇪"
+      },
+      "deviceSync": {
+        "title": "Gerätesynchronisation",
+        "desc": "Deine Reisekarte bleibt auf jedem Gerät gleich. Auch auf einem neuen Handy.",
+        "devicePhone": "Handy",
+        "deviceTablet": "Tablet",
+        "deviceA": "Gerät A",
+        "deviceB": "Gerät B",
+        "note": "Automatisches Cloud-Backup · Fotos ausgenommen"
+      },
+      "titles": {
+        "title": "Titel & Meilensteine freischalten",
+        "desc": "Über 10 Titel und Meilenstein-Badges werden freigeschaltet."
+      },
+      "mapStyle": {
+        "title": "Kartenstil",
+        "desc": "Wähle aus 10 Dot-Farbpaletten und gestalte die Karte ganz nach deinem Geschmack.",
+        "premiumOnly": "Nur Premium"
+      }
+    }
   }
 }
