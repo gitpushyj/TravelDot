@@ -668,8 +668,8 @@
       "current": "현재: {{name}}"
     },
     "mapAppearance": {
-      "label": "도트 지도 색 및 테마 변경",
-      "sub": "지도 테마 고정 · 도트 팔레트 선택",
+      "label": "도트 지도 색 변경",
+      "sub": "10가지 팔레트 중 선택",
       "proBadge": "PRO 🔒"
     },
     "dev": {
@@ -856,15 +856,9 @@
     }
   },
   "mapAppearance": {
-    "title": "지도 외형",
+    "title": "도트 지도 색",
     "section": {
-      "lock": "지도 테마 고정",
       "palette": "도트 색"
-    },
-    "lock": {
-      "system": "앱 따라가기",
-      "light": "라이트 고정",
-      "dark": "다크 고정"
     }
   },
   "flight": {

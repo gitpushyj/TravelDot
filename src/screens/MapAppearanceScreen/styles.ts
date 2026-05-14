@@ -44,13 +44,6 @@ export function makeStyles(theme: Theme) {
     sectionLabelSpaced: {
       marginTop: 24,
     },
-    card: {
-      backgroundColor: theme.cardBg,
-      borderRadius: 14,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      overflow: "hidden",
-    },
     mapPreviewWrap: {
       borderRadius: 14,
       overflow: "hidden",

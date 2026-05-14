@@ -6,22 +6,14 @@ import DotMap from "../components/DotMap";
 import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { getCurrentLocale } from "../i18n";
 import type { MapPalette } from "../theme/mapPalettes";
-import { useTheme } from "../theme/themeStore";
-import {
-  useMapTheme,
-  useThemeStore,
-  type MapThemeLock,
-} from "../theme/themeStore";
+import { useMapTheme, useTheme, useThemeStore } from "../theme/themeStore";
 
-import MapThemeLockRow from "./MapAppearanceScreen/MapThemeLockRow";
 import PalettePicker from "./MapAppearanceScreen/PalettePicker";
 import { makeStyles } from "./MapAppearanceScreen/styles";
 
 type Props = {
   onClose: () => void;
 };
-
-const LOCK_OPTIONS: MapThemeLock[] = ["system", "light", "dark"];
 
 export default function MapAppearanceScreen({ onClose }: Props) {
   const { t } = useTranslation();
@@ -33,19 +25,8 @@ export default function MapAppearanceScreen({ onClose }: Props) {
   // 도트맵 핀치/팬 중에는 부모 ScrollView 세로 스크롤을 잠가 손가락 충돌을 막는다.
   const [mapInteracting, setMapInteracting] = useState(false);
 
-  const mapThemeLock = useThemeStore((s) => s.mapThemeLock);
   const mapPaletteId = useThemeStore((s) => s.mapPaletteId);
-  const setMapThemeLock = useThemeStore((s) => s.setMapThemeLock);
   const setMapPaletteId = useThemeStore((s) => s.setMapPaletteId);
-
-  const lockOptions = useMemo(
-    () =>
-      LOCK_OPTIONS.map((value) => ({
-        value,
-        label: t(`mapAppearance.lock.${value}`),
-      })),
-    [t]
-  );
 
   const labelOf = (palette: MapPalette) => {
     const locale = getCurrentLocale();
@@ -67,13 +48,7 @@ export default function MapAppearanceScreen({ onClose }: Props) {
         contentContainerStyle={styles.content}
         scrollEnabled={!mapInteracting}
       >
-        {/* 미리보기. 지도 area 뒤에 mapTheme.bgColor를 깔아 잠금 효과를 즉시 확인 */}
-        <View
-          style={[
-            styles.mapPreviewWrap,
-            { backgroundColor: mapTheme.bgColor },
-          ]}
-        >
+        <View style={styles.mapPreviewWrap}>
           <DotMap
             enableZoom
             playIntro={false}
@@ -81,16 +56,6 @@ export default function MapAppearanceScreen({ onClose }: Props) {
             onInteractingChange={setMapInteracting}
           />
         </View>
-
-        <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
-          {t("mapAppearance.section.lock")}
-        </Text>
-        <MapThemeLockRow
-          theme={theme}
-          current={mapThemeLock}
-          options={lockOptions}
-          onSelect={(v) => void setMapThemeLock(v)}
-        />
 
         <Text style={[styles.sectionLabel, styles.sectionLabelSpaced]}>
           {t("mapAppearance.section.palette")}

@@ -668,8 +668,8 @@
       "current": "Current: {{name}}"
     },
     "mapAppearance": {
-      "label": "Map color & theme",
-      "sub": "Lock map theme · pick a dot palette",
+      "label": "Map dot color",
+      "sub": "Pick from 10 palettes",
       "proBadge": "PRO 🔒"
     },
     "dev": {
@@ -856,15 +856,9 @@
     }
   },
   "mapAppearance": {
-    "title": "Map appearance",
+    "title": "Map dot color",
     "section": {
-      "lock": "Lock map theme",
       "palette": "Dot color"
-    },
-    "lock": {
-      "system": "Follow app",
-      "light": "Light",
-      "dark": "Dark"
     }
   },
   "flight": {

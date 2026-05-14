@@ -13,23 +13,17 @@ import {
 import { DARK_THEME, LIGHT_THEME, Theme, ThemeMode } from "./theme";
 
 const STORAGE_KEY = "visitgrid:themeMode";
-const MAP_LOCK_STORAGE_KEY = "visitgrid:mapThemeLock";
 const MAP_PALETTE_STORAGE_KEY = "visitgrid:mapPaletteId";
-
-// 도트 지도만 따로 라이트/다크를 고정하는 옵션. "system"이면 앱 테마를 따라간다.
-export type MapThemeLock = "system" | "light" | "dark";
 
 type S = {
   mode: ThemeMode;
   systemScheme: ColorSchemeName;
   hydrated: boolean;
-  // 지도 외형 (유료 기능)
-  mapThemeLock: MapThemeLock;
+  // 지도 도트 팔레트 (유료 기능). 라이트/다크 변종은 앱 테마를 그대로 따라간다.
   mapPaletteId: string;
   hydrate: () => Promise<void>;
   setMode: (m: ThemeMode) => Promise<void>;
   setSystemScheme: (s: ColorSchemeName) => void;
-  setMapThemeLock: (lock: MapThemeLock) => Promise<void>;
   setMapPaletteId: (id: string) => Promise<void>;
 };
 
@@ -37,25 +31,19 @@ export const useThemeStore = create<S>((set) => ({
   mode: "system",
   systemScheme: Appearance.getColorScheme(),
   hydrated: false,
-  mapThemeLock: "system",
   mapPaletteId: DEFAULT_MAP_PALETTE_ID,
   hydrate: async () => {
     try {
-      const [rawMode, rawLock, rawPalette] = await Promise.all([
+      const [rawMode, rawPalette] = await Promise.all([
         AsyncStorage.getItem(STORAGE_KEY),
-        AsyncStorage.getItem(MAP_LOCK_STORAGE_KEY),
         AsyncStorage.getItem(MAP_PALETTE_STORAGE_KEY),
       ]);
       const mode: ThemeMode =
         rawMode === "light" || rawMode === "dark" || rawMode === "system"
           ? rawMode
           : "system";
-      const mapThemeLock: MapThemeLock =
-        rawLock === "light" || rawLock === "dark" || rawLock === "system"
-          ? rawLock
-          : "system";
       const mapPaletteId = rawPalette ?? DEFAULT_MAP_PALETTE_ID;
-      set({ mode, mapThemeLock, mapPaletteId, hydrated: true });
+      set({ mode, mapPaletteId, hydrated: true });
     } catch {
       set({ hydrated: true });
     }
@@ -69,12 +57,6 @@ export const useThemeStore = create<S>((set) => ({
     }
   },
   setSystemScheme: (systemScheme) => set({ systemScheme }),
-  setMapThemeLock: async (mapThemeLock) => {
-    set({ mapThemeLock });
-    try {
-      await AsyncStorage.setItem(MAP_LOCK_STORAGE_KEY, mapThemeLock);
-    } catch {}
-  },
   setMapPaletteId: async (mapPaletteId) => {
     set({ mapPaletteId });
     try {
@@ -90,40 +72,30 @@ export function useTheme(): Theme {
   return effective === "dark" ? DARK_THEME : LIGHT_THEME;
 }
 
-// 도트 지도에만 적용되는 효과 색. 사용자가 지도 테마를 고정했으면 앱 테마와
-// 무관하게 해당 색을 쓰고, 팔레트를 골랐으면 그 팔레트의 5단계 gradient를 쓴다.
+// 도트 지도에만 적용되는 효과 색. light/dark 변종은 앱 테마를 그대로 따라가고,
+// 팔레트(heatmap)만 사용자가 고른 값을 쓴다.
 export type MapTheme = {
   heatmap: HeatmapPalette;
   homeColor: string;
   highlightDot: string;
-  // 미리보기 화면에서 지도 뒤 배경을 칠할 때 사용.
-  bgColor: string;
   mode: "light" | "dark";
 };
 
 export function useMapTheme(): MapTheme {
   const mode = useThemeStore((s) => s.mode);
   const systemScheme = useThemeStore((s) => s.systemScheme);
-  const storedLock = useThemeStore((s) => s.mapThemeLock);
   const storedPaletteId = useThemeStore((s) => s.mapPaletteId);
-  // 지도 외형은 유료 전용. 미가입/free로 돌아가면 저장값(이전 선택)을 무시하고
-  // 항상 기본값(green + system)을 적용한다. 저장값 자체는 유지해, 재가입 시
-  // 이전 선택을 다시 가져와 자동 복원한다.
+  // 도트 팔레트는 유료 전용. 미가입/free로 돌아가면 저장값(이전 선택)을 무시하고
+  // 항상 기본 팔레트를 적용한다. 저장값 자체는 유지해, 재가입 시 자동 복원된다.
   const tier = useSubscriptionStore((s) => s.tier);
   const isSubscribed = tier != null && tier !== "free";
 
-  const effectiveLock = isSubscribed ? storedLock : "system";
   const effectivePaletteId = isSubscribed
     ? storedPaletteId
     : DEFAULT_MAP_PALETTE_ID;
 
-  const appEffective = mode === "system" ? systemScheme ?? "light" : mode;
   const effective: "light" | "dark" =
-    effectiveLock === "system"
-      ? appEffective === "dark"
-        ? "dark"
-        : "light"
-      : effectiveLock;
+    mode === "system" ? (systemScheme === "dark" ? "dark" : "light") : mode;
 
   const base = effective === "dark" ? DARK_THEME : LIGHT_THEME;
   const palette = findMapPalette(effectivePaletteId);
@@ -131,7 +103,6 @@ export function useMapTheme(): MapTheme {
     heatmap: effective === "dark" ? palette.dark : palette.light,
     homeColor: base.homeColor,
     highlightDot: base.highlightDot,
-    bgColor: base.homeBg,
     mode: effective,
   };
 }
