@@ -45,6 +45,7 @@ type Props = {
   onOpenLanguage: () => void;
   onOpenMapAppearance: () => void;
   onOpenSubscription: () => void;
+  onOpenPremiumIntro: () => void;
 };
 
 const THEME_MODES: ThemeMode[] = ["system", "light", "dark"];
@@ -59,6 +60,7 @@ export default function SettingsScreen({
   onOpenLanguage,
   onOpenMapAppearance,
   onOpenSubscription,
+  onOpenPremiumIntro,
 }: Props) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -373,9 +375,9 @@ export default function SettingsScreen({
             onPress={
               isSubscribed
                 ? onOpenMapAppearance
-                : onOpenSubscription
+                : onOpenPremiumIntro
             }
-            // 무료 사용자는 시각적으로 잠긴 상태 + PRO 뱃지, 누르면 구독 화면으로.
+            // 무료 사용자는 시각적으로 잠긴 상태 + PRO 뱃지, 누르면 유료 기능 안내로.
             // 유료 사용자는 평소처럼 바로 진입.
             locked={!isSubscribed}
             trailingBadge={

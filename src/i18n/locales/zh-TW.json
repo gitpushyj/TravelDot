@@ -681,10 +681,11 @@
       "deviceSync": {
         "title": "裝置同步",
         "desc": "旅行紀錄(dot 地圖)在每一台裝置上完全相同。換新手機也照樣留著。",
-        "devicePhone": "手機",
-        "deviceTablet": "平板",
+        "myDevice": "我的裝置",
         "deviceA": "裝置 A",
         "deviceB": "裝置 B",
+        "deviceC": "裝置 C",
+        "deviceD": "裝置 D",
         "note": "自動雲端備份 · 不含照片"
       },
       "titles": {

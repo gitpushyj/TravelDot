@@ -11,14 +11,20 @@ import BadgeMedal from "../../TitlesScreen/BadgeMedal";
 import SlideFrame from "./SlideFrame";
 
 // 호칭·마일스톤 소개 슬라이드. 실제 유료 호칭 카탈로그(PREMIUM_BADGE_DEFS_BY_ID)에서
-// 대표 6개를 골라 실제 BadgeMedal 컴포넌트로 보여준다.
+// 대표 12개를 골라 실제 BadgeMedal 컴포넌트로 보여준다.
 const SHOWCASE: readonly { id: string; stage: BadgeStage }[] = [
+  { id: "premium_calendar_6", stage: "silver" },
   { id: "premium_calendar_12", stage: "gold" },
-  { id: "premium_flag_palette_7", stage: "p1" },
-  { id: "premium_un_linguist_6", stage: "p2" },
-  { id: "premium_humanity_50", stage: "p1" },
-  { id: "premium_earth_50", stage: "p3" },
-  { id: "premium_round_the_clock", stage: "p2" },
+  { id: "premium_flag_palette_5", stage: "p1" },
+  { id: "premium_flag_palette_7", stage: "p2" },
+  { id: "premium_un_linguist_3", stage: "p1" },
+  { id: "premium_un_linguist_6", stage: "p3" },
+  { id: "premium_humanity_25", stage: "p1" },
+  { id: "premium_humanity_50", stage: "p2" },
+  { id: "premium_humanity_75", stage: "p3" },
+  { id: "premium_earth_25", stage: "p1" },
+  { id: "premium_earth_75", stage: "p3" },
+  { id: "premium_round_the_clock", stage: "gold" },
 ];
 
 export default function TitlesSlide() {

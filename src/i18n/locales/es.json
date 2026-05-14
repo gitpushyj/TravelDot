@@ -681,10 +681,11 @@
       "deviceSync": {
         "title": "Sincronización de dispositivos",
         "desc": "Tu mapa de viajes se mantiene igual en cada dispositivo. Incluso en un móvil nuevo.",
-        "devicePhone": "Móvil",
-        "deviceTablet": "Tablet",
+        "myDevice": "Mi dispositivo",
         "deviceA": "Dispositivo A",
         "deviceB": "Dispositivo B",
+        "deviceC": "Dispositivo C",
+        "deviceD": "Dispositivo D",
         "note": "Copia de seguridad automática en la nube · fotos excluidas"
       },
       "titles": {

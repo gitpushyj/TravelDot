@@ -12,25 +12,20 @@ export default function PremiumIntroScreenNav({
   const theme = useTheme();
   const returnToTab = route.params?.returnToTab;
 
-  // returnToTab이 지정되면 탭에서 호출된 것 → 해당 탭으로 active를 옮긴 뒤 닫기/이동.
-  // 없으면 Root 스택의 일반 화면에서 띄운 것이므로 goBack만으로 호출 화면으로 자연 복귀.
-  const restoreCaller = () => {
-    if (returnToTab) {
-      navigation.navigate("Main", { screen: returnToTab });
-    }
-  };
-
   return (
     <>
       <StatusBar style={theme.statusBar} />
       <PremiumIntroScreen
         onGoToSubscription={() => {
-          restoreCaller();
-          navigation.replace("Subscription");
+          // returnToTab을 그대로 Subscription에 넘겨, 구독 화면의 X도 동일 탭으로 복귀.
+          navigation.replace(
+            "Subscription",
+            returnToTab ? { returnToTab } : undefined
+          );
         }}
         onDismiss={() => {
           if (returnToTab) {
-            restoreCaller();
+            navigation.navigate("Main", { screen: returnToTab });
           } else {
             navigation.goBack();
           }

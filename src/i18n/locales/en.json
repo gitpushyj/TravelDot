@@ -872,10 +872,11 @@
       "deviceSync": {
         "title": "Device sync",
         "desc": "Your travel map stays the same across every device. Even on a new phone.",
-        "devicePhone": "Phone",
-        "deviceTablet": "Tablet",
+        "myDevice": "My device",
         "deviceA": "Device A",
         "deviceB": "Device B",
+        "deviceC": "Device C",
+        "deviceD": "Device D",
         "note": "Automatic cloud backup · photos excluded"
       },
       "titles": {

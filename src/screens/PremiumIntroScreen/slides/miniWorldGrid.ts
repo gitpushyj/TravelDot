@@ -11,7 +11,30 @@ export const GRID_ROWS = 14;
 const MIN_LAT = -60;
 const MAX_LAT = 85;
 
-export type LandCell = { row: number; col: number; level: 1 | 2 | 3 | 4 };
+export type LandCell = {
+  row: number;
+  col: number;
+  level: 1 | 2 | 3 | 4;
+  // 데모용 "사용자가 방문한 셀" 플래그. 실제 여행 패턴처럼 보이도록
+  // 일부 지역(유럽 전역, 동남/동아시아 일부, 미 동부 일부, 남미 일부 등)만 true.
+  visited: boolean;
+};
+
+// (row, col)이 데모 방문 지역(유럽·동아시아·미국·브라질·동남아 일부)에 속하는지.
+// 32×14 equirectangular grid 기준 — 대륙이 보이는 칸을 손으로 지정한다.
+function isVisitedRegion(row: number, col: number): boolean {
+  // 유럽 (전역)
+  if (col >= 15 && col <= 19 && row >= 2 && row <= 5) return true;
+  // 동아시아 (한국·일본·중국 동부)
+  if (col >= 24 && col <= 27 && row >= 3 && row <= 5) return true;
+  // 동남아시아 (베트남·태국·필리핀 일대)
+  if (col >= 23 && col <= 26 && row >= 6 && row <= 7) return true;
+  // 미국 동부
+  if (col >= 8 && col <= 11 && row >= 3 && row <= 4) return true;
+  // 남미 동부 (브라질)
+  if (col >= 10 && col <= 12 && row >= 8 && row <= 9) return true;
+  return false;
+}
 
 function buildLandCells(): LandCell[] {
   const seen = new Set<string>();
@@ -34,7 +57,8 @@ function buildLandCells(): LandCell[] {
     const [row, col] = key.split(",").map(Number);
     // 셀마다 고정된 1~4 레벨 — 팔레트 모드에서 heatmap gradient를 흉내낸다.
     const level = (((row * 31 + col * 17) % 4) + 1) as 1 | 2 | 3 | 4;
-    return { row, col, level };
+    const visited = isVisitedRegion(row, col);
+    return { row, col, level, visited };
   });
 }
 

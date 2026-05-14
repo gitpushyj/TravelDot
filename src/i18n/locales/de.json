@@ -681,10 +681,11 @@
       "deviceSync": {
         "title": "Gerätesynchronisation",
         "desc": "Deine Reisekarte bleibt auf jedem Gerät gleich. Auch auf einem neuen Handy.",
-        "devicePhone": "Handy",
-        "deviceTablet": "Tablet",
+        "myDevice": "Mein Gerät",
         "deviceA": "Gerät A",
         "deviceB": "Gerät B",
+        "deviceC": "Gerät C",
+        "deviceD": "Gerät D",
         "note": "Automatisches Cloud-Backup · Fotos ausgenommen"
       },
       "titles": {

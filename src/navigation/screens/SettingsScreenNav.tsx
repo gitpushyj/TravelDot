@@ -26,6 +26,7 @@ export default function SettingsScreenNav({ navigation }: Props) {
         onOpenLanguage={() => navigation.navigate("Language")}
         onOpenMapAppearance={() => navigation.navigate("MapAppearance")}
         onOpenSubscription={() => navigation.navigate("Subscription")}
+        onOpenPremiumIntro={() => navigation.navigate("PremiumIntro")}
       />
     </>
   );

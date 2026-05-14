@@ -681,10 +681,11 @@
       "deviceSync": {
         "title": "デバイス同期",
         "desc": "旅行の記録(dotマップ)はどのデバイスでも同じ。新しいスマホでもそのまま。",
-        "devicePhone": "スマホ",
-        "deviceTablet": "タブレット",
+        "myDevice": "自分のデバイス",
         "deviceA": "デバイスA",
         "deviceB": "デバイスB",
+        "deviceC": "デバイスC",
+        "deviceD": "デバイスD",
         "note": "クラウド自動バックアップ · 写真は対象外"
       },
       "titles": {

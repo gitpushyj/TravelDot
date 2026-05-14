@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { badgeFromId } from "../features/badges/badges";
@@ -29,9 +29,14 @@ import { makeStyles } from "./MilestonesScreen/styles";
 type Props = {
   onClose: () => void;
   onOpenTitles: () => void;
+  onOpenPremiumIntro: () => void;
 };
 
-export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
+export default function MilestonesScreen({
+  onClose,
+  onOpenTitles,
+  onOpenPremiumIntro,
+}: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
@@ -111,9 +116,7 @@ export default function MilestonesScreen({ onClose, onOpenTitles }: Props) {
           <PremiumLockedSection
             theme={theme}
             styles={styles}
-            onPressUpsell={() => {
-              Alert.alert(t("milestones.premium.ctaUnlock"));
-            }}
+            onPressUpsell={onOpenPremiumIntro}
           />
         )}
         <Text style={styles.footnote}>{t("milestones.footnote")}</Text>

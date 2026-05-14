@@ -139,7 +139,9 @@ export default function AiScreen() {
         disabled={!!rateLimit}
         onSend={(text) => void send(text)}
         lockedForUpgrade={lockedForUpgrade}
-        onUpgrade={() => navigation.navigate("Subscription")}
+        onUpgrade={() =>
+          navigation.navigate("PremiumIntro", { returnToTab: "AI" })
+        }
       />
     </KeyboardAvoidingView>
   );

@@ -34,7 +34,7 @@ export type RootStackParamList = {
   ReviewSuspect: undefined;
   Language: undefined;
   MapAppearance: undefined;
-  Subscription: undefined;
+  Subscription: { returnToTab?: keyof MainTabParamList } | undefined;
   PremiumIntro: { returnToTab?: keyof MainTabParamList } | undefined;
   CountryMerge: { countryCode: string };
   ImageDetail: {

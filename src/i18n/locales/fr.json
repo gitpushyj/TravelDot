@@ -681,10 +681,11 @@
       "deviceSync": {
         "title": "Synchronisation des appareils",
         "desc": "Ta carte de voyages reste identique sur tous tes appareils. Même sur un nouveau téléphone.",
-        "devicePhone": "Téléphone",
-        "deviceTablet": "Tablette",
+        "myDevice": "Mon appareil",
         "deviceA": "Appareil A",
         "deviceB": "Appareil B",
+        "deviceC": "Appareil C",
+        "deviceD": "Appareil D",
         "note": "Sauvegarde cloud automatique · photos exclues"
       },
       "titles": {
