@@ -106,20 +106,25 @@ export default function AiScreen() {
         </Pressable>
       </View>
 
-      <Pressable style={styles.body} onPress={Keyboard.dismiss}>
-        {messages.length === 0 && !isSending ? (
+      {messages.length === 0 && !isSending ? (
+        // 빈 상태는 스크롤이 없으므로 Pressable로 감싸 탭하면 키보드를 닫는다.
+        <Pressable style={styles.body} onPress={Keyboard.dismiss}>
           <AiChatEmptyState
             onPickExample={(text) => composerRef.current?.setText(text)}
           />
-        ) : (
+        </Pressable>
+      ) : (
+        // 리스트는 Pressable로 감싸면 부모가 터치 responder를 잡아 빈 여백 스크롤이
+        // 막힌다. AiChatList가 keyboardDismissMode로 키보드 닫기를 자체 처리한다.
+        <View style={styles.body}>
           <AiChatList
             messages={messages}
             isThinking={isSending}
             onImagePress={onImagePress}
             onCopied={handleCopied}
           />
-        )}
-      </Pressable>
+        </View>
+      )}
 
       {copiedToastVisible ? (
         <View pointerEvents="none" style={styles.toastWrap}>
