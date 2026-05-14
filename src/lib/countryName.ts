@@ -1,12 +1,9 @@
-import { KO_NAME_BY_CODE, COUNTRY_LIST } from "./countryLookup";
+import { KO_NAME_BY_CODE } from "./countryLookup";
 import type { SupportedLocale } from "../i18n";
 
-const ENGLISH_NAME_BY_CODE: Record<string, string> = (() => {
-  const m: Record<string, string> = {};
-  for (const c of COUNTRY_LIST) m[c.code] = c.name;
-  return m;
-})();
-
+// 한국어는 큐레이션된 명칭(예: "북한", "터키")을 유지하기 위해 별도 매핑을 쓴다.
+// 그 외 locale은 i18n 폴리필(@formatjs/intl-displaynames)이 모든 플랫폼에서
+// Intl.DisplayNames를 보장한다.
 export function getCountryName(
   code: string,
   locale: SupportedLocale
@@ -16,8 +13,6 @@ export function getCountryName(
     const dn = new Intl.DisplayNames([locale], { type: "region" });
     const name = dn.of(code);
     if (name && name !== code) return name;
-  } catch {
-    // 일부 환경에서 Intl.DisplayNames 미지원 — 영어 fallback.
-  }
-  return ENGLISH_NAME_BY_CODE[code] ?? KO_NAME_BY_CODE[code] ?? code;
+  } catch {}
+  return code;
 }

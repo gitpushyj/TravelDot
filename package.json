@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
+    "@formatjs/intl-displaynames": "^7.3.6",
+    "@formatjs/intl-getcanonicallocales": "^3.2.7",
+    "@formatjs/intl-locale": "^5.3.6",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-firebase/analytics": "^24.0.0",
     "@react-native-firebase/app": "^24.0.0",
