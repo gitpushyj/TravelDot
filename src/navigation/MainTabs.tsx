@@ -65,7 +65,9 @@ export default function MainTabs() {
             const tier = useSubscriptionStore.getState().tier;
             if (hydrated && !seen && tier === "free") {
               e.preventDefault();
-              navigation.getParent()?.navigate("PremiumIntro");
+              navigation
+                .getParent()
+                ?.navigate("PremiumIntro", { returnToTab: "AI" });
             }
           },
         })}

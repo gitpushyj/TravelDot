@@ -35,7 +35,7 @@ export type RootStackParamList = {
   Language: undefined;
   MapAppearance: undefined;
   Subscription: undefined;
-  PremiumIntro: undefined;
+  PremiumIntro: { returnToTab?: keyof MainTabParamList } | undefined;
   CountryMerge: { countryCode: string };
   ImageDetail: {
     photos: ImageDetailPhoto[];
