@@ -6,7 +6,10 @@ import {
   VisitPhotoInput,
 } from "../travel/visitRepository";
 import { useVisitStore, SyncReport } from "../travel/visitStore";
-import { isInsideCountryBbox, resolveCountryDetailed } from "./countryResolver";
+import {
+  isInsideCountryPolygon,
+  resolveCountryDetailed,
+} from "./countryResolver";
 import { ensurePermission, iteratePhotos } from "./photoLibrary";
 
 // 첫 스캔 메모리/트랜잭션 부담을 막기 위한 chunk 크기.
@@ -84,12 +87,12 @@ async function runSync(sinceDate: string | null): Promise<void> {
       }
       if (p.lat == null || p.lng == null) continue;
       withGps += 1;
-      // 본국 bbox 사전 체크 — 본국 bbox 안에 들어오는 점은 polygon ray-cast를
-      // 거치지 않고 즉시 본국으로 처리해 buffer에서 제외한다. 10만 장 케이스에서
-      // 본국 사진이 90%+를 차지하는 사용자에게 가장 큰 비용 절감 항목.
-      // bbox는 본국 외 사진을 본국으로 잘못 분류할 수 있으나, 본국 사진은 어차피
-      // 자동 추가에서 제외되므로 false positive가 결과에 영향을 주지 않는다.
-      if (homeCode && isInsideCountryBbox(homeCode, p.lat, p.lng)) {
+      // 본국 polygon 사전 체크 — 본국 polygon에 들어오는 점은 즉시 본국으로
+      // 처리해 전체 features 루프를 생략한다. 10만 장 케이스에서 본국 사진이
+      // 90%+를 차지하는 사용자에게 가장 큰 비용 절감 항목. bbox-only 단축은
+      // 인접국 영토를 본국 bbox가 삼키는 경우(예: KR bbox가 후쿠오카를 포함)
+      // false negative를 만들기 때문에 사용하지 않는다.
+      if (homeCode && isInsideCountryPolygon(homeCode, p.lat, p.lng)) {
         if (!sample) {
           sample = {
             lat: p.lat,
@@ -112,9 +115,6 @@ async function runSync(sinceDate: string | null): Promise<void> {
         };
       }
       if (!code) continue;
-      // bbox precheck를 빠져나온 좌표라도 polygon 매칭 결과 본국이 나올 수
-      // 있다 (본국 bbox와 다른 국가 polygon이 살짝 겹치는 경계 케이스).
-      // 본국은 자동 추가에서 제외한다.
       if (homeCode && code === homeCode) continue;
       resolved += 1;
       buffer.push({

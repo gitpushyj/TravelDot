@@ -42,11 +42,12 @@ const codeToIndex: Map<string, number> = new Map(
   features.map((f, i) => [f.properties.code, i])
 );
 
-// 본국 bbox 안에 들어오는 점은 ray-cast 없이 즉시 본국 처리해 10만 장 스캔에서
-// 90%+를 차지하는 본국 사진의 매칭 비용을 제거한다. bbox는 본국 외 사진을
-// 본국으로 잘못 분류할 수 있으나, 호출 측에서는 본국 사진을 어차피 자동 추가
-// 대상에서 제외하므로 false positive가 사용자 결과에 영향을 주지 않는다.
-export function isInsideCountryBbox(
+// 본국 polygon에 들어오는 점은 ray-cast 1회로 즉시 본국 처리한다. 10만 장
+// 스캔에서 90%+를 차지하는 본국 사진은 전체 features 루프를 도는 대신 polygon
+// 1회만 검사하면 끝난다. bbox-only 단축은 사각형이 polygon의 superset이라
+// 본국 외 사진을 본국으로 잘못 분류할 수 있어 사용하지 않는다 (예: KR bbox는
+// 후쿠오카·키타큐슈·쓰시마를 포함).
+export function isInsideCountryPolygon(
   code: string,
   lat: number,
   lng: number
@@ -54,7 +55,8 @@ export function isInsideCountryBbox(
   const i = codeToIndex.get(code);
   if (i == null) return false;
   const [minX, minY, maxX, maxY] = boxes[i];
-  return lng >= minX && lng <= maxX && lat >= minY && lat <= maxY;
+  if (lng < minX || lng > maxX || lat < minY || lat > maxY) return false;
+  return booleanPointInPolygon(point([lng, lat]), features[i]);
 }
 
 export type ResolveDiagnostics = {
