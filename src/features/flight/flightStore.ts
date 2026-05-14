@@ -4,6 +4,7 @@ import { track } from "../../lib/tracking";
 
 import type { AirportRef, ActiveFlight } from "./flightTypes";
 import { loadActiveFlight, saveActiveFlight } from "./flightStorage";
+import { startFlightActivity, endFlightActivity } from "./liveActivity";
 
 // 도착 이벤트 로깅 공통 헬퍼. background는 앱이 닫혀 있는 동안 도착 시각이 지난 경우,
 // foreground는 앱이 켜져 있는 동안 tick에서 도착을 감지한 경우.
@@ -52,8 +53,13 @@ export const useFlightStore = create<State>((set, get) => ({
       // 앱이 닫혀 있는 동안 비행이 끝났다 — 도착 토스트는 한 번 띄워준다.
       await saveActiveFlight(null);
       logArrived(loaded, "background");
+      void endFlightActivity();
       set({ active: null, arrived: loaded, hydrated: true });
       return;
+    }
+    if (loaded) {
+      // 진행 중 비행 — 라이브액티비티를 멱등 재동기화(기존 1개로 정리 후 재생성).
+      void startFlightActivity(loaded);
     }
     set({ active: loaded, hydrated: true });
   },
@@ -70,6 +76,7 @@ export const useFlightStore = create<State>((set, get) => ({
     // 비행이 active로 반영되도록 한다. 영속화 실패는 앱 재시작 시 복원만 못할 뿐
     // 현재 세션의 비행 동작에는 영향이 없다.
     set({ active: flight, arrived: null });
+    void startFlightActivity(flight);
     try {
       await saveActiveFlight(flight);
     } catch (e) {
@@ -79,6 +86,7 @@ export const useFlightStore = create<State>((set, get) => ({
 
   cancel: async () => {
     await saveActiveFlight(null);
+    void endFlightActivity();
     set({ active: null });
   },
 
@@ -88,6 +96,7 @@ export const useFlightStore = create<State>((set, get) => ({
     if (now < a.arriveAt) return;
     await saveActiveFlight(null);
     logArrived(a, "foreground");
+    void endFlightActivity();
     set({ active: null, arrived: a });
   },
 

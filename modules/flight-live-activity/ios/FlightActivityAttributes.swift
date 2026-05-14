@@ -1,0 +1,1 @@
+../../../targets/flight-activity/FlightActivityAttributes.swift

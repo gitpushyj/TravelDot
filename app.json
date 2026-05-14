@@ -33,6 +33,9 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSSupportsLiveActivities": true
       }
     },
     "android": {
@@ -95,7 +98,8 @@
         {
           "userTrackingPermission": "Pixel Travel uses this identifier to measure how features are used so we can improve the app experience."
         }
-      ]
+      ],
+      "@bacons/apple-targets"
     ]
   }
 }
