@@ -86,15 +86,19 @@ export function makeStyles(theme: Theme) {
       backgroundColor: theme.accent,
       // 그라데이션 대신 단색 + 카드 위 도트 배치로 충분히 임팩트가 있다.
       aspectRatio: 16 / 11,
-      padding: 16,
-      justifyContent: "flex-end",
     },
     heroDots: {
-      ...StyleSheet.absoluteFillObject,
+      // 도트는 카드 가장자리까지 닿고, 아래 칩 영역만 분리된다.
+      // padding을 자식(칩)으로 옮겨서 도트맵 measurement에 음수 margin이
+      // 끼지 않도록 한다.
+      flex: 1,
     },
     heroBadgeRow: {
       flexDirection: "row",
       gap: 8,
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+      paddingTop: 8,
     },
     heroBadge: {
       flexDirection: "row",
