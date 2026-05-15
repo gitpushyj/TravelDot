@@ -221,6 +221,7 @@ function cellKey(lat, lng) {
 // ---- Pass 1: lat/lng grid over land ----
 const dots = [];
 const occupied = new Set();
+const cellDot = new Map(); // cellKey -> dot, so Pass 2 merges can find the owner
 let nextId = 0;
 
 const startLat = Math.ceil((minLat - half) / gridSize) * gridSize + half;
@@ -246,7 +247,9 @@ for (let lat = startLat; lat <= maxLat - half + 1e-9; lat += gridSize) {
       }
       if (cs.length > 1) dot.countries = cs;
       dots.push(dot);
-      occupied.add(cellKey(dot.lat, dot.lng));
+      const k = cellKey(dot.lat, dot.lng);
+      occupied.add(k);
+      cellDot.set(k, dot);
     }
   }
 }
@@ -285,19 +288,6 @@ if (countries) {
     const snapped = snapToCell(labelY, labelX);
     const key = cellKey(snapped.lat, snapped.lng);
 
-    // If that cell already has a dot (because it belongs to a neighboring
-    // country at this resolution), don't duplicate — the country is grouped
-    // into that shared cell.
-    if (occupied.has(key)) {
-      anchorsMergedFor.push(props.NAME);
-      continue;
-    }
-
-    if (snapped.lat < minLat || snapped.lat > maxLat) {
-      skippedAnchors.push(props.NAME);
-      continue;
-    }
-
     const rawCode =
       props.ISO_A2_EH && props.ISO_A2_EH !== "-99"
         ? props.ISO_A2_EH
@@ -306,12 +296,36 @@ if (countries) {
       ? applyOverride(rawCode, props.NAME)
       : { code: undefined, name: props.NAME };
 
+    // If that cell already has a dot (because it belongs to a neighboring
+    // country at this resolution), don't add a duplicate — fold this country
+    // into the existing dot's `countries` list so it stays tappable.
+    if (occupied.has(key)) {
+      anchorsMergedFor.push(props.NAME);
+      const existing = cellDot.get(key);
+      if (existing && mapped.code) {
+        if (!existing.countries) {
+          existing.countries = existing.country
+            ? [{ code: existing.country, name: existing.name ?? existing.country }]
+            : [];
+        }
+        if (!existing.countries.some((c) => c.code === mapped.code)) {
+          existing.countries.push({ code: mapped.code, name: mapped.name });
+        }
+      }
+      continue;
+    }
+
+    if (snapped.lat < minLat || snapped.lat > maxLat) {
+      skippedAnchors.push(props.NAME);
+      continue;
+    }
+
     const cs = findCountriesInCell(snapped.lat, snapped.lng, gridSize);
     if (mapped.code && !cs.some((c) => c.code === mapped.code)) {
       cs.unshift({ code: mapped.code, name: mapped.name });
     }
 
-    dots.push({
+    const anchorDot = {
       id: `a${nextId++}`,
       lat: +snapped.lat.toFixed(2),
       lng: +snapped.lng.toFixed(2),
@@ -319,8 +333,10 @@ if (countries) {
       country: mapped.code,
       name: mapped.name,
       countries: cs.length > 1 ? cs : undefined,
-    });
+    };
+    dots.push(anchorDot);
     occupied.add(key);
+    cellDot.set(key, anchorDot);
     anchorCount++;
     anchorsAddedFor.push(props.NAME);
   }
