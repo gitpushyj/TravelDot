@@ -9,8 +9,8 @@ import {
 } from "./gameMachine";
 import { fetchTriviaQuestions } from "./questionService";
 
-// 텍스트 문제라 국기보다 읽는 시간이 오래 걸린다. 15초로 둔다.
-export const QUESTION_SECONDS = 15;
+// 한 문제당 제한시간. 순발력 게임으로 가져가기 위해 5초로 짧게 잡는다.
+export const QUESTION_SECONDS = 5;
 const TICK_MS = 100;
 const REVEAL_MS = 1200;
 // 한 게임당 문제 풀 크기. 100문제 모두 가져오면 큐가 너무 길어 게임이 끝나지 않으니 30개로 제한.
