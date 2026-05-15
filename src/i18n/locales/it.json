@@ -707,7 +707,33 @@
   "gamesHub": {
     "title": "Giochi",
     "flagQuizTitle": "Quiz delle bandiere",
-    "flagQuizDesc": "Guarda la bandiera, indovina il paese"
+    "flagQuizDesc": "Guarda la bandiera, indovina il paese",
+    "triviaTitle": "Quiz di viaggio",
+    "triviaDesc": "Mettiti alla prova con 100 domande di viaggio dal mondo"
+  },
+  "trivia": {
+    "start": "Inizia",
+    "score": "Punti {{score}}",
+    "gameOver": "Partita finita",
+    "finalScore": "{{score}} risposte corrette",
+    "newBest": "Nuovo record!",
+    "bestScoreLabel": "Record {{score}}",
+    "retry": "Rigioca",
+    "exit": "Esci",
+    "myBest": "Mio record",
+    "loginToSave": "Accedi per salvare i tuoi punteggi",
+    "noBestScore": "In attesa della tua prima partita",
+    "anonymousTraveler": "Viaggiatore anonimo",
+    "youSuffix": "(tu)",
+    "scoreUnit": "pti",
+    "thisWeekTop": "Top della settimana",
+    "viewRanking": "Vedi classifica",
+    "leaderboardTitle": "Classifica della settimana",
+    "rankN": "{{rank}}°",
+    "myRank": "Mia posizione",
+    "weeklyResetHint": "Ogni lunedì inizia una nuova stagione",
+    "loadingQuestions": "Caricamento domande…",
+    "loadError": "Impossibile caricare le domande. Riprova tra un momento."
   },
   "flagQuiz": {
     "start": "Inizia",

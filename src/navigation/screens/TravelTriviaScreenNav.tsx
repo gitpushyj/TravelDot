@@ -1,21 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import GamesHubScreen from "../../screens/GamesHub/GamesHubScreen";
+import { TravelTriviaScreen } from "../../features/travelTrivia/TravelTriviaScreen";
 import { useTheme } from "../../theme/themeStore";
 import type { RootStackParamList } from "../types";
 
-export default function GamesHubScreenNav({
+export default function TravelTriviaScreenNav({
   navigation,
-}: NativeStackScreenProps<RootStackParamList, "GamesHub">) {
+}: NativeStackScreenProps<RootStackParamList, "TravelTrivia">) {
   const theme = useTheme();
   return (
     <>
       <StatusBar style={theme.statusBar} />
-      <GamesHubScreen
+      <TravelTriviaScreen
         onClose={() => navigation.goBack()}
-        onOpenFlagQuiz={() => navigation.navigate("FlagQuiz")}
-        onOpenTravelTrivia={() => navigation.navigate("TravelTrivia")}
+        onViewRanking={() => navigation.navigate("TravelTriviaLeaderboard")}
       />
     </>
   );

@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ChevronLeft, Flag } from "lucide-react-native";
+import { ChevronLeft, Flag, Globe2 } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
 
 import { useTheme } from "../../theme/themeStore";
@@ -9,9 +9,11 @@ import { GameCard } from "./GameCard";
 export default function GamesHubScreen({
   onClose,
   onOpenFlagQuiz,
+  onOpenTravelTrivia,
 }: {
   onClose: () => void;
   onOpenFlagQuiz: () => void;
+  onOpenTravelTrivia: () => void;
 }) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -39,6 +41,12 @@ export default function GamesHubScreen({
           title={t("gamesHub.flagQuizTitle")}
           description={t("gamesHub.flagQuizDesc")}
           onPress={onOpenFlagQuiz}
+        />
+        <GameCard
+          icon={Globe2}
+          title={t("gamesHub.triviaTitle")}
+          description={t("gamesHub.triviaDesc")}
+          onPress={onOpenTravelTrivia}
         />
       </ScrollView>
     </SafeAreaView>

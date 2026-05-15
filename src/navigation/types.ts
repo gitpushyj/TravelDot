@@ -25,6 +25,8 @@ export type RootStackParamList = {
   GamesHub: undefined;
   FlagQuiz: undefined;
   FlagQuizLeaderboard: undefined;
+  TravelTrivia: undefined;
+  TravelTriviaLeaderboard: undefined;
   AddTrip: { prefilledCountry?: { code: string; name: string } } | undefined;
   ChangeHome: undefined;
   Titles: undefined;

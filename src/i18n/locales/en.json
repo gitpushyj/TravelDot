@@ -936,7 +936,33 @@
   "gamesHub": {
     "title": "Games",
     "flagQuizTitle": "Flag Quiz",
-    "flagQuizDesc": "See the flag, name the country"
+    "flagQuizDesc": "See the flag, name the country",
+    "triviaTitle": "Travel Trivia",
+    "triviaDesc": "Test yourself on 100 travel facts from around the world"
+  },
+  "trivia": {
+    "start": "Start",
+    "score": "Score {{score}}",
+    "gameOver": "Game Over",
+    "finalScore": "{{score}} correct",
+    "newBest": "New best score!",
+    "bestScoreLabel": "Best {{score}}",
+    "retry": "Play again",
+    "exit": "Exit",
+    "myBest": "My best",
+    "loginToSave": "Log in to save your scores",
+    "noBestScore": "Waiting for your first run",
+    "anonymousTraveler": "Anonymous traveler",
+    "youSuffix": "(you)",
+    "scoreUnit": "pts",
+    "thisWeekTop": "This week's top",
+    "viewRanking": "View ranking",
+    "leaderboardTitle": "This week's leaderboard",
+    "rankN": "#{{rank}}",
+    "myRank": "My rank",
+    "weeklyResetHint": "A new season starts every Monday",
+    "loadingQuestions": "Loading questions…",
+    "loadError": "Couldn’t load questions. Please try again in a moment."
   },
   "flagQuiz": {
     "start": "Start",

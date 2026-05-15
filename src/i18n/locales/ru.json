@@ -707,7 +707,33 @@
   "gamesHub": {
     "title": "Игры",
     "flagQuizTitle": "Викторина флагов",
-    "flagQuizDesc": "Посмотрите на флаг и угадайте страну"
+    "flagQuizDesc": "Посмотрите на флаг и угадайте страну",
+    "triviaTitle": "Викторина о путешествиях",
+    "triviaDesc": "Проверьте себя на 100 вопросах о путешествиях со всего мира"
+  },
+  "trivia": {
+    "start": "Старт",
+    "score": "Счёт {{score}}",
+    "gameOver": "Игра окончена",
+    "finalScore": "Правильных: {{score}}",
+    "newBest": "Новый рекорд!",
+    "bestScoreLabel": "Лучший {{score}}",
+    "retry": "Ещё раз",
+    "exit": "Выйти",
+    "myBest": "Мой рекорд",
+    "loginToSave": "Войдите, чтобы сохранять результаты",
+    "noBestScore": "Ждём вашу первую попытку",
+    "anonymousTraveler": "Аноним",
+    "youSuffix": "(вы)",
+    "scoreUnit": "очк.",
+    "thisWeekTop": "Топ недели",
+    "viewRanking": "Посмотреть рейтинг",
+    "leaderboardTitle": "Рейтинг недели",
+    "rankN": "{{rank}} место",
+    "myRank": "Моё место",
+    "weeklyResetHint": "Новый сезон начинается каждый понедельник",
+    "loadingQuestions": "Загружаем вопросы…",
+    "loadError": "Не удалось загрузить вопросы. Попробуйте позже."
   },
   "flagQuiz": {
     "start": "Начать",

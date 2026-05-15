@@ -707,7 +707,33 @@
   "gamesHub": {
     "title": "遊戲",
     "flagQuizTitle": "國旗問答",
-    "flagQuizDesc": "看國旗，猜國家"
+    "flagQuizDesc": "看國旗，猜國家",
+    "triviaTitle": "旅行常識問答",
+    "triviaDesc": "挑戰 100 道世界旅行常識題"
+  },
+  "trivia": {
+    "start": "開始",
+    "score": "得分 {{score}}",
+    "gameOver": "遊戲結束",
+    "finalScore": "答對 {{score}} 題",
+    "newBest": "刷新最高紀錄！",
+    "bestScoreLabel": "最高 {{score}}",
+    "retry": "再來一次",
+    "exit": "離開",
+    "myBest": "我的最高",
+    "loginToSave": "登入後將保存成績",
+    "noBestScore": "等待你的第一次挑戰",
+    "anonymousTraveler": "匿名旅行者",
+    "youSuffix": "(我)",
+    "scoreUnit": "分",
+    "thisWeekTop": "本週榜首",
+    "viewRanking": "查看排名",
+    "leaderboardTitle": "本週排行榜",
+    "rankN": "第 {{rank}} 名",
+    "myRank": "我的排名",
+    "weeklyResetHint": "每週一開啟新賽季",
+    "loadingQuestions": "正在載入題目…",
+    "loadError": "無法載入題目，請稍後再試。"
   },
   "flagQuiz": {
     "start": "開始",

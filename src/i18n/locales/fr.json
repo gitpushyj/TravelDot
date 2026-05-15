@@ -707,7 +707,33 @@
   "gamesHub": {
     "title": "Jeux",
     "flagQuizTitle": "Quiz des drapeaux",
-    "flagQuizDesc": "Regardez le drapeau, devinez le pays"
+    "flagQuizDesc": "Regardez le drapeau, devinez le pays",
+    "triviaTitle": "Quiz de voyage",
+    "triviaDesc": "Testez-vous sur 100 questions de voyage du monde entier"
+  },
+  "trivia": {
+    "start": "Commencer",
+    "score": "Score {{score}}",
+    "gameOver": "Partie terminée",
+    "finalScore": "{{score}} bonnes réponses",
+    "newBest": "Nouveau record !",
+    "bestScoreLabel": "Record {{score}}",
+    "retry": "Rejouer",
+    "exit": "Quitter",
+    "myBest": "Mon record",
+    "loginToSave": "Connectez-vous pour sauvegarder vos scores",
+    "noBestScore": "En attente de votre première partie",
+    "anonymousTraveler": "Voyageur anonyme",
+    "youSuffix": "(vous)",
+    "scoreUnit": "pts",
+    "thisWeekTop": "Top de la semaine",
+    "viewRanking": "Voir le classement",
+    "leaderboardTitle": "Classement de la semaine",
+    "rankN": "{{rank}}e",
+    "myRank": "Mon rang",
+    "weeklyResetHint": "Une nouvelle saison commence chaque lundi",
+    "loadingQuestions": "Chargement des questions…",
+    "loadError": "Impossible de charger les questions. Réessayez dans un instant."
   },
   "flagQuiz": {
     "start": "Commencer",

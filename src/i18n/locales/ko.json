@@ -936,7 +936,33 @@
   "gamesHub": {
     "title": "게임",
     "flagQuizTitle": "국기 퀴즈",
-    "flagQuizDesc": "국기를 보고 나라를 맞혀보세요"
+    "flagQuizDesc": "국기를 보고 나라를 맞혀보세요",
+    "triviaTitle": "여행 상식 퀴즈",
+    "triviaDesc": "전 세계 여행 상식 100문제에 도전해 보세요"
+  },
+  "trivia": {
+    "start": "시작",
+    "score": "점수 {{score}}",
+    "gameOver": "게임 오버",
+    "finalScore": "{{score}}개 정답",
+    "newBest": "최고 기록 경신!",
+    "bestScoreLabel": "최고 {{score}}",
+    "retry": "다시하기",
+    "exit": "나가기",
+    "myBest": "나의 최고",
+    "loginToSave": "로그인하면 기록이 저장돼요",
+    "noBestScore": "첫 도전을 기다리고 있어요",
+    "anonymousTraveler": "익명의 여행자",
+    "youSuffix": "(나)",
+    "scoreUnit": "점",
+    "thisWeekTop": "이번 주 TOP",
+    "viewRanking": "순위 보기",
+    "leaderboardTitle": "이번 주 랭킹",
+    "rankN": "{{rank}}위",
+    "myRank": "내 순위",
+    "weeklyResetHint": "매주 월요일 새 시즌이 시작돼요",
+    "loadingQuestions": "문제를 불러오는 중…",
+    "loadError": "문제를 불러오지 못했어요. 잠시 후 다시 시도해 주세요."
   },
   "flagQuiz": {
     "start": "시작",

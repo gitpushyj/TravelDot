@@ -707,7 +707,33 @@
   "gamesHub": {
     "title": "Juegos",
     "flagQuizTitle": "Quiz de banderas",
-    "flagQuizDesc": "Mira la bandera y adivina el país"
+    "flagQuizDesc": "Mira la bandera y adivina el país",
+    "triviaTitle": "Quiz de viajes",
+    "triviaDesc": "Pon a prueba tus conocimientos con 100 preguntas de viajes"
+  },
+  "trivia": {
+    "start": "Empezar",
+    "score": "Puntos {{score}}",
+    "gameOver": "Fin del juego",
+    "finalScore": "{{score}} aciertos",
+    "newBest": "¡Nuevo récord!",
+    "bestScoreLabel": "Mejor {{score}}",
+    "retry": "Volver a jugar",
+    "exit": "Salir",
+    "myBest": "Mi mejor",
+    "loginToSave": "Inicia sesión para guardar tus puntuaciones",
+    "noBestScore": "Esperando tu primera partida",
+    "anonymousTraveler": "Viajero anónimo",
+    "youSuffix": "(tú)",
+    "scoreUnit": "pts",
+    "thisWeekTop": "Top de la semana",
+    "viewRanking": "Ver ranking",
+    "leaderboardTitle": "Ranking de la semana",
+    "rankN": "Puesto {{rank}}",
+    "myRank": "Mi puesto",
+    "weeklyResetHint": "Cada lunes empieza una nueva temporada",
+    "loadingQuestions": "Cargando preguntas…",
+    "loadError": "No se pudieron cargar las preguntas. Inténtalo de nuevo en un momento."
   },
   "flagQuiz": {
     "start": "Empezar",

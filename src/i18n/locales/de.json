@@ -707,7 +707,33 @@
   "gamesHub": {
     "title": "Spiele",
     "flagQuizTitle": "Flaggen-Quiz",
-    "flagQuizDesc": "Flagge ansehen, Land erraten"
+    "flagQuizDesc": "Flagge ansehen, Land erraten",
+    "triviaTitle": "Reise-Quiz",
+    "triviaDesc": "Teste dich mit 100 Fragen zu Reisen weltweit"
+  },
+  "trivia": {
+    "start": "Start",
+    "score": "Punkte {{score}}",
+    "gameOver": "Spiel vorbei",
+    "finalScore": "{{score}} richtig",
+    "newBest": "Neuer Bestwert!",
+    "bestScoreLabel": "Beste {{score}}",
+    "retry": "Nochmal",
+    "exit": "Beenden",
+    "myBest": "Mein Bestwert",
+    "loginToSave": "Melde dich an, um deine Punkte zu speichern",
+    "noBestScore": "Warten auf deinen ersten Versuch",
+    "anonymousTraveler": "Anonyme:r Reisende:r",
+    "youSuffix": "(du)",
+    "scoreUnit": "Pkt.",
+    "thisWeekTop": "Top diese Woche",
+    "viewRanking": "Rangliste anzeigen",
+    "leaderboardTitle": "Rangliste diese Woche",
+    "rankN": "Platz {{rank}}",
+    "myRank": "Mein Rang",
+    "weeklyResetHint": "Eine neue Saison startet jeden Montag",
+    "loadingQuestions": "Fragen werden geladen…",
+    "loadError": "Fragen konnten nicht geladen werden. Bitte versuche es später erneut."
   },
   "flagQuiz": {
     "start": "Start",
