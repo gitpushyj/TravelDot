@@ -39,12 +39,18 @@ export default function CountryDotMap({ countryCode, color }: Props) {
     let maxLng = -Infinity;
     let minLat = Infinity;
     let maxLat = -Infinity;
+    let sumLng = 0;
+    let sumLat = 0;
     for (const p of dots) {
       if (p.lng < minLng) minLng = p.lng;
       if (p.lng > maxLng) maxLng = p.lng;
       if (p.lat < minLat) minLat = p.lat;
       if (p.lat > maxLat) maxLat = p.lat;
+      sumLng += p.lng;
+      sumLat += p.lat;
     }
+    const centroidLng = sumLng / dots.length;
+    const centroidLat = sumLat / dots.length;
     const bboxW = maxLng - minLng + GRID_SIZE;
     const bboxH = maxLat - minLat + GRID_SIZE;
     // 컨테이너의 짧은 변 기준 비율 패딩. 카드형 hero(아스펙트 16/11)에서
@@ -63,8 +69,20 @@ export default function CountryDotMap({ countryCode, color }: Props) {
       Math.min(drawableW / bboxW, drawableH / bboxH) * fewDotZoom;
     const drawnW = bboxW * scale;
     const drawnH = bboxH * scale;
-    const offX = (size.width - drawnW) / 2;
-    const offY = (size.height - drawnH) / 2;
+    // 도트의 시각적 무게중심(centroid)을 컨테이너 중앙에 맞춘다.
+    // bbox 기준 정렬은 비대칭 형상(좁고 긴 곶, 외딴 영토)에서 한쪽으로 치우쳐
+    // 보이는 문제가 있어 dots 평균 위치를 사용한다.
+    // 단 bbox가 padding 밖으로 나가면 컨테이너 안에 들어오도록 clamp한다.
+    const centroidLocalX = (centroidLng - minLng + GRID_SIZE / 2) * scale;
+    const centroidLocalY = (maxLat - centroidLat + GRID_SIZE / 2) * scale;
+    let offX = size.width / 2 - centroidLocalX;
+    let offY = size.height / 2 - centroidLocalY;
+    if (offX < padding) offX = padding;
+    else if (offX + drawnW > size.width - padding)
+      offX = size.width - padding - drawnW;
+    if (offY < padding) offY = padding;
+    else if (offY + drawnH > size.height - padding)
+      offY = size.height - padding - drawnH;
     const dotPx = Math.max(2, GRID_SIZE * FILL_RATIO * scale);
     const radius = dotPx * 0.25;
     return { minLng, maxLat, scale, dotPx, radius, offX, offY };
