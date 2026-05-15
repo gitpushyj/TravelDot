@@ -7,7 +7,7 @@ import {
   type GameState,
 } from "./gameMachine";
 
-export const QUESTION_SECONDS = 10;
+export const QUESTION_SECONDS = 8;
 const TICK_MS = 100;
 const REVEAL_MS = 1000;
 
