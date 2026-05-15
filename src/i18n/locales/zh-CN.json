@@ -334,7 +334,8 @@
     "languagesUnit": "languages",
     "percentUnit": "%",
     "hoursUnit": "hours",
-    "gamesBtnA11y": "游戏"
+    "gamesBtnA11y": "游戏",
+    "gamesBtnLabel": "游戏"
   },
   "scan": {
     "completedTitle": "照片扫描完成",

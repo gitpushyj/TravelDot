@@ -43,7 +43,15 @@ export function makeStyles(theme: Theme) {
       letterSpacing: 0.2,
     },
     gamesBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
       padding: 4,
+    },
+    gamesBtnLabel: {
+      color: theme.textPrimary,
+      fontSize: 14,
+      fontWeight: "700",
     },
     mapStatsHeader: {
       flexDirection: "row",

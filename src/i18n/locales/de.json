@@ -334,7 +334,8 @@
     "languagesUnit": "languages",
     "percentUnit": "%",
     "hoursUnit": "hours",
-    "gamesBtnA11y": "Spiele"
+    "gamesBtnA11y": "Spiele",
+    "gamesBtnLabel": "Spiele"
   },
   "scan": {
     "completedTitle": "Foto-Scan abgeschlossen",

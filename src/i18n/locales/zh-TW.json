@@ -334,7 +334,8 @@
     "languagesUnit": "languages",
     "percentUnit": "%",
     "hoursUnit": "hours",
-    "gamesBtnA11y": "遊戲"
+    "gamesBtnA11y": "遊戲",
+    "gamesBtnLabel": "遊戲"
   },
   "scan": {
     "completedTitle": "相片掃描完成",

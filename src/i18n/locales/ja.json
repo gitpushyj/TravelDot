@@ -334,7 +334,8 @@
     "languagesUnit": "languages",
     "percentUnit": "%",
     "hoursUnit": "hours",
-    "gamesBtnA11y": "ゲーム"
+    "gamesBtnA11y": "ゲーム",
+    "gamesBtnLabel": "ゲーム"
   },
   "scan": {
     "completedTitle": "写真の確認が終わりました",

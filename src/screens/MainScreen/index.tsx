@@ -371,6 +371,7 @@ export default function MainScreen({ navigation }: Props) {
           style={styles.gamesBtn}
         >
           <Gamepad2 color={theme.textPrimary} size={24} />
+          <Text style={styles.gamesBtnLabel}>{t("home.gamesBtnLabel")}</Text>
         </Pressable>
       </Animated.View>
       <AnimatedScrollView

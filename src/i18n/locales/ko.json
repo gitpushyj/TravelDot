@@ -428,7 +428,8 @@
     "hoursUnit": "시간",
     "shareBtnA11y": "지도 공유하기",
     "zoomBtnA11y": "지도 전체화면 보기",
-    "gamesBtnA11y": "게임"
+    "gamesBtnA11y": "게임",
+    "gamesBtnLabel": "게임"
   },
   "share": {
     "previewTitle": "지도 공유",

@@ -428,7 +428,8 @@
     "hoursUnit": "hours",
     "shareBtnA11y": "Share map",
     "zoomBtnA11y": "Open fullscreen map",
-    "gamesBtnA11y": "Games"
+    "gamesBtnA11y": "Games",
+    "gamesBtnLabel": "Games"
   },
   "share": {
     "previewTitle": "Share Map",
