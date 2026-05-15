@@ -85,7 +85,7 @@ export const LIGHT_THEME: Theme = {
   optionBtnPressedBg: "#f3efe6",
   optionBtnBorder: "#ecebe4",
   highlightDot: "#ffd75e",
-  flightPathFaint: "rgba(0,0,0,0.28)",
+  flightPathFaint: "rgba(0,0,0,0.5)",
   flightPathBright: "#1a1a1a",
   statusBar: "dark",
 };

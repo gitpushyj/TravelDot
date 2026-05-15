@@ -77,6 +77,9 @@ type Props = {
   // 띄울지 여부. 캡처용(ShareMapCard)이나 회전된 컨테이너(MapZoomScreen)에서는
   // false로 끈다.
   showLegend?: boolean;
+  // 진행 중인 비행의 비행기·경로·목적지 펄스를 그릴지 여부. 공유 카드처럼
+  // 정적 캡처 이미지에서는 false로 끈다.
+  showFlightOverlay?: boolean;
 };
 
 export default function DotMap({
@@ -90,6 +93,7 @@ export default function DotMap({
   parentRotated90 = false,
   flightAutoZoom = false,
   showLegend = true,
+  showFlightOverlay = true,
 }: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const viewBoxW = 360;
@@ -692,11 +696,13 @@ export default function DotMap({
                     }
                   />
                 ))}
-                <FlightOverlay
-                  baseScale={baseScale}
-                  maxLat={maxLat}
-                  gridSize={gridSize}
-                />
+                {showFlightOverlay && (
+                  <FlightOverlay
+                    baseScale={baseScale}
+                    maxLat={maxLat}
+                    gridSize={gridSize}
+                  />
+                )}
               </Group>
             </Canvas>
           </GestureDetector>

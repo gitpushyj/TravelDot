@@ -97,6 +97,7 @@ const ShareMapCard = forwardRef<View, Props>(function ShareMapCard(
             playIntro={false}
             mapAreaStyle={styles.mapInner}
             showLegend={false}
+            showFlightOverlay={false}
           />
         </View>
 
