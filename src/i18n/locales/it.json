@@ -726,6 +726,13 @@
     "topPlayer": "Miglior giocatore",
     "anonymousTraveler": "Viaggiatore anonimo",
     "youSuffix": "(tu)",
-    "othersCount": "e altri {{count}}"
+    "othersCount": "e altri {{count}}",
+    "scoreUnit": "pt",
+    "thisWeekTop": "Top di questa settimana",
+    "viewRanking": "Vedi classifica",
+    "leaderboardTitle": "Classifica settimanale",
+    "rankN": "#{{rank}}",
+    "myRank": "La mia posizione",
+    "weeklyResetHint": "Una nuova stagione inizia ogni lunedì"
   }
 }

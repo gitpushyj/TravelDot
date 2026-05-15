@@ -955,6 +955,13 @@
     "topPlayer": "Top player",
     "anonymousTraveler": "Anonymous traveler",
     "youSuffix": "(you)",
-    "othersCount": "and {{count}} more"
+    "othersCount": "and {{count}} more",
+    "scoreUnit": "pts",
+    "thisWeekTop": "This week's top",
+    "viewRanking": "View ranking",
+    "leaderboardTitle": "This week's leaderboard",
+    "rankN": "#{{rank}}",
+    "myRank": "My rank",
+    "weeklyResetHint": "A new season starts every Monday"
   }
 }

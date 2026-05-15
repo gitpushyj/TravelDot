@@ -726,6 +726,13 @@
     "topPlayer": "Лучший игрок",
     "anonymousTraveler": "Анонимный путешественник",
     "youSuffix": "(ты)",
-    "othersCount": "и ещё {{count}}"
+    "othersCount": "и ещё {{count}}",
+    "scoreUnit": "очк.",
+    "thisWeekTop": "Топ недели",
+    "viewRanking": "Рейтинг",
+    "leaderboardTitle": "Рейтинг недели",
+    "rankN": "#{{rank}}",
+    "myRank": "Мой ранг",
+    "weeklyResetHint": "Каждый понедельник стартует новый сезон"
   }
 }

@@ -726,6 +726,13 @@
     "topPlayer": "全体1位",
     "anonymousTraveler": "名無しの旅人",
     "youSuffix": "(あなた)",
-    "othersCount": "他{{count}}名"
+    "othersCount": "他{{count}}名",
+    "scoreUnit": "点",
+    "thisWeekTop": "今週のTOP",
+    "viewRanking": "ランキングを見る",
+    "leaderboardTitle": "今週のランキング",
+    "rankN": "{{rank}}位",
+    "myRank": "自分の順位",
+    "weeklyResetHint": "毎週月曜日に新シーズンが始まります"
   }
 }

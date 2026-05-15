@@ -726,6 +726,13 @@
     "topPlayer": "全球第一",
     "anonymousTraveler": "匿名旅行者",
     "youSuffix": "（你）",
-    "othersCount": "等{{count}}人"
+    "othersCount": "等{{count}}人",
+    "scoreUnit": "分",
+    "thisWeekTop": "本周排名",
+    "viewRanking": "查看排名",
+    "leaderboardTitle": "本周排行榜",
+    "rankN": "第{{rank}}名",
+    "myRank": "我的排名",
+    "weeklyResetHint": "每周一开始新赛季"
   }
 }

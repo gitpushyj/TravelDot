@@ -955,6 +955,13 @@
     "topPlayer": "전체 1위",
     "anonymousTraveler": "익명의 여행자",
     "youSuffix": "(나)",
-    "othersCount": "외 {{count}}명"
+    "othersCount": "외 {{count}}명",
+    "scoreUnit": "점",
+    "thisWeekTop": "이번 주 TOP",
+    "viewRanking": "순위 보기",
+    "leaderboardTitle": "이번 주 랭킹",
+    "rankN": "{{rank}}위",
+    "myRank": "내 순위",
+    "weeklyResetHint": "매주 월요일 새 시즌이 시작돼요"
   }
 }

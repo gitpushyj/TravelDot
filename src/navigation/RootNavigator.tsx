@@ -9,6 +9,7 @@ import ChangeHomeScreenNav from "./screens/ChangeHomeScreenNav";
 import CountryDetailScreenNav from "./screens/CountryDetailScreenNav";
 import CountryMergeScreenNav from "./screens/CountryMergeScreenNav";
 import EditTripScreenNav from "./screens/EditTripScreenNav";
+import FlagQuizLeaderboardScreenNav from "./screens/FlagQuizLeaderboardScreenNav";
 import FlagQuizScreenNav from "./screens/FlagQuizScreenNav";
 import GamesHubScreenNav from "./screens/GamesHubScreenNav";
 import HistoryScreenNav from "./screens/HistoryScreenNav";
@@ -40,6 +41,7 @@ export default function RootNavigator() {
         <Stack.Screen name="Main" component={MainTabs} />
         <Stack.Screen name="GamesHub" component={GamesHubScreenNav} />
         <Stack.Screen name="FlagQuiz" component={FlagQuizScreenNav} />
+        <Stack.Screen name="FlagQuizLeaderboard" component={FlagQuizLeaderboardScreenNav} />
         <Stack.Screen name="AddTrip" component={AddTripScreenNav} />
         <Stack.Screen name="ChangeHome" component={ChangeHomeScreenNav} />
         <Stack.Screen name="Titles" component={TitlesScreenNav} />

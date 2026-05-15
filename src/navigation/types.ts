@@ -24,6 +24,7 @@ export type RootStackParamList = {
   Main: NavigatorScreenParams<MainTabParamList> | undefined;
   GamesHub: undefined;
   FlagQuiz: undefined;
+  FlagQuizLeaderboard: undefined;
   AddTrip: { prefilledCountry?: { code: string; name: string } } | undefined;
   ChangeHome: undefined;
   Titles: undefined;

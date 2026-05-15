@@ -15,10 +15,21 @@ import { GameOverView } from "./components/GameOverView";
 import { LivesIndicator } from "./components/LivesIndicator";
 import { QuizStartView } from "./components/QuizStartView";
 import { TimerBar } from "./components/TimerBar";
-import { fetchMyQuizScore, fetchTopQuizScore, submitQuizScore, type TopQuizScore } from "./scoreService";
+import {
+  fetchLeaderboard,
+  fetchMyQuizScore,
+  submitQuizScore,
+  type LeaderboardEntry,
+} from "./scoreService";
 import { QUESTION_SECONDS, useFlagQuizGame } from "./useFlagQuizGame";
 
-export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
+export function FlagQuizScreen({
+  onClose,
+  onViewRanking,
+}: {
+  onClose: () => void;
+  onViewRanking: () => void;
+}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const userId = useAuthStore((s) => s.user?.id ?? null);
@@ -26,52 +37,50 @@ export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
 
   const [bestScore, setBestScore] = useState<number | null>(null);
   const [loadingScore, setLoadingScore] = useState(false);
-  const [topScore, setTopScore] = useState<TopQuizScore | null>(null);
+  const [topThree, setTopThree] = useState<LeaderboardEntry[]>([]);
   const [loadingTop, setLoadingTop] = useState(false);
   const [isNewBest, setIsNewBest] = useState(false);
   // 이번 게임오버 처리(점수 제출)를 1회만 하기 위한 가드.
   const submittedRef = useRef(false);
-
-  // 대기 화면 진입 시 내 최고 점수 조회.
-  useEffect(() => {
-    if (!userId) {
-      setBestScore(null);
-      return;
-    }
-    let cancelled = false;
-    setLoadingScore(true);
-    fetchMyQuizScore(userId).then((row) => {
-      if (cancelled) return;
-      setBestScore(row?.bestScore ?? null);
-      setLoadingScore(false);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [userId]);
-
-  // 전체 1위 조회. 시작화면 진입과 게임오버 직후에 다시 갱신해서
-  // 본인이 갓 신기록을 세웠을 때도 1위 라인이 즉시 반영되도록 한다.
+  // unmount 후 setState 방지용 가드.
   const mountedRef = useRef(true);
   useEffect(() => {
     return () => {
       mountedRef.current = false;
     };
   }, []);
+
+  // 이번 주 내 점수 조회 (로그인 시).
+  const refreshMy = useCallback(() => {
+    if (!userId) {
+      setBestScore(null);
+      return;
+    }
+    setLoadingScore(true);
+    fetchMyQuizScore().then((row) => {
+      if (!mountedRef.current) return;
+      setBestScore(row?.bestScore ?? null);
+      setLoadingScore(false);
+    });
+  }, [userId]);
+
+  // 이번 주 1·2·3위 조회. 시작화면 진입과 게임오버 직후에 다시 갱신해서
+  // 본인이 갓 신기록을 세웠을 때도 즉시 반영되도록 한다.
   const refreshTop = useCallback(() => {
     setLoadingTop(true);
-    fetchTopQuizScore().then((row) => {
+    fetchLeaderboard(3).then((list) => {
       if (!mountedRef.current) return;
-      setTopScore(row);
+      setTopThree(list);
       setLoadingTop(false);
     });
   }, []);
 
   useEffect(() => {
+    refreshMy();
     refreshTop();
-  }, [refreshTop]);
+  }, [refreshMy, refreshTop]);
 
-  // 게임오버 전이 시 점수 제출 (로그인 사용자만, 1회). 제출 후 전체 1위 재조회.
+  // 게임오버 전이 시 점수 제출 (로그인 사용자만, 1회). 제출 후 내 점수 + TOP 3 재조회.
   useEffect(() => {
     if (game.status !== "over" || submittedRef.current) return;
     submittedRef.current = true;
@@ -80,6 +89,7 @@ export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
     setIsNewBest(finalScore > prevBest);
     if (userId) {
       submitQuizScore(finalScore).then((row) => {
+        if (!mountedRef.current) return;
         if (row) setBestScore(row.bestScore);
         refreshTop();
       });
@@ -146,10 +156,11 @@ export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
           bestScore={bestScore}
           loading={loadingScore}
           signedIn={!!userId}
-          topScore={topScore}
+          topThree={topThree}
           topLoading={loadingTop}
           currentUserId={userId}
           onStart={handleStart}
+          onViewRanking={onViewRanking}
         />
       ) : game.status === "over" ? (
         <GameOverView
