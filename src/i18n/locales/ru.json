@@ -333,7 +333,8 @@
     "colorsUnit": "colors",
     "languagesUnit": "languages",
     "percentUnit": "%",
-    "hoursUnit": "hours"
+    "hoursUnit": "hours",
+    "gamesBtnA11y": "Игры"
   },
   "scan": {
     "completedTitle": "Сканирование фото завершено",
@@ -700,5 +701,24 @@
         "desc": "Выберите одну из 10 палитр цвета точек, чтобы настроить карту под себя."
       }
     }
+  },
+  "gamesHub": {
+    "title": "Игры",
+    "flagQuizTitle": "Викторина флагов",
+    "flagQuizDesc": "Посмотрите на флаг и угадайте страну"
+  },
+  "flagQuiz": {
+    "start": "Начать",
+    "bestScore": "Лучший результат {{score}}",
+    "noBestScore": "Ждём вашу первую попытку",
+    "loginToSave": "Войдите, чтобы сохранять результаты",
+    "loadingScore": "Загрузка результата…",
+    "score": "Счёт {{score}}",
+    "gameOver": "Игра окончена",
+    "finalScore": "Правильных: {{score}}",
+    "newBest": "Новый рекорд!",
+    "bestScoreLabel": "Рекорд {{score}}",
+    "retry": "Играть снова",
+    "exit": "Выйти"
   }
 }

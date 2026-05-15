@@ -42,6 +42,9 @@ export function makeStyles(theme: Theme) {
       fontWeight: "800",
       letterSpacing: 0.2,
     },
+    gamesBtn: {
+      padding: 4,
+    },
     mapStatsHeader: {
       flexDirection: "row",
       alignItems: "center",

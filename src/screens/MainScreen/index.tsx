@@ -24,6 +24,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
+import { Gamepad2 } from "lucide-react-native";
 import type { CompositeScreenProps } from "@react-navigation/native";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -363,6 +364,14 @@ export default function MainScreen({ navigation }: Props) {
       <StatusBar style={theme.statusBar} />
       <Animated.View style={[styles.topAppBar, topBarStyle]}>
         <Text style={styles.topAppBarTitle}>PixelTravel</Text>
+        <Pressable
+          onPress={() => navigation.navigate("GamesHub")}
+          hitSlop={8}
+          accessibilityLabel={t("home.gamesBtnA11y")}
+          style={styles.gamesBtn}
+        >
+          <Gamepad2 color={theme.textPrimary} size={24} />
+        </Pressable>
       </Animated.View>
       <AnimatedScrollView
         style={styles.scroll}

@@ -333,7 +333,8 @@
     "colorsUnit": "colors",
     "languagesUnit": "languages",
     "percentUnit": "%",
-    "hoursUnit": "hours"
+    "hoursUnit": "hours",
+    "gamesBtnA11y": "Juegos"
   },
   "scan": {
     "completedTitle": "Escaneo de fotos completado",
@@ -700,5 +701,24 @@
         "desc": "Elige entre 10 paletas de colores de puntos para personalizar el mapa a tu gusto."
       }
     }
+  },
+  "gamesHub": {
+    "title": "Juegos",
+    "flagQuizTitle": "Quiz de banderas",
+    "flagQuizDesc": "Mira la bandera y adivina el país"
+  },
+  "flagQuiz": {
+    "start": "Empezar",
+    "bestScore": "Mejor puntuación {{score}}",
+    "noBestScore": "Esperando tu primer intento",
+    "loginToSave": "Inicia sesión para guardar tus puntuaciones",
+    "loadingScore": "Cargando tu puntuación…",
+    "score": "Puntuación {{score}}",
+    "gameOver": "Fin del juego",
+    "finalScore": "{{score}} aciertos",
+    "newBest": "¡Nuevo récord!",
+    "bestScoreLabel": "Mejor {{score}}",
+    "retry": "Jugar de nuevo",
+    "exit": "Salir"
   }
 }

@@ -427,7 +427,8 @@
     "percentUnit": "%",
     "hoursUnit": "시간",
     "shareBtnA11y": "지도 공유하기",
-    "zoomBtnA11y": "지도 전체화면 보기"
+    "zoomBtnA11y": "지도 전체화면 보기",
+    "gamesBtnA11y": "게임"
   },
   "share": {
     "previewTitle": "지도 공유",
@@ -929,5 +930,24 @@
     "startA11y": "비행 시작",
     "liveA11y": "비행 정보 보기",
     "arrivedToast": "도착했어요 · {{iata}} {{city}}"
+  },
+  "gamesHub": {
+    "title": "게임",
+    "flagQuizTitle": "국기 퀴즈",
+    "flagQuizDesc": "국기를 보고 나라를 맞혀보세요"
+  },
+  "flagQuiz": {
+    "start": "시작",
+    "bestScore": "최고 점수 {{score}}",
+    "noBestScore": "첫 도전을 기다리고 있어요",
+    "loginToSave": "로그인하면 기록이 저장돼요",
+    "loadingScore": "기록 불러오는 중…",
+    "score": "점수 {{score}}",
+    "gameOver": "게임 오버",
+    "finalScore": "{{score}}개 정답",
+    "newBest": "최고 기록 경신!",
+    "bestScoreLabel": "최고 {{score}}",
+    "retry": "다시하기",
+    "exit": "나가기"
   }
 }

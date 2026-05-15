@@ -427,7 +427,8 @@
     "percentUnit": "%",
     "hoursUnit": "hours",
     "shareBtnA11y": "Share map",
-    "zoomBtnA11y": "Open fullscreen map"
+    "zoomBtnA11y": "Open fullscreen map",
+    "gamesBtnA11y": "Games"
   },
   "share": {
     "previewTitle": "Share Map",
@@ -929,5 +930,24 @@
     "startA11y": "Start flight",
     "liveA11y": "Show flight info",
     "arrivedToast": "Arrived · {{iata}} {{city}}"
+  },
+  "gamesHub": {
+    "title": "Games",
+    "flagQuizTitle": "Flag Quiz",
+    "flagQuizDesc": "See the flag, name the country"
+  },
+  "flagQuiz": {
+    "start": "Start",
+    "bestScore": "Best score {{score}}",
+    "noBestScore": "Waiting for your first run",
+    "loginToSave": "Log in to save your scores",
+    "loadingScore": "Loading your score…",
+    "score": "Score {{score}}",
+    "gameOver": "Game Over",
+    "finalScore": "{{score}} correct",
+    "newBest": "New best score!",
+    "bestScoreLabel": "Best {{score}}",
+    "retry": "Play again",
+    "exit": "Exit"
   }
 }

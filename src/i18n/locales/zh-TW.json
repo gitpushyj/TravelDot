@@ -333,7 +333,8 @@
     "colorsUnit": "colors",
     "languagesUnit": "languages",
     "percentUnit": "%",
-    "hoursUnit": "hours"
+    "hoursUnit": "hours",
+    "gamesBtnA11y": "遊戲"
   },
   "scan": {
     "completedTitle": "相片掃描完成",
@@ -700,5 +701,24 @@
         "desc": "從 10 種 dot 色彩調色盤中挑一款,把地圖調成你的風格。"
       }
     }
+  },
+  "gamesHub": {
+    "title": "遊戲",
+    "flagQuizTitle": "國旗問答",
+    "flagQuizDesc": "看國旗，猜國家"
+  },
+  "flagQuiz": {
+    "start": "開始",
+    "bestScore": "最高分 {{score}}",
+    "noBestScore": "等待你的第一次挑戰",
+    "loginToSave": "登入後即可儲存成績",
+    "loadingScore": "正在載入成績…",
+    "score": "得分 {{score}}",
+    "gameOver": "遊戲結束",
+    "finalScore": "答對 {{score}} 題",
+    "newBest": "刷新最高分！",
+    "bestScoreLabel": "最高 {{score}}",
+    "retry": "再玩一次",
+    "exit": "離開"
   }
 }

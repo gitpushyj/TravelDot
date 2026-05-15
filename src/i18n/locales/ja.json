@@ -333,7 +333,8 @@
     "colorsUnit": "colors",
     "languagesUnit": "languages",
     "percentUnit": "%",
-    "hoursUnit": "hours"
+    "hoursUnit": "hours",
+    "gamesBtnA11y": "ゲーム"
   },
   "scan": {
     "completedTitle": "写真の確認が終わりました",
@@ -700,5 +701,24 @@
         "desc": "10種類のdotカラーパレットから選んで、マップを自分好みに。"
       }
     }
+  },
+  "gamesHub": {
+    "title": "ゲーム",
+    "flagQuizTitle": "国旗クイズ",
+    "flagQuizDesc": "国旗を見て国名を当てよう"
+  },
+  "flagQuiz": {
+    "start": "スタート",
+    "bestScore": "ベストスコア {{score}}",
+    "noBestScore": "最初の挑戦をお待ちしています",
+    "loginToSave": "ログインするとスコアが保存されます",
+    "loadingScore": "スコアを読み込み中…",
+    "score": "スコア {{score}}",
+    "gameOver": "ゲームオーバー",
+    "finalScore": "正解 {{score}}",
+    "newBest": "自己ベスト更新！",
+    "bestScoreLabel": "ベスト {{score}}",
+    "retry": "もう一度",
+    "exit": "終了"
   }
 }

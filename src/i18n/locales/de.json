@@ -333,7 +333,8 @@
     "colorsUnit": "colors",
     "languagesUnit": "languages",
     "percentUnit": "%",
-    "hoursUnit": "hours"
+    "hoursUnit": "hours",
+    "gamesBtnA11y": "Spiele"
   },
   "scan": {
     "completedTitle": "Foto-Scan abgeschlossen",
@@ -700,5 +701,24 @@
         "desc": "Wähle aus 10 Dot-Farbpaletten und gestalte die Karte ganz nach deinem Geschmack."
       }
     }
+  },
+  "gamesHub": {
+    "title": "Spiele",
+    "flagQuizTitle": "Flaggen-Quiz",
+    "flagQuizDesc": "Flagge ansehen, Land erraten"
+  },
+  "flagQuiz": {
+    "start": "Start",
+    "bestScore": "Bestwert {{score}}",
+    "noBestScore": "Warte auf deinen ersten Versuch",
+    "loginToSave": "Melde dich an, um deine Punkte zu speichern",
+    "loadingScore": "Punktestand wird geladen…",
+    "score": "Punkte {{score}}",
+    "gameOver": "Spiel vorbei",
+    "finalScore": "{{score}} richtig",
+    "newBest": "Neuer Bestwert!",
+    "bestScoreLabel": "Bestwert {{score}}",
+    "retry": "Nochmal spielen",
+    "exit": "Beenden"
   }
 }

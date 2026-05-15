@@ -333,7 +333,8 @@
     "colorsUnit": "colors",
     "languagesUnit": "languages",
     "percentUnit": "%",
-    "hoursUnit": "hours"
+    "hoursUnit": "hours",
+    "gamesBtnA11y": "Jeux"
   },
   "scan": {
     "completedTitle": "Analyse des photos terminée",
@@ -700,5 +701,24 @@
         "desc": "Choisis parmi 10 palettes de couleurs de points pour personnaliser la carte à ton goût."
       }
     }
+  },
+  "gamesHub": {
+    "title": "Jeux",
+    "flagQuizTitle": "Quiz des drapeaux",
+    "flagQuizDesc": "Regardez le drapeau, devinez le pays"
+  },
+  "flagQuiz": {
+    "start": "Commencer",
+    "bestScore": "Meilleur score {{score}}",
+    "noBestScore": "En attente de votre premier essai",
+    "loginToSave": "Connectez-vous pour enregistrer vos scores",
+    "loadingScore": "Chargement de votre score…",
+    "score": "Score {{score}}",
+    "gameOver": "Partie terminée",
+    "finalScore": "{{score}} bonnes réponses",
+    "newBest": "Nouveau record !",
+    "bestScoreLabel": "Record {{score}}",
+    "retry": "Rejouer",
+    "exit": "Quitter"
   }
 }
