@@ -3,6 +3,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -72,7 +73,12 @@ export default function NicknameStep({ onNext }: Props) {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={{ flex: 1 }}
     >
-      <View style={local.body}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={local.body}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <View style={local.header}>
           <NicknameBadge color={theme.accent} bgColor={theme.accentSoftBg} />
           <Text style={[styles.title, { marginTop: 16 }]}>
@@ -90,7 +96,7 @@ export default function NicknameStep({ onNext }: Props) {
             errorKey={showErrors ? errorKey : null}
           />
         </View>
-      </View>
+      </ScrollView>
 
       <View style={styles.footer}>
         <Pressable
@@ -153,9 +159,9 @@ function NicknameBadge({
 function makeLocalStyles(_theme: ReturnType<typeof useTheme>) {
   return StyleSheet.create({
     body: {
-      flex: 1,
       paddingHorizontal: 20,
       paddingTop: 8,
+      paddingBottom: 8,
     },
     header: {
       paddingTop: 8,

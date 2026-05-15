@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import { useTranslation } from "react-i18next";
-import Svg, { Circle, Path, Rect } from "react-native-svg";
 
 import { WheelItem } from "../../components/WheelPicker";
 import {
@@ -110,12 +110,13 @@ export default function BirthGenderStep({ onNext }: Props) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={local.body}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={local.body}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={local.header}>
-          <CalendarBadge color={theme.accent} bgColor={theme.accentSoftBg} />
-          <Text style={[styles.title, { marginTop: 16 }]}>
-            {t("onboarding.birth.title")}
-          </Text>
+          <Text style={styles.title}>{t("onboarding.birth.title")}</Text>
           <Text style={styles.subtitle}>{t("onboarding.birth.subtitle")}</Text>
         </View>
 
@@ -133,7 +134,7 @@ export default function BirthGenderStep({ onNext }: Props) {
           />
           <GenderCard value={gender} onChange={setGender} />
         </View>
-      </View>
+      </ScrollView>
 
       <View style={styles.footer}>
         <Pressable
@@ -154,61 +155,12 @@ export default function BirthGenderStep({ onNext }: Props) {
   );
 }
 
-function CalendarBadge({
-  color,
-  bgColor,
-}: {
-  color: string;
-  bgColor: string;
-}) {
-  return (
-    <View
-      style={{
-        width: 48,
-        height: 48,
-        borderRadius: 14,
-        backgroundColor: bgColor,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Svg width={26} height={26} viewBox="0 0 24 24">
-        <Rect
-          x={3}
-          y={5}
-          width={18}
-          height={16}
-          rx={3}
-          stroke={color}
-          strokeWidth={1.8}
-          fill="none"
-        />
-        <Path
-          d="M3 9h18"
-          stroke={color}
-          strokeWidth={1.8}
-          strokeLinecap="round"
-        />
-        <Path
-          d="M8 3v4M16 3v4"
-          stroke={color}
-          strokeWidth={1.8}
-          strokeLinecap="round"
-        />
-        <Circle cx={8} cy={14} r={1.2} fill={color} />
-        <Circle cx={12} cy={14} r={1.2} fill={color} />
-        <Circle cx={16} cy={14} r={1.2} fill={color} />
-      </Svg>
-    </View>
-  );
-}
-
 function makeLocalStyles(_theme: ReturnType<typeof useTheme>) {
   return StyleSheet.create({
     body: {
-      flex: 1,
       paddingHorizontal: 20,
       paddingTop: 8,
+      paddingBottom: 8,
     },
     header: {
       paddingTop: 8,
