@@ -69,7 +69,6 @@ export const COUNTRY_CAPITALS: Record<string, readonly [number, number]> = {
   GA: [0.42, 9.45], // Libreville
   GB: [51.51, -0.13], // London
   GE: [41.72, 44.78], // Tbilisi
-  GG: [49.45, -2.54], // St Peter Port (건지)
   GH: [5.60, -0.19], // Accra
   GL: [64.18, -51.74], // Nuuk
   GN: [9.51, -13.71], // Conakry
@@ -85,13 +84,11 @@ export const COUNTRY_CAPITALS: Record<string, readonly [number, number]> = {
   ID: [-6.21, 106.85], // Jakarta
   IE: [53.35, -6.26], // Dublin
   IL: [31.78, 35.22], // Jerusalem
-  IM: [54.15, -4.48], // Douglas (맨섬)
   IN: [28.61, 77.21], // New Delhi
   IQ: [33.32, 44.36], // Baghdad
   IR: [35.69, 51.39], // Tehran
   IS: [64.15, -21.94], // Reykjavik
   IT: [41.90, 12.50], // Rome
-  JE: [49.19, -2.10], // Saint Helier (저지)
   JM: [17.97, -76.79], // Kingston
   JO: [31.95, 35.93], // Amman
   JP: [35.68, 139.69], // Tokyo
@@ -103,7 +100,6 @@ export const COUNTRY_CAPITALS: Record<string, readonly [number, number]> = {
   KP: [39.02, 125.76], // Pyongyang
   KR: [37.57, 126.98], // Seoul
   KW: [29.38, 47.99], // Kuwait City
-  KY: [19.29, -81.38], // George Town (케이맨)
   KZ: [51.17, 71.42], // Astana
   LA: [17.97, 102.60], // Vientiane
   LB: [33.89, 35.50], // Beirut
