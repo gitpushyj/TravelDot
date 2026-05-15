@@ -42,26 +42,28 @@ function hslToHex(h: number, s: number, l: number): string {
   return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
 }
 
-// Light 모드 1~4단계: lightness 70 → 50 → 33 → 20 (단조 감소).
+// Light 모드 1~4단계: lightness 70 → 53 → 40 → 30 (단조 감소).
+// 옆 단계와의 격차를 줄이고 최상단의 어두움을 누른다.
 // satScale은 mono 팔레트(채도 0)를 만들기 위해 곱셈으로 적용.
 function genLight(hue: number, satScale: number): HeatmapPalette {
   return [
     L0_LIGHT,
     hslToHex(hue, 42 * satScale, 70),
-    hslToHex(hue, 55 * satScale, 50),
-    hslToHex(hue, 62 * satScale, 33),
-    hslToHex(hue, 65 * satScale, 20),
+    hslToHex(hue, 52 * satScale, 53),
+    hslToHex(hue, 56 * satScale, 40),
+    hslToHex(hue, 58 * satScale, 30),
   ];
 }
 
-// Dark 모드 1~4단계: lightness 27 → 42 → 58 → 72 (단조 증가).
+// Dark 모드 1~4단계: lightness 30 → 44 → 56 → 66 (단조 증가).
+// 라이트와 대칭으로 양 끝의 강도를 완화한다.
 function genDark(hue: number, satScale: number): HeatmapPalette {
   return [
     L0_DARK,
-    hslToHex(hue, 48 * satScale, 27),
-    hslToHex(hue, 58 * satScale, 42),
-    hslToHex(hue, 65 * satScale, 58),
-    hslToHex(hue, 62 * satScale, 72),
+    hslToHex(hue, 44 * satScale, 30),
+    hslToHex(hue, 54 * satScale, 44),
+    hslToHex(hue, 58 * satScale, 56),
+    hslToHex(hue, 56 * satScale, 66),
   ];
 }
 
