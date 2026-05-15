@@ -556,7 +556,8 @@
       },
       "feature2": {
         "title": "Photos sécurisées",
-        "desc": "L'analyse se fait sur cet appareil — rien n'est envoyé en ligne"
+        "desc": "L'analyse se fait sur cet appareil — ",
+        "descEmphasis": "rien n'est envoyé en ligne"
       },
       "feature3": {
         "title": "Modifiable à tout moment",

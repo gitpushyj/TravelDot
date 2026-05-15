@@ -10,6 +10,7 @@ type Props = {
   iconBg: string;
   title: string;
   desc: string;
+  descEmphasis?: string;
 };
 
 export default function SyncFeatureRow({
@@ -19,6 +20,7 @@ export default function SyncFeatureRow({
   iconBg,
   title,
   desc,
+  descEmphasis,
 }: Props) {
   return (
     <View style={styles.row}>
@@ -27,7 +29,12 @@ export default function SyncFeatureRow({
       </View>
       <View style={styles.text}>
         <Text style={[styles.title, { color: theme.textPrimary }]}>{title}</Text>
-        <Text style={[styles.desc, { color: theme.textSecondary }]}>{desc}</Text>
+        <Text style={[styles.desc, { color: theme.textSecondary }]}>
+          {desc}
+          {descEmphasis ? (
+            <Text style={styles.descEmphasis}>{descEmphasis}</Text>
+          ) : null}
+        </Text>
       </View>
     </View>
   );
@@ -59,5 +66,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     marginTop: 4,
+  },
+  descEmphasis: {
+    fontWeight: "700",
+    textDecorationLine: "underline",
   },
 });

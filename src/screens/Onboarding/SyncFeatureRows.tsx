@@ -42,6 +42,7 @@ export default function SyncFeatureRows({ theme }: Props) {
         iconColor={SHIELD_FG}
         title={t("onboarding.sync.feature2.title")}
         desc={t("onboarding.sync.feature2.desc")}
+        descEmphasis={t("onboarding.sync.feature2.descEmphasis")}
       />
       <View style={[styles.divider, { backgroundColor: theme.cardBorder }]} />
       <SyncFeatureRow

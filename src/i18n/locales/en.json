@@ -758,7 +758,8 @@
       },
       "feature2": {
         "title": "Photos stay private",
-        "desc": "All analysis runs on this device — nothing is uploaded"
+        "desc": "All analysis runs on this device — ",
+        "descEmphasis": "nothing is uploaded"
       },
       "feature3": {
         "title": "Change anytime",

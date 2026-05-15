@@ -556,7 +556,8 @@
       },
       "feature2": {
         "title": "Fotos bleiben sicher",
-        "desc": "Die Analyse läuft nur auf diesem Gerät, nichts wird hochgeladen"
+        "desc": "Die Analyse läuft nur auf diesem Gerät, ",
+        "descEmphasis": "nichts wird hochgeladen"
       },
       "feature3": {
         "title": "Jederzeit änderbar",
