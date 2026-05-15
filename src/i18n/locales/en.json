@@ -735,8 +735,12 @@
     "sync": {
       "title": "Let's sync your trips",
       "body": "We'll go through your photos and build trip records automatically.",
-      "fullAccessHint": "For best results, please choose \"Allow full photo access\".",
-      "cloudOnlyNote": "Only photos saved on this device can be analyzed. Photos kept only in the cloud (e.g. Google Photos) and removed from the device can't be imported.",
+      "fullAccessHint": {
+        "prefix": "For accurate auto-detection, please choose ",
+        "highlight": "Allow full photo access",
+        "suffix": "."
+      },
+      "cloudOnlyNote": "Only photos saved on this device are analyzed. Without full access, some trips may not be detected.",
       "button": "Start sync",
       "scanning": "Reviewing {{processed}} photos...",
       "preparing": "Getting ready to scan your photos...",

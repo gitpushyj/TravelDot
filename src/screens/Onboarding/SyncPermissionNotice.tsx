@@ -6,18 +6,32 @@ import type { Theme } from "../../theme/theme";
 
 type Props = {
   theme: Theme;
-  title: string;
+  titlePrefix: string;
+  titleHighlight: string;
+  titleSuffix: string;
   body: string;
 };
 
-export default function SyncPermissionNotice({ theme, title, body }: Props) {
+export default function SyncPermissionNotice({
+  theme,
+  titlePrefix,
+  titleHighlight,
+  titleSuffix,
+  body,
+}: Props) {
   return (
     <View style={[styles.box, { backgroundColor: theme.accentSoftBg }]}>
       <View style={styles.iconWrap}>
         <FilledLockIcon color={theme.accent} />
       </View>
       <View style={styles.text}>
-        <Text style={[styles.title, { color: theme.accentSoftText }]}>{title}</Text>
+        <Text style={[styles.title, { color: theme.accentSoftText }]}>
+          {titlePrefix}
+          <Text style={[styles.titleHighlight, { color: theme.dangerOn }]}>
+            {titleHighlight}
+          </Text>
+          {titleSuffix}
+        </Text>
         <Text style={[styles.body, { color: theme.textSecondary }]}>{body}</Text>
       </View>
     </View>
@@ -56,6 +70,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "700",
     lineHeight: 19,
+  },
+  titleHighlight: {
+    fontWeight: "800",
   },
   body: {
     fontSize: 12,

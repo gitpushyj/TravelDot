@@ -534,8 +534,12 @@
     "sync": {
       "title": "開始同步旅行紀錄",
       "body": "我們會掃描你的手機相片,自動整理出旅行紀錄。",
-      "fullAccessHint": "為了讓自動紀錄更順暢,請選擇「允許存取所有相片」。",
-      "cloudOnlyNote": "僅會分析儲存在本機的相片。僅存在於雲端(如 Google 相簿)且已從手機移除的相片無法匯入。",
+      "fullAccessHint": {
+        "prefix": "為了準確自動紀錄,請選擇",
+        "highlight": "允許存取所有相片",
+        "suffix": "。"
+      },
+      "cloudOnlyNote": "僅會分析儲存在本機的相片。若未允許完整存取,部分旅行可能無法被分析。",
       "button": "開始同步",
       "scanning": "正在檢視 {{processed}} 張相片…",
       "preparing": "正在準備掃描相片…",

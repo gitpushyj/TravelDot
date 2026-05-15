@@ -534,8 +534,12 @@
     "sync": {
       "title": "Vamos a sincronizar tus viajes",
       "body": "Revisaremos tus fotos y crearemos los registros de viaje automáticamente.",
-      "fullAccessHint": "Para una mejor detección automática, elige \"Permitir acceso a todas las fotos\".",
-      "cloudOnlyNote": "Solo se analizan las fotos guardadas en este dispositivo. Las fotos que solo están en la nube (p. ej. Google Fotos) y se han eliminado del dispositivo no se pueden importar.",
+      "fullAccessHint": {
+        "prefix": "Para una detección automática precisa, elige ",
+        "highlight": "Permitir acceso a todas las fotos",
+        "suffix": "."
+      },
+      "cloudOnlyNote": "Solo se analizan las fotos guardadas en este dispositivo. Sin acceso completo, no se podrán analizar todos los viajes.",
       "button": "Iniciar sincronización",
       "scanning": "Revisando {{processed}} fotos…",
       "preparing": "Preparando la revisión de tus fotos…",

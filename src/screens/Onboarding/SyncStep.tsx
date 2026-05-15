@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
+  AppState,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -11,6 +13,7 @@ import {
   activateKeepAwakeAsync,
   deactivateKeepAwake,
 } from "expo-keep-awake";
+import * as MediaLibrary from "expo-media-library";
 
 import { ensurePermission } from "../../features/photoSync/photoLibrary";
 import { runFullSync } from "../../features/photoSync/syncService";
@@ -66,19 +69,46 @@ export default function SyncStep({ onNext }: Props) {
     };
   }, [phase]);
 
+  const beginSync = (access: "granted" | "limited") => {
+    setPermission(access);
+    setPhase("syncing");
+    runFullSync().catch(() => {
+      // 실패는 lastSync.error로 보고된다. 여기서는 흡수.
+    });
+  };
+
   const startSync = async () => {
     if (phase === "syncing") return;
+    // 한 번 거부된 권한은 requestPermissionsAsync로 다이얼로그가 다시 뜨지 않고
+    // 즉시 denied가 반환된다. canAskAgain이 false면 OS 설정 앱으로 보낸다.
+    const current = await MediaLibrary.getPermissionsAsync();
+    if (current.status !== "granted" && !current.canAskAgain) {
+      await Linking.openSettings();
+      return;
+    }
     const result = await ensurePermission();
     setPermission(result);
     if (result === "denied") {
       setPhase("denied");
       return;
     }
-    setPhase("syncing");
-    runFullSync().catch(() => {
-      // 실패는 lastSync.error로 보고된다. 여기서는 흡수.
-    });
+    beginSync(result);
   };
+
+  // 사용자가 설정에서 권한을 켜고 돌아온 경우 자동으로 다음 단계로 진행한다.
+  // denied 화면에서만 청취해 불필요한 리스너를 줄인다.
+  useEffect(() => {
+    if (phase !== "denied") return;
+    const sub = AppState.addEventListener("change", async (state) => {
+      if (state !== "active") return;
+      const current = await MediaLibrary.getPermissionsAsync();
+      if (current.status !== "granted") return;
+      const access =
+        current.accessPrivileges === "limited" ? "limited" : "granted";
+      beginSync(access);
+    });
+    return () => sub.remove();
+  }, [phase]);
 
   if (phase === "denied") {
     return (
@@ -185,7 +215,9 @@ export default function SyncStep({ onNext }: Props) {
         <View style={localStyles.notice}>
           <SyncPermissionNotice
             theme={theme}
-            title={t("onboarding.sync.fullAccessHint")}
+            titlePrefix={t("onboarding.sync.fullAccessHint.prefix")}
+            titleHighlight={t("onboarding.sync.fullAccessHint.highlight")}
+            titleSuffix={t("onboarding.sync.fullAccessHint.suffix")}
             body={t("onboarding.sync.cloudOnlyNote")}
           />
         </View>

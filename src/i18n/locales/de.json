@@ -534,8 +534,12 @@
     "sync": {
       "title": "Lass uns deine Reisen synchronisieren",
       "body": "Wir gehen deine Fotos durch und erstellen die Reise-Einträge automatisch.",
-      "fullAccessHint": "Wähle für ein zuverlässiges Erfassen „Vollen Zugriff auf alle Fotos erlauben\".",
-      "cloudOnlyNote": "Es werden nur Fotos analysiert, die auf diesem Gerät gespeichert sind. Fotos, die nur in der Cloud (z. B. Google Fotos) liegen und vom Gerät entfernt wurden, lassen sich nicht importieren.",
+      "fullAccessHint": {
+        "prefix": "Wähle für eine zuverlässige automatische Erkennung ",
+        "highlight": "Vollen Zugriff auf alle Fotos erlauben",
+        "suffix": "."
+      },
+      "cloudOnlyNote": "Es werden nur Fotos analysiert, die auf diesem Gerät gespeichert sind. Ohne vollen Zugriff können nicht alle Reisen erkannt werden.",
       "button": "Synchronisierung starten",
       "scanning": "{{processed}} Fotos werden geprüft …",
       "preparing": "Foto-Scan wird vorbereitet …",
