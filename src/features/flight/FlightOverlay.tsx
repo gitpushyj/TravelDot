@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { AppState } from "react-native";
-import { Group, Rect } from "@shopify/react-native-skia";
+import { Group, Path, Rect } from "@shopify/react-native-skia";
 import {
   cancelAnimation,
   Easing,
@@ -14,11 +14,9 @@ import {
 import {
   AIRPLANE_PIVOT_COL,
   AIRPLANE_PIVOT_ROW,
-  AIRPLANE_PIXELS,
-  AIRPLANE_PIXELS_ACCENT,
-  AIRPLANE_PIXELS_BODY,
   AIRPLANE_RED_LIGHT,
-} from "./airplanePixels";
+  buildAirplane,
+} from "./airplaneShape";
 import {
   greatCircleInterp,
   initialBearing,
@@ -32,10 +30,9 @@ import { useTheme } from "../../theme/themeStore";
 
 const PATH_SAMPLES = 50;
 
-// 비행기 한 픽셀 = 도트 한 셀(gridSize*baseScale) × 이 비율.
-// 10×10 그리드에서 0.35 → 비행기 전체가 10 * 0.35 = 3.5 셀 폭. 기존(13×13×0.27)과
-// 화면상 비행기 크기를 비슷하게 유지한다.
-const AIRPLANE_PIXEL_RATIO = 0.35;
+// 비행기 좌표 한 단위 = 도트 한 셀(gridSize*baseScale) × 이 비율.
+// 10×10 단위 공간에서 0.35 → 비행기 전체가 약 3.5 셀 폭.
+const AIRPLANE_UNIT_RATIO = 0.35;
 
 // 경로 점 한 개 = 도트 셀의 이 비율 (도트보다 작은 사각형).
 const PATH_DOT_RATIO = 0.18;
@@ -201,10 +198,13 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
 
   // 비행기 픽셀 1개 크기·pivot 픽셀(화면 좌표계 기준).
   const cellPx = gridSize * baseScale;
-  const planePx = cellPx * AIRPLANE_PIXEL_RATIO;
+  const planePx = cellPx * AIRPLANE_UNIT_RATIO;
   const pivotPx = AIRPLANE_PIVOT_COL * planePx;
   const pivotPy = AIRPLANE_PIVOT_ROW * planePx;
   const pathDotPx = cellPx * PATH_DOT_RATIO;
+
+  // 비행기 벡터 Path 3종(동체·조종석·엔진) — planePx가 바뀔 때만 다시 만든다.
+  const airplane = useMemo(() => buildAirplane(planePx), [planePx]);
 
   // 매 프레임 worklet — 비행기 현재 좌표 + 현재 위치 기준 도착지로의 방위각.
   // 대권 경로는 평면지도에서 곡선으로 보이는데 머리 방향이 출발 시점의 초기 방위각으로
@@ -289,42 +289,24 @@ export default function FlightOverlay({ baseScale, maxLat, gridSize }: Props) {
         size={cellPx * 0.6}
         opacity={destPulse}
       />
-      {/* 비행기 — outline(어두운) layer + body(흰색) layer */}
+      {/* 비행기 — 벡터 실루엣. outline(stroke) → 흰 body → 엔진/조종석 accent 순.
+          좌표는 buildAirplane이 planePx 단위로 미리 그려 둔다. */}
       <Group transform={planeTransform}>
-        {/* outline: 모든 픽셀(흰 body + 파란 accent)의 가장자리를 어둡게 그려
-            검은 outline 효과. 살짝 큰 사각형을 먼저 깔고 그 위에 색 layer를 덮는다. */}
-        {AIRPLANE_PIXELS.map((p) => (
-          <Rect
-            key={`pl-o-${p.col}-${p.row}`}
-            x={p.col * planePx - planePx * 0.18}
-            y={p.row * planePx - planePx * 0.18}
-            width={planePx * 1.36}
-            height={planePx * 1.36}
-            color="rgba(0,0,0,0.7)"
-          />
-        ))}
+        {/* outline: body Path를 굵은 어두운 stroke로 먼저 깔아 가장자리만 남긴다. */}
+        <Path
+          path={airplane.body}
+          style="stroke"
+          strokeWidth={planePx * 0.44}
+          strokeJoin="round"
+          strokeCap="round"
+          color="rgba(0,0,0,0.72)"
+        />
         {/* body: 흰색 채움 */}
-        {AIRPLANE_PIXELS_BODY.map((p) => (
-          <Rect
-            key={`pl-w-${p.col}-${p.row}`}
-            x={p.col * planePx}
-            y={p.row * planePx}
-            width={planePx}
-            height={planePx}
-            color="#ffffff"
-          />
-        ))}
-        {/* accent: 파란 액센트(조종석, 날개 줄, 창문) — body 위에 덮어 그린다 */}
-        {AIRPLANE_PIXELS_ACCENT.map((p) => (
-          <Rect
-            key={`pl-b-${p.col}-${p.row}`}
-            x={p.col * planePx}
-            y={p.row * planePx}
-            width={planePx}
-            height={planePx}
-            color="#2b6cff"
-          />
-        ))}
+        <Path path={airplane.body} color="#ffffff" />
+        {/* 엔진 포드: 양 날개의 어두운 액센트 */}
+        <Path path={airplane.engines} color="#39414f" />
+        {/* 조종석 윈드실드: 파란 액센트 */}
+        <Path path={airplane.cockpit} color="#2b6cff" />
         {/* 꼬리 끝 빨간 anti-collision 점등. 좌표는 AIRPLANE_RED_LIGHT,
             opacity는 redBlink sharedValue를 통해 약 1초 사이클로 깜빡임. */}
         <RedBeacon
