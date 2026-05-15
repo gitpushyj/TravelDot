@@ -96,7 +96,7 @@ export default function TripRow({
       </View>
       <View style={styles.tripBody}>
         <View style={styles.tripTitleRow}>
-          <Text style={styles.tripDate} numberOfLines={1}>
+          <Text style={styles.tripDate} numberOfLines={2}>
             {formatTripDateRange(trip.startDate, trip.endDate)}{" "}
             {t("common.daysSuffix", { count: trip.days })}
           </Text>
