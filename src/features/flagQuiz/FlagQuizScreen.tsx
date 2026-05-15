@@ -15,7 +15,7 @@ import { GameOverView } from "./components/GameOverView";
 import { LivesIndicator } from "./components/LivesIndicator";
 import { QuizStartView } from "./components/QuizStartView";
 import { TimerBar } from "./components/TimerBar";
-import { fetchMyQuizScore, submitQuizScore } from "./scoreService";
+import { fetchMyQuizScore, fetchTopQuizScore, submitQuizScore, type TopQuizScore } from "./scoreService";
 import { QUESTION_SECONDS, useFlagQuizGame } from "./useFlagQuizGame";
 
 export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
@@ -26,11 +26,13 @@ export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
 
   const [bestScore, setBestScore] = useState<number | null>(null);
   const [loadingScore, setLoadingScore] = useState(false);
+  const [topScore, setTopScore] = useState<TopQuizScore | null>(null);
+  const [loadingTop, setLoadingTop] = useState(false);
   const [isNewBest, setIsNewBest] = useState(false);
   // 이번 게임오버 처리(점수 제출)를 1회만 하기 위한 가드.
   const submittedRef = useRef(false);
 
-  // 대기 화면 진입 시 최고 점수 조회.
+  // 대기 화면 진입 시 내 최고 점수 조회.
   useEffect(() => {
     if (!userId) {
       setBestScore(null);
@@ -48,7 +50,28 @@ export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
     };
   }, [userId]);
 
-  // 게임오버 전이 시 점수 제출 (로그인 사용자만, 1회).
+  // 전체 1위 조회. 시작화면 진입과 게임오버 직후에 다시 갱신해서
+  // 본인이 갓 신기록을 세웠을 때도 1위 라인이 즉시 반영되도록 한다.
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+  const refreshTop = useCallback(() => {
+    setLoadingTop(true);
+    fetchTopQuizScore().then((row) => {
+      if (!mountedRef.current) return;
+      setTopScore(row);
+      setLoadingTop(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    refreshTop();
+  }, [refreshTop]);
+
+  // 게임오버 전이 시 점수 제출 (로그인 사용자만, 1회). 제출 후 전체 1위 재조회.
   useEffect(() => {
     if (game.status !== "over" || submittedRef.current) return;
     submittedRef.current = true;
@@ -58,9 +81,12 @@ export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
     if (userId) {
       submitQuizScore(finalScore).then((row) => {
         if (row) setBestScore(row.bestScore);
+        refreshTop();
       });
+    } else {
+      refreshTop();
     }
-  }, [game.status, game.score, userId, bestScore]);
+  }, [game.status, game.score, userId, bestScore, refreshTop]);
 
   const handleStart = useCallback(() => {
     submittedRef.current = false;
@@ -120,6 +146,9 @@ export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
           bestScore={bestScore}
           loading={loadingScore}
           signedIn={!!userId}
+          topScore={topScore}
+          topLoading={loadingTop}
+          currentUserId={userId}
           onStart={handleStart}
         />
       ) : game.status === "over" ? (

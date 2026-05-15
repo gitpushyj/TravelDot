@@ -720,6 +720,11 @@
     "newBest": "自己ベスト更新！",
     "bestScoreLabel": "ベスト {{score}}",
     "retry": "もう一度",
-    "exit": "終了"
+    "exit": "終了",
+    "myBest": "自己ベスト",
+    "topPlayer": "全体1位",
+    "anonymousTraveler": "名無しの旅人",
+    "youSuffix": "(あなた)",
+    "othersCount": "他{{count}}名"
   }
 }

@@ -720,6 +720,11 @@
     "newBest": "Новый рекорд!",
     "bestScoreLabel": "Рекорд {{score}}",
     "retry": "Играть снова",
-    "exit": "Выйти"
+    "exit": "Выйти",
+    "myBest": "Мой рекорд",
+    "topPlayer": "Лучший игрок",
+    "anonymousTraveler": "Анонимный путешественник",
+    "youSuffix": "(ты)",
+    "othersCount": "и ещё {{count}}"
   }
 }

@@ -720,6 +720,11 @@
     "newBest": "¡Nuevo récord!",
     "bestScoreLabel": "Mejor {{score}}",
     "retry": "Jugar de nuevo",
-    "exit": "Salir"
+    "exit": "Salir",
+    "myBest": "Mi récord",
+    "topPlayer": "Mejor jugador",
+    "anonymousTraveler": "Viajero anónimo",
+    "youSuffix": "(tú)",
+    "othersCount": "y {{count}} más"
   }
 }

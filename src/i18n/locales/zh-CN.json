@@ -720,6 +720,11 @@
     "newBest": "刷新最高分！",
     "bestScoreLabel": "最高 {{score}}",
     "retry": "再玩一次",
-    "exit": "退出"
+    "exit": "退出",
+    "myBest": "我的最佳",
+    "topPlayer": "全球第一",
+    "anonymousTraveler": "匿名旅行者",
+    "youSuffix": "（你）",
+    "othersCount": "等{{count}}人"
   }
 }

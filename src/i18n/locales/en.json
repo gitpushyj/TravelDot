@@ -949,6 +949,11 @@
     "newBest": "New best score!",
     "bestScoreLabel": "Best {{score}}",
     "retry": "Play again",
-    "exit": "Exit"
+    "exit": "Exit",
+    "myBest": "My best",
+    "topPlayer": "Top player",
+    "anonymousTraveler": "Anonymous traveler",
+    "youSuffix": "(you)",
+    "othersCount": "and {{count}} more"
   }
 }

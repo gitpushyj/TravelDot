@@ -949,6 +949,11 @@
     "newBest": "최고 기록 경신!",
     "bestScoreLabel": "최고 {{score}}",
     "retry": "다시하기",
-    "exit": "나가기"
+    "exit": "나가기",
+    "myBest": "나의 최고",
+    "topPlayer": "전체 1위",
+    "anonymousTraveler": "익명의 여행자",
+    "youSuffix": "(나)",
+    "othersCount": "외 {{count}}명"
   }
 }
