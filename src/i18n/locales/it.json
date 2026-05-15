@@ -557,7 +557,7 @@
       "feature2": {
         "title": "Foto al sicuro",
         "desc": "L'analisi avviene solo sul dispositivo, ",
-        "descEmphasis": "niente viene caricato"
+        "descEmphasis": "niente viene caricato sui server"
       },
       "feature3": {
         "title": "Modificabile sempre",

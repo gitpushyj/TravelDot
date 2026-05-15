@@ -557,7 +557,7 @@
       "feature2": {
         "title": "照片安全處理",
         "desc": "分析僅在本機進行,",
-        "descEmphasis": "不會上傳至外部"
+        "descEmphasis": "不會上傳至伺服器"
       },
       "feature3": {
         "title": "隨時可變更",

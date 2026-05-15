@@ -759,7 +759,7 @@
       "feature2": {
         "title": "Photos stay private",
         "desc": "All analysis runs on this device — ",
-        "descEmphasis": "nothing is uploaded"
+        "descEmphasis": "nothing is uploaded to any server"
       },
       "feature3": {
         "title": "Change anytime",

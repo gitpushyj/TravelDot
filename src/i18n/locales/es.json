@@ -557,7 +557,7 @@
       "feature2": {
         "title": "Tus fotos seguras",
         "desc": "El análisis se hace en el dispositivo y ",
-        "descEmphasis": "no se sube nada"
+        "descEmphasis": "no se sube nada al servidor"
       },
       "feature3": {
         "title": "Cambia cuando quieras",

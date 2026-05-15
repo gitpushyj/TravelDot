@@ -557,7 +557,7 @@
       "feature2": {
         "title": "写真は安全に処理",
         "desc": "解析は端末上のみで行われ、",
-        "descEmphasis": "外部にアップロードしません"
+        "descEmphasis": "サーバーにアップロードしません"
       },
       "feature3": {
         "title": "いつでも変更可能",
