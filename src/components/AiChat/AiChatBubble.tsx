@@ -1,6 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Markdown from "react-native-markdown-display";
@@ -32,6 +32,22 @@ export default function AiChatBubble({ message, onImagePress, onCopied }: Props)
     onCopied?.();
   };
 
+  // LLM이 만들어낸 이미지 URL은 404/비이미지/hotlink 차단 등으로 로드에 실패할 수 있다.
+  // 실패한 URL은 그리드에서 제거 → 전부 실패하면 imageGrid 자체가 사라져 "빈 박스" 증상 방지.
+  const [failedUrls, setFailedUrls] = useState<Set<string>>(() => new Set());
+  const handleImageError = useCallback((url: string) => {
+    setFailedUrls((prev) => {
+      if (prev.has(url)) return prev;
+      const next = new Set(prev);
+      next.add(url);
+      return next;
+    });
+  }, []);
+  const visibleImageUrls = useMemo(
+    () => (message.imageUrls ?? []).filter((url) => !failedUrls.has(url)),
+    [message.imageUrls, failedUrls]
+  );
+
   return (
     <View style={[styles.row, isUser ? styles.rowUser : styles.rowAssistant]}>
       <Pressable
@@ -51,15 +67,20 @@ export default function AiChatBubble({ message, onImagePress, onCopied }: Props)
             {fallbackText}
           </Text>
         ) : null}
-        {message.imageUrls && message.imageUrls.length > 0 ? (
+        {visibleImageUrls.length > 0 ? (
           <View style={styles.imageGrid}>
-            {message.imageUrls.map((url) => (
+            {visibleImageUrls.map((url) => (
               <Pressable
                 key={url}
                 style={styles.imageWrap}
                 onPress={() => onImagePress(url)}
               >
-                <Image source={{ uri: url }} style={styles.image} resizeMode="cover" />
+                <Image
+                  source={{ uri: url }}
+                  style={styles.image}
+                  resizeMode="cover"
+                  onError={() => handleImageError(url)}
+                />
               </Pressable>
             ))}
           </View>
