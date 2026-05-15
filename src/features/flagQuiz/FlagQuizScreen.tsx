@@ -71,16 +71,31 @@ export function FlagQuizScreen({ onClose }: { onClose: () => void }) {
   const handleSelect = useCallback(
     (code: string) => {
       if (game.reveal) return;
-      const correct = code === game.current?.answerCode;
-      Haptics.notificationAsync(
-        correct
-          ? Haptics.NotificationFeedbackType.Success
-          : Haptics.NotificationFeedbackType.Error,
-      );
       game.select(code);
     },
-    [game.reveal, game.current?.answerCode, game.select],
+    [game.reveal, game.select],
   );
+
+  // reveal 변화를 감지해 오답일 때만 강한 진동을 발화한다.
+  // timeout(자동 오답)도 reveal이 생기는 동일 경로라 자동 통합된다.
+  // Heavy impact를 짧은 간격으로 3회 발사해 체감 강도를 높인다.
+  useEffect(() => {
+    const reveal = game.reveal;
+    if (!reveal || reveal.correct) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    const t1 = setTimeout(
+      () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
+      80,
+    );
+    const t2 = setTimeout(
+      () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy),
+      160,
+    );
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [game.reveal]);
 
   const locale = getCurrentLocale();
 
