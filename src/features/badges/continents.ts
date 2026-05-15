@@ -44,11 +44,10 @@ const ASIA = [
 
 const EUROPE = [
   "AD", "AL", "AT", "AX", "BA", "BE", "BG", "BY", "CH", "CY",
-  "CZ", "DE", "DK", "EE", "ES", "FI", "FO", "FR", "GB", "GG",
-  "GR", "HR", "HU", "IE", "IM", "IS", "IT", "JE", "LI", "LT",
-  "LU", "LV", "MC", "MD", "ME", "MK", "MT", "NL", "NO", "PL",
-  "PT", "RO", "RS", "RU", "SE", "SI", "SK", "SM", "UA", "VA",
-  "XK",
+  "CZ", "DE", "DK", "EE", "ES", "FI", "FO", "FR", "GB", "GR",
+  "HR", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "MC",
+  "MD", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS",
+  "RU", "SE", "SI", "SK", "SM", "UA", "VA", "XK",
 ];
 
 const AFRICA = [
@@ -61,9 +60,9 @@ const AFRICA = [
 ];
 
 const NORTH_AMERICA = [
-  "AG", "AW", "BB", "BL", "BS", "BZ", "CA", "CR", "CU", "CW",
-  "DM", "DO", "GD", "GL", "GT", "HN", "HT", "JM", "KN", "KY",
-  "LC", "MF", "MX", "NI", "PA", "SV", "SX", "TT", "US", "VC",
+  "AG", "AW", "BB", "BS", "BZ", "CA", "CR", "CU", "CW", "DM",
+  "DO", "GD", "GL", "GT", "HN", "HT", "JM", "KN", "LC", "MX",
+  "NI", "PA", "SV", "SX", "TT", "US", "VC",
 ];
 
 const SOUTH_AMERICA = [

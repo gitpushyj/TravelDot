@@ -2859,7 +2859,7 @@
     "iata": "GCM",
     "name": "Owen Roberts International Airport",
     "city": "George Town",
-    "country": "KY",
+    "country": "GB",
     "lat": 19.2928,
     "lng": -81.3577
   },
@@ -3763,7 +3763,7 @@
     "iata": "IOM",
     "name": "Isle of Man Airport",
     "city": "Castletown",
-    "country": "IM",
+    "country": "GB",
     "lat": 54.0831,
     "lng": -4.6239
   },

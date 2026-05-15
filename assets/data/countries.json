@@ -21,12 +21,6 @@
     "aliases": ["Gambia"]
   },
   {
-    "code": "GG",
-    "name": "Guernsey",
-    "nameKo": "건지섬",
-    "aliases": ["건지", "건시"]
-  },
-  {
     "code": "GT",
     "name": "Guatemala",
     "nameKo": "과테말라"
@@ -269,12 +263,6 @@
     "nameKo": "말리"
   },
   {
-    "code": "IM",
-    "name": "Isle of Man",
-    "nameKo": "맨섬",
-    "aliases": ["Ellan Vannin"]
-  },
-  {
     "code": "MX",
     "name": "México",
     "nameKo": "멕시코",
@@ -501,18 +489,6 @@
     "name": "São Tomé e Príncipe",
     "nameKo": "상투메 프린시페",
     "aliases": ["São Tomé and Príncipe", "Sao Tome and Principe"]
-  },
-  {
-    "code": "MF",
-    "name": "Saint-Martin",
-    "nameKo": "생마르탱",
-    "aliases": ["Saint Martin"]
-  },
-  {
-    "code": "BL",
-    "name": "Saint-Barthélemy",
-    "nameKo": "생바르텔레미",
-    "aliases": ["Saint Barthélemy", "St Barts"]
   },
   {
     "code": "EH",
@@ -868,12 +844,6 @@
     "nameKo": "잠비아"
   },
   {
-    "code": "JE",
-    "name": "Jersey",
-    "nameKo": "저지섬",
-    "aliases": ["저지"]
-  },
-  {
     "code": "GQ",
     "name": "Guinea Ecuatorial",
     "nameKo": "적도 기니",
@@ -964,12 +934,6 @@
     "code": "KE",
     "name": "Kenya",
     "nameKo": "케냐"
-  },
-  {
-    "code": "KY",
-    "name": "Cayman Islands",
-    "nameKo": "케이맨 제도",
-    "aliases": ["케이맨제도"]
   },
   {
     "code": "KM",

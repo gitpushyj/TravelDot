@@ -4,6 +4,21 @@ import type { Feature, MultiPolygon, Polygon } from "geojson";
 
 import countriesData from "../../../assets/data/countries-polygons.json";
 
+// 자치령/해외영토를 부모 국가로 흡수해 컬렉션 완성 동기를 해치지 않도록 한다.
+// resolve 후처리만 적용하며 폴리곤은 그대로 둔다 (좌표 매칭은 정확한 폴리곤이 필요).
+const TERRITORY_TO_PARENT: Record<string, string> = {
+  JE: "GB",
+  GG: "GB",
+  IM: "GB",
+  KY: "GB",
+  BL: "FR",
+  MF: "FR",
+};
+
+function applyTerritoryMapping(code: string): string {
+  return TERRITORY_TO_PARENT[code] ?? code;
+}
+
 type CountryFeature = Feature<Polygon | MultiPolygon, { code: string }>;
 
 const features = (
@@ -88,7 +103,7 @@ export function resolveCountryDetailed(
     if (lng < minX || lng > maxX || lat < minY || lat > maxY) continue;
     diag.bboxHits += 1;
     if (booleanPointInPolygon(pt, features[i])) {
-      return { code: features[i].properties.code, diag };
+      return { code: applyTerritoryMapping(features[i].properties.code), diag };
     }
   }
   return { code: null, diag };
