@@ -116,9 +116,9 @@ export function colorForVisitOnMap(
   if (opts.isHomeCountry) return mapTheme.homeColor;
   const c = opts.count | 0;
   if (c <= 0) return mapTheme.heatmap[0];
-  if (c <= 2) return mapTheme.heatmap[1];
-  if (c <= 6) return mapTheme.heatmap[2];
-  if (c <= 13) return mapTheme.heatmap[3];
+  if (c <= 4) return mapTheme.heatmap[1];
+  if (c <= 12) return mapTheme.heatmap[2];
+  if (c <= 22) return mapTheme.heatmap[3];
   return mapTheme.heatmap[4];
 }
 

@@ -133,8 +133,8 @@ export function colorForVisitWith(
   if (opts.isHomeCountry) return theme.homeColor;
   const c = opts.count | 0;
   if (c <= 0) return theme.heatmap[0];
-  if (c <= 2) return theme.heatmap[1];
-  if (c <= 6) return theme.heatmap[2];
-  if (c <= 13) return theme.heatmap[3];
+  if (c <= 4) return theme.heatmap[1];
+  if (c <= 12) return theme.heatmap[2];
+  if (c <= 22) return theme.heatmap[3];
   return theme.heatmap[4];
 }
