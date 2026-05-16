@@ -49,7 +49,7 @@ export function GameCard({
     >
       <Image
         source={illustration}
-        style={{ width: 140, height: 140 }}
+        style={{ width: 130, height: 180 }}
         resizeMode="contain"
       />
       <View style={{ flex: 1, gap: 10 }}>

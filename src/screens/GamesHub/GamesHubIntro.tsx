@@ -34,7 +34,7 @@ export function GamesHubIntro() {
       </View>
       <Image
         source={require("../../../assets/game_tropi.png")}
-        style={{ width: 220, height: 220 }}
+        style={{ width: 200, height: 280 }}
         resizeMode="contain"
       />
     </View>
