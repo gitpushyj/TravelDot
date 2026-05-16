@@ -82,9 +82,9 @@ export default function GamesHubScreen({
           {t("gamesHub.title")}
         </Text>
       </View>
-      <ScrollView contentContainerStyle={{ paddingBottom: 24, gap: 16 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 24, gap: 8 }}>
         <GamesHubIntro />
-        <View style={{ paddingHorizontal: 16, gap: 14 }}>
+        <View style={{ paddingHorizontal: 12, gap: 12 }}>
           <GameCard
             palette={flagPalette}
             illustration={require("../../../assets/game_earth.png")}

@@ -12,9 +12,9 @@ export function GamesHubIntro() {
       style={{
         flexDirection: "row",
         alignItems: "center",
-        paddingHorizontal: 16,
+        paddingHorizontal: 12,
         paddingTop: 4,
-        paddingBottom: 8,
+        paddingBottom: 0,
       }}
     >
       <View style={{ flex: 1, gap: 6 }}>
