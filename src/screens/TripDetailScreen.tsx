@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import CountryDotMap from "../components/CountryDotMap";
 import { resolveDisplayUris } from "../features/photoSync/photoLibrary";
 import {
   scanDevicePhotosForTrip,
@@ -25,10 +24,12 @@ import { colorForCountry } from "../utils/countryColors";
 import { flagEmoji } from "../utils/flag";
 import { formatTripDateRange } from "../utils/tripFormat";
 
+import DateRangeCard from "./TripDetailScreen/DateRangeCard";
 import {
   formatDateLong,
   formatDateShortDot,
 } from "./TripDetailScreen/format";
+import HeroCard from "./TripDetailScreen/HeroCard";
 import PhotosGridView, {
   type GridPhoto,
 } from "./TripDetailScreen/PhotosGridView";
@@ -330,8 +331,9 @@ export default function TripDetailScreen({
         </Pressable>
         <View style={styles.headerCenter}>
           <Text style={styles.headerFlag}>{flag}</Text>
-          <Text style={styles.headerTitle}>{koName}</Text>
-          <Text style={styles.headerCode}>{trip.countryCode}</Text>
+          <Text style={styles.headerTitle}>
+            {formatTripDateRange(trip.startDate, trip.endDate)}
+          </Text>
         </View>
         <Pressable
           onPress={onEdit}
@@ -349,41 +351,21 @@ export default function TripDetailScreen({
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Pressable
+        <HeroCard
+          countryCode={trip.countryCode}
+          countryName={koName}
+          countryColor={countryColor}
+          days={trip.days}
+          photoCount={totalPhotos}
           onPress={onSelectCountry}
-          style={({ pressed }) => [
-            styles.heroCard,
-            { backgroundColor: countryColor.bg },
-            pressed && { opacity: 0.85 },
-          ]}
-        >
-          <View style={styles.heroDots}>
-            <CountryDotMap
-              countryCode={trip.countryCode}
-              color={countryColor.dot}
-            />
-          </View>
-          <View style={styles.heroBadgeRow}>
-            <View style={styles.heroBadge}>
-              <Text style={styles.heroBadgeNum}>{trip.days}</Text>
-              <Text style={styles.heroBadgeUnit}>{t("tripDetail.dayUnit")}</Text>
-            </View>
-            <View style={styles.heroBadge}>
-              <Text style={styles.heroBadgeNum}>
-                {totalPhotos ?? "—"}
-              </Text>
-              <Text style={styles.heroBadgeUnit}>{t("tripDetail.photoUnit")}</Text>
-            </View>
-          </View>
-        </Pressable>
+        />
 
-        <View style={styles.section}>
-          <Text style={styles.sectionLabel}>{t("tripDetail.sectionDates")}</Text>
-          <Text style={styles.sectionDate}>
-            {formatTripDateRange(trip.startDate, trip.endDate)}{" "}
-            {t("common.daysSuffix", { count: trip.days })}
-          </Text>
-        </View>
+        <DateRangeCard
+          startDate={trip.startDate}
+          endDate={trip.endDate}
+          days={trip.days}
+          countryColor={countryColor}
+        />
 
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>{t("tripDetail.sectionPhotos")}</Text>

@@ -78,60 +78,7 @@ export function makeStyles(theme: Theme) {
       paddingHorizontal: 20,
       paddingTop: 8,
       paddingBottom: 60,
-      gap: 20,
-    },
-    heroCard: {
-      borderRadius: 24,
-      overflow: "hidden",
-      backgroundColor: theme.accent,
-      // 그라데이션 대신 단색 + 카드 위 도트 배치로 충분히 임팩트가 있다.
-      aspectRatio: 16 / 11,
-    },
-    heroDots: {
-      // 도트는 카드 가장자리까지 닿고, 아래 칩 영역만 분리된다.
-      // padding을 자식(칩)으로 옮겨서 도트맵 measurement에 음수 margin이
-      // 끼지 않도록 한다.
-      flex: 1,
-    },
-    heroBadgeRow: {
-      flexDirection: "row",
-      gap: 8,
-      paddingHorizontal: 16,
-      paddingBottom: 16,
-      paddingTop: 8,
-    },
-    heroBadge: {
-      flexDirection: "row",
-      alignItems: "baseline",
-      backgroundColor: "rgba(255,255,255,0.95)",
-      paddingHorizontal: 14,
-      paddingVertical: 8,
-      borderRadius: 12,
-    },
-    heroBadgeNum: {
-      color: "#1a1a1a",
-      fontSize: 17,
-      fontWeight: "800",
-    },
-    heroBadgeUnit: {
-      color: "#1a1a1a",
-      fontSize: 13,
-      fontWeight: "600",
-    },
-    section: {
-      gap: 6,
-    },
-    sectionLabel: {
-      color: theme.textSecondary,
-      fontSize: 13,
-      fontWeight: "600",
-      letterSpacing: 0.3,
-    },
-    sectionDate: {
-      color: theme.textPrimary,
-      fontSize: 22,
-      fontWeight: "800",
-      letterSpacing: 0.5,
+      gap: 16,
     },
     sectionHeaderRow: {
       flexDirection: "row",

@@ -43,7 +43,7 @@
     "continue": "Продолжить",
     "remove": "Удалить",
     "loading": "Загрузка…",
-    "daysSuffix": "({{count}} days)"
+    "daysSuffix": "({{count}} дн.)"
   },
   "alerts": {
     "saveFailed": "Не удалось сохранить",
@@ -143,8 +143,10 @@
   },
   "tripDetail": {
     "edit": "✎ Изменить",
-    "dayUnit": " дн. поездка",
-    "photoUnit": " фото",
+    "miniDayUnit": "дн.",
+    "miniDayLabel": "Поездка",
+    "miniPhotoUnit": "фото",
+    "miniPhotoLabel": "Снимки",
     "sectionDates": "Даты поездки",
     "sectionPhotos": "Фото",
     "viewAll": "Все ({{count}}) →",

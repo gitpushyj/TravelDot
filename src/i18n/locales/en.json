@@ -151,8 +151,10 @@
   },
   "tripDetail": {
     "edit": "✎ Edit",
-    "dayUnit": " day trip",
-    "photoUnit": " photos",
+    "miniDayUnit": "days",
+    "miniDayLabel": "Trip",
+    "miniPhotoUnit": "photos",
+    "miniPhotoLabel": "Captured",
     "sectionDates": "Trip period",
     "sectionPhotos": "Photos",
     "viewAll": "View all ({{count}}) →",

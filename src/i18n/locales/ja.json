@@ -43,7 +43,7 @@
     "continue": "続ける",
     "remove": "削除",
     "loading": "読み込み中…",
-    "daysSuffix": "({{count}} days)"
+    "daysSuffix": "({{count}}日)"
   },
   "alerts": {
     "saveFailed": "保存に失敗しました",
@@ -143,8 +143,10 @@
   },
   "tripDetail": {
     "edit": "✎ 編集",
-    "dayUnit": "日間の旅",
-    "photoUnit": "枚の写真",
+    "miniDayUnit": "日",
+    "miniDayLabel": "旅",
+    "miniPhotoUnit": "枚",
+    "miniPhotoLabel": "写真",
     "sectionDates": "旅の期間",
     "sectionPhotos": "写真",
     "viewAll": "すべて見る ({{count}}) →",

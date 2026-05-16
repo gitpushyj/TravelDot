@@ -43,7 +43,7 @@
     "continue": "繼續",
     "remove": "移除",
     "loading": "載入中…",
-    "daysSuffix": "({{count}} days)"
+    "daysSuffix": "({{count}}天)"
   },
   "alerts": {
     "saveFailed": "儲存失敗",
@@ -143,8 +143,10 @@
   },
   "tripDetail": {
     "edit": "✎ 編輯",
-    "dayUnit": " 天行程",
-    "photoUnit": " 張相片",
+    "miniDayUnit": "天",
+    "miniDayLabel": "旅行",
+    "miniPhotoUnit": "張",
+    "miniPhotoLabel": "相片",
     "sectionDates": "旅行期間",
     "sectionPhotos": "相片",
     "viewAll": "查看全部 ({{count}}) →",

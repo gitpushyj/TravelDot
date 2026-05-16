@@ -43,7 +43,7 @@
     "continue": "Continua",
     "remove": "Rimuovi",
     "loading": "Caricamento…",
-    "daysSuffix": "({{count}} days)"
+    "daysSuffix": "({{count}} giorni)"
   },
   "alerts": {
     "saveFailed": "Salvataggio non riuscito",
@@ -143,8 +143,10 @@
   },
   "tripDetail": {
     "edit": "✎ Modifica",
-    "dayUnit": " giorni",
-    "photoUnit": " foto",
+    "miniDayUnit": "gg",
+    "miniDayLabel": "Viaggio",
+    "miniPhotoUnit": "foto",
+    "miniPhotoLabel": "Scatti",
     "sectionDates": "Periodo del viaggio",
     "sectionPhotos": "Foto",
     "viewAll": "Vedi tutto ({{count}}) →",

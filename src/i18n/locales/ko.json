@@ -151,8 +151,10 @@
   },
   "tripDetail": {
     "edit": "✎ 수정",
-    "dayUnit": " 일 여행",
-    "photoUnit": " 장의 사진",
+    "miniDayUnit": "일",
+    "miniDayLabel": "여행",
+    "miniPhotoUnit": "장",
+    "miniPhotoLabel": "사진",
     "sectionDates": "여행 기간",
     "sectionPhotos": "사진",
     "viewAll": "전체보기 ({{count}}) →",
