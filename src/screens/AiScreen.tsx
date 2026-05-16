@@ -25,6 +25,10 @@ import {
 import { useAiChatStore } from "../features/aiChat/aiChatStore";
 import { useAuthStore } from "../features/auth/authStore";
 import { useSubscription } from "../features/subscription/useSubscription";
+import {
+  trackAiChatCleared,
+  trackAiChatOpened,
+} from "../lib/analyticsEvents";
 import type { RootStackParamList } from "../navigation/types";
 import { useTheme } from "../theme/themeStore";
 
@@ -57,6 +61,13 @@ export default function AiScreen() {
     if (userId) void hydrate(userId);
   }, [userId, hydrate]);
 
+  // 마운트 1회 ai_chat_opened. AI 탭 진입과 동일한 시점이며 paywall 게이트로
+  // 빠진 케이스(PremiumIntro로 redirect)는 MainTabs의 tabPress 인터셉트에서
+  // 막히므로 여기까지 도달하지 않는다.
+  useEffect(() => {
+    trackAiChatOpened();
+  }, []);
+
   useEffect(() => {
     return () => {
       if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
@@ -79,7 +90,10 @@ export default function AiScreen() {
         {
           text: t("aiChat.confirmClear.confirm"),
           style: "destructive",
-          onPress: () => void clear(),
+          onPress: () => {
+            trackAiChatCleared();
+            void clear();
+          },
         },
       ]
     );
@@ -143,7 +157,10 @@ export default function AiScreen() {
         onSend={(text) => void send(text)}
         lockedForUpgrade={lockedForUpgrade}
         onUpgrade={() =>
-          navigation.navigate("PremiumIntro", { returnToTab: "AI" })
+          navigation.navigate("PremiumIntro", {
+            returnToTab: "AI",
+            analyticsSource: "feature_gate",
+          })
         }
       />
     </KeyboardAvoidingView>

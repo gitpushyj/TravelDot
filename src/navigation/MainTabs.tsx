@@ -67,7 +67,10 @@ export default function MainTabs() {
               e.preventDefault();
               navigation
                 .getParent()
-                ?.navigate("PremiumIntro", { returnToTab: "AI" });
+                ?.navigate("PremiumIntro", {
+                  returnToTab: "AI",
+                  analyticsSource: "ai_tab",
+                });
             }
           },
         })}

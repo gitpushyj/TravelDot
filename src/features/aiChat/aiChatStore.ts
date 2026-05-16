@@ -1,5 +1,9 @@
 import { create } from "zustand";
 
+import {
+  trackAiMessageOutcome,
+  trackAiMessageSent,
+} from "../../lib/analyticsEvents";
 import { fetchUserTier } from "../auth/userTier";
 
 import { sendChat } from "./aiChatClient";
@@ -79,6 +83,11 @@ export const useAiChatStore = create<State>((set, get) => ({
       createdAt: Date.now(),
     };
     const historyForCall = get().messages;
+    trackAiMessageSent({
+      tier,
+      messageLength: trimmed.length,
+      historyDepth: historyForCall.length,
+    });
     const after = trimByTier([...historyForCall, userMessage], tier);
     set({ messages: after, isSending: true });
     await saveMessages(userId, after, uiCap);
@@ -87,6 +96,10 @@ export const useAiChatStore = create<State>((set, get) => ({
       history: historyForCall,
       newUserText: trimmed,
       historyCap: historyCapFor(tier),
+    });
+    trackAiMessageOutcome({
+      tier: outcome.kind === "ok" || outcome.kind === "rate_limited" ? outcome.tier : tier,
+      outcome: outcome.kind,
     });
 
     if (outcome.kind === "ok" && assistant) {

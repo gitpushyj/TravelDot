@@ -25,8 +25,12 @@ export default function SettingsScreenNav({ navigation }: Props) {
         onReviewSuspect={() => navigation.navigate("ReviewSuspect")}
         onOpenLanguage={() => navigation.navigate("Language")}
         onOpenMapAppearance={() => navigation.navigate("MapAppearance")}
-        onOpenSubscription={() => navigation.navigate("Subscription")}
-        onOpenPremiumIntro={() => navigation.navigate("PremiumIntro")}
+        onOpenSubscription={() =>
+          navigation.navigate("Subscription", { analyticsSource: "settings" })
+        }
+        onOpenPremiumIntro={() =>
+          navigation.navigate("PremiumIntro", { analyticsSource: "settings" })
+        }
       />
     </>
   );

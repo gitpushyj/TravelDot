@@ -27,6 +27,13 @@ import { useBadgeStore } from "../badges/badgeStore";
 import { COUNTRY_NAME_KO_BY_CODE } from "../badges/countryNames";
 import type { BadgeDefinition } from "../badges/badges";
 import { useEntitlementStore } from "../entitlement/entitlementStore";
+import {
+  setHomeCountryProperty,
+  setVisitedCountryBucketProperty,
+  trackAllVisitsWiped,
+  trackHomeCountryChanged,
+  trackTripDeleted,
+} from "../../lib/analyticsEvents";
 import { buildPremiumContext } from "../milestone/premium/buildContext";
 import { evaluatePremiumBadges } from "../milestone/premium/evaluatePremium";
 import type { PremiumContext } from "../milestone/premium/types";
@@ -174,10 +181,15 @@ export const useVisitStore = create<State>((set, get) => ({
       selectedCountry: home ? { code: home.code, name: home.name } : null,
       homeCleanupReport: cleanupReport,
     });
+    // Analytics user properties 동기화. hydrate는 cold-start에서 한 번 실행되므로
+    // 여기서 초기 값을 한 번 설정해두고, 이후 변화는 setHomeCountry/refreshVisits가 갱신한다.
+    setHomeCountryProperty(home?.code ?? null);
+    setVisitedCountryBucketProperty(Object.keys(counts).length);
     // 첫 평가는 ready=true 이후에 수행. 뱃지 스토어는 App.tsx에서 hydrate 완료를 보장한다.
     await get().evaluateBadges();
   },
   setHomeCountry: async (c) => {
+    const prev = get().homeCountry?.code ?? null;
     await saveHomeCountry(c);
     // 본국이 새로 지정/변경되면 그 국가의 자동 누적분을 정리한다.
     const r = await removeAutoVisitsForCountry(c.code);
@@ -204,6 +216,10 @@ export const useVisitStore = create<State>((set, get) => ({
       });
     }
     // 본국이 바뀌면 해외 사진 기준이 달라지므로 항상 재평가한다.
+    setHomeCountryProperty(c.code);
+    if (prev !== c.code) {
+      trackHomeCountryChanged({ from: prev, to: c.code });
+    }
     await get().evaluateBadges();
   },
   // 일회용 "본국 바꾸기": 모든 방문 기록을 비우고 새 본국으로 다시 시작한다.
@@ -214,8 +230,10 @@ export const useVisitStore = create<State>((set, get) => ({
     // 동일하게 차단 — 로그인 없이 본국을 바꿀 수 없다.
     const userId = useAuthStore.getState().user?.id;
     if (!userId) throw new Error("authentication required to change home country");
+    const prev = get().homeCountry?.code ?? null;
     await markHomeCountryChangedInDb(userId, c.code);
     await wipeAllVisits();
+    trackAllVisitsWiped();
     await saveHomeCountry(c);
     // 새 본국에 대해서는 자동 누적분이 처음부터 없으므로 cleanup 플래그를 done으로 유지.
     await AsyncStorage.setItem(HOME_AUTO_CLEANUP_FLAG, "done");
@@ -230,6 +248,11 @@ export const useVisitStore = create<State>((set, get) => ({
       homeCleanupReport: null,
       suspectTrips: [],
     });
+    setHomeCountryProperty(c.code);
+    setVisitedCountryBucketProperty(0);
+    if (prev !== c.code) {
+      trackHomeCountryChanged({ from: prev, to: c.code });
+    }
     await get().evaluateBadges();
   },
   setHomeChanged: (changed) => set({ homeChanged: changed }),
@@ -246,6 +269,9 @@ export const useVisitStore = create<State>((set, get) => ({
       availableYears: years,
       visitCountsByYear: {}, // 캐시 무효화
     });
+    // 방문 국가 수 버킷을 갱신. raw 값을 그대로 보내지 않고 버킷팅하는 이유는
+    // analyticsEvents 모듈 주석에 있다.
+    setVisitedCountryBucketProperty(Object.keys(counts).length);
     await get().evaluateBadges();
   },
   evaluateBadges: async () => {
@@ -297,6 +323,15 @@ export const useVisitStore = create<State>((set, get) => ({
     // 그대로 제거한다.
     await softDeletePhotosInRange(countryCode, startDate, endDate);
     await softDeleteEmptyTripsForCountry(countryCode);
+    const days = Math.max(
+      0,
+      Math.round((Date.parse(endDate) - Date.parse(startDate)) / 86_400_000) + 1
+    );
+    trackTripDeleted({
+      countryCode,
+      durationDays: Number.isFinite(days) ? days : 0,
+      source: "review_reject",
+    });
     await get().refreshVisits();
   },
   rejectSuspectTrip: async (trip) => {

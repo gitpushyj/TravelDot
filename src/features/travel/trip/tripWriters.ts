@@ -1,3 +1,8 @@
+import {
+  trackTripCreated,
+  trackTripDeleted,
+  trackTripEdited,
+} from "../../../lib/analyticsEvents";
 import { notifyTripsChanged } from "../../travelSync/notifyTripsChanged";
 import { getTripDb } from "./tripDb";
 import {
@@ -5,6 +10,15 @@ import {
   softDeleteTrip,
   updateTripDates as updateTripDatesById,
 } from "./tripRepository";
+
+// YYYY-MM-DD 두 날짜 사이 일수(포함). 잘못된 범위면 0.
+function durationDays(startDate: string, endDate: string): number {
+  const startMs = Date.parse(startDate);
+  const endMs = Date.parse(endDate);
+  if (!Number.isFinite(startMs) || !Number.isFinite(endMs)) return 0;
+  const diff = Math.round((endMs - startMs) / 86_400_000);
+  return diff >= 0 ? diff + 1 : 0;
+}
 
 // 기존 호출 측이 쓰던 (country, start, end) 시그니처를 그대로 받는 호환 wrapper.
 // 내부에선 tripRepository의 id 기반 함수로 변환한다.
@@ -15,6 +29,11 @@ export async function createTrip(
   endDate: string
 ): Promise<void> {
   await createTripRow({ countryCode, startDate, endDate });
+  trackTripCreated({
+    countryCode,
+    durationDays: durationDays(startDate, endDate),
+    source: "manual",
+  });
   notifyTripsChanged();
 }
 
@@ -34,6 +53,11 @@ export async function updateTripDates(
     startDate: newStartDate,
     endDate: newEndDate,
   });
+  trackTripEdited({
+    countryCode,
+    oldDurationDays: durationDays(oldStartDate, oldEndDate),
+    newDurationDays: durationDays(newStartDate, newEndDate),
+  });
   notifyTripsChanged();
 }
 
@@ -45,6 +69,11 @@ export async function deleteTrip(
   const id = await findTripIdByExactRange(countryCode, startDate, endDate);
   if (!id) return;
   await softDeleteTrip(id);
+  trackTripDeleted({
+    countryCode,
+    durationDays: durationDays(startDate, endDate),
+    source: "manual",
+  });
   notifyTripsChanged();
 }
 

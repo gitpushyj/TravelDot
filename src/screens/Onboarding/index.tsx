@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Alert, BackHandler, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
@@ -8,6 +8,14 @@ import { useProfileStore } from "../../features/onboarding/profileStore";
 import { saveUserProfileToDb } from "../../features/onboarding/saveUserProfile";
 import { useVisitStore } from "../../features/travel/visitStore";
 import { useScreenBottomInset } from "../../hooks/useScreenInsets";
+import {
+  trackOnboardingCompleted,
+  trackOnboardingStepView,
+} from "../../lib/analyticsEvents";
+import {
+  logTutorialBegin,
+  logTutorialComplete,
+} from "../../lib/tracking";
 import { useTheme } from "../../theme/themeStore";
 
 import AllTripsStep from "./AllTripsStep";
@@ -42,6 +50,26 @@ export default function OnboardingFlow() {
     const persisted = useOnboardingStore.getState().lastStep;
     return persisted >= 1 ? persisted : 1;
   });
+
+  // 온보딩 funnel 분석용. step 진입을 매번 발화하고, 첫 진입은 표준 tutorial_begin도 보낸다.
+  const ONBOARDING_STEP_NAMES = [
+    "login",
+    "home_country",
+    "birth_gender",
+    "nickname",
+    "sync",
+    "review_trips",
+  ];
+  const onboardingStartMsRef = useRef<number>(Date.now());
+  const tutorialBeginSentRef = useRef(false);
+  useEffect(() => {
+    const name = ONBOARDING_STEP_NAMES[step - 1] ?? `step_${step}`;
+    trackOnboardingStepView(step, name);
+    if (!tutorialBeginSentRef.current) {
+      tutorialBeginSentRef.current = true;
+      logTutorialBegin();
+    }
+  }, [step]);
 
   // step 변화를 영속화한다. mid-flow 종료 후 재진입 시 같은 step으로 복원되며,
   // App.tsx의 자동 완료 분기는 lastStep > 0을 보고 mid-flow 사용자에게 markCompleted를
@@ -109,6 +137,12 @@ export default function OnboardingFlow() {
     } catch (e) {
       Alert.alert(t("alerts.saveFailed"), String(e));
     }
+    trackOnboardingCompleted({
+      homeCountry: homeCountry?.code ?? null,
+      durationMs: Date.now() - onboardingStartMsRef.current,
+      visitedCountryCount: Object.keys(useVisitStore.getState().visitCounts).length,
+    });
+    logTutorialComplete();
     await markCompleted();
   };
 

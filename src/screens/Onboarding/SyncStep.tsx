@@ -72,7 +72,7 @@ export default function SyncStep({ onNext }: Props) {
   const beginSync = (access: "granted" | "limited") => {
     setPermission(access);
     setPhase("syncing");
-    runFullSync().catch(() => {
+    runFullSync("onboarding").catch(() => {
       // 실패는 lastSync.error로 보고된다. 여기서는 흡수.
     });
   };

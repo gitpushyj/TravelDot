@@ -1,7 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useRef } from "react";
 
 import GlobalSyncProgressBar from "../components/GlobalSyncProgressBar";
+import { logScreenView } from "../lib/tracking";
 import { useTheme } from "../theme/themeStore";
 import MainTabs from "./MainTabs";
 import AddTripScreenNav from "./screens/AddTripScreenNav";
@@ -32,8 +34,21 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
   const theme = useTheme();
+  // 직전 active screen 이름을 들고 있다가 다음 전환 때 같은 화면이면 중복 발화를 방지한다.
+  // RN Firebase는 React Navigation을 자동 추적하지 않으므로 onStateChange에서 직접 호출한다.
+  const lastScreenRef = useRef<string | null>(null);
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer
+      ref={navigationRef}
+      onStateChange={() => {
+        const current = navigationRef.current?.getCurrentRoute();
+        const name = current?.name;
+        if (!name) return;
+        if (lastScreenRef.current === name) return;
+        lastScreenRef.current = name;
+        logScreenView(name);
+      }}
+    >
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

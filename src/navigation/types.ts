@@ -39,8 +39,13 @@ export type RootStackParamList = {
   ReviewSuspect: undefined;
   Language: undefined;
   MapAppearance: undefined;
-  Subscription: { returnToTab?: keyof MainTabParamList } | undefined;
-  PremiumIntro: { returnToTab?: keyof MainTabParamList } | undefined;
+  // analyticsSource: paywall_viewed에 어디에서 들어왔는지 기록한다.
+  Subscription:
+    | { returnToTab?: keyof MainTabParamList; analyticsSource?: string }
+    | undefined;
+  PremiumIntro:
+    | { returnToTab?: keyof MainTabParamList; analyticsSource?: string }
+    | undefined;
   CountryMerge: { countryCode: string };
   ImageDetail: {
     photos: ImageDetailPhoto[];

@@ -2,8 +2,25 @@ import { StatusBar } from "expo-status-bar";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import SubscriptionScreen from "../../screens/SubscriptionScreen";
+import type { PaywallSource } from "../../lib/analyticsEvents";
 import { useTheme } from "../../theme/themeStore";
 import type { RootStackParamList } from "../types";
+
+// route.params.analyticsSource는 string으로 넘어오지만 잘 알려진 값이면
+// PaywallSource로 좁혀 SubscriptionScreen이 한 번에 강타입으로 받는다.
+const KNOWN_SOURCES: readonly PaywallSource[] = [
+  "settings",
+  "premium_intro",
+  "milestones",
+  "ai_tab",
+  "feature_gate",
+];
+function asPaywallSource(s: string | undefined): PaywallSource {
+  if (s && (KNOWN_SOURCES as readonly string[]).includes(s)) {
+    return s as PaywallSource;
+  }
+  return "unknown";
+}
 
 export default function SubscriptionScreenNav({
   navigation,
@@ -23,10 +40,12 @@ export default function SubscriptionScreenNav({
     }
   };
 
+  const source = asPaywallSource(route.params?.analyticsSource);
+
   return (
     <>
       <StatusBar style={theme.statusBar} />
-      <SubscriptionScreen onClose={handleClose} />
+      <SubscriptionScreen onClose={handleClose} source={source} />
     </>
   );
 }

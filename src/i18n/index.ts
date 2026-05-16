@@ -5,6 +5,8 @@ import { initReactI18next } from "react-i18next";
 import * as Localization from "expo-localization";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { setLanguageProperty } from "../lib/analyticsEvents";
+
 import en from "./locales/en.json";
 import ko from "./locales/ko.json";
 import ja from "./locales/ja.json";
@@ -93,11 +95,13 @@ export async function initI18n() {
     compatibilityJSON: "v4",
   });
 
+  setLanguageProperty(initial);
   return i18n;
 }
 
 export async function setAppLocale(locale: SupportedLocale) {
   await i18n.changeLanguage(locale);
+  setLanguageProperty(locale);
   try {
     await AsyncStorage.setItem(STORAGE_KEY, locale);
   } catch {}

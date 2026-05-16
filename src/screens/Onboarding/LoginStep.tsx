@@ -6,6 +6,10 @@ import AppleSignInButton from "../../components/auth/AppleSignInButton";
 import GoogleSignInButton from "../../components/auth/GoogleSignInButton";
 import { isAppleSignInAvailable } from "../../features/auth/appleSignIn";
 import { useAuthStore } from "../../features/auth/authStore";
+import {
+  trackSigninAttempted,
+  trackSigninFailed,
+} from "../../lib/analyticsEvents";
 import { useTheme } from "../../theme/themeStore";
 
 import LoginDivider from "./LoginDivider";
@@ -36,14 +40,28 @@ export default function LoginStep({ onNext }: Props) {
   }, [user, onNext]);
 
   const onPressGoogle = async () => {
+    trackSigninAttempted("google");
     const r = await signInGoogle();
-    if (r.ok || r.cancelled) return;
+    if (r.ok) return;
+    trackSigninFailed({
+      provider: "google",
+      cancelled: r.cancelled,
+      reason: r.message,
+    });
+    if (r.cancelled) return;
     Alert.alert(t("alerts.loginFailed"), r.message);
   };
 
   const onPressApple = async () => {
+    trackSigninAttempted("apple");
     const r = await signInApple();
-    if (r.ok || r.cancelled) return;
+    if (r.ok) return;
+    trackSigninFailed({
+      provider: "apple",
+      cancelled: r.cancelled,
+      reason: r.message,
+    });
+    if (r.cancelled) return;
     Alert.alert(t("alerts.loginFailed"), r.message);
   };
 

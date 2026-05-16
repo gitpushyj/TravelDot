@@ -1,3 +1,9 @@
+import {
+  PhotoSyncTrigger,
+  trackPhotoSyncCompleted,
+  trackPhotoSyncFailed,
+  trackPhotoSyncStarted,
+} from "../../lib/analyticsEvents";
 import { toLocalDateKey } from "../../utils/date";
 import {
   addPhotos,
@@ -19,7 +25,12 @@ const SYNC_FLUSH_CHUNK = 500;
 // sinceDate가 주어지면 그 날짜(YYYY-MM-DD) 미만의 사진은 건너뛴다.
 // iteratePhotos는 creationTime DESC로 사진을 내려주므로, 임계 날짜보다
 // 이전 사진을 만나는 순간 더 이상 볼 필요가 없어 즉시 break한다.
-async function runSync(sinceDate: string | null): Promise<void> {
+async function runSync(
+  sinceDate: string | null,
+  trigger: PhotoSyncTrigger
+): Promise<void> {
+  const startedAt = Date.now();
+  trackPhotoSyncStarted(trigger);
   const store = useVisitStore.getState();
   const homeCode = store.homeCountry?.code ?? null;
 
@@ -37,6 +48,15 @@ async function runSync(sinceDate: string | null): Promise<void> {
       withGps: 0,
       resolved: 0,
       added: 0,
+    });
+    trackPhotoSyncCompleted({
+      trigger,
+      permission,
+      scanned: 0,
+      withGps: 0,
+      resolved: 0,
+      added: 0,
+      durationMs: Date.now() - startedAt,
     });
     return;
   }
@@ -154,6 +174,15 @@ async function runSync(sinceDate: string | null): Promise<void> {
     useVisitStore
       .getState()
       .setLastSync({ permission, scanned, withGps, resolved, added, sample });
+    trackPhotoSyncCompleted({
+      trigger,
+      permission,
+      scanned,
+      withGps,
+      resolved,
+      added,
+      durationMs: Date.now() - startedAt,
+    });
   } catch (err) {
     useVisitStore
       .getState()
@@ -167,17 +196,25 @@ async function runSync(sinceDate: string | null): Promise<void> {
       sample,
       error: String(err),
     });
+    trackPhotoSyncFailed({
+      trigger,
+      reason: String(err),
+      durationMs: Date.now() - startedAt,
+    });
     throw err;
   }
 }
 
-export async function runFullSync(): Promise<void> {
-  return runSync(null);
+// trigger를 명시적으로 받는다. 호출 측의 의미가 분석에 그대로 보존된다.
+export async function runFullSync(
+  trigger: PhotoSyncTrigger = "manual_full"
+): Promise<void> {
+  return runSync(null, trigger);
 }
 
 // 앱에 기록된 가장 최근 방문 날짜 이후의 사진만 추가 스캔한다.
 // 기록이 전혀 없으면 전체 스캔으로 폴백한다.
 export async function runIncrementalSync(): Promise<void> {
   const since = await loadLatestVisitDate();
-  return runSync(since);
+  return runSync(since, "incremental");
 }

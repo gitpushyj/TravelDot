@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+import { trackMilestoneKindChanged } from "../../lib/analyticsEvents";
 import { useEntitlementStore } from "../entitlement/entitlementStore";
 import {
   loadMilestoneKind,
@@ -43,5 +44,6 @@ export const useMilestoneStore = create<State>((set) => ({
   setKind: async (kind) => {
     set({ kind });
     await saveMilestoneKind(kind);
+    trackMilestoneKindChanged(kind);
   },
 }));
