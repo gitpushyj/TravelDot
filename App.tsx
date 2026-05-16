@@ -14,6 +14,7 @@ import {
 import { requestTrackingPermissionIfNeeded } from "./src/lib/tracking";
 import AppAlerts from "./src/components/AppAlerts";
 import { useAuthStore } from "./src/features/auth/authStore";
+import { useTrackLastActive } from "./src/features/auth/useTrackLastActive";
 import { useEntitlementStore } from "./src/features/entitlement/entitlementStore";
 import { useFlightStore } from "./src/features/flight/flightStore";
 import { useHydrateUserProfileFromDb } from "./src/features/onboarding/useHydrateUserProfileFromDb";
@@ -105,6 +106,10 @@ export default function App() {
   // RC customerInfo 변화·앱 foreground 진입 시 서버 tier와 호칭을 다시 fetch한다.
   // 결제 만료 후 client가 stale "premium" 상태로 남는 문제를 막는 핵심.
   useTierAutoSync(authUser?.id ?? null);
+
+  // 앱 시작 + foreground 진입 시 public.users.last_active_at을 갱신한다.
+  // 휴면 사용자 식별·리텐션 분석용. 실제 DB 호출은 30분 throttle을 거친다.
+  useTrackLastActive(authUser?.id ?? null);
 
   // 로그인되어 있고 sync store도 hydrate된 시점에 트립 동기화를 시작한다.
   // push는 모든 tier에서, pull은 premium 이상에서. 결과는 백그라운드라 await하지 않는다.
