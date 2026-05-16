@@ -13,8 +13,9 @@ import { fetchTriviaQuestions } from "./questionService";
 export const QUESTION_SECONDS = 5;
 const TICK_MS = 100;
 const REVEAL_MS = 1200;
-// 한 게임당 문제 풀 크기. 100문제 모두 가져오면 큐가 너무 길어 게임이 끝나지 않으니 30개로 제한.
-const GAME_QUESTION_COUNT = 30;
+// 한 게임당 문제 풀 크기. DB에 있는 모든 문제를 큐에 넣고 싶으므로 충분히 큰 값을 보낸다.
+// RPC가 LIMIT으로 자르기 때문에 실제로는 DB에 존재하는 문제 수만큼만 반환된다.
+const GAME_QUESTION_COUNT = 1000;
 
 // 정답 공개 단계 정보. 1.2초간 정답/내 선택을 보여준 뒤 다음 문제로 이동한다.
 export type Reveal = {
