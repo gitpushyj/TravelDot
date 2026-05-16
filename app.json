@@ -93,6 +93,7 @@
       ],
       "./plugins/withPodfileModularHeaders",
       "./plugins/withAndroidLocalizedAppName",
+      "./plugins/withAndroidReleaseSigning",
       [
         "expo-tracking-transparency",
         {
