@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 
 import { useTheme } from "../../theme/themeStore";
 import { GameCard, type GameCardPalette } from "./GameCard";
-import { GamesHubIntro } from "./GamesHubIntro";
 import { useGamesHubScores } from "./useGamesHubScores";
 
 const FLAG_QUIZ_QUESTIONS = 50;
@@ -72,7 +71,7 @@ export default function GamesHubScreen({
           alignItems: "center",
           gap: 4,
           paddingHorizontal: 12,
-          paddingVertical: 8,
+          paddingVertical: 4,
         }}
       >
         <Pressable onPress={onClose} hitSlop={10} style={{ padding: 8 }}>
@@ -82,9 +81,8 @@ export default function GamesHubScreen({
           {t("gamesHub.title")}
         </Text>
       </View>
-      <ScrollView contentContainerStyle={{ paddingBottom: 24, gap: 8 }}>
-        <GamesHubIntro />
-        <View style={{ paddingHorizontal: 12, gap: 12 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+        <View style={{ paddingHorizontal: 12, paddingTop: 12, gap: 8 }}>
           <GameCard
             palette={flagPalette}
             illustration={require("../../../assets/game_earth.png")}

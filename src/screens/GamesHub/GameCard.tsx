@@ -40,19 +40,20 @@ export function GameCard({
   return (
     <View
       style={{
-        gap: 12,
-        padding: 16,
+        gap: 8,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
         borderRadius: 24,
         backgroundColor: palette.bg,
       }}
     >
-      <View style={{ flexDirection: "row", gap: 14, alignItems: "center" }}>
+      <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
         <Image
           source={illustration}
-          style={{ width: 130, height: 180 }}
+          style={{ width: 130, height: 180, marginVertical: -22 }}
           resizeMode="contain"
         />
-        <View style={{ flex: 1, gap: 10 }}>
+        <View style={{ flex: 1, gap: 8 }}>
           <View style={{ flexDirection: "row" }}>
             <View
               style={{
@@ -88,7 +89,7 @@ export function GameCard({
       <View
         style={{
           flexDirection: "row",
-          paddingVertical: 10,
+          paddingVertical: 8,
           borderTopWidth: 1,
           borderBottomWidth: 1,
           borderColor: palette.separator,
@@ -121,7 +122,7 @@ export function GameCard({
           alignItems: "center",
           justifyContent: "center",
           gap: 6,
-          paddingVertical: 14,
+          paddingVertical: 12,
           borderRadius: 16,
           backgroundColor: palette.accent,
           opacity: pressed ? 0.85 : 1,
