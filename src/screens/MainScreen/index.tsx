@@ -465,6 +465,10 @@ export default function MainScreen({ navigation }: Props) {
                   onInteractingChange={setMapInteracting}
                   mapAreaStyle={styles.mapAreaInner}
                   flightAutoZoom
+                  onCountryDoubleTap={(c) => {
+                    setSelectedCountry(c);
+                    navigation.navigate("CountryDetail");
+                  }}
                 />
               ) : null}
             </Animated.View>

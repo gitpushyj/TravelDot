@@ -80,7 +80,12 @@ type Props = {
   // 진행 중인 비행의 비행기·경로·목적지 펄스를 그릴지 여부. 공유 카드처럼
   // 정적 캡처 이미지에서는 false로 끈다.
   showFlightOverlay?: boolean;
+  // 같은 나라 도트를 빠르게 두 번 탭하면 호출된다. 부모가 navigation 등을 수행한다.
+  // 다중 국가 도트(pending)나 빈 영역 탭에서는 발동하지 않는다.
+  onCountryDoubleTap?: (country: CountryRef) => void;
 };
+
+const DOUBLE_TAP_WINDOW_MS = 300;
 
 export default function DotMap({
   visitCounts: visitCountsProp,
@@ -94,6 +99,7 @@ export default function DotMap({
   flightAutoZoom = false,
   showLegend = true,
   showFlightOverlay = true,
+  onCountryDoubleTap,
 }: Props) {
   const { dots, gridSize, minLat, maxLat } = dotData as DotData;
   const viewBoxW = 360;
@@ -336,6 +342,10 @@ export default function DotMap({
     ]
   );
 
+  // 같은 나라 도트에서 짧은 간격으로 두 번째 탭이 들어오면 더블탭으로 간주한다.
+  // 단일 탭은 즉시 선택을 수행하므로 응답성이 손상되지 않는다.
+  const lastTapRef = useRef<{ time: number; code: string } | null>(null);
+
   const onTap = useCallback(
     (worldX: number, worldY: number) => {
       const cellPx = gridSize * baseScale;
@@ -356,6 +366,7 @@ export default function DotMap({
       }
       if (!bestCountries || bestCountries.length === 0) {
         // 도트가 없는 여백을 탭하면 본국을 선택지로 돌려준다.
+        lastTapRef.current = null;
         if (homeCountry) {
           setPending(null);
           setSelectedCountry({
@@ -368,8 +379,23 @@ export default function DotMap({
       if (bestCountries.length === 1 || autoPickFirst) {
         const c = bestCountries[0];
         setPending(null);
+        const now = Date.now();
+        const last = lastTapRef.current;
+        if (
+          onCountryDoubleTap &&
+          last &&
+          last.code === c.code &&
+          now - last.time < DOUBLE_TAP_WINDOW_MS
+        ) {
+          lastTapRef.current = null;
+          onCountryDoubleTap({ code: c.code, name: c.name });
+          return;
+        }
+        lastTapRef.current = { time: now, code: c.code };
         setSelectedCountry({ code: c.code, name: c.name });
       } else {
+        // 다중 국가 도트는 사용자가 명시적으로 선택해야 하므로 더블탭 추적을 리셋한다.
+        lastTapRef.current = null;
         setPending(bestCountries);
       }
     },
@@ -381,6 +407,7 @@ export default function DotMap({
       setSelectedCountry,
       autoPickFirst,
       homeCountry,
+      onCountryDoubleTap,
     ]
   );
 
