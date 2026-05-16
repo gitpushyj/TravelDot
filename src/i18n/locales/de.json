@@ -142,7 +142,6 @@
     "undoRemoves": "{{count}} markierte Löschungen rückgängig machen"
   },
   "tripDetail": {
-    "edit": "✎ Bearbeiten",
     "miniDayUnit": "Tage",
     "miniDayLabel": "Reise",
     "miniPhotoUnit": "Fotos",

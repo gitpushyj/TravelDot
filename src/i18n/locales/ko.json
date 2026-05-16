@@ -150,7 +150,6 @@
     "undoRemoves": "삭제 표시 {{count}}장 되돌리기"
   },
   "tripDetail": {
-    "edit": "✎ 수정",
     "miniDayUnit": "일",
     "miniDayLabel": "여행",
     "miniPhotoUnit": "장",

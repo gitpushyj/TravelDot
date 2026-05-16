@@ -142,7 +142,6 @@
     "undoRemoves": "削除予定の{{count}}枚を元に戻す"
   },
   "tripDetail": {
-    "edit": "✎ 編集",
     "miniDayUnit": "日",
     "miniDayLabel": "旅",
     "miniPhotoUnit": "枚",

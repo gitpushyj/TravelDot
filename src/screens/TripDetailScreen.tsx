@@ -337,11 +337,11 @@ export default function TripDetailScreen({
           onPress={onEdit}
           hitSlop={8}
           style={({ pressed }) => [
-            styles.editBtn,
-            pressed && styles.editBtnPressed,
+            styles.iconBtn,
+            pressed && styles.iconBtnPressed,
           ]}
         >
-          <Text style={styles.editBtnText}>{t("tripDetail.edit")}</Text>
+          <Text style={styles.iconBtnText}>✎</Text>
         </Pressable>
       </View>
 

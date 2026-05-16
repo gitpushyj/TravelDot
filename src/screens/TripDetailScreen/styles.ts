@@ -58,22 +58,6 @@ export function makeStyles(theme: Theme) {
       fontSize: 12,
       fontWeight: "700",
     },
-    editBtn: {
-      paddingHorizontal: 12,
-      height: 40,
-      borderRadius: 20,
-      backgroundColor: theme.cardBg,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    editBtnPressed: { backgroundColor: theme.tabRowBg },
-    editBtnText: {
-      color: theme.textPrimary,
-      fontSize: 13,
-      fontWeight: "700",
-    },
     scrollContent: {
       paddingHorizontal: 20,
       paddingTop: 8,

@@ -142,7 +142,6 @@
     "undoRemoves": "撤销 {{count}} 张待删除"
   },
   "tripDetail": {
-    "edit": "✎ 编辑",
     "miniDayUnit": "天",
     "miniDayLabel": "旅行",
     "miniPhotoUnit": "张",

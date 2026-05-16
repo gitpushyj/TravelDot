@@ -142,7 +142,6 @@
     "undoRemoves": "還原 {{count}} 張待刪除"
   },
   "tripDetail": {
-    "edit": "✎ 編輯",
     "miniDayUnit": "天",
     "miniDayLabel": "旅行",
     "miniPhotoUnit": "張",

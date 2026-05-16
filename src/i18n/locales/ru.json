@@ -142,7 +142,6 @@
     "undoRemoves": "Отменить удаление: {{count}}"
   },
   "tripDetail": {
-    "edit": "✎ Изменить",
     "miniDayUnit": "дн.",
     "miniDayLabel": "Поездка",
     "miniPhotoUnit": "фото",

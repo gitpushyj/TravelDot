@@ -150,7 +150,6 @@
     "undoRemoves": "Undo {{count}} pending removals"
   },
   "tripDetail": {
-    "edit": "✎ Edit",
     "miniDayUnit": "days",
     "miniDayLabel": "Trip",
     "miniPhotoUnit": "photos",

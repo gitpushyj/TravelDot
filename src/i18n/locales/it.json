@@ -142,7 +142,6 @@
     "undoRemoves": "Annulla le {{count}} contrassegnate per la rimozione"
   },
   "tripDetail": {
-    "edit": "✎ Modifica",
     "miniDayUnit": "gg",
     "miniDayLabel": "Viaggio",
     "miniPhotoUnit": "foto",
