@@ -10,8 +10,8 @@ export function makeEmptyTripsStyles(theme: Theme) {
       paddingBottom: 24,
     },
     illustration: {
-      width: 200,
-      height: 160,
+      width: 280,
+      height: 224,
       marginBottom: 16,
     },
     line: {
