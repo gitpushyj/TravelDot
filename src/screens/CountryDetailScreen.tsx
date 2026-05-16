@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import CountryDotMap from "../components/CountryDotMap";
 import {
   countPhotosForCountry,
   countPhotosForTrip,
@@ -16,9 +15,10 @@ import { useScreenBottomInset } from "../hooks/useScreenInsets";
 import { getCurrentLocale } from "../i18n";
 import { getCountryName } from "../lib/countryName";
 import { useTheme } from "../theme/themeStore";
-import { colorForCountry } from "../utils/countryColors";
 import { flagEmoji } from "../utils/flag";
 
+import EmptyTrips from "./CountryDetailScreen/EmptyTrips";
+import HeroCard from "./CountryDetailScreen/HeroCard";
 import { makeStyles } from "./CountryDetailScreen/styles";
 import TripRow from "./CountryDetailScreen/TripRow";
 import { formatMD, groupByYear } from "./CountryDetailScreen/utils";
@@ -114,7 +114,10 @@ export default function CountryDetailScreen({
 
   const flag = flagEmoji(selectedCountry.code);
   const hasTrips = (trips?.length ?? 0) > 0;
-  const countryColor = colorForCountry(selectedCountry.code);
+  const countryName = getCountryName(
+    selectedCountry.code,
+    getCurrentLocale()
+  );
 
   return (
     <View style={[styles.root, { paddingBottom: bottomInset }]}>
@@ -132,7 +135,7 @@ export default function CountryDetailScreen({
         <View style={styles.headerCenter}>
           <Text style={styles.headerFlag}>{flag}</Text>
           <Text style={styles.headerTitle} numberOfLines={1}>
-            {getCountryName(selectedCountry.code, getCurrentLocale())}
+            {countryName}
           </Text>
           <Text style={styles.headerCode}>{selectedCountry.code}</Text>
         </View>
@@ -163,28 +166,13 @@ export default function CountryDetailScreen({
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.heroCard, { backgroundColor: countryColor.bg }]}>
-          <View style={styles.heroDots}>
-            <CountryDotMap
-              countryCode={selectedCountry.code}
-              color={countryColor.dot}
-            />
-          </View>
-        </View>
-
-        <View style={styles.statsCard}>
-          <StatCol
-            value={trips?.length ?? 0}
-            unit={t("countryDetail.statVisits")}
-          />
-          <View style={styles.statDivider} />
-          <StatCol value={totalDays} unit={t("countryDetail.statDays")} />
-          <View style={styles.statDivider} />
-          <StatCol
-            value={photoTotal ?? 0}
-            unit={t("countryDetail.statPhotos")}
-          />
-        </View>
+        <HeroCard
+          code={selectedCountry.code}
+          name={countryName}
+          visits={trips?.length ?? 0}
+          days={totalDays}
+          photos={photoTotal ?? 0}
+        />
 
         <View style={styles.sectionHeader}>
           <View style={styles.sectionHeaderLeft}>
@@ -196,10 +184,7 @@ export default function CountryDetailScreen({
                 onPress={() =>
                   onAddTrip({
                     code: selectedCountry.code,
-                    name: getCountryName(
-                      selectedCountry.code,
-                      getCurrentLocale()
-                    ),
+                    name: countryName,
                   })
                 }
                 hitSlop={8}
@@ -241,9 +226,7 @@ export default function CountryDetailScreen({
             <Text style={styles.emptyText}>{t("common.loading")}</Text>
           </View>
         ) : trips.length === 0 ? (
-          <View style={styles.emptyWrap}>
-            <Text style={styles.emptyText}>{t("countryDetail.empty")}</Text>
-          </View>
+          <EmptyTrips />
         ) : (
           grouped.map((g) => (
             <View key={g.year} style={styles.yearGroup}>
@@ -273,13 +256,3 @@ export default function CountryDetailScreen({
   );
 }
 
-function StatCol({ value, unit }: { value: number; unit: string }) {
-  const theme = useTheme();
-  const styles = useMemo(() => makeStyles(theme), [theme]);
-  return (
-    <View style={styles.statCol}>
-      <Text style={styles.statNum}>{value}</Text>
-      <Text style={styles.statUnit}>{unit}</Text>
-    </View>
-  );
-}

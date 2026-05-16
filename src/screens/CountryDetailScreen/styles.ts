@@ -70,46 +70,6 @@ export function makeStyles(theme: Theme) {
       paddingTop: 8,
       paddingBottom: 60,
     },
-    heroCard: {
-      borderRadius: 24,
-      overflow: "hidden",
-      backgroundColor: theme.accent,
-      aspectRatio: 16 / 11,
-      marginBottom: 16,
-    },
-    heroDots: {
-      ...StyleSheet.absoluteFillObject,
-    },
-    statsCard: {
-      flexDirection: "row",
-      backgroundColor: theme.cardBg,
-      borderRadius: 18,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      paddingVertical: 18,
-      paddingHorizontal: 8,
-      marginBottom: 28,
-    },
-    statCol: {
-      flex: 1,
-      alignItems: "center",
-      gap: 4,
-    },
-    statNum: {
-      color: theme.textPrimary,
-      fontSize: 26,
-      fontWeight: "800",
-    },
-    statUnit: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      fontWeight: "600",
-    },
-    statDivider: {
-      width: 1,
-      backgroundColor: theme.cardBorder,
-      marginVertical: 6,
-    },
     sectionHeader: {
       flexDirection: "row",
       alignItems: "center",
