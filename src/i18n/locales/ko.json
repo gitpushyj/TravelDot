@@ -162,6 +162,7 @@
     "photosEmpty": "이 여행에 저장된 사진이 없어요.",
     "noteSection": "기록",
     "noteWritten": "{{date}} 작성",
+    "notePlaceholder": "이 여행에 메모를 남겨보세요",
     "photosGridHeader": "사진 {{count}}",
     "photosGridEmpty": "이 여행의 사진이 없어요."
   },
@@ -172,8 +173,7 @@
     "sectionTrips": "여행 기록",
     "swipeToDelete": "← 옆으로 밀어 삭제",
     "sortLatest": "최신순",
-    "emptyLine1": "아직 이 나라의",
-    "emptyLine2": "여행 기록이 없어요.",
+    "empty": "아직 이 나라의 여행 기록이 없어요.",
     "tripPhotos": "{{count}}장",
     "tripRecent": "최근",
     "deleteAction": "삭제",

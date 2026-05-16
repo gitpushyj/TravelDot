@@ -154,6 +154,7 @@
     "photosEmpty": "Для этой поездки фото не сохранены.",
     "noteSection": "Заметка",
     "noteWritten": "Записано {{date}}",
+    "notePlaceholder": "Оставь заметку об этой поездке",
     "photosGridHeader": "Фото: {{count}}",
     "photosGridEmpty": "Для этой поездки нет фото."
   },
@@ -164,8 +165,7 @@
     "sectionTrips": "История поездок",
     "swipeToDelete": "← Свайп для удаления",
     "sortLatest": "Свежее",
-    "emptyLine1": "Поездок в эту страну",
-    "emptyLine2": "ещё не записано.",
+    "empty": "Поездок в эту страну ещё не записано.",
     "tripPhotos": "{{count}} фото",
     "tripRecent": "Свежее",
     "deleteAction": "Удалить",

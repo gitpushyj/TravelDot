@@ -154,6 +154,7 @@
     "photosEmpty": "No hay fotos guardadas para este viaje.",
     "noteSection": "Nota",
     "noteWritten": "Escrito el {{date}}",
+    "notePlaceholder": "Deja una nota sobre este viaje",
     "photosGridHeader": "{{count}} fotos",
     "photosGridEmpty": "No hay fotos para este viaje."
   },
@@ -164,8 +165,7 @@
     "sectionTrips": "Historial de viajes",
     "swipeToDelete": "← Desliza para eliminar",
     "sortLatest": "Más recientes",
-    "emptyLine1": "Aún no hay viajes",
-    "emptyLine2": "registrados en este país.",
+    "empty": "Aún no hay viajes registrados en este país.",
     "tripPhotos": "{{count}} fotos",
     "tripRecent": "Reciente",
     "deleteAction": "Eliminar",

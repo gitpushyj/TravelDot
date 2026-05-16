@@ -162,6 +162,7 @@
     "photosEmpty": "No photos saved for this trip.",
     "noteSection": "Note",
     "noteWritten": "Written {{date}}",
+    "notePlaceholder": "Leave a note for this trip",
     "photosGridHeader": "{{count}} photos",
     "photosGridEmpty": "No photos for this trip."
   },
@@ -172,8 +173,7 @@
     "sectionTrips": "Trip history",
     "swipeToDelete": "← Swipe to delete",
     "sortLatest": "Newest",
-    "emptyLine1": "No trips recorded",
-    "emptyLine2": "for this country yet.",
+    "empty": "No trips recorded for this country yet.",
     "tripPhotos": "{{count}} photos",
     "tripRecent": "Latest",
     "deleteAction": "Delete",

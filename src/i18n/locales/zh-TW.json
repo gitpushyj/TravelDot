@@ -154,6 +154,7 @@
     "photosEmpty": "這趟旅行沒有儲存的相片。",
     "noteSection": "紀錄",
     "noteWritten": "{{date}} 撰寫",
+    "notePlaceholder": "為這次旅行寫點什麼吧",
     "photosGridHeader": "{{count}} 張相片",
     "photosGridEmpty": "這趟旅行沒有相片。"
   },
@@ -164,8 +165,7 @@
     "sectionTrips": "旅行紀錄",
     "swipeToDelete": "← 向左滑動刪除",
     "sortLatest": "最新",
-    "emptyLine1": "這個國家",
-    "emptyLine2": "還沒有旅行紀錄。",
+    "empty": "這個國家還沒有旅行紀錄。",
     "tripPhotos": "{{count}} 張",
     "tripRecent": "最近",
     "deleteAction": "刪除",

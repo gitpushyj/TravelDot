@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 24,
     overflow: "hidden",
-    aspectRatio: 16 / 17,
+    aspectRatio: 16 / 15,
     paddingHorizontal: 20,
     paddingTop: 24,
     paddingBottom: 16,

@@ -154,6 +154,7 @@
     "photosEmpty": "Für diese Reise sind keine Fotos gespeichert.",
     "noteSection": "Notiz",
     "noteWritten": "Verfasst am {{date}}",
+    "notePlaceholder": "Schreib eine Notiz zu dieser Reise",
     "photosGridHeader": "{{count}} Fotos",
     "photosGridEmpty": "Keine Fotos für diese Reise."
   },
@@ -164,8 +165,7 @@
     "sectionTrips": "Reiseverlauf",
     "swipeToDelete": "← Zum Löschen wischen",
     "sortLatest": "Neueste",
-    "emptyLine1": "Für dieses Land sind",
-    "emptyLine2": "noch keine Reisen erfasst.",
+    "empty": "Für dieses Land sind noch keine Reisen erfasst.",
     "tripPhotos": "{{count}} Fotos",
     "tripRecent": "Aktuell",
     "deleteAction": "Löschen",

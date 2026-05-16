@@ -174,34 +174,6 @@ export function makeStyles(theme: Theme) {
       alignItems: "center",
       justifyContent: "center",
     },
-    noteCard: {
-      backgroundColor: theme.cardBg,
-      borderRadius: 16,
-      borderWidth: 1,
-      borderColor: theme.cardBorder,
-      padding: 18,
-      gap: 12,
-    },
-    noteHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    noteTitle: {
-      color: theme.textPrimary,
-      fontSize: 17,
-      fontWeight: "800",
-    },
-    noteDate: {
-      color: theme.textSecondary,
-      fontSize: 12,
-      fontWeight: "600",
-    },
-    noteBody: {
-      color: theme.textPrimary,
-      fontSize: 14,
-      lineHeight: 22,
-    },
   });
 }
 

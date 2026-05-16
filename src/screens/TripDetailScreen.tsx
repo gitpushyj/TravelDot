@@ -25,11 +25,9 @@ import { flagEmoji } from "../utils/flag";
 import { formatTripDateRange } from "../utils/tripFormat";
 
 import DateRangeCard from "./TripDetailScreen/DateRangeCard";
-import {
-  formatDateLong,
-  formatDateShortDot,
-} from "./TripDetailScreen/format";
+import { formatDateShortDot } from "./TripDetailScreen/format";
 import HeroCard from "./TripDetailScreen/HeroCard";
+import NoteCard from "./TripDetailScreen/NoteCard";
 import PhotosGridView, {
   type GridPhoto,
 } from "./TripDetailScreen/PhotosGridView";
@@ -367,6 +365,8 @@ export default function TripDetailScreen({
           countryColor={countryColor}
         />
 
+        <NoteCard note={note} onEdit={onEdit} />
+
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>{t("tripDetail.sectionPhotos")}</Text>
           {totalPhotos != null && totalPhotos > 0 && (
@@ -418,17 +418,6 @@ export default function TripDetailScreen({
           </ScrollView>
         )}
 
-        {note && (
-          <View style={styles.noteCard}>
-            <View style={styles.noteHeader}>
-              <Text style={styles.noteTitle}>{t("tripDetail.noteSection")}</Text>
-              <Text style={styles.noteDate}>
-                {t("tripDetail.noteWritten", { date: formatDateLong(note.date) })}
-              </Text>
-            </View>
-            <Text style={styles.noteBody}>{note.body}</Text>
-          </View>
-        )}
       </ScrollView>
     </View>
   );

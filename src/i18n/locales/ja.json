@@ -154,6 +154,7 @@
     "photosEmpty": "この旅に保存された写真はありません。",
     "noteSection": "メモ",
     "noteWritten": "{{date}} 作成",
+    "notePlaceholder": "この旅の記録を残してみよう",
     "photosGridHeader": "写真 {{count}}",
     "photosGridEmpty": "この旅の写真はありません。"
   },
@@ -164,8 +165,7 @@
     "sectionTrips": "旅の記録",
     "swipeToDelete": "← 横にスワイプで削除",
     "sortLatest": "新しい順",
-    "emptyLine1": "この国の旅の記録は",
-    "emptyLine2": "まだありません。",
+    "empty": "この国の旅の記録はまだありません。",
     "tripPhotos": "{{count}}枚",
     "tripRecent": "最新",
     "deleteAction": "削除",
