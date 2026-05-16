@@ -6,13 +6,13 @@ export function makeEmptyTripsStyles(theme: Theme) {
   return StyleSheet.create({
     container: {
       alignItems: "center",
-      paddingTop: 40,
+      paddingTop: 16,
       paddingBottom: 24,
     },
     illustration: {
-      width: 280,
-      height: 224,
-      marginBottom: 16,
+      width: 320,
+      height: 320,
+      marginBottom: 4,
     },
     line: {
       color: theme.textSecondary,
