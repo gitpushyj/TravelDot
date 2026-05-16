@@ -940,10 +940,20 @@
   },
   "gamesHub": {
     "title": "Games",
+    "introTitle": "Travel and trivia,\nturned into a game!",
+    "introSubtitle": "Play the quizzes and become a world travel master.",
     "flagQuizTitle": "Flag Quiz",
     "flagQuizDesc": "See the flag, name the country",
+    "flagQuizHeading": "See the flag,\nname the country!",
     "triviaTitle": "Travel Trivia",
-    "triviaDesc": "Test yourself on 100 travel facts from around the world"
+    "triviaDesc": "Test yourself on 100 travel facts from around the world",
+    "triviaHeading": "100 travel facts\nfrom around the world!",
+    "topScore": "Top Score",
+    "myBestScore": "My Best",
+    "questionCount": "Questions",
+    "play": "Play",
+    "challenge": "Take On",
+    "emptyScore": "-"
   },
   "trivia": {
     "start": "Start",

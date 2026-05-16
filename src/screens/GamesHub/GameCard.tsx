@@ -1,56 +1,138 @@
-import { Pressable, Text, View } from "react-native";
-import type { LucideIcon } from "lucide-react-native";
+import { Image, Pressable, Text, View, type ImageSourcePropType } from "react-native";
+import { ChevronRight, type LucideIcon } from "lucide-react-native";
 
-import { useTheme } from "../../theme/themeStore";
+export type GameCardPalette = {
+  bg: string;
+  accent: string;
+  accentText: string;
+  separator: string;
+  titleText: string;
+  statLabel: string;
+  statValue: string;
+};
 
-// 게임 허브의 게임 1개 카드.
+export type GameCardStat = {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+};
+
+// 게임 허브의 카드 1개. dumb component — 컬러/콘텐츠는 모두 props로 받는다.
 export function GameCard({
-  icon: Icon,
+  palette,
+  illustration,
+  badgeIcon: BadgeIcon,
+  badgeLabel,
   title,
-  description,
+  stats,
+  ctaLabel,
   onPress,
 }: {
-  icon: LucideIcon;
+  palette: GameCardPalette;
+  illustration: ImageSourcePropType;
+  badgeIcon: LucideIcon;
+  badgeLabel: string;
   title: string;
-  description: string;
+  stats: [GameCardStat, GameCardStat, GameCardStat];
+  ctaLabel: string;
   onPress: () => void;
 }) {
-  const theme = useTheme();
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => ({
+    <View
+      style={{
         flexDirection: "row",
-        alignItems: "center",
-        gap: 16,
-        padding: 18,
-        borderRadius: 16,
-        backgroundColor: theme.cardBg,
-        borderWidth: 1,
-        borderColor: theme.cardBorder,
-        opacity: pressed ? 0.85 : 1,
-      })}
+        gap: 14,
+        padding: 16,
+        borderRadius: 24,
+        backgroundColor: palette.bg,
+      }}
     >
-      <View
-        style={{
-          width: 48,
-          height: 48,
-          borderRadius: 12,
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: theme.accentSoftBg,
-        }}
-      >
-        <Icon color={theme.accent} size={26} />
-      </View>
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 17, fontWeight: "800", color: theme.textPrimary }}>
+      <Image
+        source={illustration}
+        style={{ width: 140, height: 140 }}
+        resizeMode="contain"
+      />
+      <View style={{ flex: 1, gap: 10 }}>
+        <View style={{ flexDirection: "row" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 6,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 999,
+              backgroundColor: palette.accent,
+            }}
+          >
+            <BadgeIcon color={palette.accentText} size={14} />
+            <Text
+              style={{ color: palette.accentText, fontSize: 13, fontWeight: "700" }}
+            >
+              {badgeLabel}
+            </Text>
+          </View>
+        </View>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "800",
+            color: palette.titleText,
+            lineHeight: 26,
+          }}
+        >
           {title}
         </Text>
-        <Text style={{ fontSize: 14, color: theme.textSecondary, marginTop: 2 }}>
-          {description}
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingVertical: 10,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            borderColor: palette.separator,
+          }}
+        >
+          {stats.map(({ icon: StatIcon, label, value }, idx) => (
+            <View key={idx} style={{ flex: 1, gap: 4 }}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+                <StatIcon color={palette.accent} size={14} />
+                <Text style={{ fontSize: 11, color: palette.statLabel }}>{label}</Text>
+              </View>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "700",
+                  color: palette.statValue,
+                }}
+              >
+                {value}
+              </Text>
+            </View>
+          ))}
+        </View>
+        <Pressable
+          onPress={onPress}
+          accessibilityRole="button"
+          accessibilityLabel={`${ctaLabel}, ${title.replace(/\n/g, " ")}`}
+          style={({ pressed }) => ({
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
+            paddingVertical: 14,
+            borderRadius: 16,
+            backgroundColor: palette.accent,
+            opacity: pressed ? 0.85 : 1,
+          })}
+        >
+          <Text
+            style={{ color: palette.accentText, fontSize: 16, fontWeight: "700" }}
+          >
+            {ctaLabel}
+          </Text>
+          <ChevronRight color={palette.accentText} size={18} />
+        </Pressable>
       </View>
-    </Pressable>
+    </View>
   );
 }

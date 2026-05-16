@@ -940,10 +940,20 @@
   },
   "gamesHub": {
     "title": "게임",
+    "introTitle": "여행도 지식도\n게임으로 즐겨보세요!",
+    "introSubtitle": "퀴즈를 풀고 세계 여행 마스터가 되어보세요.",
     "flagQuizTitle": "국기 퀴즈",
     "flagQuizDesc": "국기를 보고 나라를 맞혀보세요",
+    "flagQuizHeading": "국기를 보고\n나라를 맞혀보세요!",
     "triviaTitle": "여행 상식 퀴즈",
-    "triviaDesc": "전 세계 여행 상식 100문제에 도전해 보세요"
+    "triviaDesc": "전 세계 여행 상식 100문제에 도전해 보세요",
+    "triviaHeading": "전 세계 여행 상식\n100문제에 도전해 보세요!",
+    "topScore": "1등 점수",
+    "myBestScore": "나의 최고",
+    "questionCount": "문제 수",
+    "play": "플레이하기",
+    "challenge": "도전하기",
+    "emptyScore": "-"
   },
   "trivia": {
     "start": "시작",

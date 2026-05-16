@@ -711,10 +711,20 @@
   },
   "gamesHub": {
     "title": "Giochi",
+    "introTitle": "Viaggio e cultura,\ndivertiti giocando!",
+    "introSubtitle": "Gioca ai quiz e diventa un maestro del viaggio.",
     "flagQuizTitle": "Quiz delle bandiere",
     "flagQuizDesc": "Guarda la bandiera, indovina il paese",
+    "flagQuizHeading": "Guarda la bandiera,\nindovina il paese!",
     "triviaTitle": "Quiz di viaggio",
-    "triviaDesc": "Mettiti alla prova con 100 domande di viaggio dal mondo"
+    "triviaDesc": "Mettiti alla prova con 100 domande di viaggio dal mondo",
+    "triviaHeading": "100 domande di curiosità\nsul viaggio nel mondo!",
+    "topScore": "Punteggio top",
+    "myBestScore": "Il mio record",
+    "questionCount": "Domande",
+    "play": "Gioca",
+    "challenge": "Sfida",
+    "emptyScore": "-"
   },
   "trivia": {
     "start": "Inizia",

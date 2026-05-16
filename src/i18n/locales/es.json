@@ -711,10 +711,20 @@
   },
   "gamesHub": {
     "title": "Juegos",
+    "introTitle": "Viajes y trivia,\n¡a jugar!",
+    "introSubtitle": "Juega a los quizzes y conviértete en maestro viajero.",
     "flagQuizTitle": "Quiz de banderas",
     "flagQuizDesc": "Mira la bandera y adivina el país",
+    "flagQuizHeading": "Mira la bandera,\n¡adivina el país!",
     "triviaTitle": "Quiz de viajes",
-    "triviaDesc": "Pon a prueba tus conocimientos con 100 preguntas de viajes"
+    "triviaDesc": "Pon a prueba tus conocimientos con 100 preguntas de viajes",
+    "triviaHeading": "¡100 preguntas de\ncuriosidades del mundo!",
+    "topScore": "Mejor puntuación",
+    "myBestScore": "Mi récord",
+    "questionCount": "Preguntas",
+    "play": "Jugar",
+    "challenge": "Aceptar",
+    "emptyScore": "-"
   },
   "trivia": {
     "start": "Empezar",

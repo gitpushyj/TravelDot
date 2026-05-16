@@ -711,10 +711,20 @@
   },
   "gamesHub": {
     "title": "Jeux",
+    "introTitle": "Voyage et savoir,\nen mode jeu !",
+    "introSubtitle": "Joue aux quiz et deviens maître du voyage.",
     "flagQuizTitle": "Quiz des drapeaux",
     "flagQuizDesc": "Regardez le drapeau, devinez le pays",
+    "flagQuizHeading": "Vois le drapeau,\ndevine le pays !",
     "triviaTitle": "Quiz de voyage",
-    "triviaDesc": "Testez-vous sur 100 questions de voyage du monde entier"
+    "triviaDesc": "Testez-vous sur 100 questions de voyage du monde entier",
+    "triviaHeading": "100 questions sur\nle voyage à travers le monde !",
+    "topScore": "Meilleur score",
+    "myBestScore": "Mon record",
+    "questionCount": "Questions",
+    "play": "Jouer",
+    "challenge": "Relever",
+    "emptyScore": "-"
   },
   "trivia": {
     "start": "Commencer",

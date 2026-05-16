@@ -711,10 +711,20 @@
   },
   "gamesHub": {
     "title": "ゲーム",
+    "introTitle": "旅も知識も\nゲームで楽しもう！",
+    "introSubtitle": "クイズに挑戦して、世界トラベルマスターになろう。",
     "flagQuizTitle": "国旗クイズ",
     "flagQuizDesc": "国旗を見て国名を当てよう",
+    "flagQuizHeading": "国旗を見て\n国名を当てよう！",
     "triviaTitle": "旅行常識クイズ",
-    "triviaDesc": "世界の旅行常識100問に挑戦しよう"
+    "triviaDesc": "世界の旅行常識100問に挑戦しよう",
+    "triviaHeading": "世界の旅トリビア\n100問にチャレンジ！",
+    "topScore": "1位スコア",
+    "myBestScore": "ベスト",
+    "questionCount": "問題数",
+    "play": "プレイ",
+    "challenge": "挑戦",
+    "emptyScore": "-"
   },
   "trivia": {
     "start": "スタート",

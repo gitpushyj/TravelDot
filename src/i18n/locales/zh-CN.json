@@ -711,10 +711,20 @@
   },
   "gamesHub": {
     "title": "游戏",
+    "introTitle": "旅行也好知识也好，\n用游戏享受吧！",
+    "introSubtitle": "玩转测验，成为世界旅行大师。",
     "flagQuizTitle": "国旗问答",
     "flagQuizDesc": "看国旗，猜国家",
+    "flagQuizHeading": "看国旗，\n猜国家！",
     "triviaTitle": "旅行常识问答",
-    "triviaDesc": "挑战 100 道世界旅行常识题"
+    "triviaDesc": "挑战 100 道世界旅行常识题",
+    "triviaHeading": "全世界旅行常识\n100题大挑战！",
+    "topScore": "第一名",
+    "myBestScore": "我的最高",
+    "questionCount": "题数",
+    "play": "开始玩",
+    "challenge": "去挑战",
+    "emptyScore": "-"
   },
   "trivia": {
     "start": "开始",

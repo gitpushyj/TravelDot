@@ -711,10 +711,20 @@
   },
   "gamesHub": {
     "title": "Spiele",
+    "introTitle": "Reisen und Wissen —\nspielerisch entdecken!",
+    "introSubtitle": "Spiel die Quiz und werde Reise-Master.",
     "flagQuizTitle": "Flaggen-Quiz",
     "flagQuizDesc": "Flagge ansehen, Land erraten",
+    "flagQuizHeading": "Sieh die Flagge,\nnenn das Land!",
     "triviaTitle": "Reise-Quiz",
-    "triviaDesc": "Teste dich mit 100 Fragen zu Reisen weltweit"
+    "triviaDesc": "Teste dich mit 100 Fragen zu Reisen weltweit",
+    "triviaHeading": "100 Fragen rund\nums Reisen!",
+    "topScore": "Top-Score",
+    "myBestScore": "Mein Bestwert",
+    "questionCount": "Fragen",
+    "play": "Spielen",
+    "challenge": "Loslegen",
+    "emptyScore": "-"
   },
   "trivia": {
     "start": "Start",

@@ -51,6 +51,12 @@ export type Theme = {
   // 라이트 테마에서는 어두운 톤, 다크 테마에서는 흰 톤.
   flightPathFaint: string;
   flightPathBright: string;
+  // 게임 허브 카드 — 국기 퀴즈는 오렌지 톤, 여행 상식은 블루 톤
+  gameCardFlagBg: string;
+  gameCardFlagAccent: string;
+  gameCardTriviaBg: string;
+  gameCardTriviaAccent: string;
+  gameCardSeparator: string;
   // 상태 표시줄 스타일 ("light" → 흰 글씨)
   statusBar: "light" | "dark";
 };
@@ -87,6 +93,11 @@ export const LIGHT_THEME: Theme = {
   highlightDot: "#ffd75e",
   flightPathFaint: "rgba(0,0,0,0.5)",
   flightPathBright: "#1a1a1a",
+  gameCardFlagBg: "#fff0e2",
+  gameCardFlagAccent: "#ff8b3a",
+  gameCardTriviaBg: "#e7eefb",
+  gameCardTriviaAccent: "#3d7bd9",
+  gameCardSeparator: "rgba(0,0,0,0.06)",
   statusBar: "dark",
 };
 
@@ -123,6 +134,11 @@ export const DARK_THEME: Theme = {
   highlightDot: "#ffd75e",
   flightPathFaint: "rgba(255,255,255,0.32)",
   flightPathBright: "#ffffff",
+  gameCardFlagBg: "#3a261a",
+  gameCardFlagAccent: "#ff8b3a",
+  gameCardTriviaBg: "#1c2638",
+  gameCardTriviaAccent: "#5d92ef",
+  gameCardSeparator: "rgba(255,255,255,0.10)",
   statusBar: "light",
 };
 
