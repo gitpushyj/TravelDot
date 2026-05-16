@@ -36,6 +36,7 @@ import { isValidDateKey, toLocalDateKey } from "../utils/date";
 import { flagEmoji } from "../utils/flag";
 
 import DateField from "../components/DateField";
+import { applyEndChange, applyStartChange } from "./EditTripScreen/dateRange";
 import { dayCount, exifTakenAt } from "./EditTripScreen/exif";
 import { makeStyles } from "./EditTripScreen/styles";
 
@@ -117,6 +118,20 @@ export default function EditTripScreen({ trip, onClose }: Props) {
   );
 
   const dirty = datesChanged || noteChanged || photosChanged;
+
+  // wheel picker로 한쪽 날짜를 다른 쪽 너머로 옮기면 invalid range가 되어
+  // 에러 텍스트가 노출됐다. iOS Calendar처럼 기존 기간을 보존하며 다른 쪽도
+  // 함께 이동시켜, 사용자가 추가 조작 없이 여행 전체를 옮길 수 있도록 한다.
+  const onChangeStart = (v: string) => {
+    const next = applyStartChange(v, startDate, endDate);
+    setStartDate(next.start);
+    setEndDate(next.end);
+  };
+  const onChangeEnd = (v: string) => {
+    const next = applyEndChange(v, startDate, endDate);
+    setStartDate(next.start);
+    setEndDate(next.end);
+  };
 
   const togglePhotoRemoval = (id: string) => {
     setPhotos((prev) =>
@@ -329,13 +344,13 @@ export default function EditTripScreen({ trip, onClose }: Props) {
             <DateField
               label={t("editTrip.dateLabelStart")}
               value={startDate}
-              onChange={setStartDate}
+              onChange={onChangeStart}
             />
             <Text style={styles.dateSeparator}>—</Text>
             <DateField
               label={t("editTrip.dateLabelEnd")}
               value={endDate}
-              onChange={setEndDate}
+              onChange={onChangeEnd}
             />
           </View>
           {!datesValid && (
